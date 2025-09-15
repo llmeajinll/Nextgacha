@@ -1,9 +1,8 @@
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --border-color: #d9d9d9;
 }
 
-@media (prefers-color-scheme: dark) {
+/* @media (prefers-color-scheme: dark) {
   :root {
     --background: #0a0a0a;
     --foreground: #ededed;
@@ -39,4 +38,21 @@ a {
   html {
     color-scheme: dark;
   }
+} */
+
+body {
+  margin: 0;
+  /* font-family: 'silkscreenttf'; */
 }
+
+@font-face {
+  font-family: 'silkscreen';
+  src: url('/fonts/Silkscreen-Regular.woff2') format('woff2');
+}
+
+/* @font-face {
+  font-family: 'slikscreenwoff2';
+  src: url('./font/Silkscreen-Regular.woff2') format('woff2');
+  font-weight: normal;
+  font-style: normal;
+} */
