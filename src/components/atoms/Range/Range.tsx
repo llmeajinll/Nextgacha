@@ -24,12 +24,12 @@ import {
 
 type Props = {
   width?: 'fit' | 'full' | '960';
-  height?: 'fit' | 'full';
+  height?: 'fit' | 'full' | '450';
   gap?: 'none' | '10' | '15' | '30';
   direction?: 'row' | 'column';
-  justify?: 'spacebetween' | 'center' | 'start';
+  justify?: 'spacebetween' | 'center' | 'start' | 'right';
   align?: 'center' | 'stretch';
-  addStyle?: any;
+  style?: any;
   children?: React.ReactNode;
 };
 
@@ -40,10 +40,10 @@ export default function Range({
   justify = 'start',
   align = 'stretch',
   gap = 'none',
-  addStyle,
+  style,
   children,
 }: Props) {
-  console.log(width, height, direction, gap, justify, align, addStyle);
+  console.log(width, height, direction, gap, justify, align, style);
 
   //   let inlineVars: Record<string, string> = {};
 
@@ -90,7 +90,7 @@ export default function Range({
         ${justifyVariant[justify]}
         ${alignVariant[align]}
         `}
-      style={{ ...addStyle, ...inlineStyles }}
+      style={{ ...style, ...inlineStyles }}
     >
       {children}
     </div>

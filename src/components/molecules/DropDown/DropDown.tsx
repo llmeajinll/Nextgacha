@@ -20,11 +20,11 @@ export default function DropDown({
 }) {
   const [state, setState] = useState(false);
   const [lists, setLists] = useState([
-    { name: '치이카와', code: 'ban3_1', count: 1 },
-    { name: '하치와레', code: 'ban3_2', count: 0 },
-    { name: '우사기', code: 'ban3_3', count: 1 },
-    { name: '밤만쥬', code: 'ban3_4', count: 1 },
-    { name: '모몬가', code: 'ban3_5', count: 1 },
+    { name: '치이카와', code: 'ban3_1', count: 1, price: 4000 },
+    { name: '하치와레', code: 'ban3_2', count: 0, price: 4000 },
+    { name: '우사기', code: 'ban3_3', count: 1, price: 4000 },
+    { name: '밤만쥬', code: 'ban3_4', count: 1, price: 4000 },
+    { name: '모몬가', code: 'ban3_5', count: 1, price: 4000 },
   ]);
   //   const [select, setSelect] = useState('');
   return (

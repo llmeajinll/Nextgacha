@@ -46,6 +46,7 @@ export const widthVariant = styleVariants({
 export const heightVariant = styleVariants({
   fit: { height: 'fit-content' },
   full: { height: '100%' },
+  '450': { height: '450px' },
   dynamic: { height: rangeHeight },
 });
 
@@ -76,6 +77,9 @@ export const justifyVariant = styleVariants({
   start: {
     justifyContent: 'start',
   },
+  right: {
+    justifyContent: 'flex-end',
+  },
 });
 
 export const alignVariant = styleVariants({
@@ -87,4 +91,59 @@ export const alignVariant = styleVariants({
   },
 });
 
-// =========== ImgBtn 변수 ===========
+// =========== labeltitle 변수 ===========
+export const labelVariant = styleVariants({
+  small: {
+    width: 60,
+    fontSize: 14,
+    letterSpacing: '-0.7px',
+    lineHeight: '120%',
+  },
+  large: {
+    width: 80,
+    fontSize: 18,
+    letterSpacing: '-0.9px',
+    lineHeight: '120%',
+  },
+});
+
+export const contentVariant = styleVariants({
+  small: {
+    // width: 'clac(100% - 60px)',
+    fontSize: 14,
+    letterSpacing: '-0.7px',
+    lineHeight: '120%',
+  },
+  large: {
+    // width: 'clac(100% - 100px)',
+    fontSize: 20,
+    letterSpacing: '-1px',
+    lineHeight: '120%',
+  },
+});
+
+// =========== category 변수 ===========
+
+export const categoryVariant = styleVariants({
+  header: {
+    width: 1000,
+    fontSize: 14,
+    letterSpacing: '-0.7px',
+    lineHeight: '120%',
+    zIndex: 10,
+    position: 'absolute',
+
+    translate: '-50%',
+    left: '50%',
+    top: '60px',
+  },
+  menu: {
+    // width: 'clac(100% - 100px)',
+    width: 1312,
+    fontSize: 20,
+    letterSpacing: '-1px',
+    lineHeight: '120%',
+    zIndex: 0,
+    marginTop: '-1px',
+  },
+});

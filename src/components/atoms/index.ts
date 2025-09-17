@@ -6,3 +6,4 @@ export { default as ReactSlick } from './ReactSlick/ReactSlick';
 export { default as Btn } from './Btn/Btn';
 export { default as ImgBtn } from './ImgBtn/ImgBtn';
 export { default as Range } from './Range/Range';
+export { default as Category } from './Category/Category';

@@ -2,6 +2,7 @@ import { style } from '@vanilla-extract/css';
 import { vars } from '@/styles/theme.css';
 
 export const headerContainer = style({
+  position: 'relative',
   //   backgroundColor: 'red',
   width: 1314,
   borderBottom: `1px solid ${vars.color.gray1}`,
@@ -28,9 +29,11 @@ export const logo = style({
 });
 
 export const menu = style({
+  height: '60px',
   marginLeft: 20,
   fontSize: 14,
   letterSpacing: -0.7,
+  lineHeight: '60px',
   cursor: 'pointer',
 });
 
