@@ -1,14 +1,14 @@
 'use client';
 
-import React, { useState } from 'react';
+import React from 'react';
 import {
   dropdownContainer,
   dropdownTitle,
   listContainer,
   listStyle,
 } from './dropdown.css';
-import Image from 'next/image';
-import { ImgBtn, Range } from '@/components/atoms';
+// import Image from 'next/image';
+import { ImgBtn } from '@/components/atoms';
 import { addToTempCartAtom } from '@/jotai/store';
 
 import { useSetAtom } from 'jotai';
@@ -30,7 +30,7 @@ export default function DropDown({ props }: { props: DropDownType }) {
 
   console.log('status: ', isOpen);
   const { secondRoute } = useSplitRoute();
-  const status = true;
+  // const status = true;
   //   const [select, setSelect] = useState('');
   return (
     <div style={{ position: 'relative', zIndex: 10 }} ref={dropdownRef}>

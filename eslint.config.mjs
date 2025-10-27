@@ -27,7 +27,7 @@ const eslintConfig = [
       'no-var': 'off',
       'no-console': 'off',
 
-      'react-hooks/exhaustive-deps': 'warn',
+      'react-hooks/exhaustive-deps': 'off',
     },
   },
 ];

@@ -1,7 +1,8 @@
+'use client';
+
 import React from 'react';
 import { btn, moreBtn } from './btn.css';
 import * as styles from '@/styles/variants.css';
-import { assignInlineVars } from '@vanilla-extract/dynamic';
 import Link from 'next/link';
 
 type MajorBtnType = {

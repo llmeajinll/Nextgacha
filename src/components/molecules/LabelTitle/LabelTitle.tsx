@@ -1,3 +1,5 @@
+'use client';
+
 import React from 'react';
 import { Range } from '@/components/atoms';
 import { contentStyle } from './labeltitle.css';

@@ -1,3 +1,5 @@
+'use client';
+
 import React from 'react';
 import { signIn, signOut } from '@/auth';
 import kakao_login from '../../../../public/assets/images/kakao_login.png';

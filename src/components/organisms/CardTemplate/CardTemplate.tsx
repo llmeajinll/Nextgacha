@@ -1,3 +1,5 @@
+'use client';
+
 import React, { useState, useEffect } from 'react';
 import { Card } from '@/components/molecules';
 import { cardTemplateContainer } from './cardtemplate.css';

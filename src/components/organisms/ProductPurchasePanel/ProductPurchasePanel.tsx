@@ -1,9 +1,9 @@
 'use client';
+
 import { Btn, HeartBtn, ImgBtn, ReactSlick, Range } from '@/components/atoms';
 import { DropDown, LabelTitle, Ticket } from '@/components/molecules';
 import { panelTitle, ticketContainer } from './productPurchasePanel.css';
 import React, { useState, useRef, useEffect } from 'react';
-import Image from 'next/image';
 import { useAtom } from 'jotai';
 import { tempCartAtom, addToTempCartAtom } from '@/jotai/store';
 import useSplitRoute from '@/app/hooks/useSplitRoute';
