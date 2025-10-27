@@ -12,7 +12,12 @@ const withVanillaExtract = createVanillaExtractPlugin();
 
 const nextConfig: NextConfig = {
   /* config options here */
-  reactStrictMode: true,
+  reactStrictMode: false,
+  experimental: {
+    // @ts-ignore
+    appDir: true,
+    serverActions: {},
+  },
 };
 
 // module.exports = withVanillaExtract(nextConfig);
