@@ -3,7 +3,6 @@
 import React, { useState } from 'react';
 import { ProductPurchasePanel } from '../organisms';
 import { DetailTab } from '../molecules';
-import useSplitRoute from '@/app/hooks/useSplitRoute';
 
 export default function DetailTemplate() {
   return (

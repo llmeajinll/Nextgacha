@@ -1,3 +1,5 @@
+'use client';
+
 import { title } from './title.css';
 import React from 'react';
 

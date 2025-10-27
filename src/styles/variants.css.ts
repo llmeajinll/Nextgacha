@@ -1,10 +1,10 @@
-import { style, styleVariants } from '@vanilla-extract/css';
+import { styleVariants } from '@vanilla-extract/css';
 import { vars } from '@/styles/theme.css';
-import {
-  rangeWidth,
-  rangeHeight,
-  rangeGap,
-} from '@/components/atoms/Range/range.css';
+// import {
+//   rangeWidth,
+//   rangeHeight,
+//   rangeGap,
+// } from '@/components/atoms/Range/range.css';
 
 // export const base = style({
 //   borderRadius: 8,
@@ -50,7 +50,7 @@ export const widthVariant = styleVariants({
   full: { width: '100%' } as const,
   '320': { width: '320px' } as const,
   '960': { width: '960px' } as const,
-  dynamic: { width: rangeWidth } as const,
+  // dynamic: { width: rangeWidth } as const,
 });
 
 export const heightVariant = styleVariants({
@@ -58,7 +58,7 @@ export const heightVariant = styleVariants({
   full: { height: '100%' } as const,
   '70': { height: '70px' } as const,
   '450': { height: '450px' } as const,
-  dynamic: { height: rangeHeight } as const,
+  // dynamic: { height: rangeHeight } as const,
 });
 
 export const gapVariant = styleVariants({
@@ -68,7 +68,7 @@ export const gapVariant = styleVariants({
   '30': { gap: '30px' } as const,
   '10 30': { gap: '10px 30px' } as const,
   '10 0': { gap: '10px 0px' } as const,
-  dynamic: { gap: rangeGap } as const,
+  // dynamic: { gap: rangeGap } as const,
 });
 
 export const rangePresetVariant = styleVariants({

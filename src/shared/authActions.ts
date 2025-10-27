@@ -1,7 +1,7 @@
 'use server';
 
 import { signIn, signOut } from '@/auth';
-import { cookies } from 'next/headers';
+// import { cookies } from 'next/headers';
 
 export async function kakaoSignIn() {
   console.log('signin called');

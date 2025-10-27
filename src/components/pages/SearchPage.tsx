@@ -7,9 +7,9 @@ import { CardTemplate } from '../organisms';
 export default function SearchPage() {
   const searchParams = useSearchParams();
 
-  const type = searchParams.get('type');
-  const detail = searchParams.get('detail');
-  const company = searchParams.get('company');
+  // const type = searchParams.get('type');
+  // const detail = searchParams.get('detail');
+  // const company = searchParams.get('company');
   return (
     <>
       {/* <div>SearchPage</div>
