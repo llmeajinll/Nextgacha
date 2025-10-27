@@ -87,7 +87,7 @@ export default function Range({
 
   //   console.log(inlineStyles);
 
-  let inlineStyles = {};
+  // let inlineStyles = {};
 
   // return (
   //   <div
@@ -120,7 +120,7 @@ export default function Range({
           ]
         }
         `}
-      style={{ ...style, ...inlineStyles }}
+      style={{ ...style }}
     >
       {children}
     </div>
