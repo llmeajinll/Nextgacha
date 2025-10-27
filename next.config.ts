@@ -13,8 +13,13 @@ const withVanillaExtract = createVanillaExtractPlugin();
 const nextConfig: NextConfig = {
   /* config options here */
   reactStrictMode: false,
+  compiler: {
+    styledComponents: true,
+  },
   experimental: {
-    serverActions: {},
+    serverActions: {
+      bodySizeLimit: '2mb',
+    },
   },
 };
 
