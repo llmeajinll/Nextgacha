@@ -14,8 +14,6 @@ const nextConfig: NextConfig = {
   /* config options here */
   reactStrictMode: false,
   experimental: {
-    // @ts-ignore
-    appDir: true,
     serverActions: {},
   },
 };
