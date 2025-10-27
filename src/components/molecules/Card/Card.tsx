@@ -10,13 +10,15 @@ import {
   bottomContainer,
 } from './card.css';
 import Link from 'next/link';
+import { CardProps } from '@/shared/type';
+import { comma } from '@/shared/comma';
 
-export default function Card({ id }: { id?: string }) {
+export default function Card({ props }: { props: CardProps }) {
   return (
     <div className={cardContainer}>
-      <Link href={`/${id}`}>
+      <Link href={`/${props.group[0]}${props.num}/info`}>
         <Image
-          src='/images/image 23.png'
+          src={String(props.image[0])}
           height={300}
           width={300}
           alt='img'
@@ -31,14 +33,12 @@ export default function Card({ id }: { id?: string }) {
           {/* <Tag word='SOLD OUT' color='#DCDCDC' /> */}
         </div>
 
-        <div className={cardTitle}>
-          치이카와 우물우물파티 3탄 캡슐토이 가챠 치이카와 우물우물파티 3탄
-          캡슐토이 가챠 치이카와 우물우물파티 3탄 캡슐토이 가챠
-        </div>
+        <div className={cardTitle}>{props.title}</div>
 
         <div className={bottomContainer}>
           <div>
-            4‚000<span style={{ fontSize: '18px' }}> 원</span>
+            {comma(props.price)}
+            <span style={{ fontSize: '18px' }}> 원</span>
           </div>
           <HeartBtn />
         </div>

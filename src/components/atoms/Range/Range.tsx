@@ -9,6 +9,7 @@ import {
   directionVariant,
   justifyVariant,
   alignVariant,
+  rangePresetVariant,
 } from '@/styles/variants.css';
 
 // type Props = {
@@ -22,28 +23,37 @@ import {
 //   children?: React.ReactNode;
 // };
 
+type Preset = 'center' | 'between' | 'columnCenter' | null;
+
+// const presetVariant = {
+//   center: 'justify-center items-center',
+//   between: 'justify-between items-center',
+//   columnCenter: 'flex-col justify-center items-center',
+// };
+
 type Props = {
-  width?: 'fit' | 'full' | '960';
-  height?: 'fit' | 'full' | '450';
-  gap?: 'none' | '10' | '15' | '30';
-  direction?: 'row' | 'column';
-  justify?: 'spacebetween' | 'center' | 'start' | 'right';
-  align?: 'center' | 'stretch';
+  width?: keyof typeof widthVariant;
+  height?: keyof typeof heightVariant;
+  gap?: keyof typeof gapVariant;
+  preset?: keyof typeof rangePresetVariant;
   style?: any;
   children?: React.ReactNode;
 };
 
 export default function Range({
-  width = 'fit',
-  height = 'fit',
-  direction = 'row',
-  justify = 'start',
-  align = 'stretch',
-  gap = 'none',
+  width,
+  height,
+  // direction = 'row',
+  // justify = 'start',
+  // align = 'stretch',
+  gap,
+
+  preset,
   style,
   children,
 }: Props) {
-  console.log(width, height, direction, gap, justify, align, style);
+  // console.log(width, height, preset, style);
+  // console.log(rangePresetVariant[preset ?? 'center']);
 
   //   let inlineVars: Record<string, string> = {};
 
@@ -79,16 +89,36 @@ export default function Range({
 
   let inlineStyles = {};
 
+  // return (
+  //   <div
+  //     className={`
+  //       ${range}
+  //       ${widthVariant[width]}
+  //       ${heightVariant[height]}
+  //       ${gapVariant[gap]}
+  //       ${directionVariant[direction]}
+  //       ${justifyVariant[justify]}
+  //       ${alignVariant[align]}
+  //       ${rangePresetVariant[preset ?? 'center']}
+  //       `}
+  //     style={{ ...style, ...inlineStyles }}
+  //   >
+  //     {children}
+  //   </div>
+  // );
+
   return (
     <div
       className={`
         ${range} 
-        ${widthVariant[width]} 
-        ${heightVariant[height]} 
-        ${gapVariant[gap]} 
-        ${directionVariant[direction]} 
-        ${justifyVariant[justify]}
-        ${alignVariant[align]}
+        ${widthVariant[width ?? 'fit']} 
+        ${heightVariant[height ?? 'fit']} 
+        ${gapVariant[gap ?? 'none']} 
+        ${
+          rangePresetVariant[
+            (preset ?? 'center') as keyof typeof rangePresetVariant
+          ]
+        }
         `}
       style={{ ...style, ...inlineStyles }}
     >

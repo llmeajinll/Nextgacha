@@ -2,12 +2,14 @@ import { vars } from '@/styles/theme.css';
 import { style } from '@vanilla-extract/css';
 
 export const categoryContainer = style({
+  boxSizing: 'border-box',
   display: 'flex',
   flexDirection: 'column',
   border: `1px solid ${vars.color.gray1}`,
   padding: '20px 30px',
   backgroundColor: 'white',
   gap: 10,
+  zIndex: 12,
 });
 
 export const line = style({

@@ -14,14 +14,14 @@ export const bannerContainer = style({
 });
 
 export const eventConatiner = style({
-  display: 'flex',
-  overflow: 'hidden',
+  // display: 'flex',
+  // overflow: 'hidden',
   //   width: 1312,
-  width: '100%',
-  height: 437,
+  // width: '100%',
+  // height: 437,
 
   borderBottom: `1px solid ${vars.color.gray1}`,
-  borderLeft: `1px solid ${vars.color.gray1}`,
+  // borderLeft: `1px solid ${vars.color.gray1}`,
   borderRight: `1px solid ${vars.color.gray1}`,
 });
 

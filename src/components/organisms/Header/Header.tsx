@@ -1,8 +1,8 @@
 'use client';
 
-import React, { useState } from 'react';
-import { Category } from '@/components/atoms';
-import { Search } from '@/components/molecules';
+import React, { useEffect, useState } from 'react';
+// import { signIn, signOut } from '@/auth';
+import { Search, Category } from '@/components/molecules';
 import {
   headerContainer,
   logo,
@@ -11,15 +11,23 @@ import {
   menu,
   search,
 } from './header.css';
+
 import Link from 'next/link';
 
+import { useSession } from 'next-auth/react';
+
+import { kakaoSignIn, kakaoSignOut } from '@/shared/authActions';
+
 export default function Header() {
-  const [show, setShow] = useState(false);
+  const [showCategory, setShowCategory] = useState(false);
+  const [showLogin, setShowLogin] = useState(false);
+
+  const { data: session } = useSession();
 
   return (
     <>
       <div className={headerContainer}>
-        {show && <Category setShow={setShow} />}
+        {showCategory && <Category setShow={setShowCategory} />}
         <div className={menuContainer}>
           <div className={wrap}>
             <Link href='/'>
@@ -28,8 +36,8 @@ export default function Header() {
             <div className={wrap}>
               <span
                 className={menu}
-                onMouseEnter={() => setShow(true)}
-                onMouseLeave={() => setShow(false)}
+                onMouseEnter={() => setShowCategory(true)}
+                onMouseLeave={() => setShowCategory(false)}
               >
                 <Link href='/search'>CATEGORY</Link>
               </span>
@@ -45,7 +53,15 @@ export default function Header() {
 
           <div className={wrap}>
             <Search />
-            <span className={menu}>LOGIN</span>
+            {session ? (
+              <form action={kakaoSignOut}>
+                <button className={menu}>LOGOUT</button>
+              </form>
+            ) : (
+              <form action={kakaoSignIn}>
+                <button className={menu}>LOGIN</button>
+              </form>
+            )}
           </div>
         </div>
       </div>

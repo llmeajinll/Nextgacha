@@ -39,12 +39,13 @@ export const listContainer = style({
   lineHeight: '43px',
 });
 
-export const list = style({
+export const listStyle = style({
   boxSizing: 'border-box',
   width: 480,
   padding: '0 0 0 10px',
   color: vars.color.black1,
   lineHeight: '44px',
+  cursor: 'pointer',
   ':hover': {
     backgroundColor: '#F1F1F1',
   },

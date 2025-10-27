@@ -10,7 +10,7 @@ export const title = style({
   borderBottom: `1px solid ${vars.color.gray1}`,
   //   padding: '0 10px',
   color: vars.color.black1,
-  margin: '0 auto 15px auto',
+  margin: '0 auto',
   fontSize: 24,
   lineHeight: '60px',
   letterSpacing: '-1.2px',

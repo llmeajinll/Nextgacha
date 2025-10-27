@@ -35,9 +35,14 @@ export const menu = style({
   letterSpacing: -0.7,
   lineHeight: '60px',
   cursor: 'pointer',
+  backgroundColor: 'white',
+  border: 'none',
+  fontFamily: 'silkscreen',
+  color: vars.color.black1,
 });
 
 export const wrap = style({
+  position: 'relative',
   width: 'fit-content',
   display: 'flex',
   alignItems: 'center',

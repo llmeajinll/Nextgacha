@@ -5,6 +5,7 @@ export const cardContainer = style({
   // backgroundColor: 'red',
   width: 300,
   height: 'fit-content',
+  paddingBottom: '25px',
 });
 
 export const cardImage = style({

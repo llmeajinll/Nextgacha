@@ -12,7 +12,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
   ],
   callbacks: {
     async redirect({ url, baseUrl }) {
-      return '/main';
+      return '/';
       // return baseUrl;
     },
   },

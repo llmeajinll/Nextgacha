@@ -1,9 +1,9 @@
 export { default as Tag } from './Tag/Tag';
 export { default as HeartBtn } from './ImgBtn/HeartBtn';
 export { default as Title } from './Title/Title';
-export { default as MoreBtn } from './Btn/MoreBtn';
 export { default as ReactSlick } from './ReactSlick/ReactSlick';
 export { default as Btn } from './Btn/Btn';
 export { default as ImgBtn } from './ImgBtn/ImgBtn';
 export { default as Range } from './Range/Range';
-export { default as Category } from './Category/Category';
+export { default as CountBtn } from './Btn/CountBtn';
+export { default as AuthBtn } from './Btn/AuthBtn';

@@ -21,41 +21,89 @@ export const btnSizeVariants = styleVariants({
     height: '30px',
     fontSize: '24px',
     letterSpacing: '-1.2px',
-  },
+  } as const,
   medium: {
     width: '180px',
     height: '50px',
     fontSize: '20px',
     letterSpacing: '-1px',
-  },
+  } as const,
+  big: {
+    width: '320px',
+    height: '60px',
+    fontSize: '22px',
+    letterSpacing: '-1.1px',
+  } as const,
 });
 
 export const colorVariants = styleVariants({
-  primary: { backgroundColor: vars.color.blue1, color: 'white' },
-  reversePrimary: { backgroundColor: 'white', color: vars.color.blue1 },
+  primary: { backgroundColor: vars.color.blue1, color: 'white' } as const,
+  reversePrimary: {
+    backgroundColor: 'white',
+    color: vars.color.blue1,
+  } as const,
 });
 
 // =========== Range 변수 ===========
 export const widthVariant = styleVariants({
-  fit: { width: 'fit-content' },
-  full: { width: '100%' },
-  '960': { width: '960px' },
-  dynamic: { width: rangeWidth },
+  fit: { width: 'fit-content' } as const,
+  full: { width: '100%' } as const,
+  '320': { width: '320px' } as const,
+  '960': { width: '960px' } as const,
+  dynamic: { width: rangeWidth } as const,
 });
 
 export const heightVariant = styleVariants({
-  fit: { height: 'fit-content' },
-  full: { height: '100%' },
-  '450': { height: '450px' },
-  dynamic: { height: rangeHeight },
+  fit: { height: 'fit-content' } as const,
+  full: { height: '100%' } as const,
+  '70': { height: '70px' } as const,
+  '450': { height: '450px' } as const,
+  dynamic: { height: rangeHeight } as const,
 });
 
 export const gapVariant = styleVariants({
-  none: { gap: '0px' },
-  '10': { gap: '10px' },
-  '15': { gap: '15px' },
-  '30': { gap: '30px' },
-  dynamic: { gap: rangeGap },
+  none: { gap: '0px' } as const,
+  '10': { gap: '10px' } as const,
+  '15': { gap: '15px' } as const,
+  '30': { gap: '30px' } as const,
+  '10 30': { gap: '10px 30px' } as const,
+  '10 0': { gap: '10px 0px' } as const,
+  dynamic: { gap: rangeGap } as const,
+});
+
+export const rangePresetVariant = styleVariants({
+  center: {
+    justifyContent: 'center',
+    // alignItems: 'center',
+  },
+  left: {
+    justifyContent: 'start',
+    // alignItems: 'center',
+  },
+  right: {
+    justifyContent: 'flex-end',
+    // alignItems: 'center',
+  },
+  between: {
+    justifyContent: 'space-between',
+    // alignItems: 'center',
+  },
+  bottom: {
+    alignItems: 'bottom',
+  },
+  column: {
+    flexDirection: 'column',
+  },
+  columnCenter: {
+    flexDirection: 'column',
+    justifyContent: 'center',
+    // alignItems: 'center',
+  },
+  columnBetween: {
+    flexDirection: 'column',
+    justifyContent: 'space-between',
+    // alignItems: 'center',
+  },
 });
 
 export const directionVariant = styleVariants({
@@ -139,11 +187,28 @@ export const categoryVariant = styleVariants({
   },
   menu: {
     // width: 'clac(100% - 100px)',
-    width: 1312,
+    width: 1314,
     fontSize: 20,
     letterSpacing: '-1px',
     lineHeight: '120%',
     zIndex: 0,
     marginTop: '-1px',
+  },
+});
+
+// =========== ReactSlick 변수 ===========
+
+export const reactSlickVariant = styleVariants({
+  small: {
+    width: '450px',
+    height: '450px',
+    border: `1px solid ${vars.color.gray1}`,
+  },
+  banner: {
+    width: '1312px',
+    height: '437px',
+    borderBottom: `2px solid ${vars.color.gray1}`,
+    borderLeft: `1px solid ${vars.color.gray1}`,
+    borderRight: `1px solid ${vars.color.gray1}`,
   },
 });

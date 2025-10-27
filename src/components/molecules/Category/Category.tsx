@@ -101,6 +101,7 @@ export default function Category({ status = 'header', setShow }: Props) {
           애니메이션
         </div>
         <Range
+          preset='left'
           gap='15'
           style={{
             flexWrap: 'wrap',
@@ -133,7 +134,7 @@ export default function Category({ status = 'header', setShow }: Props) {
           시리즈
         </div>
 
-        <Range direction='column' gap='15'>
+        <Range preset='column' gap='15'>
           <div>
             <div
               className={`${sublabel} ${

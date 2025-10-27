@@ -1,26 +1,53 @@
 import React from 'react';
-import { btn } from './btn.css';
+import { btn, moreBtn } from './btn.css';
 import * as styles from '@/styles/variants.css';
 import { assignInlineVars } from '@vanilla-extract/dynamic';
+import Link from 'next/link';
 
-type Props = {
-  size?: 'small' | 'medium';
-  color?: 'primary' | 'reversePrimary';
-  text: string;
-  children?: React.ReactNode;
+type MajorBtnType = {
+  type?: 'major';
+  size?: keyof typeof styles.btnSizeVariants;
+  color?: keyof typeof styles.colorVariants;
 };
 
-export default function Btn({
-  size = 'medium',
-  color = 'primary',
-  text = '입력',
-  children,
-}: Props) {
+type MoreBtnType = {
+  type: 'more';
+  href: string;
+  query?: { type?: string; detail?: string };
+};
+
+type BtnType = MajorBtnType | MoreBtnType;
+
+type Props = BtnType & {
+  children?: React.ReactNode | string;
+  onClick?: React.MouseEventHandler<HTMLButtonElement> | undefined;
+  style?: React.CSSProperties | undefined;
+};
+
+export default function Btn(props: Props) {
+  if ('type' in props && props.type === 'more') {
+    return (
+      <Link
+        href={{
+          pathname: `/${props.href}`,
+          query: props.query,
+        }}
+      >
+        <button className={moreBtn}>더보기 ⟩</button>
+      </Link>
+    );
+  }
   return (
     <button
-      className={`${styles.btnSizeVariants[size]} ${styles.colorVariants[color]} ${btn}`}
+      onClick={props.onClick}
+      style={props.style}
+      className={`
+        ${styles.btnSizeVariants[props.size ?? 'medium']} 
+        ${styles.colorVariants[props.color ?? 'primary']} 
+        ${btn}
+        `}
     >
-      {text}
+      {props.children}
     </button>
   );
 }

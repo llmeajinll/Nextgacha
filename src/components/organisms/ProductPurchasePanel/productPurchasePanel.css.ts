@@ -2,7 +2,6 @@ import { vars } from '@/styles/theme.css';
 import { style } from '@vanilla-extract/css';
 
 export const panelTitle = style({
-  width: '100%',
   marginBottom: 10,
   height: 42,
   fontSize: 18,
@@ -15,4 +14,32 @@ export const panelTitle = style({
   WebkitLineClamp: 2,
   WebkitBoxOrient: 'vertical',
   color: vars.color.black1,
+});
+
+export const ticketContainer = style({
+  display: 'flex',
+  width: '960px',
+  maxWidth: '960px',
+  marginBottom: '40px',
+  overflowX: 'auto',
+
+  scrollbarWidth: 'thin',
+
+  scrollbarColor: 'rgba(0,0,0,0.3) transparent',
+
+  selectors: {
+    '&::-webkit-scrollbar': {
+      width: '6px',
+    },
+    '&::-webkit-scrollbar-thumb': {
+      background: 'rgba(0, 0, 0, 0.3)',
+      borderRadius: '4px',
+    },
+    '&::-webkit-scrollbar-thumb:hover': {
+      background: 'rgba(0, 0, 0, 0.5)',
+    },
+    '&::-webkit-scrollbar-track': {
+      background: 'transparent',
+    },
+  },
 });

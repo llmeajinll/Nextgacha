@@ -1,8 +1,11 @@
-import React from 'react';
+'use client';
+
+import React, { use, useEffect } from 'react';
 import { Banner, CardTemplate } from '@/components/organisms';
-import { Btn, MoreBtn, Title } from '../atoms';
+import { Btn, Title } from '../atoms';
 
 export default function HomePage() {
+
   return (
     <>
       <Banner />
@@ -15,7 +18,11 @@ export default function HomePage() {
       >
         <Title text='예약 판매' />
         <CardTemplate />
-        <MoreBtn />
+        <Btn
+          type='more'
+          href='search'
+          query={{ type: 'main', detail: '예약 판매' }}
+        />
       </div>
 
       <div
@@ -26,7 +33,11 @@ export default function HomePage() {
       >
         <Title text='인기 상품' />
         <CardTemplate />
-        <MoreBtn />
+        <Btn
+          type='more'
+          href='search'
+          query={{ type: 'main', detail: '인기 상품' }}
+        />
       </div>
     </>
   );

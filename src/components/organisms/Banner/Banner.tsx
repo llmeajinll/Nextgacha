@@ -11,12 +11,22 @@ import {
   slices,
 } from './banner.css';
 
+import { ReactSlick } from '@/components/atoms';
+
 export default function Banner() {
   const [angle, setAngle] = useState(0);
   let imgUrl = [
-    '/images/event1.png',
-    '/images/event2.png',
-    '/images/event3.png',
+    {
+      url: '/images/event1.png',
+      onClick: () =>
+        (document.location.href = `http://localhost:3000/search?company=bandai`),
+    },
+    {
+      url: '/images/event2.png',
+      onClick: () =>
+        (document.location.href = `http://localhost:3000/search?type=character&detail=치이카와`),
+    },
+    { url: '/images/event3.png' },
   ];
   let imgCount = imgUrl.length;
   let show = 0;
@@ -33,7 +43,7 @@ export default function Banner() {
     <>
       <div className={bannerContainer}>
         <div className={eventConatiner}>
-          {imgUrl.map((url, index) => (
+          {/* {imgUrl.map((url, index) => (
             <Image
               src={url}
               alt='event'
@@ -41,7 +51,8 @@ export default function Banner() {
               height={437}
               key={index}
             />
-          ))}
+          ))} */}
+          <ReactSlick image={imgUrl} preset='banner' />
         </div>
         <div className={lever}>
           <div
@@ -54,18 +65,18 @@ export default function Banner() {
             <div className={dot}></div>
           </div>
 
-          {imgUrl.map((_, index) => {
-            let angle = 360 * (index / imgCount) - 90;
+          {imgUrl.map((_, idx) => {
+            let angle = 360 * (idx / imgCount) - 90;
 
             return (
               <div
-                key={index}
+                key={idx}
                 className={slices}
                 style={{
                   transform: `rotate(${angle}deg) translate(58px)`,
                 }}
                 onClick={() => {
-                  show = index;
+                  show = idx;
                   console.log(show);
                 }}
               ></div>

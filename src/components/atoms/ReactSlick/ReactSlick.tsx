@@ -6,8 +6,22 @@ import Image from 'next/image';
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
 import { sliderContainer } from './reactSlick.css';
+import { dirxml } from 'console';
+import { reactSlickVariant } from '@/styles/variants.css';
+import { Number } from 'mongoose';
 
-export default function ReactSlick() {
+type Preset = keyof typeof reactSlickVariant;
+type PropsType1 = {
+  image?: { url?: string; onClick?: () => void }[];
+};
+type PropsType2 = {
+  image?: string[];
+};
+type PropsType = (PropsType1 | PropsType2) & { preset?: Preset };
+
+export default function ReactSlick({ image, preset }: PropsType) {
+  const isStringArray = Array.isArray(image) && typeof image[0] === 'string';
+
   let settings = {
     dots: true,
     infinite: true,
@@ -15,47 +29,38 @@ export default function ReactSlick() {
     slidesToShow: 1,
     slidesToScroll: 1,
   };
+
+  let sizeSettings = { width: 450, height: 450 };
+
+  if (preset === 'banner') {
+    sizeSettings = { width: 1312, height: 439 };
+    settings = {
+      ...settings,
+      dots: false,
+    };
+  }
   return (
-    <div className={sliderContainer}>
+    <div className={`${reactSlickVariant[preset ?? 'small']}`}>
       <Slider {...settings}>
-        <div style={{ width: '450px', height: '450px' }}>
-          <Image
-            width={450}
-            height={450}
-            src='/images/image 23.png'
-            alt='main'
-          />
-        </div>
+        {image?.map((val, idx) => {
+          const url = isStringArray ? (val as string) : (val as any).url;
+          const onClick = !isStringArray ? (val as any).onClick : undefined;
 
-        <div style={{ width: '450px', height: '450px' }}>
-          {/* <div style={{ width: '450px', height: '450px' }}>1</div> */}
-          <Image
-            width={450}
-            height={450}
-            src='/images/image 23.png'
-            alt='main'
-          />
-        </div>
-
-        <div style={{ width: '450px', height: '450px' }}>
-          {/* <div style={{ width: '450px', height: '450px' }}>1</div> */}
-          <Image
-            width={450}
-            height={450}
-            src='/images/image 23.png'
-            alt='main'
-          />
-        </div>
-
-        <div style={{ width: '450px', height: '450px' }}>
-          {/* <div style={{ width: '450px', height: '450px' }}>1</div> */}
-          <Image
-            width={450}
-            height={450}
-            src='/images/image 23.png'
-            alt='main'
-          />
-        </div>
+          return (
+            <div
+              className={`${preset ?? 'small'}`}
+              onClick={onClick ?? (() => {})}
+              key={idx}
+            >
+              <Image
+                width={sizeSettings.width}
+                height={sizeSettings.height}
+                src={String(url)}
+                alt='main'
+              />
+            </div>
+          );
+        })}
       </Slider>
     </div>
   );

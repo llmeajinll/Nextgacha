@@ -7,5 +7,4 @@ export const rangeGap = createVar();
 
 export const range = style({
   display: 'flex',
-  //   border: '1px solid black',
 });

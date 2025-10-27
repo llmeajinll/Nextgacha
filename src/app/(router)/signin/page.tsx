@@ -19,7 +19,6 @@ export default function SignIn() {
       >
         <button type='submit'>Signout with Kakao</button>
       </form>
-      font test
     </div>
   );
 }
