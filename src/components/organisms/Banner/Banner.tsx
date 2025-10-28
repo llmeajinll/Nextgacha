@@ -30,12 +30,12 @@ export default function Banner() {
   ];
   let imgCount = imgUrl.length;
   let show = 0;
-  //   let angle = 360 * (1 / imgCount) - 90;
-  //   console.log(angle);
+  let subangle = 360 * (1 / imgCount) - 90;
+  console.log(subangle);
   useEffect(() => {
     const interval = setInterval(() => {
-      setAngle((prev) => prev + 120);
-    }, 5000);
+      setAngle((prev) => prev + 360 * (1 / imgCount));
+    }, 4500);
 
     return () => clearInterval(interval);
   }, []);

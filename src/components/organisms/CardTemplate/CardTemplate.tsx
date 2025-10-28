@@ -19,7 +19,7 @@ export default function CardTemplate() {
     handleSearch();
   }, []);
   return (
-    <div style={{ width: '1272px' }}>
+    <div style={{ width: '1272px', margin: '0 auto' }}>
       <div className={cardTemplateContainer}>
         {/* <Card id='reserve1' />
         <Card id='reserve2' />

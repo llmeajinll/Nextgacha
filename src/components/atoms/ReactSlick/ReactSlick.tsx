@@ -6,7 +6,6 @@ import Image from 'next/image';
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
 import { sliderContainer } from './reactSlick.css';
-import { dirxml } from 'console';
 import { reactSlickVariant } from '@/styles/variants.css';
 import { Number } from 'mongoose';
 
@@ -28,6 +27,8 @@ export default function ReactSlick({ image, preset }: PropsType) {
     speed: 500,
     slidesToShow: 1,
     slidesToScroll: 1,
+    autoplay: false,
+    autoplaySpeed: 4000,
   };
 
   let sizeSettings = { width: 450, height: 450 };
@@ -37,6 +38,7 @@ export default function ReactSlick({ image, preset }: PropsType) {
     settings = {
       ...settings,
       dots: false,
+      autoplay: true,
     };
   }
   return (
