@@ -19,19 +19,21 @@ export default function Banner() {
     {
       url: '/images/event1.png',
       onClick: () =>
-        (document.location.href = `http://localhost:3000/search?company=bandai`),
+        (document.location.href = `${process.env.NEXT_PUBLIC_URL}/search?company=bandai`),
     },
     {
       url: '/images/event2.png',
       onClick: () =>
-        (document.location.href = `http://localhost:3000/search?type=character&detail=치이카와`),
+        (document.location.href = `${process.env.NEXT_PUBLIC_URL}/search?type=character&detail=치이카와`),
     },
     { url: '/images/event3.png' },
   ];
+
   let imgCount = imgUrl.length;
   let show = 0;
   let subangle = 360 * (1 / imgCount) - 90;
   console.log(subangle);
+
   useEffect(() => {
     const interval = setInterval(() => {
       setAngle((prev) => prev + 360 * (1 / imgCount));
@@ -39,6 +41,7 @@ export default function Banner() {
 
     return () => clearInterval(interval);
   }, []);
+
   return (
     <>
       <div className={bannerContainer}>
