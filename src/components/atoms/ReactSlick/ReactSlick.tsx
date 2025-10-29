@@ -1,6 +1,6 @@
 'use client';
 
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import Slider from 'react-slick';
 import Image from 'next/image';
 import 'slick-carousel/slick/slick.css';
@@ -19,6 +19,21 @@ type PropsType2 = {
 type PropsType = (PropsType1 | PropsType2) & { preset?: Preset };
 
 export default function ReactSlick({ image, preset }: PropsType) {
+  const [angle, setAngle] = useState(0);
+
+  let imgCount = image?.length || 0;
+  let show = 0;
+  let subangle = 360 * (1 / imgCount) - 90;
+  console.log(subangle);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setAngle((prev) => prev + 360 * (1 / imgCount));
+    }, 4500);
+
+    return () => clearInterval(interval);
+  }, []);
+
   const isStringArray = Array.isArray(image) && typeof image[0] === 'string';
 
   let settings = {
