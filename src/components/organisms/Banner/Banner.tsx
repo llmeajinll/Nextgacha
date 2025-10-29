@@ -19,12 +19,12 @@ export default function Banner() {
     {
       url: '/images/event1.png',
       onClick: () =>
-        (document.location.href = `${process.env.NEXT_PUBLIC_URL}/search?company=bandai`),
+        (document.location.href = `${process.env.NEXT_PUBLIC_URL}search?type=series&company=bandai`),
     },
     {
       url: '/images/event2.png',
       onClick: () =>
-        (document.location.href = `${process.env.NEXT_PUBLIC_URL}/search?type=character&detail=치이카와`),
+        (document.location.href = `${process.env.NEXT_PUBLIC_URL}search?type=character&detail=치이카와`),
     },
     { url: '/images/event3.png' },
   ];
