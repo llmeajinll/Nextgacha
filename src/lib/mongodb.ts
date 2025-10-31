@@ -1,6 +1,11 @@
 import { MongoClient } from 'mongodb';
 // import mongoose from 'mongoose';
 
+interface CounterType {
+  _id: string;
+  num: number;
+}
+
 const url: string = process.env.MONGODB_URI!;
 
 if (!url) {
@@ -13,8 +18,16 @@ let connectDB: Promise<MongoClient>;
 connectDB = new MongoClient(url, options).connect();
 
 const client = await connectDB;
-const productDB = client.db('gacha').collection('product');
+const gachaDB = client.db('gacha');
+
+const productColl = gachaDB.collection('product');
+const qnaColl = gachaDB.collection('qna');
+const reviewColl = gachaDB.collection('review');
+const orderColl = gachaDB.collection('order');
+const counterColl = gachaDB.collection('counter');
+
+console.log(counterColl);
 
 // console.log(productDB);
 
-export { productDB };
+export { gachaDB, productColl, qnaColl, reviewColl, orderColl, counterColl };

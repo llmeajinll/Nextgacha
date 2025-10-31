@@ -23,6 +23,7 @@ export default function Header() {
   const [showLogin, setShowLogin] = useState(false);
 
   const { data: session } = useSession();
+  console.log('session', session);
 
   return (
     <>

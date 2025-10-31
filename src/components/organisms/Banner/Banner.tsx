@@ -2,19 +2,12 @@
 
 import React, { useEffect, useState } from 'react';
 import Image from 'next/image';
-import {
-  bannerContainer,
-  eventConatiner,
-  lever,
-  handle,
-  dot,
-  slices,
-} from './banner.css';
+import { bannerContainer, eventConatiner } from './banner.css';
 
 import { ReactSlick } from '@/components/atoms';
 
 export default function Banner() {
-  const [angle, setAngle] = useState(0);
+  // const [angle, setAngle] = useState(0);
   let imgUrl = [
     {
       url: '/images/event1.png',
@@ -29,18 +22,18 @@ export default function Banner() {
     { url: '/images/event3.png' },
   ];
 
-  let imgCount = imgUrl.length;
-  let show = 0;
-  let subangle = 360 * (1 / imgCount) - 90;
-  console.log(subangle);
+  // let imgCount = imgUrl.length;
+  // let show = 0;
+  // let subangle = 360 * (1 / imgCount) - 90;
+  // console.log(subangle);
 
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setAngle((prev) => prev + 360 * (1 / imgCount));
-    }, 4500);
+  // useEffect(() => {
+  //   const interval = setInterval(() => {
+  //     setAngle((prev) => prev + 360 * (1 / imgCount));
+  //   }, 4500);
 
-    return () => clearInterval(interval);
-  }, []);
+  //   return () => clearInterval(interval);
+  // }, []);
 
   return (
     <>
@@ -57,7 +50,7 @@ export default function Banner() {
           ))} */}
           <ReactSlick image={imgUrl} preset='banner' />
         </div>
-        <div className={lever}>
+        {/* <div className={lever}>
           <div
             className={handle}
             style={{
@@ -85,7 +78,7 @@ export default function Banner() {
               ></div>
             );
           })}
-        </div>
+        </div> */}
       </div>
     </>
   );

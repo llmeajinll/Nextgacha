@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { productDB } from '@/lib/mongodb';
+import { productColl } from '@/lib/mongodb';
 
 export async function GET(req: Request) {
   // const { data } = await req.json();
@@ -32,7 +32,7 @@ export async function GET(req: Request) {
     query = { num: Number(search) };
   }
 
-  const product = await productDB.find(query).sort({ create: -1 }).toArray();
+  const product = await productColl.find(query).sort({ create: -1 }).toArray();
 
   return NextResponse.json(product);
   // return NextResponse.json({
