@@ -1,26 +1,44 @@
 'use client';
 
 import Image from 'next/image';
-import React from 'react';
+import Link from 'next/link';
+import React, { useState, useEffect } from 'react';
 import { HeartBtn, Tag } from '@/components/atoms';
+import { TagContainer } from '@/components/molecules';
 import {
   cardContainer,
   cardImage,
   infoContainer,
-  TagContainer,
+  // TagContainer,
   cardTitle,
   bottomContainer,
 } from './card.css';
-import Link from 'next/link';
 import { CardProps } from '@/shared/type';
 import { comma } from '@/shared/comma';
 
 export default function Card({ props }: { props: CardProps }) {
+  const [like, setLike] = useState(false);
+  useEffect(() => {
+    // console.log('Card props:', props);
+    const raw = document.cookie
+      .split('; ')
+      .find((row) => row.startsWith('userInfo='))
+      ?.split('=')[1];
+
+    const userInfo = raw ? JSON.parse(decodeURIComponent(raw)) : null;
+
+    if (userInfo && userInfo.like) {
+      console.log('userInfo.like:', userInfo.like, 'props.num:', props.num);
+      setLike(userInfo.like.includes(props.num));
+    }
+  }, []);
   return (
     <div className={cardContainer}>
-      <Link href={`/${props.group[0]}${props.num}/info`}>
+      <Link href={`/${props.group[0] || null}${props.num}/info`}>
         <Image
-          src={String(props.image[0])}
+          src={
+            props.image[0] ? String(props.image[0]) : '/images/defaultImg.png'
+          }
           height={300}
           width={300}
           alt='img'
@@ -28,13 +46,10 @@ export default function Card({ props }: { props: CardProps }) {
         />
       </Link>
       <div className={infoContainer}>
-        <div className={TagContainer}>
-          <Tag word='2025년 12월 예약' color='#BCE2FF' />
-          <Tag word='HOT' color='#FFA5A5' />
-          <Tag word='NEW' color='#FFDFAB' />
-          {/* <Tag word='SOLD OUT' color='#DCDCDC' /> */}
-        </div>
-
+        <TagContainer
+          create={props?.create || ''}
+          reserve={props?.reserve || ''}
+        />
         <div className={cardTitle}>{props.title}</div>
 
         <div className={bottomContainer}>
@@ -42,7 +57,7 @@ export default function Card({ props }: { props: CardProps }) {
             {comma(props.price)}
             <span style={{ fontSize: '18px' }}> 원</span>
           </div>
-          <HeartBtn />
+          <HeartBtn status={like} />
         </div>
       </div>
     </div>

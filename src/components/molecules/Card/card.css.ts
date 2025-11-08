@@ -25,11 +25,11 @@ export const infoContainer = style({
   padding: '0 5px',
 });
 
-export const TagContainer = style({
-  display: 'flex',
-  gap: 3,
-  marginBottom: 5,
-});
+// export const TagContainer = style({
+//   display: 'flex',
+//   gap: 3,
+//   marginBottom: 5,
+// });
 
 export const cardTitle = style({
   width: '100%',

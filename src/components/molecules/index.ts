@@ -5,3 +5,4 @@ export { default as LabelTitle } from './LabelTitle/LabelTitle';
 export { default as Category } from './Category/Category';
 export { default as Ticket } from './Ticket/Ticket';
 export { default as DetailTab } from './DetailTab/DetailTab';
+export { default as TagContainer } from './TagContainer/TagContainer';

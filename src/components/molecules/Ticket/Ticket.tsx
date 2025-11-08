@@ -23,20 +23,6 @@ export default function Ticket({ props }: { props: ProductProps }) {
       </div>
       <Range preset='columnCenter'>
         <CountBtn
-          type='minus'
-          onClick={() =>
-            setCount((prev) => {
-              if (count === 1) {
-                alert('상품을 삭제하시겠습니까?');
-                return prev;
-              } else {
-                return (prev -= 1);
-              }
-            })
-          }
-        />
-        <div className={countNumber}>{props.count}</div>
-        <CountBtn
           type='plus'
           onClick={() =>
             setCount((prev) => {
@@ -45,6 +31,21 @@ export default function Ticket({ props }: { props: ProductProps }) {
                 return prev;
               } else {
                 return (prev += 1);
+              }
+            })
+          }
+        />
+        <div className={countNumber}>{props.count}</div>
+
+        <CountBtn
+          type='minus'
+          onClick={() =>
+            setCount((prev) => {
+              if (count === 1) {
+                alert('상품을 삭제하시겠습니까?');
+                return prev;
+              } else {
+                return (prev -= 1);
               }
             })
           }

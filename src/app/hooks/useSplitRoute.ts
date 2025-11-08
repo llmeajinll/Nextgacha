@@ -8,7 +8,7 @@ export default function useSplitRoute() {
   const firstRoute = route[0];
   const secondRoute = route[1];
 
-  const seperatedRoute = route[0].split(/(?=\d)/);
+  const seperatedRoute = firstRoute.match(/[a-zA-Z]+|[0-9]+/g);
 
   return { firstRoute, secondRoute, route, seperatedRoute };
 }

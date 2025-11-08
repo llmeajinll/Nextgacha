@@ -16,6 +16,7 @@ export type CardProps = {
   _id: string;
   group: string[];
   num: number;
+  created_at: string;
   list: {
     name: string;
     count: number;

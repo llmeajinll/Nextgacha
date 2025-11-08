@@ -25,9 +25,16 @@ const qnaColl = gachaDB.collection('qna');
 const reviewColl = gachaDB.collection('review');
 const orderColl = gachaDB.collection('order');
 const counterColl = gachaDB.collection('counter');
-
-console.log(counterColl);
+const userColl = gachaDB.collection('user');
 
 // console.log(productDB);
 
-export { gachaDB, productColl, qnaColl, reviewColl, orderColl, counterColl };
+export {
+  gachaDB,
+  productColl,
+  qnaColl,
+  reviewColl,
+  orderColl,
+  counterColl,
+  userColl,
+};

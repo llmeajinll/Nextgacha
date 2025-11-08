@@ -53,7 +53,7 @@ export default function ReactSlick({ image, preset }: PropsType) {
     autoplaySpeed: 4000,
 
     beforeChange: (current: number, next: number) => {
-      console.log('current:', current, 'next:', next);
+      // console.log('current:', current, 'next:', next);
       setAngle((prev) => prev + divideAngle);
     },
   };
@@ -115,7 +115,7 @@ export default function ReactSlick({ image, preset }: PropsType) {
                   transform: `rotate(${angle}deg) translate(58px)`,
                 }}
                 onClick={() => {
-                  console.log(idx, divideAngle * idx);
+                  // console.log(idx, divideAngle * idx);
                   sliderRef.current?.slickGoTo(idx);
                   setAngle(divideAngle * idx);
                 }}

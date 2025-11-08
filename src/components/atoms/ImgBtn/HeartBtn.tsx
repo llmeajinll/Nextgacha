@@ -1,10 +1,20 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Image from 'next/image';
 
-export default function HeartBtn({ size = 28 }: { size?: number }) {
-  const [liked, setLiked] = useState(false);
+export default function HeartBtn({
+  size = 28,
+  status = false,
+}: {
+  size?: number;
+  status?: boolean;
+}) {
+  console.log('HeartBtn status:', status);
+  const [liked, setLiked] = useState(status);
+  useEffect(() => {
+    setLiked(status);
+  }, [status]);
 
   const imgurl = ['/images/heart1.png', '/images/heart2.png'];
   return (

@@ -9,7 +9,7 @@ const withVanillaExtract = createVanillaExtractPlugin();
 // const withMDX = require('@next/mdx')({
 //   extension: /\.mdx$/,
 // });
-
+console.log('VERCEL_IMAGE_URL:', process.env.VERCEL_IMAGE_URL);
 const nextConfig: NextConfig = {
   /* config options here */
   reactStrictMode: false,
@@ -20,6 +20,15 @@ const nextConfig: NextConfig = {
     serverActions: {
       bodySizeLimit: '2mb',
     },
+  },
+
+  images: {
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: '**.public.blob.vercel-storage.com',
+      },
+    ],
   },
 };
 

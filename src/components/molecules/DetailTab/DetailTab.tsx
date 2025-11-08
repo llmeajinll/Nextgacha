@@ -18,7 +18,7 @@ export default function DetailTab() {
         size='big'
         color={route[1] === 'info' ? 'primary' : 'reversePrimary'}
         onClick={() => {
-          router.push(`/${route[0]}/info`);
+          router.replace(`/${route[0]}/info`);
         }}
       >
         INFO
@@ -27,7 +27,7 @@ export default function DetailTab() {
         size='big'
         color={route[1] === 'qna' ? 'primary' : 'reversePrimary'}
         onClick={() => {
-          router.push(`/${route[0]}/qna`);
+          router.replace(`/${route[0]}/qna`);
         }}
         style={{ marginLeft: '-1px' }}
       >
@@ -37,7 +37,7 @@ export default function DetailTab() {
         size='big'
         color={route[1] === 'review' ? 'primary' : 'reversePrimary'}
         onClick={() => {
-          router.push(`/${route[0]}/review`);
+          router.replace(`/${route[0]}/review`);
         }}
         style={{ marginLeft: '-1px' }}
       >

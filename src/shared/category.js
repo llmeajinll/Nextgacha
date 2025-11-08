@@ -6,6 +6,7 @@ export const category = {
     '짱구',
     '커비',
     '리락쿠마',
+    '다마고치',
     '디즈니',
     '스밋코쿠라시',
     '기타',
@@ -37,5 +38,56 @@ export const category = {
     ],
     STANDSTONES: ['오네무탄'],
     ETC: ['메지루시'],
+  },
+};
+
+export const categoryMatch = {
+  character: {
+    포켓몬: 'pokemon',
+    치이카와: 'chiikawa',
+    산리오: 'sanrio',
+    짱구: 'shinchan',
+    커비: 'kirby',
+    리락쿠마: 'rilakkuma',
+    다마고치: 'tamagotchi',
+    디즈니: 'disney',
+    스밋코쿠라시: 'sumikkogurashi',
+    기타: 'etc',
+  },
+  ani: {
+    '귀멸의 칼날': 'demon_slayer',
+    '나의 히어로 아카데미아': 'my_hero_academia',
+    단다단: 'dandadan',
+    '봇치 더 락': 'bocchi_the_rock',
+    윈브레: 'winbreak',
+    '진격의 거인': 'attack_on_titan',
+    하이큐: 'haikyu',
+    '스파이 패밀리': 'spy_family',
+    은혼: 'gintama',
+    체인소맨: 'chainsaw_man',
+    주술회전: 'jujutsu_kaisen',
+    '죠죠의 기묘한 모험': 'jojos_bizarre_adventure',
+    기타: 'etc',
+  },
+  series: {
+    TOMY: {
+      동글동글동물들: 'round_animals',
+      판다노아코: 'panda_no_aco',
+      콧치무이테: 'kocchimuite',
+    },
+    BANDAI: {
+      생물도감시리즈: 'creature_dictionary_series',
+      해양생물시리즈: 'marine_life_series',
+      건담가샤폰시리즈: 'gundam_gashapon_series',
+      언제오려나: 'itsu_korona',
+      나란히줄서기: 'line_up_together',
+      네무라세타이: 'nemurase_tai',
+    },
+    STANDSTONES: {
+      오네무탄: 'onemutan',
+    },
+    ETC: {
+      메지루시: 'mejirushi',
+    },
   },
 };

@@ -6,10 +6,30 @@ import { cardTemplateContainer } from './cardtemplate.css';
 import { Title } from '@/components/atoms';
 import { CardProps } from '@/shared/type';
 
-export default function CardTemplate() {
+export default function CardTemplate({
+  tag,
+  search,
+}: {
+  tag?: string;
+  search?: string;
+}) {
   const [products, setProducts] = useState([]);
+
   const handleSearch = async () => {
-    const res = await fetch(`/api/getProduct`);
+    let url = '';
+    if (tag) {
+      url = `/api/getProduct?tag=${tag}&count=8`;
+    }
+
+    if (search) {
+      url = `/api/getProduct?search=${search}&count=20`;
+    }
+    const res = await fetch(url, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
     const data = await res.json();
     console.log(data);
     setProducts(data);
@@ -18,17 +38,10 @@ export default function CardTemplate() {
   useEffect(() => {
     handleSearch();
   }, []);
+
   return (
     <div style={{ width: '1272px', margin: '0 auto' }}>
       <div className={cardTemplateContainer}>
-        {/* <Card id='reserve1' />
-        <Card id='reserve2' />
-        <Card id='reserve3' />
-        <Card id='reserve4' />
-        <Card id='reserve5' />
-        <Card id='reserve6' />
-        <Card id='reserve7' />
-        <Card id='reserve8' /> */}
         {products.map((item: CardProps) => (
           <Card props={item} key={item._id} />
         ))}
