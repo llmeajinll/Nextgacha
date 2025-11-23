@@ -16,7 +16,7 @@ export default function getUser({ email }: { email: string }) {
       return null;
     });
 
-  console.log('header user:', data);
+  // console.log('header user:', data);
 
   return data;
 }

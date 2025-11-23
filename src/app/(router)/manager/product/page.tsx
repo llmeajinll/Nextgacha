@@ -18,7 +18,7 @@ export default function ManageProductPage() {
   const [reserve, setReserve] = useState<Date | null>(null);
   const [list, setList] = useState(
     [] as {
-      title: string;
+      name: string;
       count: number;
     }[]
   );
@@ -94,10 +94,10 @@ export default function ManageProductPage() {
           <div key={idx}>
             <input
               placeholder='이름'
-              value={val.title}
+              value={val.name}
               onChange={(e) => {
                 const newList = [...list];
-                newList[idx].title = e.target.value;
+                newList[idx].name = e.target.value;
                 setList(newList);
               }}
             />
@@ -115,7 +115,7 @@ export default function ManageProductPage() {
           </div>
         ))}
         <button
-          onClick={() => setList((list) => [...list, { title: '', count: 0 }])}
+          onClick={() => setList((list) => [...list, { name: '', count: 0 }])}
         >
           +
         </button>
@@ -200,17 +200,13 @@ export default function ManageProductPage() {
           formData.append('price', String(price)); // 숫자는 string으로 변환
           formData.append('company', company);
 
-          // ✅ 날짜
           if (create) formData.append('create', create.toISOString());
           if (reserve) formData.append('reserve', reserve.toISOString());
 
-          // ✅ 배열 → JSON 문자열로 변환
           formData.append('group', JSON.stringify(group));
 
-          // ✅ 객체 배열 → JSON 문자열로 변환
           formData.append('list', JSON.stringify(list));
 
-          // ✅ 파일
           if (image) {
             formData.append('image', image);
           }

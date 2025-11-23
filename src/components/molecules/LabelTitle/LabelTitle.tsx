@@ -7,7 +7,7 @@ import { labelVariant, contentVariant } from '@/styles/variants.css';
 
 type Props = {
   label: string;
-  content: string;
+  content: string | React.ReactNode;
   status?: keyof typeof labelVariant;
 };
 

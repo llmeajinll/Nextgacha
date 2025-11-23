@@ -22,6 +22,7 @@ type BtnType = MajorBtnType | MoreBtnType;
 type Props = BtnType & {
   children?: React.ReactNode | string;
   onClick?: React.MouseEventHandler<HTMLButtonElement> | undefined;
+  className?: string | undefined;
   style?: React.CSSProperties | undefined;
 };
 
@@ -46,6 +47,7 @@ export default function Btn(props: Props) {
         ${styles.btnSizeVariants[props.size ?? 'medium']} 
         ${styles.colorVariants[props.color ?? 'primary']} 
         ${btn}
+        ${props.className}
         `}
     >
       {props.children}

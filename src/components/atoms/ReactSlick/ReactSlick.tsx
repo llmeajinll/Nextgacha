@@ -5,16 +5,15 @@ import Slider from 'react-slick';
 import Image from 'next/image';
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
-import { sliderContainer } from './reactSlick.css';
+
 import { reactSlickVariant } from '@/styles/variants.css';
-import { Number } from 'mongoose';
+
 import {
   lever,
   handle,
   dot,
   slices,
 } from '@/components/organisms/Banner/banner.css';
-import { before } from 'node:test';
 
 type Preset = keyof typeof reactSlickVariant;
 type PropsType1 = {
@@ -117,11 +116,9 @@ export default function ReactSlick({ image, preset }: PropsType) {
                 onClick={() => {
                   // console.log(idx, divideAngle * idx);
                   sliderRef.current?.slickGoTo(idx);
-                  setAngle(divideAngle * idx);
+                  setAngle(divideAngle * (idx + 2));
                 }}
-              >
-                {idx}
-              </div>
+              ></div>
             );
           })}
         </div>

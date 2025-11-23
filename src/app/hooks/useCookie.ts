@@ -1,19 +1,52 @@
-import { useEffect, useState } from 'react';
-import {
-  getCookie as clientGetCookie,
-  setCookie as clientSetCookie,
-  deleteCookie as clientDeleteCookie,
-  hasCookie as clientHasCookie,
-} from 'cookies-next/client';
-import {
-  getCookie as serverGetCookie,
-  setCookie as serverSetCookie,
-  deleteCookie as serverDeleteCookie,
-  hasCookie as serverHasCookie,
-} from 'cookies-next/server';
+// import { useEffect, useState } from 'react';
+// import {
+//   getCookie as clientGetCookie,
+//   setCookie as clientSetCookie,
+//   deleteCookie as clientDeleteCookie,
+//   hasCookie as clientHasCookie,
+// } from 'cookies-next/client';
+// import {
+//   getCookie as serverGetCookie,
+//   setCookie as serverSetCookie,
+//   deleteCookie as serverDeleteCookie,
+//   hasCookie as serverHasCookie,
+// } from 'cookies-next/server';
+// import { cookies } from 'next/headers';
+'use server';
+
+import { auth } from '@/auth';
 import { cookies } from 'next/headers';
 
-export async function useCookie() {
+export async function useCookie({ target }: { target: string }) {
+  const session = await auth();
+  const cookieStore = cookies();
+  let userCookie = null;
+
+  // console.log('mypage session:', session);
+  if (session?.user) {
+    const cookie = (await cookieStore).get(target);
+    if (cookie?.value) {
+      try {
+        userCookie = JSON.parse(cookie.value);
+        console.log('Parsed userCookie:', userCookie);
+      } catch (err) {
+        console.error('Failed to parse userInfo cookie:', err);
+        userCookie = {};
+      }
+    } else {
+      console.log('userInfo cookie not found');
+      userCookie = {};
+    }
+  }
+  return userCookie;
+
+  // const getCookie = (name: string) => {
+  //   if (typeof window !== 'undefined') {
+  //     return clientGetCookie(name) as string | undefined;
+  //   } else {
+  //     return serverGetCookie(name, { cookies: cookies() }) as string | undefined;
+  //   }
+  // }
   //   const [value, setValue] = useState<boolean | undefined>(undefined);
   //   useEffect(() => {
   //     if (typeof window === 'object') {

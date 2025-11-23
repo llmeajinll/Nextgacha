@@ -15,11 +15,11 @@ import {
 } from './card.css';
 import { CardProps } from '@/shared/type';
 import { comma } from '@/shared/comma';
+import Cookie from 'js-cookie';
 
 export default function Card({ props }: { props: CardProps }) {
   const [like, setLike] = useState(false);
   useEffect(() => {
-    // console.log('Card props:', props);
     const raw = document.cookie
       .split('; ')
       .find((row) => row.startsWith('userInfo='))
@@ -34,7 +34,7 @@ export default function Card({ props }: { props: CardProps }) {
   }, []);
   return (
     <div className={cardContainer}>
-      <Link href={`/${props.group[0] || null}${props.num}/info`}>
+      <Link href={`/${props.num || 0}/info`}>
         <Image
           src={
             props.image[0] ? String(props.image[0]) : '/images/defaultImg.png'
@@ -57,7 +57,7 @@ export default function Card({ props }: { props: CardProps }) {
             {comma(props.price)}
             <span style={{ fontSize: '18px' }}> 원</span>
           </div>
-          <HeartBtn status={like} />
+          <HeartBtn status={like} num={props.num} />
         </div>
       </div>
     </div>

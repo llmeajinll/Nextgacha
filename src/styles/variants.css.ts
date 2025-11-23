@@ -49,6 +49,7 @@ export const widthVariant = styleVariants({
   fit: { width: 'fit-content' } as const,
   full: { width: '100%' } as const,
   '320': { width: '320px' } as const,
+  '340': { width: '340px' } as const,
   '960': { width: '960px' } as const,
   // dynamic: { width: rangeWidth } as const,
 });
@@ -63,6 +64,10 @@ export const heightVariant = styleVariants({
 
 export const gapVariant = styleVariants({
   none: { gap: '0px' } as const,
+  '4 10': { gap: '4px 10px' } as const,
+  '4': { gap: '4px' } as const,
+  '5': { gap: '5px' } as const,
+  '8': { gap: '8px' } as const,
   '10': { gap: '10px' } as const,
   '15': { gap: '15px' } as const,
   '30': { gap: '30px' } as const,
@@ -85,6 +90,7 @@ export const rangePresetVariant = styleVariants({
     // alignItems: 'center',
   },
   between: {
+    width: '100%',
     justifyContent: 'space-between',
     // alignItems: 'center',
   },
@@ -149,9 +155,10 @@ export const labelVariant = styleVariants({
   },
   large: {
     width: 80,
-    fontSize: 18,
+    fontSize: 20,
     letterSpacing: '-0.9px',
     lineHeight: '120%',
+    fontFamily: 'silkscreen',
   },
 });
 
@@ -167,6 +174,7 @@ export const contentVariant = styleVariants({
     fontSize: 20,
     letterSpacing: '-1px',
     lineHeight: '120%',
+    fontFamily: 'silkscreen',
   },
 });
 
@@ -210,5 +218,19 @@ export const reactSlickVariant = styleVariants({
     borderBottom: `2px solid ${vars.color.gray1}`,
     borderLeft: `1px solid ${vars.color.gray1}`,
     borderRight: `1px solid ${vars.color.gray1}`,
+  },
+});
+
+// =========== TicketContainer 변수 ===========
+
+export const ticketContainerVariant = styleVariants({
+  detail: {
+    width: '960px',
+    maxWidth: '960px',
+    marginBottom: '30px',
+  },
+  none: {
+    width: '1140px',
+    maxWidth: '1070px',
   },
 });

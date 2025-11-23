@@ -18,9 +18,11 @@ import { useSession } from 'next-auth/react';
 
 import { kakaoSignIn, kakaoSignOut } from '@/shared/authActions';
 import { Session } from 'next-auth';
+import { useSearchParams } from 'next/navigation';
 
 export default function Header({ session }: { session: Session | null }) {
   const [showCategory, setShowCategory] = useState(false);
+
   //   const [showLogin, setShowLogin] = useState(false);
 
   //   const { data: session } = useSession();
@@ -43,7 +45,7 @@ export default function Header({ session }: { session: Session | null }) {
       return null;
     });
 
-  console.log('header user:', user);
+  //   console.log('header user:', user);
 
   return (
     <>
@@ -66,9 +68,13 @@ export default function Header({ session }: { session: Session | null }) {
               <Link href='/notice'>
                 <span className={menu}>NOTICE</span>
               </Link>
-              <Link href='/resell'>
-                <span className={menu}>RESELL</span>
-              </Link>
+              {session?.user && (
+                <Link
+                  href={`/mypage/cart?email=${session?.user?.email || null}`}
+                >
+                  <span className={menu}>MYPAGE</span>
+                </Link>
+              )}
             </div>
           </div>
 

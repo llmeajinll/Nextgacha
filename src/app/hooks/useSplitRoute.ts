@@ -5,6 +5,7 @@ export default function useSplitRoute() {
   const pathname = usePathname();
 
   const route = pathname.split('/').slice(1);
+
   const firstRoute = route[0];
   const secondRoute = route[1];
 

@@ -1,0 +1,39 @@
+import { NextResponse } from 'next/server';
+import { orderColl, productColl, userColl } from '@/lib/mongodb';
+
+export async function GET(req: Request) {
+  const { searchParams } = new URL(req.url);
+  console.log('email:', searchParams);
+
+  const email = searchParams.get('email') || '';
+
+  const order = orderColl.aggregate([
+    {
+      $match: {
+        customer: email,
+      },
+    },
+    {
+      $lookup: {
+        from: 'product',
+        localField: 'num',
+        foreignField: 'num',
+        as: 'product',
+      },
+    },
+    { $unwind: '$product' },
+  ]);
+  const result = await order.toArray();
+
+  //   const response = NextResponse.json({ ok: true });
+  //   response.cookies.set({
+  //     name: 'userInfo',
+  //     value: JSON.stringify({ email: searchParams }),
+  //     httpOnly: false,
+  //     path: '/',
+  //   });
+
+  //   return response;
+
+  return NextResponse.json({ result: result, status: 200 });
+}

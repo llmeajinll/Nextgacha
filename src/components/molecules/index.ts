@@ -1,8 +1,12 @@
 export { default as Search } from './Search/Search';
 export { default as Card } from './Card/Card';
+export { default as Cart } from './Cart/Cart';
+export { default as History } from './History/History';
+export { default as Profile } from './Profile/Profile';
 export { default as DropDown } from './DropDown/DropDown';
 export { default as LabelTitle } from './LabelTitle/LabelTitle';
 export { default as Category } from './Category/Category';
 export { default as Ticket } from './Ticket/Ticket';
+export { default as TicketContainer } from './Ticket/TicketContainer';
 export { default as DetailTab } from './DetailTab/DetailTab';
 export { default as TagContainer } from './TagContainer/TagContainer';

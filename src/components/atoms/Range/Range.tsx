@@ -23,7 +23,7 @@ import {
 //   children?: React.ReactNode;
 // };
 
-type Preset = 'center' | 'between' | 'columnCenter' | null;
+// type Preset = 'center' | 'between' | 'columnCenter' | null;
 
 // const presetVariant = {
 //   center: 'justify-center items-center',
@@ -38,6 +38,8 @@ type Props = {
   preset?: keyof typeof rangePresetVariant;
   style?: any;
   children?: React.ReactNode;
+  className?: string | undefined;
+  ref?: React.RefObject<HTMLDivElement | null>;
 };
 
 export default function Range({
@@ -47,8 +49,9 @@ export default function Range({
   // justify = 'start',
   // align = 'stretch',
   gap,
-
+  className,
   preset,
+  ref,
   style,
   children,
 }: Props) {
@@ -119,7 +122,9 @@ export default function Range({
             (preset ?? 'center') as keyof typeof rangePresetVariant
           ]
         }
+        ${className}
         `}
+      ref={ref}
       style={{ ...style }}
     >
       {children}

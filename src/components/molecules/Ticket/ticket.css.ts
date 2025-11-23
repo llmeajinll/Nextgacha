@@ -23,6 +23,8 @@ export const ticketContainer = style({
 });
 
 export const contentContainer = style({
+  display: 'flex',
+  flexDirection: 'column',
   boxSizing: 'border-box',
   width: '202px',
   height: '108px',
@@ -56,4 +58,13 @@ export const countNumber = style({
   lineHeight: '30px',
   textAlign: 'center',
   backgroundColor: 'white',
+});
+
+export const deleteBtn = style({
+  cursor: 'pointer',
+});
+
+export const priceStyle = style({
+  color: vars.color.black1,
+  fontFamily: 'silkscreen',
 });

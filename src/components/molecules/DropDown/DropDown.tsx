@@ -29,12 +29,13 @@ export default function DropDown({
   props: DropDownType;
   status?: boolean;
 }) {
+  console.log(props);
   const addToTempCart = useSetAtom(addToTempCartAtom);
 
   const { isOpen, selected, toggle, setSelected, dropdownRef } =
     useDropDown('');
 
-  console.log('status: ', isOpen);
+  // console.log('status: ', isOpen);
   const { secondRoute } = useSplitRoute();
   // const status = true;
   //   const [select, setSelect] = useState('');
@@ -55,20 +56,22 @@ export default function DropDown({
 
       {isOpen && (
         <div className={listContainer}>
-          {props?.list?.map((key, idx) => (
+          {props?.list?.map((val, idx) => (
             <div
-              id={key.name + secondRoute}
-              key={key.name + secondRoute}
+              id={val.name + props.num}
+              key={idx}
               className={listStyle}
               onClick={() => {
-                if (key.count !== 0 || status) {
-                  setSelected(`${idx + 1}. ${key.name}`);
+                if (val.count !== 0 || status) {
+                  setSelected(`${idx + 1}. ${val.name}`);
                   addToTempCart({
-                    code: key.name + secondRoute,
-                    name: key.name,
+                    code: val.name + props.num,
+                    name: val.name,
                     title: props.title,
                     count: 1,
                     price: props.price,
+                    num: props.num,
+                    limit: val.count,
                   });
                 } else {
                   setSelected('');
@@ -76,9 +79,9 @@ export default function DropDown({
                 toggle;
               }}
             >
-              {idx + 1}. {key.name}{' '}
-              {key.count !== 0
-                ? `[${key.count}개]`
+              {idx + 1}. {val.name}{' '}
+              {val.count !== 0
+                ? `[${val.count}개]`
                 : status
                 ? '[예약]'
                 : '[품절]'}

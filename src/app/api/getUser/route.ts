@@ -6,7 +6,7 @@ export async function GET(req: Request) {
   const { searchParams } = new URL(req.url);
 
   const email = searchParams.get('email') || '';
-  console.log(`email: ${email}`);
+  // console.log(`email: ${email}`);
 
   if (!email || email.trim() === '') {
     return NextResponse.json(
@@ -18,7 +18,7 @@ export async function GET(req: Request) {
   const result = await userColl
     .findOne({ email: email })
     .then((res) => {
-      console.log('mongodb getUser res:', res);
+      // console.log('mongodb getUser res:', res);
       return res;
     })
     .catch((err) => {
@@ -26,23 +26,31 @@ export async function GET(req: Request) {
       return null;
     });
 
-  console.log('result:', result);
+  // console.log('result:', result);
 
   const response = NextResponse.json({ ok: true, result });
 
-  const data = {
-    qna: result?.qna || [],
-    review: result?.review || [],
-    like: result?.like || [],
-  };
+  //   const data = {
+  //     qna: result?.qna || [],
+  //     review: result?.review || [],
+  //     like: result?.like || [],
+  //   };
+
+  // const { cart, ...rest } = result as any;
 
   response.cookies.set({
     name: 'userInfo',
-    value: JSON.stringify(data),
+    value: JSON.stringify(result),
     httpOnly: false,
     path: '/',
   });
 
+  // response.cookies.set({
+  //   name: 'userInfo',
+  //   value: JSON.stringify(cart),
+  //   httpOnly: false,
+  //   path: '/',
+  // });
   return response;
 
   //   try {

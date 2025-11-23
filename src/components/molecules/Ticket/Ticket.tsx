@@ -8,48 +8,69 @@ import {
   character,
   title,
   countNumber,
+  deleteBtn,
+  priceStyle,
 } from './ticket.css';
 import { Range, CountBtn } from '@/components/atoms';
 import { ProductProps } from '@/shared/type';
+import { comma } from '@/shared/comma';
+import { useAtom, useSetAtom } from 'jotai';
+import {
+  addToTempCartAtom,
+  minusToTempCartAtom,
+  deleteTempCartAtom,
+} from '@/jotai/store';
 
-export default function Ticket({ props }: { props: ProductProps }) {
-  const [count, setCount] = useState(1);
-  const MAX = 5;
+export default function Ticket({
+  props,
+  increase,
+  decrease,
+  erase,
+}: {
+  props: ProductProps;
+  increase: (props: ProductProps) => void;
+  decrease: (props: ProductProps) => void;
+  erase: (num: string) => void;
+}) {
+  console.log('ticket props: ', props);
+  const data = { ...props, count: 1 };
+
+  // code: val.name + props.num,
+  //                   name: val.name,
+  //                   title: props.title,
+  //                   count: 1,
+  //                   price: props.price,
+  //                   num: props.num,
+  //                   limit: val.count,
+
   return (
     <div className={ticketContainer}>
       <div className={contentContainer}>
         <div className={character}>{props.name}</div>
         <div className={title}>{props.title}</div>
+        <Range preset='between' style={{ marginTop: '15px' }}>
+          <div className={priceStyle}>
+            {comma(props.price * props.count)}won
+          </div>
+          <Image
+            src='/images/trash.png'
+            alt={'trash'}
+            width={20}
+            height={20}
+            onClick={() => {
+              if (window.confirm('삭제하시겠습니까?')) {
+                // deleteToTempCart(props.code);
+                erase(props.code);
+              }
+            }}
+            className={deleteBtn}
+          />
+        </Range>
       </div>
-      <Range preset='columnCenter'>
-        <CountBtn
-          type='plus'
-          onClick={() =>
-            setCount((prev) => {
-              if (count === 5) {
-                alert('상품은 최대 5개까지만 담을 수 있습니다.');
-                return prev;
-              } else {
-                return (prev += 1);
-              }
-            })
-          }
-        />
+      <Range preset='columnCenter' style={{ marginTop: '8px' }}>
+        <CountBtn type='plus' onClick={() => increase(data)} />
         <div className={countNumber}>{props.count}</div>
-
-        <CountBtn
-          type='minus'
-          onClick={() =>
-            setCount((prev) => {
-              if (count === 1) {
-                alert('상품을 삭제하시겠습니까?');
-                return prev;
-              } else {
-                return (prev -= 1);
-              }
-            })
-          }
-        />
+        <CountBtn type='minus' onClick={() => decrease(data)} />
       </Range>
     </div>
   );
