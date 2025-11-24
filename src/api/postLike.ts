@@ -1,11 +1,5 @@
-export default async function postLike({
-  status,
-  num,
-}: {
-  status: boolean;
-  num: number;
-}) {
-  console.log('postLike data input:', status, num);
+export default async function postLike({ num }: { num: number }) {
+  console.log('postLike data input:', num);
   const data = { status, num };
   const result = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/postLike`, {
     method: 'POST',

@@ -1,9 +1,9 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import Image from 'next/image';
 import Cookies from 'js-cookie';
-
+import dayjs from 'dayjs';
 import { useAtom } from 'jotai';
 import { tempCartAtom } from '@/jotai/store';
 
@@ -12,30 +12,42 @@ import { DropDown, LabelTitle } from '@/components/molecules';
 import { CardProps } from '@/shared/type';
 import { comma } from '@/shared/comma';
 
-import { panelTitle } from './productPurchasePanel.css';
+import { panelTitle, copyText } from './productPurchasePanel.css';
 import { postCart } from '@/api/postCart';
-import dayjs from 'dayjs';
+import postLike from '@/api/postLike';
 
 export default function InfoPanel({ props }: { props: CardProps }) {
   console.log('infopanel', props);
   const [tempCart] = useAtom(tempCartAtom);
-  const [like, setLike] = useState(false);
-  let userInfo: { email: string } | null = null;
+  const [like, setLike] = useState(props.like);
 
-  useEffect(() => {
-    const data = JSON.parse(Cookies.get('userInfo') || '');
-    userInfo = data;
-    // setLike(data.includes(props.num));
-  }, []);
+  const [showText, setShowText] = useState(false);
+  const textDomRef = useRef<HTMLDivElement | null>(null);
+
+  const onClickHeartBtn = async () => {
+    try {
+      const result = await postLike({ num: props.num }); // API 호출
+      const json = await result?.json();
+      setLike(json.like); // 좋아요 상태 업데이트
+    } catch (err) {
+      console.error(err);
+    }
+  };
 
   return (
     <Range
       width='960'
       gap='30'
       style={{
+        position: 'relative',
         marginBottom: '60px',
       }}
     >
+      {showText && (
+        <div className={copyText} ref={textDomRef}>
+          COPY!
+        </div>
+      )}
       <div>
         {props?.image?.length ? (
           <ReactSlick image={props?.image} preset='small' />
@@ -77,7 +89,7 @@ export default function InfoPanel({ props }: { props: CardProps }) {
                 tempCart.reduce((a, b) => {
                   return a + b.count * b.price;
                 }, 0)
-              )}원`}
+              )} WON`}
               status='large'
             />
           </Range>
@@ -105,16 +117,32 @@ export default function InfoPanel({ props }: { props: CardProps }) {
             >
               CART
             </Btn>
-            <HeartBtn size={45} num={props.num} status={like} />
+            <HeartBtn
+              size={45}
+              num={props.num}
+              status={props.like}
+              onClick={() => {
+                console.log('click HeartBtn');
+                onClickHeartBtn();
+              }}
+            />
             <ImgBtn
               width={38}
               height={45}
-              onClick={() =>
-                navigator.clipboard
-                  .writeText(window.location.href)
-                  .then(() => alert('URL 복사됨!'))
-                  .catch(() => alert('복사 실패'))
-              }
+              onClick={() => {
+                navigator.clipboard.writeText(window.location.href);
+                const el = textDomRef.current;
+
+                if (el) {
+                  el.classList.remove(copyText);
+                  void el.offsetWidth;
+                  el.classList.add(copyText);
+                }
+                setShowText(true);
+                window.setTimeout(() => {
+                  setShowText(false);
+                }, 1500);
+              }}
             />
           </Range>
         </Range>
@@ -122,3 +150,6 @@ export default function InfoPanel({ props }: { props: CardProps }) {
     </Range>
   );
 }
+// const data = { status: !liked, num: num };
+// postLike(data);
+// setLiked(!liked);

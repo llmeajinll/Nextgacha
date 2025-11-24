@@ -13,34 +13,34 @@ export default function HeartBtn({
   size?: number;
   status?: boolean;
   num: number;
+  onClick: React.MouseEventHandler<HTMLImageElement>;
 }) {
-  console.log('HeartBtn status:', status);
-  const [liked, setLiked] = useState(status);
+  console.log(num, status);
+  const [like, setLike] = useState(status);
 
-  const toggleLike = () => {
-    const { like } = JSON.parse(Cookies.get('userInfo') || '');
-    const updatedLikes = status
-      ? like.filter((val: number) => val !== num)
-      : [...like, num];
-
-    // 쿠키에 즉시 반영
-    Cookies.set('likes', JSON.stringify(updatedLikes), {
-      path: '/',
-    });
-  };
+  useEffect(() => {
+    setLike(status);
+  }, [num, status]);
 
   const imgurl = ['/images/heart1.png', '/images/heart2.png'];
+
+  const onClickHeartBtn = async () => {
+    try {
+      const result = await postLike({ num });
+      const json = await result?.json();
+      setLike(json.like);
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
   return (
     <Image
-      src={liked ? imgurl[1] : imgurl[0]}
+      src={like ? imgurl[1] : imgurl[0]}
       width={size * 1.07 || 30}
       height={size || 28}
       alt='like'
-      onClick={() => {
-        const data = { status: !liked, num: num };
-        postLike(data);
-        setLiked(!liked);
-      }}
+      onClick={onClickHeartBtn}
       style={{ cursor: 'pointer' }}
     ></Image>
   );

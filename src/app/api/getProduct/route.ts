@@ -1,11 +1,29 @@
 import { NextResponse } from 'next/server';
-import { productColl } from '@/lib/mongodb';
+import { productColl, userColl } from '@/lib/mongodb';
+import { cookies } from 'next/headers';
+import { auth } from '@/auth';
 
 export async function GET(req: Request) {
   // const { data } = await req.json();
   // console.log(data);
-
+  // const cookieStore = cookies();
   const { searchParams } = new URL(req.url);
+  const session = await auth();
+  // const userInfoCookie = (await cookieStore).get('userInfo');
+  // let likeList: number[] = [];
+
+  if (!session?.user?.email) {
+    return NextResponse.json({ error: 'User not login' }, { status: 401 });
+  }
+
+  // if (userInfoCookie) {
+  //   try {
+  //     const parsed = JSON.parse(userInfoCookie.value);
+  //     likeList = parsed.like || [];
+  //   } catch (e) {
+  //     likeList = [];
+  //   }
+  // }
 
   const search = searchParams.get('search') || '';
   const tag = searchParams.get('tag');
@@ -49,7 +67,25 @@ export async function GET(req: Request) {
 
   // console.log(func);
 
-  const product = await func.toArray();
+  const user = await userColl.findOne(
+    { email: session?.user?.email },
+    { projection: { like: 1, _id: 0 } }
+  );
 
-  return NextResponse.json(product);
+  console.log('like:', user?.like);
+
+  // return NextResponse.json(user?.like || []);
+
+  const product = await func.toArray();
+  const result = product.map((item) => {
+    const isLike = (user?.like || [])?.includes(item.num);
+    return {
+      ...item,
+      like: isLike,
+    };
+  });
+
+  console.log('[server] result : ', result);
+
+  return NextResponse.json(result);
 }

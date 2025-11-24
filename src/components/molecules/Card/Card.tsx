@@ -57,7 +57,11 @@ export default function Card({ props }: { props: CardProps }) {
             {comma(props.price)}
             <span style={{ fontSize: '18px' }}> 원</span>
           </div>
-          <HeartBtn status={like} num={props.num} />
+          <HeartBtn
+            status={props.like}
+            num={props.num}
+            onClick={() => console.log('heartBtn')}
+          />
         </div>
       </div>
     </div>

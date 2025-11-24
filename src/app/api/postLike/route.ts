@@ -1,19 +1,21 @@
 import { NextResponse } from 'next/server';
-import { cookies } from 'next/headers';
 import { userColl } from '@/lib/mongodb';
+import { auth } from '@/auth';
 
 export async function POST(req: Request) {
   const data = await req.json();
-  console.log('client post like data:', data);
+  const { num } = data;
+  const session = await auth();
+  let like = null;
+  console.log('server post like data:', data);
+  console.log('session : ', session?.user?.email);
 
-  const cookieStore = cookies();
-  const cookie = (await cookieStore).get('userInfo');
-  const userInfo = cookie ? JSON.parse(decodeURIComponent(cookie.value)) : null;
-
-  console.log(userInfo);
+  if (!session?.user?.email) {
+    return NextResponse.json({ error: 'User not login' }, { status: 401 });
+  }
 
   const result = await userColl
-    .findOne({ email: userInfo?.email })
+    .findOne({ email: session?.user?.email })
     .then((res) => {
       console.log('mongodb getUser res:', res);
       return res;
@@ -31,23 +33,24 @@ export async function POST(req: Request) {
   }
 
   let updatedLike = result.like || [];
+  const isIncludes = updatedLike.includes(num);
 
-  if (updatedLike.includes(data.num)) {
-    // If already liked, remove the like
-    updatedLike = updatedLike.filter((item: number) => item !== data.num);
+  if (isIncludes) {
+    updatedLike = updatedLike.filter((item: number) => item !== num);
+    like = false;
   } else {
-    // If not liked, add the like
-    updatedLike.push(data.num);
+    updatedLike.push(num);
+    like = true;
   }
 
   console.log('Updated Like Array:', updatedLike);
 
   const updateResult = await userColl.updateOne(
-    { email: userInfo.email },
+    { email: session?.user?.email },
     { $set: { like: updatedLike } }
   );
 
   console.log('Update Result:', updateResult);
 
-  return NextResponse.json({ ok: true, like: updatedLike });
+  return NextResponse.json({ ok: true, like });
 }

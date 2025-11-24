@@ -1,5 +1,5 @@
 import { vars } from '@/styles/theme.css';
-import { style } from '@vanilla-extract/css';
+import { style, keyframes } from '@vanilla-extract/css';
 
 export const panelTitle = style({
   marginBottom: 10,
@@ -42,4 +42,29 @@ export const ticketContainer = style({
       background: 'transparent',
     },
   },
+});
+
+const fadeOutKeyframes = keyframes({
+  from: {
+    opacity: 1,
+  },
+  to: {
+    opacity: 0,
+  },
+});
+
+export const copyText = style({
+  position: 'absolute',
+  transform: 'translate(-50%, -50%)',
+  width: 'fit-content',
+  height: 'fit-content',
+  padding: '3px 8px 5px 8px',
+  fontFamily: 'silkscreen',
+  fontSize: '20px',
+  left: '50%',
+  top: '60%',
+  backgroundColor: `${vars.color.blue1}`,
+  color: 'white',
+  zIndex: 10,
+  animation: `${fadeOutKeyframes} 1.2s ease-out forwards`,
 });

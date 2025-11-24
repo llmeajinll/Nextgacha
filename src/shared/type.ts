@@ -43,6 +43,7 @@ export type CardProps = {
   group: string[];
   num: number;
   created_at: string;
+  like: boolean;
   list: {
     name: string;
     count: number;
