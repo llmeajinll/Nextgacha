@@ -62,7 +62,7 @@ export default function Header({ session }: { session: Session | null }) {
                 onMouseEnter={() => setShowCategory(true)}
                 onMouseLeave={() => setShowCategory(false)}
               >
-                <Link href='/search'>CATEGORY</Link>
+                <Link href='/search?type=main&detail=전체 상품'>CATEGORY</Link>
               </span>
 
               <Link href='/notice'>

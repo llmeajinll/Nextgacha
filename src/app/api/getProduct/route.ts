@@ -12,10 +12,6 @@ export async function GET(req: Request) {
   // const userInfoCookie = (await cookieStore).get('userInfo');
   // let likeList: number[] = [];
 
-  if (!session?.user?.email) {
-    return NextResponse.json({ error: 'User not login' }, { status: 401 });
-  }
-
   // if (userInfoCookie) {
   //   try {
   //     const parsed = JSON.parse(userInfoCookie.value);
@@ -36,8 +32,9 @@ export async function GET(req: Request) {
   fourMonthsAgo.setMonth(fourMonthsAgo.getMonth() - 4);
 
   let query = {};
-
-  if (tag === 'new') {
+  if (tag === 'all') {
+    query = { create: { $gte: fourMonthsAgo } };
+  } else if (tag === 'new') {
     console.log(fourMonthsAgo);
     query = { create: { $gte: fourMonthsAgo } };
   } else if (tag === 'hot') {
@@ -66,26 +63,46 @@ export async function GET(req: Request) {
   }
 
   // console.log(func);
+  if (!session?.user?.email) {
+    // return NextResponse.json({ error: 'User not login' }, { status: 401 });
+    console.log(session?.user?.email);
+  }
 
-  const user = await userColl.findOne(
-    { email: session?.user?.email },
-    { projection: { like: 1, _id: 0 } }
-  );
-
-  console.log('like:', user?.like);
+  const isLogin = session?.user?.email ? true : false;
 
   // return NextResponse.json(user?.like || []);
 
   const product = await func.toArray();
-  const result = product.map((item) => {
-    const isLike = (user?.like || [])?.includes(item.num);
-    return {
-      ...item,
-      like: isLike,
-    };
-  });
 
-  console.log('[server] result : ', result);
+  if (isLogin === true) {
+    const user = await userColl.findOne(
+      { email: session?.user?.email },
+      { projection: { like: 1, _id: 0 } }
+    );
 
-  return NextResponse.json(result);
+    console.log('like:', user?.like);
+
+    const result = product.map((item) => {
+      const isLike = (user?.like || [])?.includes(item.num);
+      return {
+        ...item,
+        like: isLike,
+      };
+    });
+
+    console.log('[server] if result : ', result);
+
+    return NextResponse.json(result);
+  } else {
+    const result = product.map((item) => {
+      return {
+        ...item,
+        like: false,
+      };
+    });
+
+    console.log('[server] else result : ', result);
+
+    return NextResponse.json(result);
+  }
 }

@@ -33,9 +33,7 @@ export default function CardTemplate({
     let url = '';
     if (tag) {
       url = `/api/getProduct?tag=${tag}&count=${count || 8}`;
-    }
-
-    if (search) {
+    } else if (search) {
       url = `/api/getProduct?search=${search}&count=20`;
     }
     const res = await fetch(url, {

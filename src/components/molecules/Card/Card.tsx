@@ -15,23 +15,22 @@ import {
 } from './card.css';
 import { CardProps } from '@/shared/type';
 import { comma } from '@/shared/comma';
-import Cookie from 'js-cookie';
+import Cookies from 'js-cookie';
 
 export default function Card({ props }: { props: CardProps }) {
-  const [like, setLike] = useState(false);
-  useEffect(() => {
-    const raw = document.cookie
-      .split('; ')
-      .find((row) => row.startsWith('userInfo='))
-      ?.split('=')[1];
+  // const [like, setLike] = useState(false);
+  const userCookie = Cookies.get('userInfo');
+  let userInfo = null;
+  let isLogin = false;
 
-    const userInfo = raw ? JSON.parse(decodeURIComponent(raw)) : null;
-
-    if (userInfo && userInfo.like) {
-      console.log('userInfo.like:', userInfo.like, 'props.num:', props.num);
-      setLike(userInfo.like.includes(props.num));
+  if (userCookie) {
+    try {
+      userInfo = JSON.parse(userCookie);
+      isLogin = userInfo?.email ? true : false;
+    } catch (err) {
+      console.error('userInfo parse error:', err);
     }
-  }, []);
+  }
   return (
     <div className={cardContainer}>
       <Link href={`/${props.num || 0}/info`}>
@@ -60,6 +59,7 @@ export default function Card({ props }: { props: CardProps }) {
           <HeartBtn
             status={props.like}
             num={props.num}
+            isLogin={isLogin}
             onClick={() => console.log('heartBtn')}
           />
         </div>

@@ -19,20 +19,23 @@ import postLike from '@/api/postLike';
 export default function InfoPanel({ props }: { props: CardProps }) {
   console.log('infopanel', props);
   const [tempCart] = useAtom(tempCartAtom);
-  const [like, setLike] = useState(props.like);
+  const userCookie = Cookies.get('userInfo');
+  let email = '';
+  let isLogin = false;
+
+  if (userCookie) {
+    try {
+      const userInfo = JSON.parse(userCookie);
+      email = userInfo?.email || '';
+      isLogin = userInfo?.email ? true : false;
+    } catch (err) {
+      console.error('userInfo parse error:', err);
+      email = '';
+    }
+  }
 
   const [showText, setShowText] = useState(false);
   const textDomRef = useRef<HTMLDivElement | null>(null);
-
-  const onClickHeartBtn = async () => {
-    try {
-      const result = await postLike({ num: props.num }); // API 호출
-      const json = await result?.json();
-      setLike(json.like); // 좋아요 상태 업데이트
-    } catch (err) {
-      console.error(err);
-    }
-  };
 
   return (
     <Range
@@ -109,7 +112,7 @@ export default function InfoPanel({ props }: { props: CardProps }) {
                 }));
 
                 postCart({
-                  email: JSON.parse(Cookies.get('userInfo') || '').email,
+                  email: email,
                   num: props.num,
                   updatedArray: data,
                 });
@@ -120,11 +123,8 @@ export default function InfoPanel({ props }: { props: CardProps }) {
             <HeartBtn
               size={45}
               num={props.num}
+              isLogin={isLogin}
               status={props.like}
-              onClick={() => {
-                console.log('click HeartBtn');
-                onClickHeartBtn();
-              }}
             />
             <ImgBtn
               width={38}

@@ -16,7 +16,9 @@ export default function SearchPage() {
   const detail = searchParams.get('detail');
 
   console.log(detail);
-  if (detail === '인기 상품') {
+  if (detail === '전체 상품') {
+    tag = 'all';
+  } else if (detail === '인기 상품') {
     tag = 'hot';
   } else if (detail === '신규 상품') {
     tag = 'new';

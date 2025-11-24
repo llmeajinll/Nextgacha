@@ -51,17 +51,19 @@ export default function Category({ status = 'header', setShow }: Props) {
           메인
         </div>
         <Range gap='15'>
-          {['인기 상품', '신규 상품', '예약 판매'].map((val, idx) => (
-            <Link href={`/search?type=main&detail=${val}`} key={val}>
-              <div
-                className={`${content} ${
-                  detail === val && status === 'menu' ? select : null
-                }`}
-              >
-                {val}
-              </div>
-            </Link>
-          ))}
+          {['전체 상품', '인기 상품', '신규 상품', '예약 판매'].map(
+            (val, idx) => (
+              <Link href={`/search?type=main&detail=${val}`} key={val}>
+                <div
+                  className={`${content} ${
+                    detail === val && status === 'menu' ? select : null
+                  }`}
+                >
+                  {val}
+                </div>
+              </Link>
+            )
+          )}
         </Range>
       </Range>
 
