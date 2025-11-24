@@ -10,6 +10,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
     }),
     // Kakao,
   ],
+  secret: process.env.NEXTAUTH_SECRET,
   callbacks: {
     async redirect({ url, baseUrl }) {
       return '/';
