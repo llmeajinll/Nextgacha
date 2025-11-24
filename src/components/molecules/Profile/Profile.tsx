@@ -25,7 +25,7 @@ export default async function Profile() {
   return (
     <Range gap='15' style={{ marginBottom: '20px' }}>
       <Image
-        src={session?.user?.image!}
+        src={session?.user?.image || '/images/defaultImg.png'}
         alt='image'
         width={100}
         height={100}

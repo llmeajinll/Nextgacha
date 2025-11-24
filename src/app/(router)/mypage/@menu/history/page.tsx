@@ -6,7 +6,7 @@ import getHistory from '@/api/getHistory';
 import { Range } from '@/components/atoms';
 import { History } from '@/components/molecules';
 
-export default function page() {
+export default function HistoryPage() {
   const searchParams = useSearchParams();
   const email = searchParams.get('email');
   const [data, setData] = useState([]);
