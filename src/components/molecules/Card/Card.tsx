@@ -19,6 +19,7 @@ import Cookies from 'js-cookie';
 
 export default function Card({ props }: { props: CardProps }) {
   // const [like, setLike] = useState(false);
+  console.log(props);
   const userCookie = Cookies.get('userInfo');
   let userInfo = null;
   let isLogin = false;
@@ -27,6 +28,7 @@ export default function Card({ props }: { props: CardProps }) {
     try {
       userInfo = JSON.parse(userCookie);
       isLogin = userInfo?.email ? true : false;
+      console.log(isLogin);
     } catch (err) {
       console.error('userInfo parse error:', err);
     }
@@ -56,12 +58,7 @@ export default function Card({ props }: { props: CardProps }) {
             {comma(props.price)}
             <span style={{ fontSize: '18px' }}> 원</span>
           </div>
-          <HeartBtn
-            status={props.like}
-            num={props.num}
-            isLogin={isLogin}
-            onClick={() => console.log('heartBtn')}
-          />
+          <HeartBtn status={props.like} num={props.num} isLogin={isLogin} />
         </div>
       </div>
     </div>

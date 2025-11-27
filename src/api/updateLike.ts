@@ -1,7 +1,7 @@
 export default async function postLike({ num }: { num: number }) {
   console.log('postLike data input:', num);
-  const data = { status, num };
-  const result = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/postLike`, {
+  const data = { num };
+  const result = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/updateLike`, {
     method: 'POST',
     body: JSON.stringify(data),
     headers: {
@@ -17,6 +17,6 @@ export default async function postLike({ num }: { num: number }) {
       return null;
     });
 
-  console.log('postLike data:', result);
+  // console.log('postLike data:', result);
   return result;
 }

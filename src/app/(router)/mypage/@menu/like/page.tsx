@@ -1,34 +1,37 @@
 'use server';
 
 import React from 'react';
-import { auth } from '@/auth';
+import getLike from '@/api/getLike';
+import { cardTemplateContainer } from '@/components/organisms/CardTemplate/cardtemplate.css';
+import { Card } from '@/components/molecules';
+import { CardProps } from '@/shared/type';
 import { cookies } from 'next/headers';
-import { CartTemplate } from '@/components/organisms';
 
 export default async function page() {
-  const session = await auth();
-  const cookieStore = cookies();
-  let userCookie = null;
+  const cookieStore = await cookies();
+  const userInfoCookie = cookieStore.get('userInfo');
+  const userInfo = userInfoCookie
+    ? JSON.parse(userInfoCookie.value)
+    : { like: [] };
+  const like = userInfo.like ?? [];
+  console.log(like);
+  const products = await getLike(like)
+    .then((res) => {
+      return res.result;
+    })
+    .catch((err) => {
+      console.log(err);
+      return [];
+    });
+  console.log('products : ', products);
 
-  // console.log('mypage session:', session);
-  if (session?.user) {
-    const cookie = (await cookieStore).get('userInfo');
-    if (cookie?.value) {
-      try {
-        userCookie = JSON.parse(cookie.value);
-        console.log('Parsed userCookie:', userCookie);
-      } catch (err) {
-        console.error('Failed to parse userInfo cookie:', err);
-        userCookie = {};
-      }
-    } else {
-      console.log('userInfo cookie not found');
-      userCookie = {};
-    }
-  }
   return (
     <>
-      <CartTemplate like={userCookie?.like} />
+      <div className={cardTemplateContainer}>
+        {products.map((item: CardProps) => (
+          <Card props={item} key={item._id} />
+        ))}
+      </div>
     </>
   );
 }

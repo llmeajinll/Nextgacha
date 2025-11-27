@@ -14,7 +14,7 @@ import { comma } from '@/shared/comma';
 
 import { panelTitle, copyText } from './productPurchasePanel.css';
 import { postCart } from '@/api/postCart';
-import postLike from '@/api/postLike';
+import postLike from '@/api/updateLike';
 
 export default function InfoPanel({ props }: { props: CardProps }) {
   console.log('infopanel', props);

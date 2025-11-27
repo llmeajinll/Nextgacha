@@ -13,11 +13,7 @@ export default function DetailLayout({
     <div>
       <DetailTemplate />
       {children}
-      <div
-        style={{ border: '1px solid red', width: '960px', margin: '0 auto' }}
-      >
-        {tab}
-      </div>
+      <div style={{ width: '958px', margin: '0 auto' }}>{tab}</div>
     </div>
   );
 }

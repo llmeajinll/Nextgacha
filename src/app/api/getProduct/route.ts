@@ -33,7 +33,7 @@ export async function GET(req: Request) {
 
   let query = {};
   if (tag === 'all') {
-    query = { create: { $gte: fourMonthsAgo } };
+    query = {};
   } else if (tag === 'new') {
     console.log(fourMonthsAgo);
     query = { create: { $gte: fourMonthsAgo } };

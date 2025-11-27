@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import Image from 'next/image';
-import postLike from '@/api/postLike';
+import updateLike from '@/api/updateLike';
 import Cookies from 'js-cookie';
 
 export default function HeartBtn({
@@ -17,19 +17,19 @@ export default function HeartBtn({
   num: number;
   onClick?: React.MouseEventHandler<HTMLImageElement>;
 }) {
-  console.log(num, status);
+  console.log(num, status, isLogin);
   const [like, setLike] = useState(status);
 
   useEffect(() => {
     setLike(status);
-  }, [num, status]);
+  }, [num, status, isLogin]);
 
   const imgurl = ['/images/heart1.png', '/images/heart2.png'];
 
   const onClickHeartBtn = async () => {
     if (isLogin) {
       try {
-        const result = await postLike({ num });
+        const result = await updateLike({ num });
         const json = await result?.json();
         setLike(json.like);
       } catch (err) {

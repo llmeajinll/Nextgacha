@@ -1,11 +1,13 @@
 import { NextResponse } from 'next/server';
-import { userColl } from '@/lib/mongodb';
+import { userColl, productColl } from '@/lib/mongodb';
 import { auth } from '@/auth';
+import { cookies } from 'next/headers';
 
 export async function POST(req: Request) {
   const data = await req.json();
-  const { num } = data;
   const session = await auth();
+  const { num } = data;
+
   let like = null;
   console.log('server post like data:', data);
   console.log('session : ', session?.user?.email);
@@ -54,3 +56,4 @@ export async function POST(req: Request) {
 
   return NextResponse.json({ ok: true, like });
 }
+

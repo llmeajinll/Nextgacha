@@ -49,3 +49,14 @@ export type CardProps = {
     count: number;
   }[];
 };
+
+export interface ReviewProps {
+  _id: string;
+  user: string;
+  buy: { code: string; count: number; name: string }[];
+  created_at: string;
+  rate: number;
+  title: string;
+  num: number;
+  purchase_date: string;
+}

@@ -3,7 +3,6 @@
 import React, { useEffect, useState } from 'react';
 import { useSearchParams } from 'next/navigation';
 import getHistory from '@/api/getHistory';
-import { Range } from '@/components/atoms';
 import { History } from '@/components/molecules';
 
 export default function HistoryPage() {
@@ -39,9 +38,6 @@ export default function HistoryPage() {
           <History props={val} key={idx} />
         ))}
       </div>
-      {/* <Range>
-        <History props={data[0]} />
-      </Range> */}
     </>
   );
 }

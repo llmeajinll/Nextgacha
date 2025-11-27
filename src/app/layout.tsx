@@ -39,10 +39,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang='en'>
-      <body
-        className={`${notoSans.className} ${layoutContainer}`}
-        style={{ border: '1px solid red' }}
-      >
+      <body className={`${notoSans.className} ${layoutContainer}`}>
         <MSWProvider>
           <SessionProvider>
             <Provider>
