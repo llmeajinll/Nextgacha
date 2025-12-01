@@ -60,3 +60,14 @@ export interface ReviewProps {
   num: number;
   purchase_date: string;
 }
+
+export interface QnaProps {
+  _id: string;
+  user: string;
+  request: { writer: string; content: string }[];
+  created_at: string;
+  updated_at: string;
+  title: string;
+  num: number;
+  private: boolean;
+}

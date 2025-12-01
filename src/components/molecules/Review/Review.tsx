@@ -1,6 +1,6 @@
 import { ReviewProps } from '@/shared/type';
 import React from 'react';
-import { Range } from '@/components/atoms';
+import { Range, Writer } from '@/components/atoms';
 import StarRating from '../StarRating/StarRating';
 import dayjs from 'dayjs';
 
@@ -32,18 +32,7 @@ export default function Review({ props }: { props: ReviewProps }) {
       </Range>
 
       <div style={{ fontSize: '18px' }}>{props.title}</div>
-      <div
-        style={{
-          marginLeft: 'auto',
-          fontSize: '12px',
-          lineHeight: '25px',
-          color: 'gray',
-          fontFamily: 'silkscreen',
-        }}
-      >
-        written by {changeStar(props.user)} at{' '}
-        {dayjs(props.created_at).format('YYYY-MM-DD')}
-      </div>
+      <Writer writer={props.user} created_at={props.created_at} />
     </Range>
   );
 }

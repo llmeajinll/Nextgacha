@@ -34,13 +34,12 @@ export default function ReviewTab() {
     <>
       <div
         style={{
-          padding: '20px 0 0 0',
           display: 'grid',
           gridTemplateColumns: 'repeat(2, 460px)',
           justifyContent: 'space-between',
           margin: '0 auto',
           width: '100%',
-          rowGap: '10px',
+          rowGap: '20px',
         }}
       >
         {review &&

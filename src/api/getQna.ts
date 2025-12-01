@@ -1,6 +1,6 @@
-export default async function getReview(num: string) {
+export default async function getQna(num: string) {
   const data = await fetch(
-    `${process.env.NEXT_PUBLIC_API_URL}/getReview?num=${num}`,
+    `${process.env.NEXT_PUBLIC_API_URL}/getQna?num=${num}`,
     {
       method: 'GET',
       headers: {
@@ -10,11 +10,11 @@ export default async function getReview(num: string) {
   )
     .then((res) => {
       const data = res.json();
-      console.log(data);
+      console.log('getQna Api', data);
       return data;
     })
     .catch((err) => {
-      console.log('fetch getReview error:', err);
+      console.log('fetch getQna error:', err);
       return null;
     });
 
