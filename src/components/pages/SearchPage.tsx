@@ -2,7 +2,7 @@
 
 import { useSearchParams } from 'next/navigation';
 import React from 'react';
-import { CardTemplate } from '../organisms';
+import { CardTemplate } from '../templates';
 
 export default function SearchPage() {
   const searchParams = useSearchParams();
