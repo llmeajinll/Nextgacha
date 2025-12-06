@@ -2,7 +2,7 @@
 
 import React from 'react';
 import getLike from '@/api/getLike';
-import { cardTemplateContainer } from '@/components/organisms/CardTemplate/cardtemplate.css';
+import { cardTemplateContainer } from '@/components/templates/CardTemplate/cardtemplate.css';
 import { Card } from '@/components/molecules';
 import { CardProps } from '@/shared/type';
 import { cookies } from 'next/headers';

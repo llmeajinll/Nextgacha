@@ -5,7 +5,6 @@ import { category, categoryMatch } from '@/shared/category';
 import dayjs from 'dayjs';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
-import { PutBlobResult } from '@vercel/blob';
 
 export default function ManageProductPage() {
   console.log(categoryMatch.character['포켓몬']);

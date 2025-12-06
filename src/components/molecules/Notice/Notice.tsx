@@ -9,14 +9,17 @@ import {
   noticeTitle,
 } from './notice.css';
 
-export default function Notice() {
+export default function Notice({ props }: { props: any }) {
+  console.log('notice props', props);
   return (
     <Range preset='between' gap='10' className={noticeContainer}>
-      <div className={noticeNum}>1</div>
+      <div className={noticeNum}>{props?.num}</div>
       <div className={noticeTitle}>
-        <Link href={`/notice/1`}>testestestestestestest</Link>
+        <Link href={`/notice/${props?.num}`}>{props?.title}</Link>
       </div>
-      <div className={noticeCreateDate}>{dayjs().format('YYYY-MM-DD')}</div>
+      <div className={noticeCreateDate}>
+        {dayjs(props?.created_at).format('YYYY-MM-DD')}
+      </div>
     </Range>
   );
 }

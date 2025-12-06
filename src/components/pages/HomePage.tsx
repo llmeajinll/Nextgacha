@@ -1,7 +1,8 @@
 'use client';
 
 import React from 'react';
-import { Banner, CardTemplate } from '@/components/organisms';
+import { Banner } from '../organisms';
+import { CardTemplate } from '../templates';
 import { Btn, Title } from '../atoms';
 
 export default function HomePage() {

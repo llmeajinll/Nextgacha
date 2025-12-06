@@ -4,9 +4,7 @@ import useSplitRoute from '@/app/hooks/useSplitRoute';
 import React, { useState, useEffect } from 'react';
 import { ReviewProps } from '@/shared/type';
 import getReview from '@/api/getReview';
-import dayjs from 'dayjs';
-import { StarBtn } from '@/components/atoms';
-import { StarRating, Review } from '@/components/molecules';
+import { Review } from '@/components/molecules';
 
 export default function ReviewTab() {
   const [review, setReview] = useState([]);
