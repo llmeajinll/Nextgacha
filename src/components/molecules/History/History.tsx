@@ -1,4 +1,3 @@
-import React, { useEffect } from 'react';
 import Image from 'next/image';
 import { Range } from '@/components/atoms';
 import { LabelTitle } from '@/components/molecules';
