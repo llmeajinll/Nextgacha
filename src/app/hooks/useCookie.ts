@@ -38,7 +38,7 @@ export async function useCookie({ target }: { target: string }) {
       userCookie = {};
     }
   }
-  return userCookie;
+  return { userCookie };
 
   // const getCookie = (name: string) => {
   //   if (typeof window !== 'undefined') {

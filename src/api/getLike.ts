@@ -1,6 +1,6 @@
 export default async function getLike(like: number[]) {
   console.log(like);
-  const result = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/getLike`, {
+  const result = await fetch(`/api/getLike`, {
     method: 'POST',
     body: JSON.stringify(like),
   })

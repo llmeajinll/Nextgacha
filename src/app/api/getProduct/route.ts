@@ -1,6 +1,5 @@
 import { NextResponse } from 'next/server';
 import { productColl, userColl } from '@/lib/mongodb';
-import { cookies } from 'next/headers';
 import { auth } from '@/auth';
 
 export async function GET(req: Request) {

@@ -1,74 +1,52 @@
 'use client';
 
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useEffect, useState, useRef, useMemo } from 'react';
+import Image from 'next/image';
 import { Range, Btn } from '@/components/atoms';
 import { Cart } from '@/components/molecules';
 import postCartProduct from '@/api/postCartProduct';
 import { totalPriceStyle } from './carttemplate.css';
 import { comma } from '@/shared/comma';
 import Cookies from 'js-cookie';
+import getCart from '@/api/getCart';
 
-export default function CartTemplate() {
-  const [items, setItems] = useState([] as any[]);
-  const [totalPrice, setTotalPrice] = useState(0);
+export default function CartTemplate({ props }: { props?: any }) {
+  // const [items, setItems] = useState([] as any[]);
+  // const [totalPrice, setTotalPrice] = useState(0);
+  // const result = await getCart();
+  // console.log('result from getCart in CartTemplate: ', result);
 
-  /** ------------------------
-   *   쿠키 파싱
-   * ------------------------ */
+  console.log('props : ', props);
 
-  const getCookie = (value: string | undefined) => {
-    try {
-      if (!value || value === 'undefined' || value === '') return null;
-      return JSON.parse(value);
-    } catch {
-      return null;
-    }
-  };
+  const totalPrice = useMemo(() => {
+    return props.reduce((acc: any, item: any) => {
+      const itemTotal =
+        item.price *
+        item.product.reduce(
+          (prodAcc: number, prod: any) => prodAcc + prod.count,
+          0
+        );
+      return acc + itemTotal;
+    }, 0);
+  }, [props]);
 
-  const parsed = getCookie(Cookies.get('userInfo'));
-  const cart = parsed?.cart ?? [];
+  // useEffect(() => {
+  //   async function fetchData() {
+  //     return getCart()
+  //       .then((res) => {
+  //         console.log('CartTemplate getCart res:', res);
 
-  console.log('userInfo cart:', cart);
+  //         setItems(res || []);
+  //       })
+  //       .catch((err) => {
+  //         console.log(err);
+  //         return [];
+  //       });
+  //   }
 
-  /** ------------------------
-   *   서버에서 상품 정보 가져오기
-   * ------------------------ */
-
-  useEffect(() => {
-    async function fetchData() {
-      const data = cart?.map((item: any) => item.num);
-
-      const result = await postCartProduct({ data })
-        .then((res: any) => {
-          if (cart) {
-            return cart?.map((c: any) => {
-              const prod = res.find((p: any) => p.num === c.num);
-              setTotalPrice(
-                (prev) =>
-                  (prev += c.product.reduce(
-                    (acc: number, cur: any) => acc + cur.count * prod.price,
-                    totalPrice
-                  ))
-              );
-
-              return {
-                productInfo: prod,
-                cartProducts: c.product,
-              };
-            });
-          }
-        })
-        .catch((err) => {
-          return [];
-        });
-
-      console.log('CartTemplate result:', result);
-
-      setItems(result ?? []);
-    }
-    fetchData();
-  }, []);
-  // console.log('merged cart items:', merged);
+  //   fetchData();
+  // router.refresh();
+  // }, []);
 
   return (
     <>
@@ -81,10 +59,36 @@ export default function CartTemplate() {
           padding: '15px 0px',
         }}
       >
-        {items?.map((item: any, index: number) => (
+        {props?.map((item: any, index: number) => (
           <Cart key={index} props={item} />
         ))}
-        <div className={totalPriceStyle}>TOTAL : {comma(totalPrice)}WON</div>
+        {totalPrice < 50000 && (
+          <div>
+            <span style={{ fontFamily: 'silkscreen', fontSize: '20px' }}>
+              Delivery Fee : 3,000WON{' '}
+            </span>
+            <span style={{ fontSize: '16px', color: 'gray' }}>
+              [50,000원 이상 구매 시 무료배송]
+            </span>
+          </div>
+        )}
+        <Range gap='30'>
+          <div className={totalPriceStyle}>
+            <span style={{ color: 'lightblue' }}>TOTAL</span> :{' '}
+            {comma(totalPrice < 50000 ? totalPrice + 3000 : totalPrice)}
+            WON
+          </div>
+          <Range preset='center' gap='8' className={totalPriceStyle}>
+            <span style={{ color: 'lightblue' }}>REWARD</span> :{' '}
+            <Image
+              src='/images/point.png'
+              alt='point'
+              width={24}
+              height={24}
+            ></Image>
+            {totalPrice * 0.01}p
+          </Range>
+        </Range>
       </Range>
       <Btn size='big'>BUY</Btn>
     </>

@@ -37,7 +37,7 @@ export default async function Profile() {
 
         <Range gap='5'>
           <Image src='/images/point.png' width={22} height={22} alt='point' />
-          <div className={point}>{comma(userCookie?.point)}</div>
+          <div className={point}>{comma(userCookie?.point)}P</div>
         </Range>
       </Range>
     </Range>

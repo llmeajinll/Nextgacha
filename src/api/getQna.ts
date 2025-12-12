@@ -1,13 +1,10 @@
 export default async function getQna(num: string) {
-  const data = await fetch(
-    `${process.env.NEXT_PUBLIC_API_URL}/getQna?num=${num}`,
-    {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    }
-  )
+  const data = await fetch(`/api/getQna?num=${num}`, {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+  })
     .then((res) => {
       const data = res.json();
       console.log('getQna Api', data);

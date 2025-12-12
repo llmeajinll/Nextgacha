@@ -71,7 +71,7 @@ export default function DropDown({
                     count: 1,
                     price: props.price,
                     num: props.num,
-                    limit: val.count,
+                    limit: { name: val.name, count: val.count },
                   });
                 } else {
                   setSelected('');

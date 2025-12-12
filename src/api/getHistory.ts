@@ -1,13 +1,10 @@
 export default async function getHistory(email: string) {
-  const data = await fetch(
-    `${process.env.NEXT_PUBLIC_API_URL}/getHistory?email=${email}`,
-    {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    }
-  )
+  const data = await fetch(`/api/getHistory?email=${email}`, {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+  })
     .then((res) => {
       console.log(res);
       return res;

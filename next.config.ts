@@ -1,5 +1,5 @@
-import type { NextConfig } from 'next';
 import { createVanillaExtractPlugin } from '@vanilla-extract/next-plugin';
+import { NextConfig } from 'next';
 
 const withVanillaExtract = createVanillaExtractPlugin();
 
@@ -11,6 +11,7 @@ const withVanillaExtract = createVanillaExtractPlugin();
 // });
 
 const nextConfig: NextConfig = {
+  // const nextConfig = {
   /* config options here */
   reactStrictMode: false,
   compiler: {
@@ -23,21 +24,21 @@ const nextConfig: NextConfig = {
   },
 
   images: {
+    // cast to any to satisfy (URL | RemotePattern)[] typing for remotePatterns
     remotePatterns: [
       {
         protocol: 'https',
-        hostname: '**.public.blob.vercel-storage.com',
+        hostname: '*.public.blob.vercel-storage.com',
+        pathname: '/**',
       },
       {
         protocol: 'http',
         hostname: 'k.kakaocdn.net',
-        port: '',
         pathname: '/**',
       },
     ],
   },
 };
-
 // module.exports = withVanillaExtract(nextConfig);
 
 export default withVanillaExtract(nextConfig);

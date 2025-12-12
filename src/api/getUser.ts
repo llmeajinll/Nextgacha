@@ -1,13 +1,10 @@
 export default function getUser({ email }: { email: string }) {
-  const data = fetch(
-    `${process.env.NEXT_PUBLIC_API_URL}/getUser?email=${email}`,
-    {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    }
-  )
+  const data = fetch(`/api/getUser?email=${email}`, {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+  })
     .then((res) => {
       return res;
     })

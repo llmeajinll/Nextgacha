@@ -33,7 +33,10 @@ export const addToTempCartAtom = atom(
       (val: any) => val.code === newItem.code
     );
 
-    const limit = newItem.limit > 5 || newItem.limit === -1 ? 5 : newItem.limit;
+    const limit =
+      newItem.limit.count > 5 || newItem.limit.count === -1
+        ? 5
+        : newItem.limit.count;
 
     console.log(
       'cookie info | cookieCart:',

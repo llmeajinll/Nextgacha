@@ -1,6 +1,6 @@
 export async function postCart(data: any) {
   console.log(data);
-  const result = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/postCart`, {
+  const result = await fetch(`/api/postCart`, {
     method: 'POST',
     body: JSON.stringify(data),
     headers: {

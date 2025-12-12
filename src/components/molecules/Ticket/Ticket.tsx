@@ -14,12 +14,6 @@ import {
 import { Range, CountBtn } from '@/components/atoms';
 import { ProductProps } from '@/shared/type';
 import { comma } from '@/shared/comma';
-import { useAtom, useSetAtom } from 'jotai';
-import {
-  addToTempCartAtom,
-  minusToTempCartAtom,
-  deleteTempCartAtom,
-} from '@/jotai/store';
 
 export default function Ticket({
   props,
@@ -32,8 +26,8 @@ export default function Ticket({
   decrease: (props: ProductProps) => void;
   erase: (num: string) => void;
 }) {
-  console.log('ticket props: ', props);
-  const data = { ...props, count: 1 };
+  // console.log('ticket props: ', props);
+  // const data = { ...props, count: 1 };
 
   // code: val.name + props.num,
   //                   name: val.name,
@@ -68,9 +62,9 @@ export default function Ticket({
         </Range>
       </div>
       <Range preset='columnCenter' style={{ marginTop: '8px' }}>
-        <CountBtn type='plus' onClick={() => increase(data)} />
+        <CountBtn type='plus' onClick={() => increase(props)} />
         <div className={countNumber}>{props.count}</div>
-        <CountBtn type='minus' onClick={() => decrease(data)} />
+        <CountBtn type='minus' onClick={() => decrease(props)} />
       </Range>
     </div>
   );

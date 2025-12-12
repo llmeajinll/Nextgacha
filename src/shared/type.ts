@@ -29,7 +29,7 @@ export type ProductProps = {
   count: number;
   price: number;
   num: number;
-  limit: number;
+  limit: { name: string; count: number };
 };
 
 export type CardProps = {
