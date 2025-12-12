@@ -13,7 +13,7 @@ export default async function updateCart({
   console.log('updateCart data input:', preset, code);
   const session = await auth();
   const data = { preset, code, email: session?.user?.email };
-  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000';
+  const baseUrl = process.env.NEXT_PUBLIC_URL || 'http://localhost:3000';
   const res = await fetch(`${baseUrl}/api/updateCart`, {
     //   const res = await fetch(`/api/updateCart`, {
     method: 'POST',
