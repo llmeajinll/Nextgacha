@@ -3,7 +3,6 @@ import { auth } from '@/auth';
 
 export default async function getCart() {
   const baseUrl = process.env.NEXT_PUBLIC_URL || 'http://localhost:3000';
-  console.log(baseUrl);
   const session = await auth();
   console.log('getCart session:', session);
   const url = new URL('/api/getCart', baseUrl);

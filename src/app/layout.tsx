@@ -9,6 +9,7 @@ import { Header } from '@/components/organisms';
 import { layoutContainer } from './layout.css';
 import { Provider } from 'jotai';
 import { MSWProvider } from '@/mocks/MSWComponent';
+import { Analytics } from '@vercel/analytics/next';
 // import { RecoilRoot } from 'recoil';
 
 // const geistSans = Geist({
@@ -41,6 +42,7 @@ export default function RootLayout({
     <html lang='en'>
       <body className={`${notoSans.className} ${layoutContainer}`}>
         <MSWProvider>
+          <Analytics />
           <SessionProvider>
             <Provider>
               <div>

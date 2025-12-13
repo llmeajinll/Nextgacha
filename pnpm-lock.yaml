@@ -23,6 +23,9 @@ importers:
       '@vanilla-extract/vite-plugin':
         specifier: ^5.1.1
         version: 5.1.2(@types/node@20.19.25)(terser@5.44.1)(tsx@4.19.2)(vite@7.2.4(@types/node@20.19.25)(terser@5.44.1)(tsx@4.19.2))
+      '@vercel/analytics':
+        specifier: ^1.6.1
+        version: 1.6.1(next@16.0.10(@babel/core@7.28.5)(react-dom@19.2.1(react@19.2.1))(react@19.2.1))(react@19.2.1)
       '@vercel/blob':
         specifier: ^2.0.0
         version: 2.0.0
@@ -1593,6 +1596,32 @@ packages:
     resolution: {integrity: sha512-b43sqGG7xuFIXfAtMIdr6UWuFAHvVPiK37MYjtBB5P0nwbuTcjnEIKQWTm9Csrx8Bu6CMimzK9m1LU6q/RNJrw==}
     peerDependencies:
       webpack: ^4.30.0 || ^5.20.2
+
+  '@vercel/analytics@1.6.1':
+    resolution: {integrity: sha512-oH9He/bEM+6oKlv3chWuOOcp8Y6fo6/PSro8hEkgCW3pu9/OiCXiUpRUogDh3Fs3LH2sosDrx8CxeOLBEE+afg==}
+    peerDependencies:
+      '@remix-run/react': ^2
+      '@sveltejs/kit': ^1 || ^2
+      next: '>= 13'
+      react: ^18 || ^19 || ^19.0.0-rc
+      svelte: '>= 4'
+      vue: ^3
+      vue-router: ^4
+    peerDependenciesMeta:
+      '@remix-run/react':
+        optional: true
+      '@sveltejs/kit':
+        optional: true
+      next:
+        optional: true
+      react:
+        optional: true
+      svelte:
+        optional: true
+      vue:
+        optional: true
+      vue-router:
+        optional: true
 
   '@vercel/backends@0.0.11':
     resolution: {integrity: sha512-L+MYiJJumNTQ71bRD69sdinqKp3icuZLZXdeMlS+dVQAFLxjzyPe2NY178ZPNMeDqRpBAm6PJukUcOBNQses1g==}
@@ -5658,6 +5687,11 @@ snapshots:
     transitivePeerDependencies:
       - babel-plugin-macros
       - supports-color
+
+  '@vercel/analytics@1.6.1(next@16.0.10(@babel/core@7.28.5)(react-dom@19.2.1(react@19.2.1))(react@19.2.1))(react@19.2.1)':
+    optionalDependencies:
+      next: 16.0.10(@babel/core@7.28.5)(react-dom@19.2.1(react@19.2.1))(react@19.2.1)
+      react: 19.2.1
 
   '@vercel/backends@0.0.11(rollup@4.53.3)(typescript@5.9.3)':
     dependencies:

@@ -76,7 +76,7 @@ export async function POST(req: Request) {
         },
         {
           $pull: {
-            'cart.$.product': { code: data.code },
+            'cart.$[].product': { code: data.code },
           },
         } as any
       )
