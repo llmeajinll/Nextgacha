@@ -58,7 +58,7 @@ export async function POST(req: Request) {
   if (!img) {
     return NextResponse.json({ error: 'No file provided' }, { status: 400 });
   } else {
-    const { url } = await put(`images/${group[0] + counter}`, img, {
+    const { url } = await put(`images/${counter}.jpg`, img, {
       access: 'public',
     })
       .then((res) => {

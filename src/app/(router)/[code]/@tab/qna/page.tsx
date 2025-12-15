@@ -50,7 +50,10 @@ export default function QnaTab() {
   };
   return (
     <Range preset='column' gap='10' width='full'>
-      {qna &&
+      {qna.length === 0 ? (
+        <div>Q&A가 없습니다! 마음껏 질문을 남겨주세요!</div>
+      ) : (
+        qna &&
         qna.map((val: any) =>
           val.private === false ? (
             <Qna key={val._id} props={val} />
@@ -59,7 +62,8 @@ export default function QnaTab() {
           ) : (
             <Private key={val._id} props={val} />
           )
-        )}
+        )
+      )}
     </Range>
   );
 }

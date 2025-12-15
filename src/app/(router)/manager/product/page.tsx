@@ -1,15 +1,15 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { category, categoryMatch } from '@/shared/category';
 import dayjs from 'dayjs';
+import { useRouter } from 'next/navigation';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 
 export default function ManageProductPage() {
-  console.log(categoryMatch.character['포켓몬']);
   const formData = new FormData();
-
+  const router = useRouter();
   const [title, setTitle] = useState('');
   const [image, setImage] = useState<File | null>(null);
   const [price, setPrice] = useState(0);
@@ -229,7 +229,18 @@ export default function ManageProductPage() {
           fetch('/api/postProduct', {
             method: 'POST',
             body: formData,
-          });
+          })
+            .then((res) => {
+              if (res.status === 201) {
+                alert('상품이 성공적으로 등록되었습니다.');
+                window.location.reload();
+              }
+            })
+            .catch((err) => {
+              console.log(err);
+              alert('등록 과정에서 오류가 발생했습니다.');
+              window.location.reload();
+            });
         }}
       >
         상품등록

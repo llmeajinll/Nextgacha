@@ -40,19 +40,25 @@ export default function ReviewTab() {
           rowGap: '20px',
         }}
       >
-        {review &&
-          review.map((val: ReviewProps) => (
-            <Review props={val} key={val._id} />
-          ))}
-        {review &&
-          review.map((val: ReviewProps) => (
-            <Review props={val} key={val._id} />
-          ))}
+        {review.length === 0 ? (
+          <div>리뷰가 없습니다! 첫 리뷰를 남겨주세요!</div>
+        ) : (
+          <>
+            {review &&
+              review.map((val: ReviewProps) => (
+                <Review props={val} key={val._id} />
+              ))}
+            {review &&
+              review.map((val: ReviewProps) => (
+                <Review props={val} key={val._id} />
+              ))}
 
-        {review &&
-          review.map((val: ReviewProps) => (
-            <Review props={val} key={val._id} />
-          ))}
+            {review &&
+              review.map((val: ReviewProps) => (
+                <Review props={val} key={val._id} />
+              ))}
+          </>
+        )}
       </div>
     </>
   );
