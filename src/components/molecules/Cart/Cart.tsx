@@ -15,10 +15,6 @@ export default function Cart({ props }: { props?: any }) {
 
   const { increase, decrease, erase } = useCart();
 
-  // const increase = () => {};
-  // const decrease = () => {};
-  // const erase = () => {};
-
   useEffect(() => {
     const el = scrollRef.current;
     if (!el) return;
@@ -40,6 +36,7 @@ export default function Cart({ props }: { props?: any }) {
         width={130}
         height={130}
         alt='productImg'
+        style={{ borderRight: '1px solid lightgray' }}
       />
 
       <Range preset='columnBetween'>

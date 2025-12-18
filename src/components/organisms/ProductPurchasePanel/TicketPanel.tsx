@@ -1,3 +1,5 @@
+'use client';
+
 import React from 'react';
 import { useAtom, useSetAtom } from 'jotai';
 import Cookie from 'js-cookie';
@@ -9,11 +11,7 @@ import {
 } from '@/jotai/store';
 import { Ticket, TicketContainer } from '@/components/molecules';
 
-export default function TicketPanel({
-  props,
-}: {
-  props: { name: string; count: number }[];
-}) {
+export default function TicketPanel() {
   const [tempCart] = useAtom(tempCartAtom);
 
   const addToTempCart = useSetAtom(addToTempCartAtom);

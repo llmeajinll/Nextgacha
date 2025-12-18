@@ -1,13 +1,21 @@
 'use client';
 
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useMemo, useRef } from 'react';
 import Image from 'next/image';
 import Cookies from 'js-cookie';
 import dayjs from 'dayjs';
+import { loadTossPayments } from '@tosspayments/tosspayments-sdk';
 import { useAtom } from 'jotai';
 import { tempCartAtom } from '@/jotai/store';
 
-import { Btn, HeartBtn, ImgBtn, ReactSlick, Range } from '@/components/atoms';
+import {
+  Btn,
+  BuyBtn,
+  HeartBtn,
+  ImgBtn,
+  ReactSlick,
+  Range,
+} from '@/components/atoms';
 import { DropDown, LabelTitle } from '@/components/molecules';
 import { CardProps } from '@/shared/type';
 import { comma } from '@/shared/comma';
@@ -22,6 +30,11 @@ export default function InfoPanel({ props }: { props: CardProps }) {
   const userCookie = Cookies.get('userInfo');
   let email = '';
   let isLogin = false;
+  const totalPrice = useMemo(() => {
+    return tempCart.reduce((a, b) => {
+      return a + b.count * b.price;
+    }, 0);
+  }, [tempCart]);
 
   if (userCookie) {
     try {
@@ -86,7 +99,7 @@ export default function InfoPanel({ props }: { props: CardProps }) {
 
         <Range preset='column' gap='10'>
           <Range width='full' preset='right'>
-            <LabelTitle
+            {/* <LabelTitle
               label='TOTAL'
               content={`${comma(
                 tempCart.reduce((a, b) => {
@@ -94,13 +107,19 @@ export default function InfoPanel({ props }: { props: CardProps }) {
                 }, 0)
               )} WON`}
               status='large'
+            /> */}
+            <LabelTitle
+              label='TOTAL'
+              content={`${comma(totalPrice || 0)} WON`}
+              status='large'
             />
           </Range>
 
           <DropDown props={props} status={props.reserve !== ''} />
 
-          <Range gap='10'>
-            <Btn>BUY</Btn>
+          <Range gap='10' preset='left'>
+            {/* <Btn>BUY</Btn> */}
+            <BuyBtn props={{ email, price: totalPrice, size: 'medium' }} />
 
             <Btn
               color='reversePrimary'
