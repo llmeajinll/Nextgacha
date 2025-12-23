@@ -1,5 +1,6 @@
-export default async function getHistory(email: string) {
-  const data = await fetch(`/api/getHistory?email=${email}`, {
+export default async function getHistory() {
+  console.log('getHistory');
+  const data = await fetch(`/api/protected/getHistory`, {
     method: 'GET',
     headers: {
       'Content-Type': 'application/json',

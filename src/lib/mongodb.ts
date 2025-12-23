@@ -20,6 +20,7 @@ connectDB = new MongoClient(url, options).connect();
 const client = await connectDB;
 const gachaDB = client.db('gacha');
 
+const cartColl = gachaDB.collection('cart');
 const productColl = gachaDB.collection('product');
 const qnaColl = gachaDB.collection('qna');
 const reviewColl = gachaDB.collection('review');
@@ -31,6 +32,7 @@ const userColl = gachaDB.collection('user');
 
 export {
   gachaDB,
+  cartColl,
   productColl,
   qnaColl,
   reviewColl,

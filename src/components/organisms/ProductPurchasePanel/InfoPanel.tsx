@@ -27,25 +27,25 @@ import postLike from '@/api/updateLike';
 export default function InfoPanel({ props }: { props: CardProps }) {
   console.log('infopanel', props);
   const [tempCart] = useAtom(tempCartAtom);
-  const userCookie = Cookies.get('userInfo');
-  let email = '';
-  let isLogin = false;
+  // const userCookie = Cookies.get('userInfo');
+  // let email = '';
+  // let isLogin = false;
   const totalPrice = useMemo(() => {
     return tempCart.reduce((a, b) => {
       return a + b.count * b.price;
     }, 0);
   }, [tempCart]);
 
-  if (userCookie) {
-    try {
-      const userInfo = JSON.parse(userCookie);
-      email = userInfo?.email || '';
-      isLogin = userInfo?.email ? true : false;
-    } catch (err) {
-      console.error('userInfo parse error:', err);
-      email = '';
-    }
-  }
+  // if (userCookie) {
+  //   try {
+  //     const userInfo = JSON.parse(userCookie);
+  //     email = userInfo?.email || '';
+  //     isLogin = userInfo?.email ? true : false;
+  //   } catch (err) {
+  //     console.error('userInfo parse error:', err);
+  //     email = '';
+  //   }
+  // }
 
   const [showText, setShowText] = useState(false);
   const textDomRef = useRef<HTMLDivElement | null>(null);
@@ -119,7 +119,13 @@ export default function InfoPanel({ props }: { props: CardProps }) {
 
           <Range gap='10' preset='left'>
             {/* <Btn>BUY</Btn> */}
-            <BuyBtn props={{ email, price: totalPrice, size: 'medium' }} />
+            <BuyBtn
+              props={{
+                // email,
+                price: totalPrice,
+                size: 'medium',
+              }}
+            />
 
             <Btn
               color='reversePrimary'
@@ -131,7 +137,7 @@ export default function InfoPanel({ props }: { props: CardProps }) {
                 }));
 
                 postCart({
-                  email: email,
+                  // email: email,
                   num: props.num,
                   updatedArray: data,
                 });
@@ -142,7 +148,7 @@ export default function InfoPanel({ props }: { props: CardProps }) {
             <HeartBtn
               size={45}
               num={props.num}
-              isLogin={isLogin}
+              isLogin={false}
               status={props.like}
             />
             <ImgBtn

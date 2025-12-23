@@ -3,20 +3,14 @@
 import React from 'react';
 import { useAtom, useSetAtom } from 'jotai';
 import Cookie from 'js-cookie';
-import {
-  tempCartAtom,
-  addToTempCartAtom,
-  minusToTempCartAtom,
-  deleteTempCartAtom,
-} from '@/jotai/store';
+import { tempCartAtom } from '@/jotai/store';
 import { Ticket, TicketContainer } from '@/components/molecules';
+import { useTempCart } from '@/app/hooks';
 
 export default function TicketPanel() {
   const [tempCart] = useAtom(tempCartAtom);
 
-  const addToTempCart = useSetAtom(addToTempCartAtom);
-  const minusToTempCart = useSetAtom(minusToTempCartAtom);
-  const deleteToTempCart = useSetAtom(deleteTempCartAtom);
+  const { TempCartAdd, TempCartMinus, TempCartDelete } = useTempCart();
 
   return (
     <>
@@ -27,9 +21,9 @@ export default function TicketPanel() {
               <Ticket
                 props={val}
                 key={key}
-                increase={addToTempCart}
-                decrease={minusToTempCart}
-                erase={deleteToTempCart}
+                increase={TempCartAdd}
+                decrease={TempCartMinus}
+                erase={TempCartDelete}
               />
             );
           })}

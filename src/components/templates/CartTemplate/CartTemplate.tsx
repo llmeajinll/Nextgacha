@@ -4,7 +4,7 @@ import React, { useEffect, useState, useRef, useMemo } from 'react';
 import Image from 'next/image';
 import { Range, Btn } from '@/components/atoms';
 import { Cart } from '@/components/molecules';
-import postCartProduct from '@/api/postCartProduct';
+// import postCartProduct from '@/api/postCartProduct';
 import { totalPriceStyle } from './carttemplate.css';
 import { comma } from '@/shared/comma';
 import Cookies from 'js-cookie';
@@ -63,15 +63,57 @@ export default function CartTemplate({ props }: { props?: any }) {
           <Cart key={index} props={item} />
         ))}
         {totalPrice < 50000 && (
-          <div>
-            <span style={{ fontFamily: 'silkscreen', fontSize: '20px' }}>
-              Delivery Fee : 3,000WON{' '}
-            </span>
-            <span style={{ fontSize: '16px', color: 'gray' }}>
-              [50,000원 이상 구매 시 무료배송]
-            </span>
-          </div>
+          <>
+            <div style={{ fontFamily: 'silkscreen', fontSize: '24px' }}>
+              PRICE :{' '}
+              <span
+                style={{
+                  display: 'inline-block',
+                  width: '270px',
+                  textAlign: 'right',
+                }}
+              >
+                {comma(totalPrice)} WON
+              </span>
+            </div>
+            <div>
+              <span
+                style={{
+                  fontFamily: 'silkscreen',
+                  fontSize: '18px',
+                }}
+              >
+                <span style={{ marginRight: '20px' }}>Delivery Fee</span>
+                <span
+                  style={{
+                    display: 'inline-block',
+                    width: '218px',
+                    textAlign: 'right',
+                  }}
+                >
+                  + 3,000WON
+                </span>
+                <span
+                  style={{
+                    marginLeft: '10px',
+                    fontSize: '16px',
+                    color: 'gray',
+                  }}
+                >
+                  [50,000원 이상 구매 시 무료배송]
+                </span>
+              </span>
+            </div>
+            <div
+              style={{
+                width: '700px',
+                height: '1px',
+                backgroundColor: 'lightgray',
+              }}
+            ></div>
+          </>
         )}
+
         <Range gap='30'>
           <div className={totalPriceStyle}>
             <span style={{ color: 'lightblue' }}>TOTAL</span> :{' '}

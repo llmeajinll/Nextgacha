@@ -24,7 +24,7 @@ export default function Ticket({
   props: ProductProps;
   increase: (props: ProductProps) => void;
   decrease: (props: ProductProps) => void;
-  erase: (num: string) => void;
+  erase: (props: ProductProps) => void;
 }) {
   // console.log('ticket props: ', props);
   // const data = { ...props, count: 1 };
@@ -54,7 +54,7 @@ export default function Ticket({
             onClick={() => {
               if (window.confirm('삭제하시겠습니까?')) {
                 // deleteToTempCart(props.code);
-                erase(props.code);
+                erase(props);
               }
             }}
             className={deleteBtn}

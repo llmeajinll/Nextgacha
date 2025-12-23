@@ -4,9 +4,11 @@ import { auth } from '@/auth';
 export default async function getCart() {
   const baseUrl = process.env.NEXT_PUBLIC_URL || 'http://localhost:3000';
   const session = await auth();
-
+  console.log('getCart start', session?.user?.email);
+  console.log(`${baseUrl}api/getCart?email=${session?.user?.email}`);
   const data = await fetch(
-    `${baseUrl}/api/getCart?email=${session?.user?.email}`,
+    `http://localhost:3000/api/protected/getCart?email=${session?.user?.email}`,
+    // `${baseUrl}/api/getCart}`,
     {
       method: 'GET',
       headers: {
@@ -15,14 +17,6 @@ export default async function getCart() {
       next: { tags: ['cart'] },
     } as any
   )
-    //   const data = await fetch(url, {
-    //     method: 'GET',
-    //     credentials: 'include',
-    //     headers: {
-    //       'Content-Type': 'application/json',
-    //     },
-    //     next: { tags: ['cart'] },
-    //   })
     .then(async (res) => {
       const result = await res.json();
       console.log('getCart Api', result);

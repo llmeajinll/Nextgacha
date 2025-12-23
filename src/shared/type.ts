@@ -48,6 +48,7 @@ export type CardProps = {
     name: string;
     count: number;
   }[];
+  isLogin?: boolean;
 };
 
 export interface ReviewProps {

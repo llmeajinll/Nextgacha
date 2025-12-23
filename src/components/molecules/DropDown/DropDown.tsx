@@ -9,13 +9,13 @@ import {
 } from './dropdown.css';
 // import Image from 'next/image';
 import { ImgBtn } from '@/components/atoms';
-import { addToTempCartAtom } from '@/jotai/store';
 
 import { useSetAtom } from 'jotai';
 import { useDropDown } from '@/app/hooks/useDropDown';
 
 import { CardProps } from '@/shared/type';
 import useSplitRoute from '@/app/hooks/useSplitRoute';
+import { useTempCart } from '@/app/hooks';
 
 type DropDownType = Pick<
   CardProps,
@@ -30,7 +30,7 @@ export default function DropDown({
   status?: boolean;
 }) {
   console.log(props);
-  const addToTempCart = useSetAtom(addToTempCartAtom);
+  const { TempCartAdd } = useTempCart();
 
   const { isOpen, selected, toggle, setSelected, dropdownRef } =
     useDropDown('');
@@ -64,7 +64,16 @@ export default function DropDown({
               onClick={() => {
                 if (val.count !== 0 || status) {
                   setSelected(`${idx + 1}. ${val.name}`);
-                  addToTempCart({
+                  // addToTempCart({
+                  //   code: val.name + props.num,
+                  //   name: val.name,
+                  //   title: props.title,
+                  //   count: 1,
+                  //   price: props.price,
+                  //   num: props.num,
+                  //   limit: { name: val.name, count: val.count },
+                  // });
+                  TempCartAdd({
                     code: val.name + props.num,
                     name: val.name,
                     title: props.title,

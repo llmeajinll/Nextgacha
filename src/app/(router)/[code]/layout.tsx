@@ -12,7 +12,7 @@ export default async function DetailLayout({
   tab: React.ReactNode;
   params: Promise<{ code: string }>;
 }) {
-  console.log(tab);
+  // console.log(tab);
   // const headersList = headers();
   // const host = (await headersList).get('host');
   // const pathname = (await headersList).get('x-pathname');

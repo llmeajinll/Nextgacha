@@ -52,17 +52,13 @@ export default function DetailTab({ status = 'detail' }: { status?: string }) {
         <Range>
           <Btn
             color={route[1] === 'cart' ? 'primary' : 'reversePrimary'}
-            onClick={() =>
-              router.replace(`/${route[0]}/cart?email=${email || null}`)
-            }
+            onClick={() => router.replace(`/${route[0]}/cart`)}
           >
             CART
           </Btn>
           <Btn
             color={route[1] === 'like' ? 'primary' : 'reversePrimary'}
-            onClick={() =>
-              router.replace(`/${route[0]}/like?email=${email || null}`)
-            }
+            onClick={() => router.replace(`/${route[0]}/like`)}
             style={{ marginLeft: '-1px' }}
           >
             LIKE
@@ -70,7 +66,8 @@ export default function DetailTab({ status = 'detail' }: { status?: string }) {
           <Btn
             color={route[1] === 'history' ? 'primary' : 'reversePrimary'}
             onClick={() =>
-              router.replace(`/${route[0]}/history?email=${email || null}`)
+              router.replace(`/${route[0]}/history
+                `)
             }
             style={{ marginLeft: '-1px' }}
           >

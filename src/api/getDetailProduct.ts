@@ -12,7 +12,7 @@ export default async function getDetailProduct(num: string) {
     headers: {
       'Content-Type': 'application/json',
     },
-    next: { tags: ['productInfo'] },
+    next: { tags: [`product-${num}`] },
   } as any)
     //   const data = await fetch(url, {
     //     method: 'GET',

@@ -1,12 +1,12 @@
 import { NextResponse } from 'next/server';
 import { cookies } from 'next/headers';
 import { userColl } from '@/lib/mongodb';
+import { auth } from '@/auth';
 
 export async function GET(req: Request) {
-  const { searchParams } = new URL(req.url);
-
-  const email = searchParams.get('email') || '';
-  // console.log(`email: ${email}`);
+  const session = await auth();
+  const email = session?.user?.email;
+  const image = session?.user?.image;
 
   if (!email || email.trim() === '') {
     return NextResponse.json(
@@ -15,8 +15,19 @@ export async function GET(req: Request) {
     );
   }
 
-  const result = await userColl
-    .findOne({ email: email })
+  const user = await userColl
+    .findOne(
+      { email: email },
+      {
+        projection: {
+          _id: 0,
+          email: 1,
+          nickname: 1,
+          point: 1,
+          address: 1,
+        },
+      }
+    )
     .then((res) => {
       // console.log('mongodb getUser res:', res);
       return res;
@@ -26,9 +37,13 @@ export async function GET(req: Request) {
       return null;
     });
 
+  const result = user ? { ...user, image: image } : null;
+
+  return NextResponse.json({ ok: true, result });
+
   // console.log('result:', result);
 
-  const response = NextResponse.json({ ok: true, result });
+  // const response = NextResponse.json({ ok: true, result });
 
   //   const data = {
   //     qna: result?.qna || [],
@@ -38,12 +53,12 @@ export async function GET(req: Request) {
 
   // const { cart, ...rest } = result as any;
 
-  response.cookies.set({
-    name: 'userInfo',
-    value: JSON.stringify(result),
-    httpOnly: false,
-    path: '/',
-  });
+  // response.cookies.set({
+  //   name: 'userInfo',
+  //   value: JSON.stringify(result),
+  //   httpOnly: false,
+  //   path: '/',
+  // });
 
   // response.cookies.set({
   //   name: 'userInfo',
@@ -51,7 +66,7 @@ export async function GET(req: Request) {
   //   httpOnly: false,
   //   path: '/',
   // });
-  return response;
+  // return response;
 
   //   try {
   //     const data = {

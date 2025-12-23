@@ -3,11 +3,17 @@ import { orderColl, productColl, userColl } from '@/lib/mongodb';
 import { auth } from '@/auth';
 
 export async function GET(req: Request) {
-  const { searchParams } = new URL(req.url);
-  console.log('email:', searchParams);
+  // const { searchParams } = new URL(req.url);
+  // console.log('email:', searchParams);
 
-  const email = searchParams.get('email') || '';
+  // const email = searchParams.get('email') || '';
 
+  console.log('test');
+
+  const session = await auth();
+  const email = session?.user?.email;
+
+  console.log(email);
   const order = orderColl.aggregate([
     {
       $match: {

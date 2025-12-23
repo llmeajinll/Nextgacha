@@ -12,9 +12,9 @@ export default function HistoryPage() {
 
   useEffect(() => {
     async function fetchData() {
-      if (!email) return;
+      // if (!email) return;
 
-      const history = await getHistory(email).then((res) => {
+      const history = await getHistory().then((res) => {
         return res;
       });
       const result = await history?.json();

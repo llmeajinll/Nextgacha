@@ -5,9 +5,10 @@ import Btn from './Btn';
 import { useState, useEffect, useRef, useCallback } from 'react';
 import { loadPaymentWidget } from '@tosspayments/payment-widget-sdk';
 import { loadTossPayments } from '@tosspayments/tosspayments-sdk';
+import { v4 as uuidv4 } from 'uuid';
 
 interface BuyBtnType {
-  email: string;
+  // email: string;
   price: number;
   size?: 'big' | 'medium';
 }
@@ -16,7 +17,7 @@ export default function BuyBtn({ props }: { props: BuyBtnType }) {
   const tossPaymentsRef = useRef<any>(null);
   const [ready, setReady] = useState(false);
 
-  console.log(props);
+  console.log(props, uuidv4());
 
   useEffect(() => {
     async function init() {
@@ -27,7 +28,7 @@ export default function BuyBtn({ props }: { props: BuyBtnType }) {
         );
 
         tossPaymentsRef.current = tossPayments.payment({
-          customerKey: props.email,
+          customerKey: uuidv4(),
         });
         setReady(true);
       } catch (e) {
@@ -40,17 +41,16 @@ export default function BuyBtn({ props }: { props: BuyBtnType }) {
 
   const onClickPayment = useCallback(
     async (e: React.MouseEvent<HTMLButtonElement>) => {
-      //   console.log(ready);
-      //   e.stopPropagation();
-      //   if (!tossPaymentsRef.current || !ready) {
-      //     alert('결제 UI가 아직 준비되지 않았습니다.');
-      //     return;
-      //   }
-
-      if (props.email === '' || undefined || null) {
-        alert('로그인 후 결재해주세요.');
+      e.stopPropagation();
+      if (!tossPaymentsRef.current || !ready) {
+        alert('결제 UI가 아직 준비되지 않았습니다.');
         return;
       }
+
+      // if (props.email === '' || undefined || null) {
+      //   alert('로그인 후 결재해주세요.');
+      //   return;
+      // }
 
       if (props.price === 0) {
         alert('0월은 결재할 수 없습니다.');
@@ -64,7 +64,7 @@ export default function BuyBtn({ props }: { props: BuyBtnType }) {
         successUrl: `${window.location.origin}/success`,
         failUrl: `${window.location.origin}/fail`,
         windowTarget: 'window',
-        customerEmail: props.email,
+        customerEmail: uuidv4(),
       });
     },
     [ready, props]

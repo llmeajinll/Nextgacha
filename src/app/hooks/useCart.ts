@@ -58,19 +58,18 @@ export default function useCart() {
     }
   };
 
-  const erase = async (code: string) => {
-    console.log('erase code: ', code);
-    if (window.confirm('삭제하시겠습니까?')) {
-      const result = await updateCart({
-        preset: 'erase',
-        code: code,
-      }).then((res) => {
-        return res;
-      });
-      console.log('decrease result: ', await result);
-      router.refresh();
-      return result;
-    }
+  const erase = async (props: ProductProps) => {
+    console.log('erase code: ', props.code);
+
+    const result = await updateCart({
+      preset: 'erase',
+      code: props.code,
+    }).then((res) => {
+      return res;
+    });
+    console.log('decrease result: ', await result);
+    router.refresh();
+    return result;
   };
 
   return { increase, decrease, erase };

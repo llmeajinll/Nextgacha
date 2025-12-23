@@ -13,7 +13,10 @@ export async function POST(req: Request) {
   console.log('session : ', session?.user?.email);
 
   if (!session?.user?.email) {
-    return NextResponse.json({ error: 'User not login' }, { status: 401 });
+    return NextResponse.json(
+      { error: 'User not login', ok: false },
+      { status: 401 }
+    );
   }
 
   const result = await userColl
@@ -56,4 +59,3 @@ export async function POST(req: Request) {
 
   return NextResponse.json({ ok: true, like });
 }
-

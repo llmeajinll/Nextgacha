@@ -23,30 +23,6 @@ import { useSearchParams } from 'next/navigation';
 export default function Header({ session }: { session: Session | null }) {
   const [showCategory, setShowCategory] = useState(false);
 
-  //   const [showLogin, setShowLogin] = useState(false);
-
-  //   const { data: session } = useSession();
-  //   console.log('session', session);
-
-  const user = fetch(
-    `${process.env.NEXT_PUBLIC_API_URL}/getUser?email=${session?.user?.email}`,
-    {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    }
-  )
-    .then((res) => {
-      return res;
-    })
-    .catch((err) => {
-      console.log('fetch getUser error:', err);
-      return null;
-    });
-
-  //   console.log('header user:', user);
-
   return (
     <>
       <div className={headerContainer}>
@@ -69,9 +45,7 @@ export default function Header({ session }: { session: Session | null }) {
                 <span className={menu}>NOTICE</span>
               </Link>
               {session?.user && (
-                <Link
-                  href={`/mypage/cart?email=${session?.user?.email || null}`}
-                >
+                <Link href={`/mypage/cart`}>
                   <span className={menu}>MYPAGE</span>
                 </Link>
               )}

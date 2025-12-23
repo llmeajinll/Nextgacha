@@ -27,17 +27,26 @@ export default function HeartBtn({
   const imgurl = ['/images/heart1.png', '/images/heart2.png'];
 
   const onClickHeartBtn = async () => {
-    if (isLogin) {
-      try {
-        const result = await updateLike({ num });
-        const json = await result?.json();
-        setLike(json.like);
-      } catch (err) {
-        console.error(err);
-      }
-    } else {
-      alert('로그인 후 사용할 수 있습니다');
-    }
+    await fetch('/api/protected/updateLike', {
+      method: 'POST',
+      body: JSON.stringify(num),
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    })
+      .then(async (res) => {
+        const data = await res.json();
+        console.log('heart button update : ', data);
+        if (data.ok === true) {
+          setLike(data.result);
+        } else {
+          alert('로그인 후 좋아요를 누를 수 있습니다.');
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+        alert('로그인 후 좋아요를 누를 수 있습니다.');
+      });
   };
 
   return (
