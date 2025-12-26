@@ -30,14 +30,14 @@ export async function POST(req: Request) {
       return null;
     });
 
-  if (!result) {
-    return NextResponse.json(
-      { ok: false, error: 'User not found' },
-      { status: 404 }
-    );
-  }
+  // if (!result) {
+  //   return NextResponse.json(
+  //     { ok: false, error: 'User not found' },
+  //     { status: 404 }
+  //   );
+  // }
 
-  let updatedLike = result.like || [];
+  let updatedLike = result?.like || [];
   const isIncludes = updatedLike.includes(num);
 
   if (isIncludes) {

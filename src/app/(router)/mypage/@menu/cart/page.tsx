@@ -1,11 +1,20 @@
-'use server';
+// 'use client';
 
-import React from 'react';
+// import React, { useState, useEffect } from 'react';
 import { CartTemplate } from '@/components/templates';
 import getCart from '@/api/getCart';
 
 export default async function page() {
   const data = await getCart();
+  // const [data, setData] = useState();
+  // useEffect(() => {
+  //   const fetchCartData = async () => {
+  //     await getCart().then(async (res) => {
+  //       console.log('cart data : ', res);
+  //     });
+  //   };
+  //   fetchCartData();
+  // }, []);
   console.log('result from getCart in page: ', data);
   return (
     <>

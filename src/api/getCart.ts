@@ -1,5 +1,6 @@
 'use server';
 import { auth } from '@/auth';
+import { cookies } from 'next/headers';
 
 export default async function getCart() {
   const baseUrl = process.env.NEXT_PUBLIC_URL || 'http://localhost:3000';
@@ -7,13 +8,15 @@ export default async function getCart() {
   console.log('getCart start', session?.user?.email);
   console.log(`${baseUrl}api/getCart?email=${session?.user?.email}`);
   const data = await fetch(
-    `http://localhost:3000/api/protected/getCart?email=${session?.user?.email}`,
+    `http://localhost:3000/api/getCart?email=${session?.user?.email}`,
     // `${baseUrl}/api/getCart}`,
     {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
       },
+      cache: 'no-store',
+
       next: { tags: ['cart'] },
     } as any
   )

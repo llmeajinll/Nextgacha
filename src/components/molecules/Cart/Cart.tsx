@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useEffect, useRef } from 'react';
+import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 import { Range } from '@/components/atoms';
 import { Ticket } from '@/components/molecules';
@@ -10,8 +11,9 @@ import Link from 'next/link';
 
 export default function Cart({ props }: { props?: any }) {
   const { productInfo, cartProducts } = props || {};
+  const router = useRouter();
   const scrollRef = useRef<HTMLDivElement>(null);
-  // console.log(props);
+  console.log(props);
 
   const { increase, decrease, erase } = useCart();
 
@@ -36,7 +38,8 @@ export default function Cart({ props }: { props?: any }) {
         width={130}
         height={130}
         alt='productImg'
-        style={{ borderRight: '1px solid lightgray' }}
+        style={{ borderRight: '1px solid lightgray', cursor: 'pointer' }}
+        onClick={() => router.push(`/${props.num}/info`)}
       />
 
       <Range preset='columnBetween'>

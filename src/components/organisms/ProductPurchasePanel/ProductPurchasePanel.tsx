@@ -4,6 +4,7 @@ import { CardProps } from '@/shared/type';
 import TicketPanel from './TicketPanel';
 import InfoPanel from './InfoPanel';
 import getDetailProduct from '@/api/getDetailProduct';
+import { Provider } from 'jotai';
 
 export default async function ProductPurchasePanel({ num }: { num: string }) {
   console.log(num);
@@ -38,8 +39,10 @@ export default async function ProductPurchasePanel({ num }: { num: string }) {
 
   return (
     <>
-      <InfoPanel props={info} />
-      <TicketPanel />
+      <Provider>
+        <InfoPanel props={info} />
+        <TicketPanel />
+      </Provider>
     </>
   );
 }

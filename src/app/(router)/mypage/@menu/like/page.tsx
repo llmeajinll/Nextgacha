@@ -21,6 +21,7 @@ export default function page() {
     const fetchLikeData = async () => {
       await fetch('/api/protected/getLike')
         .then(async (res) => {
+          console.log(res);
           const data = await res.json();
           if (data.ok === true) {
             setLike(data.result);

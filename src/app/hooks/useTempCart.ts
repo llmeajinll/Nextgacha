@@ -38,9 +38,11 @@ export default function useTempCart() {
   const TempCartAdd = (newItem: ProductProps) => {
     console.log('newItem: ', newItem);
 
-    const DBGroup = DBcart || []?.find((val: any) => val.num === newItem.num);
+    const DBGroup = (DBcart ?? [])?.find((val: any) => val.num === newItem.num);
     const DBcartCount =
-      DBGroup?.product?.find((p: any) => p.code === newItem.code)?.count ?? 0;
+      DBGroup?.product?.find((p: any) => {
+        return p.code === newItem.code;
+      })?.count ?? 0;
 
     // const preGroup = tempCart.find((val: any) => val.num === newItem.num);
     const preCount =
@@ -54,12 +56,24 @@ export default function useTempCart() {
       preCount
     );
 
+    const limitCount = newItem.limit.count >= 5 ? 5 : newItem.limit.count;
+    const count = limitCount - preCount - DBcartCount;
+
+    console.log('limitCount, count : ', limitCount, count);
+
+    if (count <= 0) {
+      alert(
+        `장바구니는 최대 ${MAX}개까지만 담을 수 있습니다. (현재 장바구니: ${DBcartCount}, 예비 장바구니: ${preCount})`
+      );
+      return;
+    }
+
     if (DBcartCount + preCount >= MAX) {
       // console.log(
       //   `장바구니는 최대 ${MAX}개까지만 이용 가능합니다. (현재 DB: ${DBcartCount}, 예비: ${preCount})`
       // );
       alert(
-        `장바구니는 최대 ${MAX}개까지만 이용 가능합니다. (현재 장바구니: ${DBcartCount}, 예비 장바구니: ${preCount})`
+        `장바구니는 최대 ${MAX}개까지만 담을 수 있습니다. (현재 장바구니: ${DBcartCount}, 예비 장바구니: ${preCount})`
       );
 
       return;
@@ -73,7 +87,7 @@ export default function useTempCart() {
         title: newItem.title,
         count: 1,
         price: newItem.price,
-        limit: { name: '', count: 0 },
+        limit: { name: newItem.name, count: newItem.limit.count },
       };
       setTempCart((prev) => [...prev, data]);
     }

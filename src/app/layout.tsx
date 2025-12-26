@@ -7,7 +7,7 @@ import './globals.css';
 import { SessionProvider } from 'next-auth/react';
 import { Header } from '@/components/organisms';
 import { layoutContainer } from './layout.css';
-import { Provider } from 'jotai';
+// import { Provider } from 'jotai';
 import { MSWProvider } from '@/mocks/MSWComponent';
 import { Analytics } from '@vercel/analytics/next';
 // import { RecoilRoot } from 'recoil';
@@ -44,12 +44,12 @@ export default function RootLayout({
         <MSWProvider>
           <Analytics />
           <SessionProvider>
-            <Provider>
-              <div>
-                <Header />
-                {children}
-              </div>
-            </Provider>
+            {/* <Provider> */}
+            <div>
+              <Header />
+              {children}
+            </div>
+            {/* </Provider> */}
           </SessionProvider>
         </MSWProvider>
       </body>

@@ -5,12 +5,13 @@ import { useRouter } from 'next/navigation';
 
 export default function useCart() {
   const router = useRouter();
+
   const increase = async (props: ProductProps) => {
     console.log('increase props: ', props);
     const limitCount = props.limit.count >= 5 ? 5 : props.limit.count;
     const count = limitCount - props.count;
 
-    console.log(count);
+    console.log('count : ', count);
 
     if (count > 0) {
       // plus cart api 호출

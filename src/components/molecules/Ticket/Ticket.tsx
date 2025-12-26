@@ -26,7 +26,7 @@ export default function Ticket({
   decrease: (props: ProductProps) => void;
   erase: (props: ProductProps) => void;
 }) {
-  // console.log('ticket props: ', props);
+  console.log('ticket props: ', props);
   // const data = { ...props, count: 1 };
 
   // code: val.name + props.num,

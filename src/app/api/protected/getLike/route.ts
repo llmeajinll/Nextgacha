@@ -15,6 +15,13 @@ export async function GET(req: Request) {
 
   console.log('auth email : ', email);
 
+  // if (!email) {
+  //   return NextResponse.json(
+  //     { ok: false, message: 'authentication failed' },
+  //     { status: 401 }
+  //   );
+  // }
+
   const result = await userColl
     .aggregate([
       { $match: { email } },
