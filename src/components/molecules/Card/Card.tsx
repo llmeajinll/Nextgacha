@@ -60,11 +60,7 @@ export default function Card({ props }: { props: CardProps }) {
             {comma(props.price)}
             <span style={{ fontSize: '18px' }}> 원</span>
           </div>
-          <HeartBtn
-            status={props.like}
-            num={props.num}
-            isLogin={props.isLogin || false}
-          />
+          <HeartBtn status={props.like} num={props.num} />
         </div>
       </div>
     </div>

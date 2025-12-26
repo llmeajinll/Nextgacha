@@ -6,18 +6,17 @@ import { cookies } from 'next/headers';
 export async function POST(req: Request) {
   const data = await req.json();
   const session = await auth();
-  const { num } = data;
 
   let like = null;
   console.log('server post like data:', data);
   console.log('session : ', session?.user?.email);
 
-  if (!session?.user?.email) {
-    return NextResponse.json(
-      { error: 'User not login', ok: false },
-      { status: 401 }
-    );
-  }
+  // if (!session?.user?.email) {
+  //   return NextResponse.json(
+  //     { error: 'User not login', ok: false },
+  //     { status: 401 }
+  //   );
+  // }
 
   const result = await userColl
     .findOne({ email: session?.user?.email })
@@ -38,13 +37,15 @@ export async function POST(req: Request) {
   // }
 
   let updatedLike = result?.like || [];
-  const isIncludes = updatedLike.includes(num);
+  console.log(updatedLike);
+  const isIncludes = updatedLike.includes(data);
+  console.log(isIncludes);
 
-  if (isIncludes) {
-    updatedLike = updatedLike.filter((item: number) => item !== num);
+  if (isIncludes === true) {
+    updatedLike = updatedLike.filter((item: number) => item !== data);
     like = false;
-  } else {
-    updatedLike.push(num);
+  } else if (isIncludes === false) {
+    updatedLike.push(data);
     like = true;
   }
 

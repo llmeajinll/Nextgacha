@@ -8,21 +8,19 @@ import Cookies from 'js-cookie';
 export default function HeartBtn({
   size = 28,
   status,
-  isLogin,
   num,
 }: {
   size?: number;
   status?: boolean;
-  isLogin: boolean;
   num: number;
   onClick?: React.MouseEventHandler<HTMLImageElement>;
 }) {
-  console.log(num, status, isLogin);
+  console.log(num, status);
   const [like, setLike] = useState(status);
 
   useEffect(() => {
     setLike(status);
-  }, [num, status, isLogin]);
+  }, [num, status]);
 
   const imgurl = ['/images/heart1.png', '/images/heart2.png'];
 
@@ -38,7 +36,7 @@ export default function HeartBtn({
         const data = await res.json();
         console.log('heart button update : ', data);
         if (data.ok === true) {
-          setLike(data.result);
+          setLike(data.like);
         } else {
           alert('로그인 후 좋아요를 누를 수 있습니다.');
         }
