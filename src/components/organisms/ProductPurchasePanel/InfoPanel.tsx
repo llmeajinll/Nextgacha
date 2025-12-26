@@ -129,17 +129,31 @@ export default function InfoPanel({ props }: { props: CardProps }) {
 
             <Btn
               color='reversePrimary'
-              onClick={() => {
+              onClick={async () => {
                 const data = tempCart.map(({ name, code, count }) => ({
                   name,
                   code,
                   count,
                 }));
 
-                postCart({
+                await postCart({
                   // email: email,
                   num: props.num,
                   updatedArray: data,
+                }).then(async (res) => {
+                  if (res.ok === true) {
+                    if (
+                      window.confirm(
+                        `장바구니에 정상적으로 들어갔습니다.\n장바구니로 이동하시겠습니까?`
+                      )
+                    ) {
+                      window.location.href = '/mypage/cart';
+                    } else {
+                      window.location.reload();
+                    }
+                  } else {
+                    alert('로그인 후 장바구니에 담을 수 있습니다.');
+                  }
                 });
               }}
             >

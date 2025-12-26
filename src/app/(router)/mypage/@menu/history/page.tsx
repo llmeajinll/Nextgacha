@@ -1,26 +1,26 @@
 'use client';
 
 import React, { useEffect, useState } from 'react';
-import { useSearchParams } from 'next/navigation';
 import getHistory from '@/api/getHistory';
 import { History } from '@/components/molecules';
 
 export default function HistoryPage() {
-  const searchParams = useSearchParams();
-  const email = searchParams.get('email');
   const [data, setData] = useState([]);
 
   useEffect(() => {
-    async function fetchData() {
+    async function fetchHistoryData() {
       // if (!email) return;
 
-      const history = await getHistory().then((res) => {
-        return res;
+      await getHistory().then(async (res) => {
+        const data = await res?.json();
+        console.log('history : ', data);
+        setData(data.result);
+        // return data;
       });
-      const result = await history?.json();
-      setData(result?.result || []);
+      // const result = await history?.json();
+      // setData(result?.result || []);
     }
-    fetchData();
+    fetchHistoryData();
   }, []);
 
   return (
@@ -34,9 +34,10 @@ export default function HistoryPage() {
           margin: '0 auto',
         }}
       >
-        {data.map((val: any, idx) => (
-          <History props={val} key={idx} />
-        ))}
+        {data.map((val: any, idx) => {
+          console.log(val);
+          return <History props={val} key={idx} />;
+        })}
       </div>
     </>
   );

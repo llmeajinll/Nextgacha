@@ -7,6 +7,7 @@ import { Cart } from '@/components/molecules';
 // import postCartProduct from '@/api/postCartProduct';
 import { totalPriceStyle } from './carttemplate.css';
 import { comma } from '@/shared/comma';
+import { BuyBtn } from '@/components/atoms';
 import Cookies from 'js-cookie';
 import getCart from '@/api/getCart';
 
@@ -83,11 +84,11 @@ export default function CartTemplate({ props }: { props?: any }) {
                   fontSize: '18px',
                 }}
               >
-                <span style={{ marginRight: '20px' }}>Delivery Fee</span>
+                <span style={{ marginRight: '20px' }}>Delivery Fee :</span>
                 <span
                   style={{
                     display: 'inline-block',
-                    width: '218px',
+                    width: '202px',
                     textAlign: 'right',
                   }}
                 >
@@ -132,7 +133,13 @@ export default function CartTemplate({ props }: { props?: any }) {
           </Range>
         </Range>
       </Range>
-      <Btn size='big'>BUY</Btn>
+      {/* <Btn size='big'>BUY</Btn> */}
+      <BuyBtn
+        props={{
+          size: 'big',
+          price: totalPrice < 50000 ? totalPrice + 3000 : totalPrice,
+        }}
+      />
     </>
   );
 }

@@ -23,8 +23,8 @@ export default function History({ props }: { props: any }) {
       <Image
         alt='img'
         src={
-          props.product.image[0]
-            ? String(props.product.image[0])
+          props.list[0].num
+            ? `${process.env.NEXT_PUBLIC_VERCEL_IMAGE_URL}${props.list[0].num}`
             : '/images/defaultImg.png'
         }
         width={200}
@@ -32,18 +32,18 @@ export default function History({ props }: { props: any }) {
         className={imageStyle}
       />
       <Range preset='columnBetween' gap='8' style={{ padding: '3px 0 0 0' }}>
-        <div className={Title}>{props.product.title}</div>
+        {/* <div className={Title}>{props.product.title}</div> */}
         <LabelTitle
-          label='주문일'
-          content={dayjs(props.created_at).format('YYYY년 MM월 DD일')}
+          label='택배사'
+          content={props.courier ? props.courier : '준비중'}
         />
         <LabelTitle
           label='운송장'
-          content={
-            props.courier && props.invoice
-              ? props.courier + ' ' + props.invoice
-              : '준비중'
-          }
+          content={props.invoice ? props.invoice : '준비중'}
+        />
+        <LabelTitle
+          label='주문일'
+          content={dayjs(props.created_at).format('YYYY년 MM월 DD일')}
         />
         <LabelTitle label='상태' content={props.status} />
         <LabelTitle label='가격' content={`${comma(props.totalPrice)}원`} />
@@ -58,11 +58,13 @@ export default function History({ props }: { props: any }) {
                 flexWrap: 'wrap',
               }}
             >
-              {props.list.map((v: any, i: number) => (
-                <div key={i} className={contentStyle}>
-                  {v.name} : {v.count}개
-                </div>
-              ))}
+              {props.list.map((value: any) => {
+                return value.product.map((val: any, idx: number) => (
+                  <div key={value.num + idx} className={contentStyle}>
+                    {val.name} : {val.count}개
+                  </div>
+                ));
+              })}
             </Range>
           }
         />

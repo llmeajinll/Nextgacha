@@ -1,5 +1,4 @@
 export default async function getHistory() {
-  console.log('getHistory');
   const data = await fetch(`/api/protected/getHistory`, {
     method: 'GET',
     headers: {

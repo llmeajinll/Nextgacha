@@ -3,13 +3,6 @@ import { orderColl, productColl, userColl } from '@/lib/mongodb';
 import { auth } from '@/auth';
 
 export async function GET(req: Request) {
-  // const { searchParams } = new URL(req.url);
-  // console.log('email:', searchParams);
-
-  // const email = searchParams.get('email') || '';
-
-  console.log('test');
-
   const session = await auth();
   const email = session?.user?.email;
 
@@ -20,15 +13,15 @@ export async function GET(req: Request) {
         customer: email,
       },
     },
-    {
-      $lookup: {
-        from: 'product',
-        localField: 'num',
-        foreignField: 'num',
-        as: 'product',
-      },
-    },
-    { $unwind: '$product' },
+    // {
+    //   $lookup: {
+    //     from: 'product',
+    //     localField: 'num',
+    //     foreignField: 'num',
+    //     as: 'product',
+    //   },
+    // },
+    // { $unwind: '$product' },
   ]);
   const result = await order.toArray();
 
