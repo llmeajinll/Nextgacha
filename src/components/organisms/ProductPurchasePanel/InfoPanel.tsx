@@ -148,7 +148,7 @@ export default function InfoPanel({ props }: { props: CardProps }) {
             <HeartBtn
               size={45}
               num={props.num}
-              isLogin={false}
+              // isLogin={false}
               status={props.like}
             />
             <ImgBtn
