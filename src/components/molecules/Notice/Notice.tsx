@@ -10,7 +10,7 @@ import {
 } from './notice.css';
 
 export default function Notice({ props }: { props: any }) {
-  console.log('notice props', props);
+  // console.log('notice props', props);
   return (
     <Range preset='between' gap='10' className={noticeContainer}>
       <div className={noticeNum}>{props?.num}</div>

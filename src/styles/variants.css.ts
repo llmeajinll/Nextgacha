@@ -34,6 +34,12 @@ export const btnSizeVariants = styleVariants({
     fontSize: '22px',
     letterSpacing: '-1.1px',
   } as const,
+  extra: {
+    width: '350px',
+    height: '50px',
+    fontSize: '20px',
+    letterSpacing: '-1px',
+  } as const,
 });
 
 export const colorVariants = styleVariants({

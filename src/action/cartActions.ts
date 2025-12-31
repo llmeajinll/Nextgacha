@@ -1,7 +1,7 @@
 'use server';
 
 export async function postCartAction(data: any) {
-  console.log(data);
+  // console.log(data);
   const result = await fetch(
     `${process.env.NEXT_PUBLIC_API_URL}/protected/postCart`,
     {
@@ -13,13 +13,13 @@ export async function postCartAction(data: any) {
     }
   )
     .then((res) => {
-      console.log('postCartAction res:', res);
+      // console.log('postCartAction res:', res);
       return res;
     })
     .catch((err) => {
       console.log(err);
     });
 
-  console.log(result);
+  // console.log(result);
   return result;
 }

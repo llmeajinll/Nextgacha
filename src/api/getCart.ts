@@ -5,8 +5,8 @@ import { cookies } from 'next/headers';
 export default async function getCart() {
   const baseUrl = process.env.NEXT_PUBLIC_URL || 'http://localhost:3000';
   const session = await auth();
-  console.log('getCart start', session?.user?.email);
-  console.log(`${baseUrl}api/getCart?email=${session?.user?.email}`);
+  // console.log('getCart start', session?.user?.email);
+  // console.log(`${baseUrl}api/getCart?email=${session?.user?.email}`);
   const data = await fetch(
     `http://localhost:3000/api/getCart?email=${session?.user?.email}`,
     // `${baseUrl}/api/getCart}`,
@@ -22,7 +22,7 @@ export default async function getCart() {
   )
     .then(async (res) => {
       const result = await res.json();
-      console.log('getCart Api', result);
+      // console.log('getCart Api', result);
       if (result && result.ok === true) {
         return result.data;
       }

@@ -5,7 +5,6 @@ import Image from 'next/image';
 import { useSpliteRoute } from '@/app/hooks';
 
 export default function InfoTab() {
-  console.log('InfoTab');
   const { firstRoute } = useSpliteRoute();
   const src = firstRoute
     ? `${process.env.NEXT_PUBLIC_VERCEL_IMAGE_URL}/${firstRoute}_info.png`

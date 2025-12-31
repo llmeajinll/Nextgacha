@@ -4,8 +4,8 @@ import { useSession } from 'next-auth/react';
 
 export default function Main() {
   const { data: session, status } = useSession();
-  console.log('session', session);
-  console.log('status', status);
+  // console.log('session', session);
+  // console.log('status', status);
 
   // if (status === 'loading') {
   //     return <div>Loading...</div>;

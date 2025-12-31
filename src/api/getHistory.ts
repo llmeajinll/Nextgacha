@@ -6,7 +6,7 @@ export default async function getHistory() {
     },
   })
     .then((res) => {
-      console.log(res);
+      // console.log(res);
       return res;
     })
     .catch((err) => {

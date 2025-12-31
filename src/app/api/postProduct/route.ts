@@ -8,10 +8,10 @@ export async function POST(req: Request) {
 
   const formData = await req.formData();
 
-  console.log('Received Form Data Entries:');
-  for (const pair of formData.entries()) {
-    console.log(`${pair[0]}: ${pair[1]}`);
-  }
+  // console.log('Received Form Data Entries:');
+  // for (const pair of formData.entries()) {
+  //   console.log(`${pair[0]}: ${pair[1]}`);
+  // }
 
   const title = formData.get('title') as string;
   const price = Number(formData.get('price'));
@@ -35,7 +35,7 @@ export async function POST(req: Request) {
         { returnDocument: 'after', upsert: true }
       )
       .then((result) => {
-        console.log('result:', result);
+        // console.log('result:', result);
         return result?.num;
       })
       .catch((error) => {
@@ -46,7 +46,7 @@ export async function POST(req: Request) {
   }
 
   const counter = await getNextSequence();
-  console.log('counter:', counter);
+  // console.log('counter:', counter);
 
   if (counter === null) {
     return NextResponse.json(
@@ -62,7 +62,7 @@ export async function POST(req: Request) {
       access: 'public',
     })
       .then((res) => {
-        console.log('Blob upload result:', res);
+        // console.log('Blob upload result:', res);
         return res;
       })
       .catch((err) => {
@@ -90,7 +90,7 @@ export async function POST(req: Request) {
   const result = await productColl
     .insertOne(insertData)
     .then((res) => {
-      console.log('Insert Result:', res);
+      // console.log('Insert Result:', res);
       return res.acknowledged;
     })
     .catch((err) => {

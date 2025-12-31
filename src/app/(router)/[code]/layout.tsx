@@ -1,4 +1,4 @@
-import React from 'react';
+// import React, { use } from 'react';
 import { headers } from 'next/headers';
 import { ProductPurchasePanel } from '@/components/organisms';
 import { DetailTab } from '@/components/molecules';
@@ -12,17 +12,7 @@ export default async function DetailLayout({
   tab: React.ReactNode;
   params: Promise<{ code: string }>;
 }) {
-  // console.log(tab);
-  // const headersList = headers();
-  // const host = (await headersList).get('host');
-  // const pathname = (await headersList).get('x-pathname');
-  // const referer = (await headersList).get('referer');
   const { code } = await params;
-  console.log(
-    'getDetailProduct pathname, domainm referer params: ',
-
-    code
-  );
 
   return (
     <div>

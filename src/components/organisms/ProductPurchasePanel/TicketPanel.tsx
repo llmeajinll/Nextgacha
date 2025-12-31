@@ -9,7 +9,7 @@ import { useTempCart } from '@/app/hooks';
 
 export default function TicketPanel() {
   const [tempCart] = useAtom(tempCartAtom);
-  console.log('tempCart : ', tempCart);
+  // console.log('tempCart : ', tempCart);
 
   const { TempCartAdd, TempCartMinus, TempCartDelete } = useTempCart();
 
@@ -18,7 +18,7 @@ export default function TicketPanel() {
       {tempCart && (
         <TicketContainer status='detail'>
           {tempCart.map((val, key) => {
-            console.log('tempCart val : ', val);
+            // console.log('tempCart val : ', val);
             return (
               <Ticket
                 props={val}

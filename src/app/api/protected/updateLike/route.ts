@@ -8,8 +8,8 @@ export async function POST(req: Request) {
   const session = await auth();
 
   let like = null;
-  console.log('server post like data:', data);
-  console.log('session : ', session?.user?.email);
+  // console.log('server post like data:', data);
+  // console.log('session : ', session?.user?.email);
 
   // if (!session?.user?.email) {
   //   return NextResponse.json(
@@ -21,7 +21,7 @@ export async function POST(req: Request) {
   const result = await userColl
     .findOne({ email: session?.user?.email })
     .then((res) => {
-      console.log('mongodb getUser res:', res);
+      // console.log('mongodb getUser res:', res);
       return res;
     })
     .catch((err) => {
@@ -37,9 +37,9 @@ export async function POST(req: Request) {
   // }
 
   let updatedLike = result?.like || [];
-  console.log(updatedLike);
+  // console.log(updatedLike);
   const isIncludes = updatedLike.includes(data);
-  console.log(isIncludes);
+  // console.log(isIncludes);
 
   if (isIncludes === true) {
     updatedLike = updatedLike.filter((item: number) => item !== data);
@@ -49,14 +49,14 @@ export async function POST(req: Request) {
     like = true;
   }
 
-  console.log('Updated Like Array:', updatedLike);
+  // console.log('Updated Like Array:', updatedLike);
 
   const updateResult = await userColl.updateOne(
     { email: session?.user?.email },
     { $set: { like: updatedLike } }
   );
 
-  console.log('Update Result:', updateResult);
+  // console.log('Update Result:', updateResult);
 
   return NextResponse.json({ ok: true, like });
 }

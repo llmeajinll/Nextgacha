@@ -8,6 +8,8 @@ export async function GET(req: Request) {
   // const cookieStore = cookies();
   const { searchParams } = new URL(req.url);
   const session = await auth();
+  const email = session?.user?.email;
+
   // const userInfoCookie = (await cookieStore).get('userInfo');
   // let likeList: number[] = [];
 
@@ -25,7 +27,7 @@ export async function GET(req: Request) {
   const count = searchParams.get('count');
   const num = Number(searchParams.get('num'));
 
-  console.log('mongodb params', Number(search), tag, search);
+  // console.log('mongodb params', Number(search), tag, search);
 
   const fourMonthsAgo = new Date();
   fourMonthsAgo.setMonth(fourMonthsAgo.getMonth() - 4);
@@ -34,7 +36,7 @@ export async function GET(req: Request) {
   if (tag === 'all') {
     query = {};
   } else if (tag === 'new') {
-    console.log(fourMonthsAgo);
+    // console.log(fourMonthsAgo);
     query = { create: { $gte: fourMonthsAgo } };
   } else if (tag === 'hot') {
     query = {};
@@ -62,12 +64,13 @@ export async function GET(req: Request) {
   }
 
   // console.log(func);
-  if (!session?.user?.email) {
-    // return NextResponse.json({ error: 'User not login' }, { status: 401 });
-    console.log(session?.user?.email);
-  }
+  // if (!session?.user?.email) {
+  // return NextResponse.json({ error: 'User not login' }, { status: 401 });
+  // console.log(session?.user?.email);
+  // }
 
-  const isLogin = session?.user?.email ? true : false;
+  const isLogin = email ? true : false;
+  console.log('isLogin : ', isLogin, email);
 
   // return NextResponse.json(user?.like || []);
 
@@ -79,7 +82,7 @@ export async function GET(req: Request) {
       { projection: { like: 1, _id: 0 } }
     );
 
-    console.log('like:', user?.like);
+    console.log('========== like:', user?.like);
 
     const result = product.map((item) => {
       const isLike = (user?.like || [])?.includes(item.num);
@@ -89,7 +92,7 @@ export async function GET(req: Request) {
       };
     });
 
-    console.log('[server] if result : ', result);
+    // console.log('[server] if result : ', result);
 
     return NextResponse.json(result);
   } else {
@@ -100,7 +103,7 @@ export async function GET(req: Request) {
       };
     });
 
-    console.log('[server] else result : ', result);
+    // console.log('[server] else result : ', result);
 
     return NextResponse.json(result);
   }

@@ -18,16 +18,17 @@ export default function CardTemplate({
   props?: CardProps[];
 }) {
   const [products, setProducts] = useState([] as CardProps[]);
-  console.log(
-    'CardTemplate tag:',
-    tag,
-    'search:',
-    search,
-    'count:',
-    count,
-    'props:',
-    props
-  );
+
+  // console.log(
+  //   'CardTemplate tag:',
+  //   tag,
+  //   'search:',
+  //   search,
+  //   'count:',
+  //   count,
+  //   'props:',
+  //   props
+  // );
 
   const handleSearch = async () => {
     let url = '';
@@ -43,7 +44,7 @@ export default function CardTemplate({
       },
     });
     const data = await res.json();
-    console.log(data);
+    // console.log(data);
     setProducts(data);
   };
 

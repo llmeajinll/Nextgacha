@@ -7,7 +7,7 @@ export default auth((req) => {
   const { pathname } = req.nextUrl;
 
   // 디버깅 로그: 터미널에 이 로그가 찍히는지 확인하세요.
-  console.log('--- Middleware Path:', pathname, '| LoggedIn:', isLoggedIn);
+  // console.log('--- Middleware Path:', pathname, '| LoggedIn:', isLoggedIn);
   // /api/protected로 시작하는 모든 경로에 대해 비로그인 시 차단
   if (pathname.startsWith('/api/protected')) {
     if (!isLoggedIn) {

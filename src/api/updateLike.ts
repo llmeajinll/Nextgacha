@@ -1,5 +1,5 @@
 export default async function postLike({ num }: { num: number }) {
-  console.log('postLike data input:', num);
+  // console.log('postLike data input:', num);
   const data = { num };
   const result = await fetch(`/api/protected/updateLike`, {
     method: 'POST',

@@ -9,7 +9,7 @@ export async function GET() {
   const session = await auth();
   const email = session?.user?.email;
 
-  console.log('auth email : ', email);
+  // console.log('auth email : ', email);
 
   const data = await cartColl.findOne(
     {
@@ -22,7 +22,7 @@ export async function GET() {
       },
     }
   );
-  console.log('aggregated cart : ', data);
+  // console.log('aggregated cart : ', data);
 
   return NextResponse.json({ ok: true, data }, { status: 200 });
 }

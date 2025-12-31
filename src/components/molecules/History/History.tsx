@@ -6,7 +6,7 @@ import { comma } from '@/shared/comma';
 import { imageStyle, Title, contentStyle } from './history.css';
 
 export default function History({ props }: { props: any }) {
-  console.log('props:', props);
+  // console.log('props:', props);
 
   const ListContent = ({ val }: { val: { name: string; count: number } }) => {
     return (
@@ -20,7 +20,7 @@ export default function History({ props }: { props: any }) {
 
   return (
     <Range gap='15' style={{ width: '620px' }} preset='left'>
-      <Image
+      {/* <Image
         alt='img'
         src={
           props.list[0].num
@@ -30,7 +30,7 @@ export default function History({ props }: { props: any }) {
         width={200}
         height={200}
         className={imageStyle}
-      />
+      /> */}
       <Range preset='columnBetween' gap='8' style={{ padding: '3px 0 0 0' }}>
         {/* <div className={Title}>{props.product.title}</div> */}
         <LabelTitle

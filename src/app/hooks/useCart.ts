@@ -7,11 +7,11 @@ export default function useCart() {
   const router = useRouter();
 
   const increase = async (props: ProductProps) => {
-    console.log('increase props: ', props);
+    // console.log('increase props: ', props);
     const limitCount = props.limit.count >= 5 ? 5 : props.limit.count;
     const count = limitCount - props.count;
 
-    console.log('count : ', count);
+    // console.log('count : ', count);
 
     if (count > 0) {
       // plus cart api 호출
@@ -19,10 +19,10 @@ export default function useCart() {
         preset: 'increase',
         code: props.code,
       }).then((res) => {
-        console.log('router refresh after increase');
+        // console.log('router refresh after increase');
         return res;
       });
-      console.log('increase result: ', await result);
+      // console.log('increase result: ', await result);
       router.refresh();
     } else {
       alert('더 이상 추가할 수 없습니다.');
@@ -30,7 +30,7 @@ export default function useCart() {
   };
 
   const decrease = async (props: ProductProps) => {
-    console.log('decrease props: ', props);
+    // console.log('decrease props: ', props);
 
     if (props.count > 1) {
       // decrease cart api 호출
@@ -40,7 +40,7 @@ export default function useCart() {
       }).then((res) => {
         return res;
       });
-      console.log('decrease result: ', await result);
+      // console.log('decrease result: ', await result);
       router.refresh();
     } else if (props.count === 1) {
       // erase cart api 호출
@@ -51,7 +51,7 @@ export default function useCart() {
         }).then((res) => {
           return res;
         });
-        console.log('decrease erase result: ', await result);
+        // console.log('decrease erase result: ', await result);
         router.refresh();
       }
     } else {
@@ -60,7 +60,7 @@ export default function useCart() {
   };
 
   const erase = async (props: ProductProps) => {
-    console.log('erase code: ', props.code);
+    // console.log('erase code: ', props.code);
 
     const result = await updateCart({
       preset: 'erase',
@@ -68,7 +68,7 @@ export default function useCart() {
     }).then((res) => {
       return res;
     });
-    console.log('decrease result: ', await result);
+    // console.log('decrease result: ', await result);
     router.refresh();
     return result;
   };

@@ -5,7 +5,6 @@ import { auth } from '@/auth';
 
 export default async function getLike() {
   // console.log(like);
-  console.log('============ getLike');
   const session = await auth();
   const email = session?.user?.email;
 

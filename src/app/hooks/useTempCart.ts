@@ -7,7 +7,7 @@ import { ProductProps } from '@/shared/type';
 const fetcher = (url: string) =>
   fetch(url, { credentials: 'include' }).then(async (res) => {
     const result = await res.json();
-    console.log(result);
+    // console.log(result);
     if (result.ok === true) {
       return result.data.cart;
     } else if (result.ok === false) {
@@ -30,13 +30,13 @@ export default function useTempCart() {
 
   const [tempCart, setTempCart] = useAtom(tempCartAtom);
 
-  console.log('swr getCart : ', DBcart);
+  // console.log('swr getCart : ', DBcart);
 
   const MAX = 5;
 
   // 예비 장바구니 값 증가
   const TempCartAdd = (newItem: ProductProps) => {
-    console.log('newItem: ', newItem);
+    // console.log('newItem: ', newItem);
 
     const DBGroup = (DBcart ?? [])?.find((val: any) => val.num === newItem.num);
     const DBcartCount =
@@ -48,18 +48,18 @@ export default function useTempCart() {
     const preCount =
       tempCart?.find((p: any) => p.code === newItem.code)?.count ?? 0;
 
-    console.log(
-      'DBGroup, DBcartCount, preGroup, preCount : ',
-      DBGroup,
-      DBcartCount,
-      tempCart,
-      preCount
-    );
+    // console.log(
+    //   'DBGroup, DBcartCount, preGroup, preCount : ',
+    //   DBGroup,
+    //   DBcartCount,
+    //   tempCart,
+    //   preCount
+    // );
 
     const limitCount = newItem.limit.count >= 5 ? 5 : newItem.limit.count;
     const count = limitCount - preCount - DBcartCount;
 
-    console.log('limitCount, count : ', limitCount, count);
+    // console.log('limitCount, count : ', limitCount, count);
 
     if (count <= 0) {
       alert(
@@ -93,7 +93,7 @@ export default function useTempCart() {
     }
     // jotai 있음
     else if (DBcartCount + preCount < MAX && preCount !== 0) {
-      console.log(`jotai 있음 (현재 DB: ${DBcartCount}, 예비: ${preCount})`);
+      // console.log(`jotai 있음 (현재 DB: ${DBcartCount}, 예비: ${preCount})`);
       const updated = tempCart.map((item) =>
         item.code === newItem.code ? { ...item, count: item.count + 1 } : item
       );
@@ -126,7 +126,7 @@ export default function useTempCart() {
 
   // 예비 장바구니 삭제
   const TempCartDelete = (newItem: ProductProps) => {
-    console.log('newItem: ', newItem);
+    // console.log('newItem: ', newItem);
 
     const updated = tempCart.filter((item) => item.code !== newItem.code);
     setTempCart(updated);

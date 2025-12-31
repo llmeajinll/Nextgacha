@@ -9,13 +9,14 @@ export default function SearchPage() {
   let tag = undefined;
 
   const search = searchParams.get('search');
-  console.log('search page search:', search);
+  // console.log('search page search:', search);
 
   const type = searchParams.get('type');
   const company = searchParams.get('company');
   const detail = searchParams.get('detail');
 
-  console.log(detail);
+  // console.log(detail);
+
   if (detail === '전체 상품') {
     tag = 'all';
   } else if (detail === '인기 상품') {

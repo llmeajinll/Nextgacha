@@ -27,28 +27,13 @@ import postLike from '@/api/updateLike';
 export default function InfoPanel({ props }: { props: CardProps }) {
   console.log('infopanel', props);
   const [tempCart] = useAtom(tempCartAtom);
-  // const userCookie = Cookies.get('userInfo');
-  // let email = '';
-  // let isLogin = false;
+  const [showText, setShowText] = useState(false);
+  const textDomRef = useRef<HTMLDivElement | null>(null);
   const totalPrice = useMemo(() => {
     return tempCart.reduce((a, b) => {
       return a + b.count * b.price;
     }, 0);
   }, [tempCart]);
-
-  // if (userCookie) {
-  //   try {
-  //     const userInfo = JSON.parse(userCookie);
-  //     email = userInfo?.email || '';
-  //     isLogin = userInfo?.email ? true : false;
-  //   } catch (err) {
-  //     console.error('userInfo parse error:', err);
-  //     email = '';
-  //   }
-  // }
-
-  const [showText, setShowText] = useState(false);
-  const textDomRef = useRef<HTMLDivElement | null>(null);
 
   return (
     <Range
@@ -99,15 +84,6 @@ export default function InfoPanel({ props }: { props: CardProps }) {
 
         <Range preset='column' gap='10'>
           <Range width='full' preset='right'>
-            {/* <LabelTitle
-              label='TOTAL'
-              content={`${comma(
-                tempCart.reduce((a, b) => {
-                  return a + b.count * b.price;
-                }, 0)
-              )} WON`}
-              status='large'
-            /> */}
             <LabelTitle
               label='TOTAL'
               content={`${comma(totalPrice || 0)} WON`}
@@ -117,18 +93,19 @@ export default function InfoPanel({ props }: { props: CardProps }) {
 
           <DropDown props={props} status={props.reserve !== ''} />
 
-          <Range gap='10' preset='left'>
+          <Range gap='10' width='full' preset='right'>
             {/* <Btn>BUY</Btn> */}
-            <BuyBtn
+            {/* <BuyBtn
               props={{
                 // email,
                 price: totalPrice,
                 size: 'medium',
               }}
-            />
+            /> */}
 
             <Btn
-              color='reversePrimary'
+              color='primary'
+              // size='extra'
               onClick={async () => {
                 const data = tempCart.map(({ name, code, count }) => ({
                   name,

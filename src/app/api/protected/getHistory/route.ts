@@ -6,7 +6,7 @@ export async function GET(req: Request) {
   const session = await auth();
   const email = session?.user?.email;
 
-  console.log(email);
+  // console.log(email);
   const order = orderColl.aggregate([
     {
       $match: {

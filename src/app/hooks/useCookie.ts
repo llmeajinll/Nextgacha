@@ -28,7 +28,7 @@ export async function useCookie({ target }: { target: string }) {
     if (cookie?.value) {
       try {
         userCookie = JSON.parse(cookie.value);
-        console.log('Parsed userCookie:', userCookie);
+        // console.log('Parsed userCookie:', userCookie);
       } catch (err) {
         console.error('Failed to parse userInfo cookie:', err);
         userCookie = {};

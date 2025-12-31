@@ -5,7 +5,7 @@ import { auth } from '@/auth';
 import { cookies } from 'next/headers';
 import Image from 'next/image';
 import { Range } from '@/components/atoms';
-import { profileImage, email, point } from './profile.css';
+import { profileImage, email, point, address } from './profile.css';
 import { comma } from '@/shared/comma';
 
 export default function Profile() {
@@ -16,17 +16,7 @@ export default function Profile() {
     address: '',
     image: '',
   });
-  // const session = await auth();
-  // const cookieStore = cookies();
-  // let userCookie = null;
-
-  //   console.log('mypage session:', session);
-  // if (session?.user) {
-  //   const cookie = (await cookieStore).get('userInfo');
-  //   userCookie = cookie ? JSON.parse(cookie.value) : null;
-  //   // console.log('Cookie : ', userCookie);
-  // } else {
-  //   return <div>로그인이 필요합니다.</div>;
+  const [show, setShow] = useState(false);
 
   useEffect(() => {
     const fetchUserData = async () => {
@@ -61,6 +51,10 @@ export default function Profile() {
       <Range preset='column' gap='4'>
         <div style={{ fontSize: '20px' }}>{user?.nickname}</div>
         <div className={email}>{user?.email}</div>
+        <Range className={address}>
+          <div>{user?.address}</div>
+          <div style={{ marginLeft: '6px', cursor: 'pointer' }}>[수정]</div>
+        </Range>
 
         <Range gap='5'>
           <Image src='/images/point.png' width={22} height={22} alt='point' />

@@ -13,7 +13,7 @@ export default function HistoryPage() {
 
       await getHistory().then(async (res) => {
         const data = await res?.json();
-        console.log('history : ', data);
+        // console.log('history : ', data);
         setData(data.result);
         // return data;
       });
@@ -35,7 +35,7 @@ export default function HistoryPage() {
         }}
       >
         {data.map((val: any, idx) => {
-          console.log(val);
+          // console.log(val);
           return <History props={val} key={idx} />;
         })}
       </div>

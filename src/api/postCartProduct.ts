@@ -1,5 +1,5 @@
 export default async function postCartProduct({ data }: { data: number[] }) {
-  console.log('postLike data input:', data);
+  // console.log('postLike data input:', data);
 
   const result = await fetch(`/api/postCartProduct`, {
     method: 'POST',

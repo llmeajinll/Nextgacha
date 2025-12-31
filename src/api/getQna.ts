@@ -7,7 +7,7 @@ export default async function getQna(num: string) {
   })
     .then((res) => {
       const data = res.json();
-      console.log('getQna Api', data);
+      // console.log('getQna Api', data);
       return data;
     })
     .catch((err) => {

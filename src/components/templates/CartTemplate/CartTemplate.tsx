@@ -31,23 +31,7 @@ export default function CartTemplate({ props }: { props?: any }) {
     }, 0);
   }, [props]);
 
-  // useEffect(() => {
-  //   async function fetchData() {
-  //     return getCart()
-  //       .then((res) => {
-  //         console.log('CartTemplate getCart res:', res);
-
-  //         setItems(res || []);
-  //       })
-  //       .catch((err) => {
-  //         console.log(err);
-  //         return [];
-  //       });
-  //   }
-
-  //   fetchData();
-  // router.refresh();
-  // }, []);
+  console.log('totalPrice', totalPrice);
 
   return (
     <>
@@ -60,10 +44,24 @@ export default function CartTemplate({ props }: { props?: any }) {
           padding: '15px 0px',
         }}
       >
-        {props?.map((item: any, index: number) => (
-          <Cart key={index} props={item} />
-        ))}
-        {totalPrice < 50000 && (
+        {props.length === 0 ? (
+          <div
+            style={{
+              boxSizing: 'border-box',
+              width: '100%',
+              height: '150px',
+              padding: '20px',
+              border: '1px solid lightgray',
+            }}
+          >
+            장바구니가 비어있습니다.
+          </div>
+        ) : (
+          props?.map((item: any, index: number) => (
+            <Cart key={index} props={item} />
+          ))
+        )}
+        {totalPrice < 50000 && totalPrice > 1 && (
           <>
             <div style={{ fontFamily: 'silkscreen', fontSize: '24px' }}>
               PRICE :{' '}
@@ -118,7 +116,11 @@ export default function CartTemplate({ props }: { props?: any }) {
         <Range gap='30'>
           <div className={totalPriceStyle}>
             <span style={{ color: 'lightblue' }}>TOTAL</span> :{' '}
-            {comma(totalPrice < 50000 ? totalPrice + 3000 : totalPrice)}
+            {comma(
+              totalPrice < 50000 && totalPrice > 1
+                ? totalPrice + 3000
+                : totalPrice
+            )}
             WON
           </div>
           <Range preset='center' gap='8' className={totalPriceStyle}>
@@ -138,6 +140,18 @@ export default function CartTemplate({ props }: { props?: any }) {
         props={{
           size: 'big',
           price: totalPrice < 50000 ? totalPrice + 3000 : totalPrice,
+          list: props.reduce((acc: any, item: any) => {
+            if (item && item.product) {
+              acc.push({
+                num: item.num,
+                product: item.product.map((p: any) => ({
+                  name: p.name,
+                  count: p.count,
+                })),
+              });
+            }
+            return acc;
+          }, [] as { num: number; product: { name: string; count: number }[] }[]),
         }}
       />
     </>

@@ -13,9 +13,10 @@ if (!url) {
 }
 
 const options: any = {};
-let connectDB: Promise<MongoClient>;
+const mongodbClient = new MongoClient(url, options);
 
-connectDB = new MongoClient(url, options).connect();
+let connectDB: Promise<MongoClient>;
+connectDB = mongodbClient.connect();
 
 const client = await connectDB;
 const gachaDB = client.db('gacha');
@@ -31,6 +32,7 @@ const userColl = gachaDB.collection('user');
 // console.log(productDB);
 
 export {
+  mongodbClient,
   gachaDB,
   cartColl,
   productColl,

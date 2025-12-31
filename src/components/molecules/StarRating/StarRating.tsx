@@ -14,7 +14,7 @@ export default function StarRating({
   const [score, setScore] = useState(value);
 
   const onClickBtn = (score: number) => {
-    console.log(score);
+    // console.log(score);
     setScore(score);
   };
 

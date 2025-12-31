@@ -1,5 +1,5 @@
 export async function postCart(data: any) {
-  console.log(data);
+  // console.log(data);
   const result = await fetch(`/api/protected/postCart`, {
     method: 'POST',
     body: JSON.stringify(data),
@@ -15,6 +15,6 @@ export async function postCart(data: any) {
       alert('로그인 후에 장바구니 추가가 가능합니다.');
     });
 
-  console.log(result);
+  // console.log(result);
   return result;
 }

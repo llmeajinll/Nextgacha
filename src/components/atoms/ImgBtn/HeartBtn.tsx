@@ -15,7 +15,7 @@ export default function HeartBtn({
   num: number;
   onClick?: React.MouseEventHandler<HTMLImageElement>;
 }) {
-  console.log(num, status);
+  // console.log(num, status);
   const [like, setLike] = useState(status);
 
   useEffect(() => {
@@ -34,7 +34,7 @@ export default function HeartBtn({
     })
       .then(async (res) => {
         const data = await res.json();
-        console.log('heart button update : ', data);
+        // console.log('heart button update : ', data);
         if (data.ok === true) {
           setLike(data.like);
         } else {

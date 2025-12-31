@@ -10,7 +10,6 @@ import Cookies from 'js-cookie';
 import Image from 'next/image';
 
 export default function QnaTab() {
-  console.log('QnaTab');
   const [qna, setQna] = useState([]);
   const { firstRoute } = useSplitRoute();
   const userInfo = Cookies.get('userInfo');

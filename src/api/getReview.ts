@@ -7,7 +7,7 @@ export default async function getReview(num: string) {
   })
     .then((res) => {
       const data = res.json();
-      console.log(data);
+      // console.log(data);
       return data;
     })
     .catch((err) => {

@@ -124,7 +124,7 @@ export default function ManageProductPage() {
         <select
           onChange={(e) => {
             setCompany(e.target.value);
-            console.log(e.target.value);
+            // console.log(e.target.value);
           }}
         >
           {Object.keys(category.series).map((val) => (
@@ -141,7 +141,7 @@ export default function ManageProductPage() {
         <select
           onChange={(e) => {
             setGroup((group) => [...group, e.target.value]);
-            console.log(group);
+            // console.log(group);
           }}
         >
           {category.character.map((val) => (
@@ -166,7 +166,7 @@ export default function ManageProductPage() {
           ))}
 
           {Object.entries(category.series).map(([seriesName, seriesList]) => {
-            console.log('seriesName, seriesList:', seriesName, seriesList);
+            // console.log('seriesName, seriesList:', seriesName, seriesList);
             const seriesMap = (
               categoryMatch.series as Record<string, Record<string, string>>
             )[seriesName];
@@ -210,10 +210,11 @@ export default function ManageProductPage() {
             formData.append('image', image);
           }
 
-          console.log('Form Data Entries:');
-          for (const pair of formData.entries()) {
-            console.log(`${pair[0]}: ${pair[1]}`);
-          }
+          // console.log('Form Data Entries:');
+
+          // for (const pair of formData.entries()) {
+          //   console.log(`${pair[0]}: ${pair[1]}`);
+          // }
 
           // console.log({
           //   title,

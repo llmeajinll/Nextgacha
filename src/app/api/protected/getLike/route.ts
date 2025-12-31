@@ -8,12 +8,10 @@ export async function GET(req: Request) {
   // const email = searchParams.get('email') || '';
   // console.log('email : ', email);
 
-  console.log('========================= server getLike');
-
   const session = await auth();
   const email = session?.user?.email;
 
-  console.log('auth email : ', email);
+  // console.log('auth email : ', email);
 
   // if (!email) {
   //   return NextResponse.json(
@@ -50,7 +48,7 @@ export async function GET(req: Request) {
     ])
     .toArray();
 
-  console.log('result : ', result[0].products);
+  // console.log('result : ', result[0].products);
 
   return NextResponse.json({ result: result[0]?.products || [], ok: true });
 }

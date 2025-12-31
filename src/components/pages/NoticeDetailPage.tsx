@@ -10,7 +10,7 @@ export default function NoticeDetailPage() {
   const { result, count } = useGetNotice({ num: Number(secondRoute) });
 
   const notice = () => {
-    console.log('secondRoute', secondRoute);
+    // console.log('secondRoute', secondRoute);
     if (secondRoute === '%EA%B3%B5%EC%A7%80')
       return {
         num: '공지',
@@ -43,7 +43,7 @@ export default function NoticeDetailPage() {
 
   const res = result ?? notice();
 
-  console.log('res', res);
+  // console.log('res', res);
   return (
     <Range
       preset='columnBetween'

@@ -14,7 +14,7 @@ export default function ReviewTab() {
     async function fetchReview() {
       const review = await getReview(firstRoute)
         .then((res) => {
-          console.log('review:', res);
+          // console.log('review:', res);
           return res;
         })
         .catch((err) => {

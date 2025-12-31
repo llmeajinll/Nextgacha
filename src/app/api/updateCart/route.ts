@@ -49,7 +49,7 @@ export async function POST(req: Request) {
         }
       )
       .then((res) => {
-        console.log('mongodb getUser res:', res);
+        // console.log('mongodb getUser res:', res);
         return res;
       })
       .catch((err) => {
@@ -113,7 +113,7 @@ export async function POST(req: Request) {
         // } as any
       )
       .then((res) => {
-        console.log('mongodb getUser res:', res);
+        // console.log('mongodb getUser res:', res);
         return res;
       })
       .catch((err) => {

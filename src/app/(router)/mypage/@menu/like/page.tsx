@@ -8,20 +8,13 @@ import { CardProps } from '@/shared/type';
 import { cookies } from 'next/headers';
 
 export default function page() {
-  // const cookieStore = await cookies();
-  // const userInfoCookie = cookieStore.get('userInfo');
-  // const userInfo = userInfoCookie
-  //   ? JSON.parse(userInfoCookie.value)
-  //   : { like: [] };
-  // const like = userInfo.like ?? [];
-  // console.log(like);
   const [like, setLike] = useState([]);
 
   useEffect(() => {
     const fetchLikeData = async () => {
       await fetch('/api/protected/getLike')
         .then(async (res) => {
-          console.log(res);
+          // console.log(res);
           const data = await res.json();
           if (data.ok === true) {
             setLike(data.result);
@@ -33,17 +26,7 @@ export default function page() {
     fetchLikeData();
   }, []);
 
-  console.log(like);
-  // const products = await getLike()
-  //   .then((res) => {
-  //     // console.log(res);
-  //     return res;
-  //   })
-  //   .catch((err) => {
-  //     console.log(err);
-  //     return [];
-  //   });
-  // console.log('products : ', products);
+  // console.log(like);
 
   return (
     <>

@@ -12,6 +12,12 @@ export const email = style({
   color: vars.color.blue1,
 });
 
+export const address = style({
+  fontSize: '13px',
+  color: vars.color.black1,
+  marginTop: '-4px',
+});
+
 export const point = style({
   fontSize: '18px',
   lineHeight: '20px',
