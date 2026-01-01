@@ -107,6 +107,10 @@ export default function InfoPanel({ props }: { props: CardProps }) {
               color='primary'
               // size='extra'
               onClick={async () => {
+                if (tempCart.length === 0) {
+                  alert('담은 상품이 없습니다.');
+                  return;
+                }
                 const data = tempCart.map(({ name, code, count }) => ({
                   name,
                   code,

@@ -43,8 +43,9 @@ export default function History({ props }: { props: any }) {
         />
         <LabelTitle
           label='주문일'
-          content={dayjs(props.created_at).format('YYYY년 MM월 DD일')}
+          content={dayjs(props.created_at).format('YYYY년 MM월 DD일 HH시 mm분')}
         />
+        <LabelTitle label='배송지' content={props.address} />
         <LabelTitle label='상태' content={props.status} />
         <LabelTitle label='가격' content={`${comma(props.totalPrice)}원`} />
         <LabelTitle

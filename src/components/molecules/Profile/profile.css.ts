@@ -24,3 +24,23 @@ export const point = style({
   fontFamily: 'silkscreen',
   color: vars.color.black2,
 });
+
+export const addressInput = style({
+  width: '400px',
+  padding: '8px',
+  border: `1px solid lightgray`,
+  // borderRadius: '4px',
+  fontSize: '14px',
+  color: vars.color.black1,
+});
+
+export const addressBtn = style({
+  width: '60px',
+  padding: '8px',
+  fontSize: '14px',
+  color: 'white',
+  backgroundColor: vars.color.blue1,
+  cursor: 'pointer',
+  border: 'none',
+  fontFamily: 'silkscreen',
+});

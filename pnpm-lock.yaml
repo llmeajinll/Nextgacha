@@ -71,6 +71,9 @@ importers:
       react-datepicker:
         specifier: ^8.8.0
         version: 8.9.0(react-dom@19.2.1(react@19.2.1))(react@19.2.1)
+      react-daum-postcode:
+        specifier: ^3.2.0
+        version: 3.2.0(react@19.2.1)
       react-dom:
         specifier: 19.2.1
         version: 19.2.1(react@19.2.1)
@@ -3740,6 +3743,11 @@ packages:
     peerDependencies:
       react: ^16.9.0 || ^17 || ^18 || ^19 || ^19.0.0-rc
       react-dom: ^16.9.0 || ^17 || ^18 || ^19 || ^19.0.0-rc
+
+  react-daum-postcode@3.2.0:
+    resolution: {integrity: sha512-NHY8TUicZXMqykbKYT8kUo2PEU7xu1DFsdRmyWJrLEUY93Xhd3rEdoJ7vFqrvs+Grl9wIm9Byxh3bI+eZxepMQ==}
+    peerDependencies:
+      react: '>=16.8.0'
 
   react-dom@19.2.1:
     resolution: {integrity: sha512-ibrK8llX2a4eOskq1mXKu/TGZj9qzomO+sNfO98M6d9zIPOEhlBkMkBUBLd1vgS0gQsLDBzA+8jJBVXDnfHmJg==}
@@ -8147,6 +8155,10 @@ snapshots:
       date-fns: 4.1.0
       react: 19.2.1
       react-dom: 19.2.1(react@19.2.1)
+
+  react-daum-postcode@3.2.0(react@19.2.1):
+    dependencies:
+      react: 19.2.1
 
   react-dom@19.2.1(react@19.2.1):
     dependencies:

@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server';
 import { cookies } from 'next/headers';
 import { userColl } from '@/lib/mongodb';
 import { auth } from '@/auth';
+import { revalidateTag } from 'next/cache';
 
 export async function GET(req: Request) {
   const session = await auth();
@@ -30,6 +31,7 @@ export async function GET(req: Request) {
     )
     .then((res) => {
       // console.log('mongodb getUser res:', res);
+      revalidateTag('userInfo', 'default');
       return res;
     })
     .catch((err) => {
@@ -40,52 +42,4 @@ export async function GET(req: Request) {
   const result = user ? { ...user, image: image } : null;
 
   return NextResponse.json({ ok: true, result });
-
-  // console.log('result:', result);
-
-  // const response = NextResponse.json({ ok: true, result });
-
-  //   const data = {
-  //     qna: result?.qna || [],
-  //     review: result?.review || [],
-  //     like: result?.like || [],
-  //   };
-
-  // const { cart, ...rest } = result as any;
-
-  // response.cookies.set({
-  //   name: 'userInfo',
-  //   value: JSON.stringify(result),
-  //   httpOnly: false,
-  //   path: '/',
-  // });
-
-  // response.cookies.set({
-  //   name: 'userInfo',
-  //   value: JSON.stringify(cart),
-  //   httpOnly: false,
-  //   path: '/',
-  // });
-  // return response;
-
-  //   try {
-  //     const data = {
-  //       qna: result?.qna || [],
-  //       review: result?.review || [],
-  //       like: result?.like || [],
-  //     };
-
-  //     (await cookies()).set({
-  //       name: 'userInfo',
-  //       value: JSON.stringify(data),
-  //       httpOnly: false,
-  //       path: '/',
-  //     });
-  //     return NextResponse.json({ ok: true, result: result });
-  //   } catch (err) {
-  //     return NextResponse.json(
-  //       { ok: false, error: (err as Error).message },
-  //       { status: 500 }
-  //     );
-  //   }
 }

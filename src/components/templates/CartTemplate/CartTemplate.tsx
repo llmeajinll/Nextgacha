@@ -49,12 +49,20 @@ export default function CartTemplate({ props }: { props?: any }) {
             style={{
               boxSizing: 'border-box',
               width: '100%',
-              height: '150px',
+              height: '130px',
               padding: '20px',
               border: '1px solid lightgray',
+              fontFamily: 'silkscreen',
+              color: 'gray',
+              fontSize: '30px',
+              textAlign: 'center',
+              alignItems: 'center',
+              display: 'flex',
+              justifyContent: 'center',
+              lineHeight: '24px',
             }}
           >
-            장바구니가 비어있습니다.
+            CART IS EMPTY
           </div>
         ) : (
           props?.map((item: any, index: number) => (
@@ -136,6 +144,7 @@ export default function CartTemplate({ props }: { props?: any }) {
         </Range>
       </Range>
       {/* <Btn size='big'>BUY</Btn> */}
+
       <BuyBtn
         props={{
           size: 'big',

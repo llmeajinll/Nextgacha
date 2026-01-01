@@ -2,27 +2,35 @@
 
 import React from 'react';
 import Btn from './Btn';
-import { useState, useEffect, useRef, useCallback } from 'react';
-import { loadPaymentWidget } from '@tosspayments/payment-widget-sdk';
+import { useCallback } from 'react';
 import { loadTossPayments } from '@tosspayments/tosspayments-sdk';
 import { v4 as uuidv4 } from 'uuid';
+import { useAtom } from 'jotai';
+import { userInfoAtom } from '@/jotai/store';
 
 interface BuyBtnType {
   // email: string;
   price: number;
   size?: 'big' | 'medium';
-  list?: { num: number; product: { name: string; count: number }[] };
+  list?: { num: number; product: { name: string; count: number }[] }[];
 }
 
 export default function BuyBtn({ props }: { props: BuyBtnType }) {
-  console.log('buyBtn list : ', props.list);
+  console.log('buyBtn list : ', props?.list);
+
+  const [userInfo] = useAtom(userInfoAtom);
 
   const onClickPayment = useCallback(
     async (e: React.MouseEvent<HTMLButtonElement>) => {
       e.stopPropagation();
 
-      if (!props?.list) {
-        alert('상품이 없습니다.');
+      if (props?.list?.length === 0) {
+        alert('장바구니가 비어있습니다.');
+        return;
+      }
+
+      if (userInfo?.address === '') {
+        alert('배송지를 입력해주세요.');
         return;
       }
 
@@ -41,6 +49,7 @@ export default function BuyBtn({ props }: { props: BuyBtnType }) {
       } else {
         // console.log('통과');
         localStorage.setItem('pending_order_items', JSON.stringify(props.list));
+        localStorage.setItem('address', JSON.stringify(userInfo?.address));
       }
 
       const tossPayments = await loadTossPayments(
@@ -68,7 +77,7 @@ export default function BuyBtn({ props }: { props: BuyBtnType }) {
           alert('결재 취소');
         });
     },
-    [props]
+    [props, userInfo]
   );
 
   return (

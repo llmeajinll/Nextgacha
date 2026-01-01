@@ -7,7 +7,7 @@ import { addOrder } from '@/lib/addOrder';
 import { resetCart } from '@/lib/resetCart';
 
 export async function POST(req: Request) {
-  const { paymentKey, orderId, amount, list } = await req.json();
+  const { paymentKey, orderId, amount, list, address } = await req.json();
   const session = await auth();
   const email = session?.user?.email;
   const mongodbSession = mongodbClient.startSession();
@@ -19,13 +19,14 @@ export async function POST(req: Request) {
     );
   }
 
-  //   console.log(
-  //     'paymentKey, orderId, amount, list : ',
-  //     paymentKey,
-  //     orderId,
-  //     amount,
-  //     list
-  //   );
+  console.log(
+    'paymentKey, orderId, amount, list, address : ',
+    paymentKey,
+    orderId,
+    amount,
+    list,
+    address
+  );
 
   // 1. [최종 재고 확인] DB에서 수량을 다시 확인
   const isStillAvailable = await validateStock(list);
@@ -74,6 +75,7 @@ export async function POST(req: Request) {
           amount,
           email,
           mongodbSession,
+          address,
         });
         const resetCartRes = await resetCart({
           email,

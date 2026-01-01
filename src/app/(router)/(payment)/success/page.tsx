@@ -17,7 +17,10 @@ export default function page() {
   useEffect(() => {
     async function confirmPayment() {
       const savedItems = localStorage.getItem('pending_order_items');
+      const savedAddress = localStorage.getItem('address');
       const list = JSON.parse(savedItems || '');
+      const address = JSON.parse(savedAddress || '');
+
       if (!savedItems) return;
 
       // const list = JSON.parse(savedItems);
@@ -33,6 +36,7 @@ export default function page() {
             orderId,
             amount,
             list,
+            address,
           }),
         });
         // console.log('response : ', response);
