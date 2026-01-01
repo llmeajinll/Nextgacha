@@ -1,6 +1,7 @@
 import { http, HttpResponse } from 'msw';
+import { baseUrl } from '@/shared/baseUrl';
 
-const baseUrl = 'http://localhost:3000';
+// const baseUrl = 'http://localhost:3000';
 
 export const handlers = [
   http.get(`${baseUrl}/api/postProductList`, ({ request }) => {

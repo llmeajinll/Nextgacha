@@ -1,8 +1,9 @@
 import { auth } from '@/auth';
 import { headers } from 'next/headers';
+import { baseUrl } from '@/shared/baseUrl';
 
 export default async function getDetailProduct(num: string) {
-  const baseUrl = process.env.NEXT_PUBLIC_URL || 'http://localhost:3000';
+  // const baseUrl = process.env.NEXT_PUBLIC_URL || 'http://localhost:3000';
 
   const session = await auth();
   console.log('getDetailProduct : ', session?.user?.email);

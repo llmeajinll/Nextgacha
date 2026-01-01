@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { auth } from '@/auth';
+import { baseUrl } from '@/shared/baseUrl';
 
 export default async function getLike() {
   // console.log(like);
@@ -10,10 +11,10 @@ export default async function getLike() {
 
   // console.log('auth email : ', email);
 
-  const baseUrl = process.env.NEXT_PUBLIC_URL || 'http://localhost:3000';
+  // const baseUrl = process.env.NEXT_PUBLIC_URL || 'http://localhost:3000';
   // const result = await fetch(`${baseUrl}/api/getLike`, {
   const result = await fetch(
-    `http://localhost:3000/api/protected/getLike?email=${email}`,
+    `${baseUrl}/api/protected/getLike?email=${email}`,
     {
       method: 'GET',
       // body: JSON.stringify(like),

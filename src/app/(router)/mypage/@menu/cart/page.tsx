@@ -3,6 +3,7 @@
 // import React, { useState, useEffect } from 'react';
 import { CartTemplate } from '@/components/templates';
 import getCart from '@/api/getCart';
+import { baseUrl } from '@/shared/baseUrl';
 
 export default async function page() {
   const data = await getCart();
@@ -15,7 +16,7 @@ export default async function page() {
   //   };
   //   fetchCartData();
   // }, []);
-  console.log('result from getCart in page: ', data);
+  console.log('result from getCart in page: ', data, baseUrl);
   return (
     <>
       <CartTemplate props={data} />

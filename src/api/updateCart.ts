@@ -2,6 +2,7 @@
 
 import { revalidateTag } from 'next/cache';
 import { auth } from '@/auth';
+import { baseUrl } from '@/shared/baseUrl';
 
 export default async function updateCart({
   preset,
@@ -13,9 +14,7 @@ export default async function updateCart({
   // console.log('updateCart data input:', preset, code);
   const session = await auth();
   const data = { preset, code, email: session?.user?.email };
-  const baseUrl = process.env.NEXT_PUBLIC_URL || 'http://localhost:3000';
-  const res = await fetch(`http://localhost:3000/api/updateCart`, {
-    //   const res = await fetch(`/api/updateCart`, {
+  const res = await fetch(`${baseUrl}/api/updateCart`, {
     method: 'POST',
     body: JSON.stringify(data),
     headers: {

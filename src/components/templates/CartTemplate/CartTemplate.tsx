@@ -18,7 +18,7 @@ export default function CartTemplate({ props }: { props?: any }) {
   // console.log('result from getCart in CartTemplate: ', result);
 
   console.log('props : ', props);
-  console.log('env : ', process.env.NODE_ENV);
+  // console.log('env : ', process.env.NODE_ENV);
 
   const totalPrice = useMemo(() => {
     return props.reduce((acc: any, item: any) => {

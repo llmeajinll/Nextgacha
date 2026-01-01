@@ -1,15 +1,9 @@
 'use server';
 import { auth } from '@/auth';
 import { cookies } from 'next/headers';
+import { baseUrl } from '@/shared/baseUrl';
 
 export default async function getCart() {
-  let baseUrl = '';
-  console.log(process.env.VERCEL_ENV);
-  if (process.env.VERCEL_ENV === 'preview') {
-    baseUrl = 'https://nextgacha.vercel.app';
-  } else {
-    baseUrl = 'http://localhost:3000';
-  }
   // console.log('getCart preview', session?.user?.email);
 
   const session = await auth();
