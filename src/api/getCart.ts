@@ -3,12 +3,18 @@ import { auth } from '@/auth';
 import { cookies } from 'next/headers';
 
 export default async function getCart() {
-  const baseUrl = process.env.NEXT_PUBLIC_URL || 'http://localhost:3000';
+  let baseUrl = '';
+  console.log(process.env.VERCEL_ENV);
+  if (process.env.VERCEL_ENV === 'preview') {
+    baseUrl = 'https://nextgacha.vercel.app';
+  } else {
+    baseUrl = 'http://localhost:3000';
+  }
+  // console.log('getCart preview', session?.user?.email);
+
   const session = await auth();
-  // console.log('getCart start', session?.user?.email);
-  // console.log(`${baseUrl}api/getCart?email=${session?.user?.email}`);
   const data = await fetch(
-    `http://localhost:3000/api/getCart?email=${session?.user?.email}`,
+    `${baseUrl}/api/getCart?email=${session?.user?.email}`,
     // `${baseUrl}/api/getCart}`,
     {
       method: 'GET',
