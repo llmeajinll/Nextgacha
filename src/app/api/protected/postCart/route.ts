@@ -13,6 +13,12 @@ export async function POST(req: Request) {
   // console.log('email, num, updatedArray : ', email, num, updatedArray);
 
   try {
+    await cartColl.updateOne(
+      { user: email },
+      { $setOnInsert: { user: email, cart: [] } },
+      { upsert: true }
+    );
+
     for (const newItem of updatedArray) {
       // 1. 해당 num과 code가 모두 존재하는지 확인하여 count만 올림
       // console.log('newItem : ', newItem);
