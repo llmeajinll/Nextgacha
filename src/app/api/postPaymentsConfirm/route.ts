@@ -3,11 +3,13 @@ import { auth } from '@/auth';
 import { mongodbClient } from '@/lib/mongodb';
 import { validateStock } from '@/lib/validateStock';
 import { reduceStock } from '@/lib/reduceStock';
+import { reducePoint } from '@/lib/reducePoint';
 import { addOrder } from '@/lib/addOrder';
 import { resetCart } from '@/lib/resetCart';
 
 export async function POST(req: Request) {
-  const { paymentKey, orderId, amount, list, address } = await req.json();
+  const { paymentKey, orderId, amount, list, address, usedPoint, addPoint } =
+    await req.json();
   const session = await auth();
   const email = session?.user?.email;
   const mongodbSession = mongodbClient.startSession();
@@ -64,6 +66,11 @@ export async function POST(req: Request) {
     // 3. [최종 처리] DB에서 재고를 깎고 결제 완료 처리
     try {
       await mongodbSession.withTransaction(async () => {
+        const reducePointRes = await reducePoint({
+          usedPoint,
+          email,
+          mongodbSession,
+        });
         const reduceStockRes = await reduceStock({
           list,
           email,
@@ -76,6 +83,7 @@ export async function POST(req: Request) {
           email,
           mongodbSession,
           address,
+          addPoint
         });
         const resetCartRes = await resetCart({
           email,
@@ -86,7 +94,11 @@ export async function POST(req: Request) {
           addOrderRes?.acknowledged,
           reduceStockRes?.ok,
           resetCartRes?.ok,
-          addOrderRes?.acknowledged && reduceStockRes?.ok && resetCartRes?.ok
+          reducePointRes?.ok,
+          addOrderRes?.acknowledged &&
+            reduceStockRes?.ok &&
+            resetCartRes?.ok &&
+            reducePointRes?.ok
         );
       });
 

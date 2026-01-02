@@ -2,6 +2,7 @@
 
 import React, { useEffect, useState, useRef, useMemo } from 'react';
 import Image from 'next/image';
+import { useAtom } from 'jotai';
 import { Range, Btn } from '@/components/atoms';
 import { Cart } from '@/components/molecules';
 // import postCartProduct from '@/api/postCartProduct';
@@ -10,6 +11,7 @@ import { comma } from '@/shared/comma';
 import { BuyBtn } from '@/components/atoms';
 import Cookies from 'js-cookie';
 import getCart from '@/api/getCart';
+import { userInfoAtom } from '@/jotai/store';
 
 export default function CartTemplate({ props }: { props?: any }) {
   // const [items, setItems] = useState([] as any[]);
@@ -19,6 +21,10 @@ export default function CartTemplate({ props }: { props?: any }) {
 
   console.log('props : ', props);
   // console.log('env : ', process.env.NODE_ENV);
+  const [userInfo] = useAtom(userInfoAtom);
+  const [point, setPoint] = useState(0);
+  const [isPointInputFocused, setIsPointInputFocused] = useState(false);
+  console.log('userInfo : ', userInfo);
 
   const totalPrice = useMemo(() => {
     return props.reduce((acc: any, item: any) => {
@@ -33,6 +39,17 @@ export default function CartTemplate({ props }: { props?: any }) {
   }, [props]);
 
   console.log('totalPrice', totalPrice);
+
+  const finalPrice = useMemo(() => {
+    if (totalPrice === 0) return 0;
+    else {
+      if (totalPrice >= 50000) {
+        return totalPrice - point;
+      } else {
+        return totalPrice - point + 3000;
+      }
+    }
+  }, [totalPrice, point]);
 
   return (
     <>
@@ -91,6 +108,53 @@ export default function CartTemplate({ props }: { props?: any }) {
                   fontSize: '18px',
                 }}
               >
+                <span style={{ marginRight: '41px' }}>USE POINTS :</span>
+                <span
+                  style={{
+                    display: 'inline-block',
+                    width: '202px',
+                    textAlign: 'right',
+                  }}
+                >
+                  <span style={{ marginRight: '8px' }}>-</span>
+                  <input
+                    value={comma(point)}
+                    style={{
+                      width: '100px',
+                      textAlign: 'right',
+                      height: '30px',
+                      border: isPointInputFocused
+                        ? '1px solid #75C3FE'
+                        : '1px solid lightgray',
+                      fontFamily: 'silkscreen',
+                      fontSize: '16px',
+                      outline: 'none',
+                    }}
+                    onFocus={() => setIsPointInputFocused(true)}
+                    onBlur={() => setIsPointInputFocused(false)}
+                    onChange={(e) => {
+                      const maxPoint = userInfo?.point ?? 0;
+                      const inputVal = Number(e.target.value) || 0;
+                      if (inputVal >= maxPoint) {
+                        setPoint(maxPoint);
+                      } else if (inputVal >= finalPrice - 1000) {
+                        setPoint(finalPrice - 1000);
+                      } else {
+                        setPoint(inputVal);
+                      }
+                    }}
+                  />
+                  <span style={{ marginLeft: '8px' }}>POINT</span>
+                </span>
+              </span>
+            </div>
+            <div>
+              <span
+                style={{
+                  fontFamily: 'silkscreen',
+                  fontSize: '18px',
+                }}
+              >
                 <span style={{ marginRight: '20px' }}>Delivery Fee :</span>
                 <span
                   style={{
@@ -99,7 +163,7 @@ export default function CartTemplate({ props }: { props?: any }) {
                     textAlign: 'right',
                   }}
                 >
-                  + 3,000WON
+                  + 3,000<span style={{ marginLeft: '8px' }}>WON</span>
                 </span>
                 <span
                   style={{
@@ -124,16 +188,17 @@ export default function CartTemplate({ props }: { props?: any }) {
 
         <Range gap='30'>
           <div className={totalPriceStyle}>
-            <span style={{ color: 'lightblue' }}>TOTAL</span> :{' '}
+            <span style={{ color: '#75C3FE' }}>TOTAL</span> :{' '}
             {comma(
-              totalPrice < 50000 && totalPrice > 1
-                ? totalPrice + 3000
-                : totalPrice
+              finalPrice
+              // totalPrice < 50000 && totalPrice > 1
+              //   ? totalPrice + 3000
+              //   : totalPrice
             )}
-            WON
+            <span style={{ marginLeft: '10px' }}>WON</span>
           </div>
           <Range preset='center' gap='8' className={totalPriceStyle}>
-            <span style={{ color: 'lightblue' }}>REWARD</span> :{' '}
+            <span style={{ color: '#75C3FE' }}>REWARD</span> :{' '}
             <Image
               src='/images/point.png'
               alt='point'
@@ -149,7 +214,10 @@ export default function CartTemplate({ props }: { props?: any }) {
       <BuyBtn
         props={{
           size: 'big',
-          price: totalPrice < 50000 ? totalPrice + 3000 : totalPrice,
+          // price: totalPrice < 50000 ? totalPrice + 3000 : totalPrice,
+          price: finalPrice,
+          usedPoint: point,
+          addPoint: totalPrice * 0.01,
           list: props.reduce((acc: any, item: any) => {
             if (item && item.product) {
               acc.push({

@@ -1,6 +1,10 @@
 // export { auth as middleware } from '@/auth';
-import { auth } from '@/auth';
+// import { auth } from '@/auth';
 import { NextResponse } from 'next/server';
+import NextAuth from 'next-auth';
+import { authConfig } from './auth.config';
+
+const { auth } = NextAuth(authConfig);
 
 export default auth((req) => {
   const isLoggedIn = !!req.auth;
@@ -24,5 +28,5 @@ export default auth((req) => {
 
 // 미들웨어가 실행될 경로 설정
 export const config = {
-  matcher: ['/api/protected/:path*'],
+  matcher: ['/api/protected/:path*', '/mypage/:path*'],
 };

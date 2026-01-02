@@ -13,6 +13,8 @@ interface BuyBtnType {
   price: number;
   size?: 'big' | 'medium';
   list?: { num: number; product: { name: string; count: number }[] }[];
+  usedPoint: number;
+  addPoint: number;
 }
 
 export default function BuyBtn({ props }: { props: BuyBtnType }) {
@@ -50,6 +52,8 @@ export default function BuyBtn({ props }: { props: BuyBtnType }) {
         // console.log('통과');
         localStorage.setItem('pending_order_items', JSON.stringify(props.list));
         localStorage.setItem('address', JSON.stringify(userInfo?.address));
+        localStorage.setItem('used_point', JSON.stringify(props.usedPoint));
+        localStorage.setItem('add_point', JSON.stringify(props.addPoint));
       }
 
       const tossPayments = await loadTossPayments(

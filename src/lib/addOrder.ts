@@ -11,6 +11,7 @@ export async function addOrder({
   email,
   mongodbSession,
   address,
+  addPoint,
 }: {
   orderId: string;
   list: any[];
@@ -18,6 +19,7 @@ export async function addOrder({
   email: string;
   mongodbSession: ClientSession;
   address: string;
+  addPoint: number;
 }) {
   // const address = await findUserInfo({ email, mongodbSession })
   //   .then((res) => {
@@ -41,6 +43,7 @@ export async function addOrder({
         courier: '',
         invoice: '',
         totalPrice: amount,
+        addPoint: addPoint,
       },
       { session: mongodbSession }
     )

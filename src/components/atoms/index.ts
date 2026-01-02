@@ -7,6 +7,5 @@ export { default as BuyBtn } from './Btn/BuyBtn';
 export { default as ImgBtn } from './ImgBtn/ImgBtn';
 export { default as Range } from './Range/Range';
 export { default as CountBtn } from './Btn/CountBtn';
-export { default as AuthBtn } from './Btn/AuthBtn';
 export { default as StarBtn } from './ImgBtn/StarBtn';
 export { default as Writer } from './Writer/Writer';

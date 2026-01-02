@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useEffect, useState } from 'react';
+
 // import { signIn, signOut } from '@/auth';
 import { Search, Category } from '@/components/molecules';
 import {
@@ -15,8 +16,9 @@ import {
 import Link from 'next/link';
 
 import { useSession } from 'next-auth/react';
+import { signIn, signOut } from 'next-auth/react';
 
-import { kakaoSignIn, kakaoSignOut } from '@/shared/authActions';
+// import { kakaoSignIn, kakaoSignOut } from '@/shared/authActions';
 import { Session } from 'next-auth';
 import { useSearchParams } from 'next/navigation';
 
@@ -55,13 +57,20 @@ export default function Header({ session }: { session: Session | null }) {
           <div className={wrap}>
             <Search />
             {session?.user ? (
-              <form action={kakaoSignOut}>
-                <button className={menu}>LOGOUT</button>
-              </form>
+              // <form action={kakaoSignOut}>
+              //   <button className={menu}>LOGOUT</button>
+              // </form>
+
+              <button className={menu} onClick={() => signOut()}>
+                LOGOUT
+              </button>
             ) : (
-              <form action={kakaoSignIn}>
-                <button className={menu}>LOGIN</button>
-              </form>
+              // <form action={kakaoSignIn}>
+              //   <button className={menu}>LOGIN</button>
+              // </form>
+              <button className={menu} onClick={() => signIn('kakao')}>
+                LOGIN
+              </button>
             )}
           </div>
         </div>

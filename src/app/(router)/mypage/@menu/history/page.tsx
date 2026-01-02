@@ -25,20 +25,44 @@ export default function HistoryPage() {
 
   return (
     <>
-      <div
-        style={{
-          padding: '20px 0 0 0',
-          display: 'grid',
-          gridTemplateColumns: 'repeat(2, 620px)',
-          justifyContent: 'space-between',
-          margin: '0 auto',
-        }}
-      >
-        {data.map((val: any, idx) => {
-          // console.log(val);
-          return <History props={val} key={idx} />;
-        })}
-      </div>
+      {data.length === 0 ? (
+        <div
+          style={{
+            boxSizing: 'border-box',
+            width: '100%',
+            height: '130px',
+            padding: '20px',
+            border: '1px solid lightgray',
+            fontFamily: 'silkscreen',
+            color: 'gray',
+            fontSize: '30px',
+            textAlign: 'center',
+            alignItems: 'center',
+            display: 'flex',
+            justifyContent: 'center',
+            lineHeight: '24px',
+            marginTop: '15px',
+          }}
+        >
+          HISTORY IS EMPTY
+        </div>
+      ) : (
+        <div
+          style={{
+            padding: '20px 0 0 0',
+            display: 'grid',
+            gridTemplateColumns: 'repeat(2, 620px)',
+            justifyContent: 'space-between',
+            margin: '0 auto',
+            gap: '20px',
+          }}
+        >
+          {data.map((val: any, idx) => {
+            // console.log(val);
+            return <History props={val} key={idx} />;
+          })}
+        </div>
+      )}
     </>
   );
 }

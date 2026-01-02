@@ -18,8 +18,12 @@ export default function page() {
     async function confirmPayment() {
       const savedItems = localStorage.getItem('pending_order_items');
       const savedAddress = localStorage.getItem('address');
+      const savedUsedPoint = localStorage.getItem('used_point');
+      const addedPoint = localStorage.getItem('add_point');
       const list = JSON.parse(savedItems || '');
       const address = JSON.parse(savedAddress || '');
+      const usedPoint = JSON.parse(savedUsedPoint || '0');
+      const addPoint = JSON.parse(addedPoint || '0');
 
       if (!savedItems) return;
 
@@ -37,6 +41,8 @@ export default function page() {
             amount,
             list,
             address,
+            usedPoint,
+            addPoint,
           }),
         });
         // console.log('response : ', response);
