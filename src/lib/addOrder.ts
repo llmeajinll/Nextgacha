@@ -9,6 +9,7 @@ export async function addOrder({
   list,
   amount,
   email,
+  name,
   mongodbSession,
   address,
   addPoint,
@@ -17,6 +18,7 @@ export async function addOrder({
   list: any[];
   amount: number;
   email: string;
+  name: string;
   mongodbSession: ClientSession;
   address: string;
   addPoint: number;
@@ -31,30 +33,44 @@ export async function addOrder({
   //     return NextResponse.json({ error: (error as Error).message });
   //   });
 
+  // console.log('list in addOrder : ', list);
+
   const result = await orderColl
     .insertOne(
       {
-        customer: email,
+        customer: name,
+        email: email,
         orderId: orderId,
         list: list,
         address: address,
         status: '상품 확인중',
-        created_at: dayjs(new Date()).format('YYYY-MM-DD HH:mm:ss'),
         courier: '',
         invoice: '',
         totalPrice: amount,
         addPoint: addPoint,
+        created_at: dayjs(new Date()).format('YYYY-MM-DD HH:mm:ss'),
+        arrivedDate: '',
       },
       { session: mongodbSession }
     )
     .then((res) => {
-      //   console.log('Insert Result:', res);
-      return { acknowledged: res.acknowledged };
+      console.log('Insert Result:', res);
+      return {
+        ok: res.acknowledged,
+        data: {
+          orderId: orderId,
+          list: list,
+          address: address,
+          totalPrice: amount,
+          addPoint: addPoint,
+          arrivedDate: '',
+        },
+      };
     })
     .catch((err) => {
       console.error('Error inserting product:', err);
-      return { acknowledged: false };
+      return { ok: false, data: {} };
     });
 
-  return result;
+  return { result };
 }

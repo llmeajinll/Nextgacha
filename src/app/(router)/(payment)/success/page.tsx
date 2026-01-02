@@ -2,6 +2,8 @@
 
 import React, { useState, useEffect } from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
+import Link from 'next/link';
+import { Range } from '@/components/atoms';
 
 export default function page() {
   const router = useRouter();
@@ -13,6 +15,7 @@ export default function page() {
 
   const [sendList, setsendList] = useState([]);
   const [isProcessing, setIsProcessing] = useState(true);
+  const [result, setResult] = useState<any>(null);
 
   useEffect(() => {
     async function confirmPayment() {
@@ -45,16 +48,17 @@ export default function page() {
             addPoint,
           }),
         });
-        // console.log('response : ', response);
-        if (response.ok) {
+        console.log('response : ', response);
+        const result = await response.json();
+        console.log(result.data);
+        if (result.ok) {
           // 3. 결제 최종 완료!
-
+          setResult(result.data);
           setIsProcessing(false);
         } else {
           // 결제 실패 처리 (예: 잔액 부족 등)
-          const error = await response.json();
-          alert('error');
-          router.push(`/fail?message=${error.message}`);
+          alert(`${result.message}`);
+          router.push(`/fail?message=${result.message}`);
         }
       } catch (err) {
         console.error('승인 중 오류 발생:', err);
@@ -72,20 +76,30 @@ export default function page() {
   return (
     <div>
       <h1>결제가 완료되었습니다!</h1>
-      <div>주문 번호: {orderId}</div>
+      <h3>주문 번호: {orderId}</h3>
+      <div>배송지: {result?.address}</div>
+      <div>결제 금액: {result?.amount}원</div>
       <div>
         주문 상품:{' '}
-        {sendList.map((value: any, index: number) => (
+        {result?.list.map((value: any, index: number) => (
           <div key={index}>
+            <div>{value.title}</div>
             {value.product.map((val: any, idx: number) => (
-              <div key={idx}>
+              <div key={idx} style={{ marginLeft: '15px' }}>
                 {val.name} : {val.count}개
               </div>
             ))}
           </div>
         ))}
       </div>
-      <div>결제 금액: {Number(amount).toLocaleString()}원</div>
+      <Range gap='30'>
+        <Link href='/' style={{ fontFamily: 'silkscreen' }}>
+          HOME
+        </Link>
+        <Link href='/mypage/history' style={{ fontFamily: 'silkscreen' }}>
+          MYPAGE
+        </Link>
+      </Range>
     </div>
   );
 }

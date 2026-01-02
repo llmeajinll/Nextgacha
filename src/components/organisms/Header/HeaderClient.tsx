@@ -21,9 +21,12 @@ import { signIn, signOut } from 'next-auth/react';
 // import { kakaoSignIn, kakaoSignOut } from '@/shared/authActions';
 import { Session } from 'next-auth';
 import { useSearchParams } from 'next/navigation';
+import { useSpliteRoute } from '@/app/hooks';
 
 export default function Header({ session }: { session: Session | null }) {
   const [showCategory, setShowCategory] = useState(false);
+  const { firstRoute } = useSpliteRoute();
+  console.log(firstRoute);
 
   return (
     <>
@@ -40,15 +43,36 @@ export default function Header({ session }: { session: Session | null }) {
                 onMouseEnter={() => setShowCategory(true)}
                 onMouseLeave={() => setShowCategory(false)}
               >
-                <Link href='/search?type=main&detail=전체 상품'>CATEGORY</Link>
+                <Link
+                  href='/search?type=main&detail=전체 상품'
+                  style={{
+                    color: `${firstRoute === 'search' ? '#75C3FE' : ''}`,
+                  }}
+                >
+                  CATEGORY
+                </Link>
               </span>
 
               <Link href='/notice'>
-                <span className={menu}>NOTICE</span>
+                <span
+                  className={menu}
+                  style={{
+                    color: `${firstRoute === 'notice' ? '#75C3FE' : ''}`,
+                  }}
+                >
+                  NOTICE
+                </span>
               </Link>
               {session?.user && (
                 <Link href={`/mypage/cart`}>
-                  <span className={menu}>MYPAGE</span>
+                  <span
+                    className={menu}
+                    style={{
+                      color: `${firstRoute === 'mypage' ? '#75C3FE' : ''}`,
+                    }}
+                  >
+                    MYPAGE
+                  </span>
                 </Link>
               )}
             </div>

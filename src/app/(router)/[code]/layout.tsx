@@ -2,6 +2,7 @@
 import { headers } from 'next/headers';
 import { ProductPurchasePanel } from '@/components/organisms';
 import { DetailTab } from '@/components/molecules';
+import ScrollToTop from '@/components/atoms/ScrollToTop';
 
 export default async function DetailLayout({
   children,
@@ -16,6 +17,7 @@ export default async function DetailLayout({
 
   return (
     <div>
+      <ScrollToTop />
       <div style={{ width: 'fit-content', margin: '50px auto 0 auto' }}>
         <ProductPurchasePanel num={code} />
         <DetailTab />

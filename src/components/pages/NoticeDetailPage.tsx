@@ -56,6 +56,17 @@ export default function NoticeDetailPage() {
         padding: '20px 50px',
       }}
     >
+      <Link
+        href='/notice'
+        style={{
+          fontFamily: 'silkscreen',
+          fontSize: '14px',
+          lineHeight: '24px',
+        }}
+      >
+        <span style={{ color: '#75c3fe' }}>{'<< '}</span>NOTICE
+      </Link>
+
       <Range
         preset='between'
         width='full'

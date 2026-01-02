@@ -3,11 +3,5 @@ import { ReactSlick } from '@/components/atoms';
 import { DetailPage } from '@/components/pages';
 
 export default function page() {
-  return (
-    <>
-      {/* <div>DetailPage</div> */}
-      {/* <ReactSlick /> */}
-      <DetailPage />
-    </>
-  );
+  return <></>;
 }

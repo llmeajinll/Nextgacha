@@ -101,53 +101,7 @@ export default function CartTemplate({ props }: { props?: any }) {
                 {comma(totalPrice)} WON
               </span>
             </div>
-            <div>
-              <span
-                style={{
-                  fontFamily: 'silkscreen',
-                  fontSize: '18px',
-                }}
-              >
-                <span style={{ marginRight: '41px' }}>USE POINTS :</span>
-                <span
-                  style={{
-                    display: 'inline-block',
-                    width: '202px',
-                    textAlign: 'right',
-                  }}
-                >
-                  <span style={{ marginRight: '8px' }}>-</span>
-                  <input
-                    value={comma(point)}
-                    style={{
-                      width: '100px',
-                      textAlign: 'right',
-                      height: '30px',
-                      border: isPointInputFocused
-                        ? '1px solid #75C3FE'
-                        : '1px solid lightgray',
-                      fontFamily: 'silkscreen',
-                      fontSize: '16px',
-                      outline: 'none',
-                    }}
-                    onFocus={() => setIsPointInputFocused(true)}
-                    onBlur={() => setIsPointInputFocused(false)}
-                    onChange={(e) => {
-                      const maxPoint = userInfo?.point ?? 0;
-                      const inputVal = Number(e.target.value) || 0;
-                      if (inputVal >= maxPoint) {
-                        setPoint(maxPoint);
-                      } else if (inputVal >= finalPrice - 1000) {
-                        setPoint(finalPrice - 1000);
-                      } else {
-                        setPoint(inputVal);
-                      }
-                    }}
-                  />
-                  <span style={{ marginLeft: '8px' }}>POINT</span>
-                </span>
-              </span>
-            </div>
+
             <div>
               <span
                 style={{
@@ -176,16 +130,62 @@ export default function CartTemplate({ props }: { props?: any }) {
                 </span>
               </span>
             </div>
-            <div
-              style={{
-                width: '700px',
-                height: '1px',
-                backgroundColor: 'lightgray',
-              }}
-            ></div>
           </>
         )}
-
+        <div>
+          <span
+            style={{
+              fontFamily: 'silkscreen',
+              fontSize: '18px',
+            }}
+          >
+            <span style={{ marginRight: '41px' }}>USE POINTS :</span>
+            <span
+              style={{
+                display: 'inline-block',
+                width: '202px',
+                textAlign: 'right',
+              }}
+            >
+              <span style={{ marginRight: '8px' }}>-</span>
+              <input
+                value={comma(point)}
+                style={{
+                  width: '100px',
+                  textAlign: 'right',
+                  height: '30px',
+                  border: isPointInputFocused
+                    ? '1px solid #75C3FE'
+                    : '1px solid lightgray',
+                  fontFamily: 'silkscreen',
+                  fontSize: '16px',
+                  outline: 'none',
+                }}
+                onFocus={() => setIsPointInputFocused(true)}
+                onBlur={() => setIsPointInputFocused(false)}
+                onChange={(e) => {
+                  const maxPoint = userInfo?.point ?? 0;
+                  const inputVal = Number(e.target.value) || 0;
+                  if (inputVal >= maxPoint) {
+                    setPoint(maxPoint);
+                  } else if (inputVal >= finalPrice - 1000) {
+                    setPoint(finalPrice - 1000);
+                  } else {
+                    setPoint(inputVal);
+                  }
+                }}
+              />
+              <span style={{ marginLeft: '8px' }}>POINT</span>
+            </span>
+          </span>
+        </div>
+        <div
+          style={{
+            width: '700px',
+            height: '1px',
+            backgroundColor: 'lightgray',
+          }}
+        ></div>
         <Range gap='30'>
           <div className={totalPriceStyle}>
             <span style={{ color: '#75C3FE' }}>TOTAL</span> :{' '}
@@ -219,9 +219,11 @@ export default function CartTemplate({ props }: { props?: any }) {
           usedPoint: point,
           addPoint: totalPrice * 0.01,
           list: props.reduce((acc: any, item: any) => {
+            console.log(item.title);
             if (item && item.product) {
               acc.push({
                 num: item.num,
+                title: item.title,
                 product: item.product.map((p: any) => ({
                   name: p.name,
                   count: p.count,

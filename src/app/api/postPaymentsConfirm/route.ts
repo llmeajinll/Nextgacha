@@ -12,6 +12,7 @@ export async function POST(req: Request) {
     await req.json();
   const session = await auth();
   const email = session?.user?.email;
+  const name = session?.user?.name;
   const mongodbSession = mongodbClient.startSession();
 
   if (!email) {
@@ -68,41 +69,44 @@ export async function POST(req: Request) {
       await mongodbSession.withTransaction(async () => {
         const reducePointRes = await reducePoint({
           usedPoint,
-          email,
+          email: email as string,
           mongodbSession,
         });
         const reduceStockRes = await reduceStock({
           list,
-          email,
+          email: email as string,
           mongodbSession,
         });
         const addOrderRes = await addOrder({
           orderId,
           list,
           amount,
-          email,
+          email: email as string,
+          name: name ?? '',
           mongodbSession,
           address,
-          addPoint
+          addPoint,
         });
         const resetCartRes = await resetCart({
-          email,
+          email: email as string,
           mongodbSession,
         });
         console.log(
-          'addOrderRes?.acknowledged, reduceStockRes?.ok : ',
-          addOrderRes?.acknowledged,
+          'addOrderRes?.result.ok, reduceStockRes?.ok : ',
+          addOrderRes?.result.ok,
           reduceStockRes?.ok,
           resetCartRes?.ok,
           reducePointRes?.ok,
-          addOrderRes?.acknowledged &&
+          addOrderRes?.result.ok &&
             reduceStockRes?.ok &&
             resetCartRes?.ok &&
             reducePointRes?.ok
         );
       });
-
-      return NextResponse.json({ ok: true }, { status: 201 });
+      return NextResponse.json(
+        { ok: true, data: { orderId, list, amount, address } },
+        { status: 201 }
+      );
     } catch (err) {
       console.error('트랜잭션 실패! 모든 작업이 취소되었습니다:', err);
       return NextResponse.json(

@@ -3,7 +3,8 @@ import { Range } from '@/components/atoms';
 import { LabelTitle } from '@/components/molecules';
 import dayjs from 'dayjs';
 import { comma } from '@/shared/comma';
-import { imageStyle, Title, contentStyle } from './history.css';
+import { imageStyle, Title, contentStyle, reviewBtn } from './history.css';
+import Link from 'next/link';
 
 export default function History({ props }: { props: any }) {
   // console.log('props:', props);
@@ -31,8 +32,10 @@ export default function History({ props }: { props: any }) {
         />
         <LabelTitle label='배송지' content={props.address} />
         <LabelTitle label='상태' content={props.status} />
-        <LabelTitle label='가격' content={`${comma(props.totalPrice)}원`} />
-        <LabelTitle label='적립' content={`${comma(props.addPoint)}p`} />
+        <Range gap='30'>
+          <LabelTitle label='가격' content={`${comma(props.totalPrice)}원`} />
+          <LabelTitle label='적립' content={`${comma(props.addPoint)}p`} />
+        </Range>
         <LabelTitle
           label='내역'
           content={
@@ -54,6 +57,11 @@ export default function History({ props }: { props: any }) {
             </Range>
           }
         />
+        {props.status === '배송 완료' && (
+          <Link href={`/mypage/history/review/${props.orderId}`}>
+            <div className={reviewBtn}>GIVE A REVIEW</div>
+          </Link>
+        )}
       </Range>
     </Range>
   );

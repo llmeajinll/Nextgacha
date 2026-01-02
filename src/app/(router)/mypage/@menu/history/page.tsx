@@ -54,12 +54,12 @@ export default function HistoryPage() {
             gridTemplateColumns: 'repeat(2, 620px)',
             justifyContent: 'space-between',
             margin: '0 auto',
-            gap: '20px',
+            gap: '30px',
           }}
         >
-          {data.map((val: any, idx) => {
+          {data.map((val: any) => {
             // console.log(val);
-            return <History props={val} key={idx} />;
+            return <History props={val} key={val.orderId} />;
           })}
         </div>
       )}

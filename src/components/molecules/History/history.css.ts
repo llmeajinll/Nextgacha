@@ -13,3 +13,14 @@ export const Title = style({
 export const contentStyle = style({
   color: vars.color.black1,
 });
+
+export const reviewBtn = style({
+  backgroundColor: vars.color.blue1,
+  color: 'white',
+  border: 'none',
+  textAlign: 'center',
+  padding: '8px 12px',
+  cursor: 'pointer',
+  fontFamily: 'silkscreen',
+  fontSize: '16px',
+});

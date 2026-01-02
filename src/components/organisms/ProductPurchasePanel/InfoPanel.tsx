@@ -73,7 +73,10 @@ export default function InfoPanel({ props }: { props: CardProps }) {
             />
           )}
           <LabelTitle label='가격' content={`${comma(props?.price || 0)}원`} />
-          <LabelTitle label='갯수' content={`${props?.list?.length || 0}개`} />
+          <LabelTitle
+            label='종류'
+            content={`${props?.list?.length || 0}가지`}
+          />
           <LabelTitle label='제조사' content={props?.company || ''} />
           <LabelTitle
             label='택배비'

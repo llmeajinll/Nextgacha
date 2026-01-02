@@ -11,11 +11,11 @@ export async function GET(req: Request) {
     .aggregate([
       {
         $match: {
-          customer: email,
+          email: email,
         },
       },
     ])
-    .sort({ created_at: -1 });
+    .sort({ _id: -1 });
   const result = await order.toArray();
 
   return NextResponse.json({ result: result, status: 200 });

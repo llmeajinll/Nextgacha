@@ -1,6 +1,5 @@
 'use server';
 import { auth } from '@/auth';
-import { cookies } from 'next/headers';
 import { baseUrl } from '@/shared/baseUrl';
 
 export default async function getCart() {

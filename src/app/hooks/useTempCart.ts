@@ -62,13 +62,15 @@ export default function useTempCart() {
     // console.log('limitCount, count : ', limitCount, count);
 
     if (count <= 0) {
+      console.log('장바구니 최대치 도달1');
       alert(
-        `장바구니는 최대 ${MAX}개까지만 담을 수 있습니다. (현재 장바구니: ${DBcartCount}, 예비 장바구니: ${preCount})`
+        `재고가 ${limitCount}개 남아있습니다. (현재 장바구니: ${DBcartCount}, 예비 장바구니: ${preCount})`
       );
       return;
     }
 
     if (DBcartCount + preCount >= MAX) {
+      console.log('장바구니 최대치 도달2');
       // console.log(
       //   `장바구니는 최대 ${MAX}개까지만 이용 가능합니다. (현재 DB: ${DBcartCount}, 예비: ${preCount})`
       // );
