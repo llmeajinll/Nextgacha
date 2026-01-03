@@ -6,6 +6,11 @@ export const profileImage = style({
   borderRadius: '300px',
 });
 
+export const name = style({
+  fontSize: '20px',
+  color: vars.color.black1,
+});
+
 export const email = style({
   fontSize: '14px',
   fontFamily: 'silkscreen',
@@ -23,24 +28,4 @@ export const point = style({
   lineHeight: '20px',
   fontFamily: 'silkscreen',
   color: vars.color.black2,
-});
-
-export const addressInput = style({
-  width: '400px',
-  padding: '8px',
-  border: `1px solid lightgray`,
-  // borderRadius: '4px',
-  fontSize: '14px',
-  color: vars.color.black1,
-});
-
-export const addressBtn = style({
-  width: '60px',
-  padding: '8px',
-  fontSize: '14px',
-  color: 'white',
-  backgroundColor: vars.color.blue1,
-  cursor: 'pointer',
-  border: 'none',
-  fontFamily: 'silkscreen',
 });

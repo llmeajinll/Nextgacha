@@ -6,8 +6,9 @@ import Image from 'next/image';
 const image = {
   share: '/images/share.png',
   dropdown: '/images/dropdown.png',
+  close: '/images/closeBtn.png',
 } as const;
-type ImageKey = keyof typeof image; // "share" | "close"
+type ImageKey = keyof typeof image; // "share" | "close" | "dropdown"
 
 type Props =
   | {

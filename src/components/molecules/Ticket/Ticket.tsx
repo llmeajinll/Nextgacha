@@ -14,6 +14,7 @@ import {
 import { Range, CountBtn } from '@/components/atoms';
 import { ProductProps } from '@/shared/type';
 import { comma } from '@/shared/comma';
+import { useModal } from '@/app/hooks';
 
 export default function Ticket({
   props,
@@ -26,6 +27,7 @@ export default function Ticket({
   decrease: (props: ProductProps) => void;
   erase: (props: ProductProps) => void;
 }) {
+  const { openModal } = useModal();
   // console.log('ticket props: ', props);
   // const data = { ...props, count: 1 };
 
@@ -47,17 +49,23 @@ export default function Ticket({
             {comma(props.price * props.count)}won
           </div>
           <Image
+            className={deleteBtn}
             src='/images/trash.png'
             alt={'trash'}
             width={20}
             height={20}
             onClick={() => {
-              if (window.confirm('삭제하시겠습니까?')) {
-                // deleteToTempCart(props.code);
+              // if (window.confirm('삭제하시겠습니까?')) {
+              //   // deleteToTempCart(props.code);
+              //   erase(props);
+              // }
+
+              openModal('삭제하시겠습니까?', () => {
                 erase(props);
-              }
+              });
+
+              // openModal('삭제하시겠습니까?');
             }}
-            className={deleteBtn}
           />
         </Range>
       </div>

@@ -1,7 +1,7 @@
 // import React, { use } from 'react';
 import { headers } from 'next/headers';
 import { ProductPurchasePanel } from '@/components/organisms';
-import { DetailTab } from '@/components/molecules';
+import { AlertModal, DetailTab } from '@/components/molecules';
 import ScrollToTop from '@/components/atoms/ScrollToTop';
 
 export default async function DetailLayout({
@@ -16,8 +16,9 @@ export default async function DetailLayout({
   const { code } = await params;
 
   return (
-    <div>
+    <>
       <ScrollToTop />
+
       <div style={{ width: 'fit-content', margin: '50px auto 0 auto' }}>
         <ProductPurchasePanel num={code} />
         <DetailTab />
@@ -26,6 +27,6 @@ export default async function DetailLayout({
       <div style={{ width: '958px', margin: '0 auto', padding: '20px 0 0 0' }}>
         {tab}
       </div>
-    </div>
+    </>
   );
 }

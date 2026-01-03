@@ -4,8 +4,8 @@ export { default as Cart } from './Cart/Cart';
 export { default as Review } from './Review/Review';
 export { default as Qna } from './Qna/Qna';
 export { default as Private } from './Qna/Private';
-export { default as MessageModal } from './Modal/MessageModal';
-
+export { default as AlertModal } from './Modal/AlertModal';
+export { default as AddressModal } from './Modal/AddressModal';
 export { default as Notice } from './Notice/Notice';
 export { default as History } from './History/History';
 export { default as Profile } from './Profile/Profile';

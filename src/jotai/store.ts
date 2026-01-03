@@ -16,6 +16,22 @@ export const userInfoAtom = atom<{
   image: string;
 } | null>(null);
 
+export const modalAtom = atom<{
+  isOpen: boolean;
+  message: string;
+
+  // onClickClose: () => void;
+  onClickCheck?: () => void;
+  onClickCancel?: () => void;
+}>({
+  isOpen: false,
+  message: 'test',
+
+  // onClickClose: () => {},
+  onClickCheck: () => {},
+  onClickCancel: () => {},
+});
+
 // export const setUserInfoAtom = atom(null, (_get, set, updated: any) => {
 //   console.log('setUserInfoAtom : ', updated);
 //   set(userInfoAtom, updated);

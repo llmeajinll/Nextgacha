@@ -7,6 +7,7 @@ import dayjs from 'dayjs';
 import { loadTossPayments } from '@tosspayments/tosspayments-sdk';
 import { useAtom } from 'jotai';
 import { tempCartAtom } from '@/jotai/store';
+import { useModal } from '@/app/hooks';
 
 import {
   Btn,
@@ -26,6 +27,7 @@ import postLike from '@/api/updateLike';
 
 export default function InfoPanel({ props }: { props: CardProps }) {
   console.log('infopanel', props);
+  const { openModal } = useModal();
   const [tempCart] = useAtom(tempCartAtom);
   const [showText, setShowText] = useState(false);
   const textDomRef = useRef<HTMLDivElement | null>(null);
@@ -111,7 +113,7 @@ export default function InfoPanel({ props }: { props: CardProps }) {
               // size='extra'
               onClick={async () => {
                 if (tempCart.length === 0) {
-                  alert('담은 상품이 없습니다.');
+                  openModal('담은 상품이 없습니다.');
                   return;
                 }
                 const data = tempCart.map(({ name, code, count }) => ({
@@ -126,17 +128,26 @@ export default function InfoPanel({ props }: { props: CardProps }) {
                   updatedArray: data,
                 }).then(async (res) => {
                   if (res.ok === true) {
-                    if (
-                      window.confirm(
-                        `장바구니에 정상적으로 들어갔습니다.\n장바구니로 이동하시겠습니까?`
-                      )
-                    ) {
-                      window.location.href = '/mypage/cart';
-                    } else {
-                      window.location.reload();
-                    }
+                    openModal(
+                      '장바구니에 정상적으로 들어갔습니다.\n장바구니로 이동하시겠습니까?',
+                      () => {
+                        window.location.href = '/mypage/cart';
+                      },
+                      () => {
+                        window.location.reload();
+                      }
+                    );
+                    // if (
+                    //   window.confirm(
+                    //     `장바구니에 정상적으로 들어갔습니다.\n장바구니로 이동하시겠습니까?`
+                    //   )
+                    // ) {
+                    //   window.location.href = '/mypage/cart';
+                    // } else {
+                    //   window.location.reload();
+                    // }
                   } else {
-                    alert('로그인 후 장바구니에 담을 수 있습니다.');
+                    openModal('로그인 후 장바구니에 담을 수 있습니다.');
                   }
                 });
               }}

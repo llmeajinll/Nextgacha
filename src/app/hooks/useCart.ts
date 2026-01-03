@@ -2,20 +2,22 @@ import { ProductProps } from '@/shared/type';
 import Cookies from 'js-cookie';
 import updateCart from '@/api/updateCart';
 import { useRouter } from 'next/navigation';
+import { useModal } from '@/app/hooks';
 
 export default function useCart() {
   const router = useRouter();
+  const { openModal } = useModal();
 
   const increase = async (props: ProductProps) => {
     // console.log('increase props: ', props);
     const limitCount = props.limit.count >= 5 ? 5 : props.limit.count;
     const count = limitCount - props.count;
 
-    // console.log('count : ', count);
+    console.log('count : ', count);
 
     if (count > 0) {
       // plus cart api 호출
-      const result = await updateCart({
+      await updateCart({
         preset: 'increase',
         code: props.code,
       }).then((res) => {
@@ -25,7 +27,9 @@ export default function useCart() {
       // console.log('increase result: ', await result);
       router.refresh();
     } else {
-      alert('더 이상 추가할 수 없습니다.');
+      // alert('더 이상 추가할 수 없습니다.');
+      console.log('왜 모달이 안뜨지');
+      openModal('더 이상 추가할 수 없습니다.');
     }
   };
 
@@ -34,7 +38,7 @@ export default function useCart() {
 
     if (props.count > 1) {
       // decrease cart api 호출
-      const result = await updateCart({
+      await updateCart({
         preset: 'decrease',
         code: props.code,
       }).then((res) => {
@@ -44,8 +48,8 @@ export default function useCart() {
       router.refresh();
     } else if (props.count === 1) {
       // erase cart api 호출
-      if (window.confirm('삭제하시겠습니까?')) {
-        const result = await updateCart({
+      openModal('삭제하시겠습니까?', async () => {
+        await updateCart({
           preset: 'erase',
           code: props.code,
         }).then((res) => {
@@ -53,7 +57,10 @@ export default function useCart() {
         });
         // console.log('decrease erase result: ', await result);
         router.refresh();
-      }
+      });
+      // if (window.confirm('삭제하시겠습니까?')) {
+
+      // }
     } else {
       alert('error');
     }

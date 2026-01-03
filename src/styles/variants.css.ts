@@ -63,6 +63,7 @@ export const widthVariant = styleVariants({
 export const heightVariant = styleVariants({
   fit: { height: 'fit-content' } as const,
   full: { height: '100%' } as const,
+  '45': { height: '45px' } as const,
   '70': { height: '70px' } as const,
   '450': { height: '450px' } as const,
   // dynamic: { height: rangeHeight } as const,

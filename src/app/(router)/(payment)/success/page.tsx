@@ -4,6 +4,7 @@ import React, { useState, useEffect } from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { Range } from '@/components/atoms';
+import { useModal } from '@/app/hooks';
 
 export default function page() {
   const router = useRouter();
@@ -16,6 +17,7 @@ export default function page() {
   const [sendList, setsendList] = useState([]);
   const [isProcessing, setIsProcessing] = useState(true);
   const [result, setResult] = useState<any>(null);
+  const { openModal } = useModal();
 
   useEffect(() => {
     async function confirmPayment() {
@@ -57,7 +59,9 @@ export default function page() {
           setIsProcessing(false);
         } else {
           // 결제 실패 처리 (예: 잔액 부족 등)
-          alert(`${result.message}`);
+          // alert(`${result.message}`);
+          openModal(`${result.message}`);
+
           router.push(`/fail?message=${result.message}`);
         }
       } catch (err) {

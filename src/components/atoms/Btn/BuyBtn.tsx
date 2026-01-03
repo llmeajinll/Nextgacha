@@ -7,6 +7,7 @@ import { loadTossPayments } from '@tosspayments/tosspayments-sdk';
 import { v4 as uuidv4 } from 'uuid';
 import { useAtom } from 'jotai';
 import { userInfoAtom } from '@/jotai/store';
+import { useModal } from '@/app/hooks';
 
 interface BuyBtnType {
   // email: string;
@@ -17,22 +18,29 @@ interface BuyBtnType {
   addPoint: number;
 }
 
-export default function BuyBtn({ props }: { props: BuyBtnType }) {
-  console.log('buyBtn list : ', props?.list);
+export default function BuyBtn({
+  props,
+  width,
+}: {
+  props: BuyBtnType;
+  width?: number;
+}) {
+  console.log('buyBtn list : ', props?.list, width);
 
   const [userInfo] = useAtom(userInfoAtom);
+  const { openModal } = useModal();
 
   const onClickPayment = useCallback(
     async (e: React.MouseEvent<HTMLButtonElement>) => {
       e.stopPropagation();
-
+      console.log('buyBtn userInfo : ', userInfo?.address === '');
       if (props?.list?.length === 0) {
-        alert('장바구니가 비어있습니다.');
-        return;
+        openModal('장바구니가 비어있습니다.');
+        // return;
       }
 
       if (userInfo?.address === '') {
-        alert('배송지를 입력해주세요.');
+        openModal('배송지를 입력해주세요.');
         return;
       }
 
@@ -78,7 +86,7 @@ export default function BuyBtn({ props }: { props: BuyBtnType }) {
         })
         .catch((err) => {
           console.log('err : ', err);
-          alert('결재 취소');
+          // alert('결재 취소');
         });
     },
     [props, userInfo]
@@ -87,7 +95,11 @@ export default function BuyBtn({ props }: { props: BuyBtnType }) {
   return (
     <>
       {/* {ready && <div id='payment-method' />} */}
-      <Btn size={props.size || 'medium'} onClick={onClickPayment}>
+      <Btn
+        // size={props.size || 'medium'}
+        onClick={onClickPayment}
+        style={{ width: `${width}px` }}
+      >
         BUY
       </Btn>
     </>

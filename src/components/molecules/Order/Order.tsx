@@ -4,6 +4,7 @@ import React, { useState, useEffect } from 'react';
 import { Range } from '@/components/atoms';
 import { inputStyle, sendingBtn, checkBox } from './order.css';
 import useSplitRoute from '@/app/hooks/useSplitRoute';
+import { useModal } from '@/app/hooks';
 
 export default function Order({
   props,
@@ -16,6 +17,7 @@ export default function Order({
   const status = route[2];
 
   const [reason, setReason] = useState('');
+  const { openModal } = useModal();
 
   const OrderBtn = () => {
     if (status === 'check') {
@@ -24,7 +26,7 @@ export default function Order({
           className={sendingBtn}
           onClick={() => {
             if (props.courier === '' || props.invoice === '') {
-              alert('택배사와 송장번호를 입력해주세요.');
+              openModal('택배사와 송장번호를 입력해주세요.');
             }
           }}
         >

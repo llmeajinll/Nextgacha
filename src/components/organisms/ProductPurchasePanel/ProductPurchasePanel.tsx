@@ -6,7 +6,6 @@ import { CardProps } from '@/shared/type';
 import TicketPanel from './TicketPanel';
 import InfoPanel from './InfoPanel';
 
-
 export default function ProductPurchasePanel({ num }: { num: string }) {
   console.log(num);
 
@@ -31,10 +30,10 @@ export default function ProductPurchasePanel({ num }: { num: string }) {
 
   return (
     <>
-      <Provider>
-        <InfoPanel props={info} />
-        <TicketPanel />
-      </Provider>
+      {/* <Provider> */}
+      <InfoPanel props={info} />
+      <TicketPanel />
+      {/* </Provider> */}
     </>
   );
 }

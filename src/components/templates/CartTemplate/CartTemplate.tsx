@@ -5,22 +5,14 @@ import Image from 'next/image';
 import { useAtom } from 'jotai';
 import { Range, Btn } from '@/components/atoms';
 import { Cart } from '@/components/molecules';
-// import postCartProduct from '@/api/postCartProduct';
 import { totalPriceStyle } from './carttemplate.css';
 import { comma } from '@/shared/comma';
 import { BuyBtn } from '@/components/atoms';
-import Cookies from 'js-cookie';
-import getCart from '@/api/getCart';
 import { userInfoAtom } from '@/jotai/store';
+import { AddressModal } from '@/components/molecules';
 
 export default function CartTemplate({ props }: { props?: any }) {
-  // const [items, setItems] = useState([] as any[]);
-  // const [totalPrice, setTotalPrice] = useState(0);
-  // const result = await getCart();
-  // console.log('result from getCart in CartTemplate: ', result);
-
   console.log('props : ', props);
-  // console.log('env : ', process.env.NODE_ENV);
   const [userInfo] = useAtom(userInfoAtom);
   const [point, setPoint] = useState(0);
   const [isPointInputFocused, setIsPointInputFocused] = useState(false);
@@ -210,10 +202,63 @@ export default function CartTemplate({ props }: { props?: any }) {
         </Range>
       </Range>
       {/* <Btn size='big'>BUY</Btn> */}
+      <Range preset='column'>
+        <AddressModal />
+        <Range>
+          <Image
+            src='/images/Group 266.png'
+            width={50}
+            height={70}
+            alt='truck1'
+          />
+          <div
+            style={{
+              position: 'relative',
+              width: `${
+                userInfo?.address !== undefined
+                  ? userInfo?.address.length * 12 + 'px'
+                  : '100%'
+              }`,
+              minWidth: '245px',
+            }}
+          >
+            <img
+              src='/images/Group 268.png'
+              // width={245}
+              // height={70}
+              style={{ width: '100%', height: '70px' }}
+              alt='truck2'
+            ></img>
+            <div
+              style={{
+                boxSizing: 'border-box',
+                position: 'absolute',
+                width: '100%',
+                top: 0,
+                height: '50px',
+                padding: '12px 10px 10px 10px',
+                display: 'flex',
+                alignItems: 'center',
+                textAlign: 'center',
+                justifyContent: 'center',
+              }}
+            >
+              {userInfo?.address || '주소를 입력해주세요'}
+            </div>
+          </div>
+          <Image
+            src='/images/Group 267.png'
+            width={25}
+            height={70}
+            alt='truck3'
+          />
+        </Range>
+      </Range>
 
       <BuyBtn
         props={{
-          size: 'big',
+          // size: 'big',
+
           // price: totalPrice < 50000 ? totalPrice + 3000 : totalPrice,
           price: finalPrice,
           usedPoint: point,
@@ -233,6 +278,11 @@ export default function CartTemplate({ props }: { props?: any }) {
             return acc;
           }, [] as { num: number; product: { name: string; count: number }[] }[]),
         }}
+        width={
+          userInfo?.address !== undefined
+            ? userInfo?.address.length * 12 + 75
+            : 350
+        }
       />
     </>
   );

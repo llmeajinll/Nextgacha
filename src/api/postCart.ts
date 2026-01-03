@@ -12,7 +12,8 @@ export async function postCart(data: any) {
     })
     .catch((err) => {
       console.log(err);
-      alert('로그인 후에 장바구니 추가가 가능합니다.');
+      return { message: '로그인 후에 장바구니 추가가 가능합니다.' };
+      // alert('로그인 후에 장바구니 추가가 가능합니다.');
     });
 
   // console.log(result);

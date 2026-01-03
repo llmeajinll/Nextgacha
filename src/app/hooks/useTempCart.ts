@@ -3,6 +3,7 @@ import useSWR from 'swr';
 import { useAtom } from 'jotai';
 import { tempCartAtom } from '@/jotai/store';
 import { ProductProps } from '@/shared/type';
+import { useModal } from '@/app/hooks';
 
 const fetcher = (url: string) =>
   fetch(url, { credentials: 'include' }).then(async (res) => {
@@ -11,13 +12,16 @@ const fetcher = (url: string) =>
     if (result.ok === true) {
       return result.data.cart;
     } else if (result.ok === false) {
-      alert('로그인 후 장바구니에 담을 수 있습니다.');
+      // openModal('로그인 후 장바구니에 담을 수 있습니다.');
+      return [];
     } else {
-      alert('로그인 후 장바구니에 담을 수 있습니다.');
+      // openModal('로그인 후 장바구니에 담을 수 있습니다.');
+      return [];
     }
   });
 
 export default function useTempCart() {
+  const { openModal } = useModal();
   const { data: DBcart, mutate } = useSWR(
     '/api/protected/getSimpleCart',
     fetcher,
@@ -63,7 +67,10 @@ export default function useTempCart() {
 
     if (count <= 0) {
       console.log('장바구니 최대치 도달1');
-      alert(
+      // alert(
+      //   `재고가 ${limitCount}개 남아있습니다. (현재 장바구니: ${DBcartCount}, 예비 장바구니: ${preCount})`
+      // );
+      openModal(
         `재고가 ${limitCount}개 남아있습니다. (현재 장바구니: ${DBcartCount}, 예비 장바구니: ${preCount})`
       );
       return;
@@ -74,7 +81,10 @@ export default function useTempCart() {
       // console.log(
       //   `장바구니는 최대 ${MAX}개까지만 이용 가능합니다. (현재 DB: ${DBcartCount}, 예비: ${preCount})`
       // );
-      alert(
+      //       alert(
+      //   `장바구니는 최대 ${MAX}개까지만 담을 수 있습니다. (현재 장바구니: ${DBcartCount}, 예비 장바구니: ${preCount})`
+      // );
+      openModal(
         `장바구니는 최대 ${MAX}개까지만 담을 수 있습니다. (현재 장바구니: ${DBcartCount}, 예비 장바구니: ${preCount})`
       );
 
@@ -117,12 +127,17 @@ export default function useTempCart() {
       return;
       //   return false;
     } else if (preCount === 1) {
-      if (window.confirm('삭제하시겠습니까?')) {
+      openModal('삭제하시겠습니까?', () => {
         const updated = tempCart.filter((item) => item.code !== newItem.code);
         setTempCart(updated);
-      } else {
-        return;
-      }
+      });
+
+      // if (window.confirm('삭제하시겠습니까?')) {
+      //   const updated = tempCart.filter((item) => item.code !== newItem.code);
+      //   setTempCart(updated);
+      // } else {
+      //   return;
+      // }
     }
   };
 

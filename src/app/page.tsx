@@ -1,6 +1,7 @@
 // import { useEffect, useState } from 'react';
 import SignIn from '@/app/(router)/signin/page';
 import { HomePage } from '@/components/pages';
+import { AlertModal } from '@/components/molecules';
 
 export default function Home() {
   // const [test, setTest] = useState('');
@@ -17,5 +18,9 @@ export default function Home() {
   //     });
   // }, []);
 
-  return <HomePage />;
+  return (
+    <div style={{ position: 'relative' }}>
+      <HomePage />
+    </div>
+  );
 }

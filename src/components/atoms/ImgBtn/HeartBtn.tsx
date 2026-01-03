@@ -2,8 +2,11 @@
 
 import React, { useState, useEffect } from 'react';
 import Image from 'next/image';
+import { useAtom } from 'jotai';
 import updateLike from '@/api/updateLike';
 import Cookies from 'js-cookie';
+import { modalAtom } from '@/jotai/store';
+import { useModal } from '@/app/hooks';
 
 export default function HeartBtn({
   size = 28,
@@ -17,6 +20,8 @@ export default function HeartBtn({
 }) {
   // console.log(num, status);
   const [like, setLike] = useState(status);
+  const [modalState, setModalState] = useAtom(modalAtom);
+  const { openModal, closeModal } = useModal();
 
   useEffect(() => {
     setLike(status);
@@ -38,12 +43,17 @@ export default function HeartBtn({
         if (data.ok === true) {
           setLike(data.like);
         } else {
-          alert('로그인 후 좋아요를 누를 수 있습니다.');
+          // alert('로그인 후 좋아요를 누를 수 있습니다.');
+          openModal('로그인 후 좋아요를 누를 수 있습니다.');
+          console.log('modalState : ', modalState);
         }
       })
       .catch((err) => {
         console.log(err);
-        alert('로그인 후 좋아요를 누를 수 있습니다.');
+        setModalState({
+          isOpen: true,
+          message: '오류가 발생하였습니다.',
+        });
       });
   };
 
