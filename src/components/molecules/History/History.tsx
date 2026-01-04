@@ -1,68 +1,210 @@
+'use client';
+
+import { useState, useEffect, useRef } from 'react';
+import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 import { Range } from '@/components/atoms';
 import { LabelTitle } from '@/components/molecules';
 import dayjs from 'dayjs';
 import { comma } from '@/shared/comma';
-import { imageStyle, Title, contentStyle, reviewBtn } from './history.css';
+import {
+  reviewBtn,
+  bigLabelTitle,
+  labelTitle,
+  bigLabelContent,
+  labelContent,
+  labelContentKor,
+  listContainer,
+  title,
+  contentContainer,
+  content,
+  count,
+} from './history.css';
 import Link from 'next/link';
 
 export default function History({ props }: { props: any }) {
-  // console.log('props:', props);
+  console.log('props:', props);
+
+  const route = useRouter();
+
+  const topRef = useRef<HTMLDivElement>(null);
+  const middleRef = useRef<HTMLDivElement>(null);
+  const bottomRef = useRef<HTMLDivElement>(null);
+
+  const [topHeight, setTopHeight] = useState(150);
+  const [middleHeight, setMiddleHeight] = useState(150);
+  const [bottomHeight, setBottomHeight] = useState(150);
+
+  useEffect(() => {
+    if (middleRef.current) {
+      const middleHeight = middleRef.current.offsetHeight;
+      setMiddleHeight(middleHeight + 10);
+    }
+    if (topRef.current) {
+      const topHeight = topRef.current.offsetHeight;
+      setTopHeight(topHeight + 20);
+    }
+    if (bottomRef.current) {
+      const bottomHeight = bottomRef.current.offsetHeight;
+      setBottomHeight(bottomHeight + 20);
+    }
+  }, [props.list, props.address, props.status]);
+
+  const ReceiptLabel = ({
+    title,
+    content,
+    size = 'medium',
+  }: {
+    title: string;
+    content: string;
+    size?: 'medium' | 'big';
+  }) => {
+    const STATUS_TEXT: Record<string, string> = {
+      '상품 확인중': 'checking product',
+      배송중: 'sending',
+      '배송 완료': 'finish',
+    };
+    const displayContent =
+      title === 'status'
+        ? STATUS_TEXT[content.trim()]
+        : title === 'delivery'
+        ? 'processing'
+        : content;
+
+    console.log(STATUS_TEXT['상품 확인중'], content === '상품 확인중');
+    return (
+      <Range preset='between'>
+        <Range className={size === 'big' ? bigLabelTitle : labelTitle}>
+          {title}
+        </Range>
+        <Range
+          className={
+            title === 'address'
+              ? labelContentKor
+              : size === 'big'
+              ? bigLabelContent
+              : labelContent
+          }
+        >
+          {displayContent || 'processing'}
+        </Range>
+      </Range>
+    );
+  };
 
   return (
-    <Range gap='15' style={{ width: '620px' }} preset='left'>
-      <Range
-        preset='columnBetween'
-        width='full'
-        gap='8'
-        style={{ padding: '3px 0 0 0' }}
+    <Range style={{ width: '310px' }} preset='column'>
+      <img src='/images/receipt_top.png' width={310} height={61} />
+      <div style={{ position: 'relative', width: '310px', height: topHeight }}>
+        <div
+          ref={topRef}
+          style={{
+            position: 'absolute',
+            width: '100%',
+            boxSizing: 'border-box',
+            padding: '20px 12px 0 12px',
+          }}
+        >
+          <ReceiptLabel title='orderId' content={props.orderId} />
+          <ReceiptLabel title='date' content={props.created_at} />
+          <ReceiptLabel title='status' content={props.status} />
+          <ReceiptLabel
+            title='delivery'
+            content={props.courier + ' ' + props.invoice}
+          />
+          <ReceiptLabel title='address' content={props.address} />
+        </div>
+
+        <img src='/images/receipt_middle.png' width={310} height={topHeight} />
+      </div>
+      <img src='/images/receipt_line.png' width={310} height={12} />
+      <div
+        style={{
+          position: 'relative',
+          width: '310px',
+          height: middleHeight,
+        }}
       >
-        {/* <div className={Title}>{props.product.title}</div> */}
-        <LabelTitle
-          label='택배사'
-          content={props.courier ? props.courier : '준비중'}
+        <div
+          ref={middleRef}
+          style={{
+            position: 'absolute',
+            width: '100%',
+            boxSizing: 'border-box',
+            padding: '10px 15px 0 12px',
+          }}
+        >
+          <Range className={labelTitle}>list</Range>
+          {props.list.map((value: any, index: number) => {
+            return (
+              <div key={props.orderId + index} className={listContainer}>
+                <div className={title}>{value?.title || 'error'}</div>
+                {value.product.map((val: any) => (
+                  <Range
+                    key={props.orderId + val.name + value.num}
+                    className={contentContainer}
+                    width='full'
+                  >
+                    <Range preset='between' width='full'>
+                      <div className={content}>{val.name}</div>
+                      <div className={count}>{val.count}개</div>
+                    </Range>
+                  </Range>
+                ))}
+              </div>
+            );
+          })}
+        </div>
+
+        <img
+          src='/images/receipt_middle.png'
+          width={310}
+          height={middleHeight}
         />
-        <LabelTitle
-          label='운송장'
-          content={props.invoice ? props.invoice : '준비중'}
-        />
-        <LabelTitle
-          label='주문일'
-          content={dayjs(props.created_at).format('YYYY년 MM월 DD일 HH시 mm분')}
-        />
-        <LabelTitle label='배송지' content={props.address} />
-        <LabelTitle label='상태' content={props.status} />
-        <Range gap='30'>
-          <LabelTitle label='가격' content={`${comma(props.totalPrice)}원`} />
-          <LabelTitle label='적립' content={`${comma(props.addPoint)}p`} />
-        </Range>
-        <LabelTitle
-          label='내역'
-          content={
-            <Range
-              gap='4 10'
-              width='full'
-              preset='left'
-              style={{
-                flexWrap: 'wrap',
-              }}
+      </div>
+      <img src='/images/receipt_line.png' width={310} height={12} />
+      <div
+        style={{
+          position: 'relative',
+          width: '310px',
+          height: bottomHeight,
+        }}
+      >
+        <div
+          ref={bottomRef}
+          style={{
+            position: 'absolute',
+            width: '100%',
+            boxSizing: 'border-box',
+            padding: '10px 12px 0 12px',
+          }}
+        >
+          <ReceiptLabel title='reward' content={comma(props.addPoint) + ' p'} />
+          <ReceiptLabel
+            title='price'
+            content={comma(props.totalPrice) + ' won'}
+            size='big'
+          />
+
+          {props.status === '배송 완료' && (
+            <button
+              className={reviewBtn}
+              onClick={() =>
+                route.push(`/mypage/history/review/${props.orderId}`)
+              }
             >
-              {props.list.map((value: any) => {
-                return value.product.map((val: any, idx: number) => (
-                  <div key={value.num + idx} className={contentStyle}>
-                    {val.name} : {val.count}개
-                  </div>
-                ));
-              })}
-            </Range>
-          }
+              GIVE A REVIEW
+            </button>
+          )}
+        </div>
+
+        <img
+          src='/images/receipt_middle.png'
+          width={310}
+          height={bottomHeight}
         />
-        {props.status === '배송 완료' && (
-          <Link href={`/mypage/history/review/${props.orderId}`}>
-            <div className={reviewBtn}>GIVE A REVIEW</div>
-          </Link>
-        )}
-      </Range>
+      </div>
+      <img src='/images/receipt_bottom.png' width={310} height={14} />
     </Range>
   );
 }

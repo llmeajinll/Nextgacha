@@ -17,20 +17,45 @@ export default function CartTemplate({ props }: { props?: any }) {
   const [point, setPoint] = useState(0);
   const [isPointInputFocused, setIsPointInputFocused] = useState(false);
   console.log('userInfo : ', userInfo);
+  const [cartItems, setCartItems] = useState(props);
 
   const totalPrice = useMemo(() => {
-    return props.reduce((acc: any, item: any) => {
-      const itemTotal =
-        item.price *
-        item.product.reduce(
-          (prodAcc: number, prod: any) => prodAcc + prod.count,
-          0
-        );
-      return acc + itemTotal;
+    setPoint(0);
+    return cartItems.reduce((acc: any, item: any) => {
+      if (item.check === true) {
+        const itemTotal =
+          item.price *
+          item.product.reduce(
+            (prodAcc: number, prod: any) => prodAcc + prod.count,
+            0
+          );
+        return acc + itemTotal;
+      } else {
+        return acc + 0;
+      }
     }, 0);
-  }, [props]);
+  }, [cartItems]);
+
+  const checkedProduct = useMemo(() => {
+    setPoint(0);
+    return cartItems.filter((item: any) => item.check);
+  }, [cartItems]);
 
   console.log('totalPrice', totalPrice);
+
+  const handleUpdateItem = (num: number, newData: any) => {
+    console.log('num : ', num, 'newData : ', newData);
+    setCartItems((prev: any) =>
+      prev.map((item: any) =>
+        item.num === num ? { ...item, ...newData } : item
+      )
+    );
+    console.log(cartItems);
+  };
+
+  // const handleSelectAll = () => {
+  //   setItems((prev) => prev.map((item) => ({ ...item, check: true })));
+  // };
 
   const finalPrice = useMemo(() => {
     if (totalPrice === 0) return 0;
@@ -75,8 +100,8 @@ export default function CartTemplate({ props }: { props?: any }) {
             CART IS EMPTY
           </div>
         ) : (
-          props?.map((item: any, index: number) => (
-            <Cart key={index} props={item} />
+          cartItems?.map((item: any, index: number) => (
+            <Cart key={index} props={item} onUpdate={handleUpdateItem} />
           ))
         )}
         {totalPrice < 50000 && totalPrice > 1 && (
@@ -124,53 +149,67 @@ export default function CartTemplate({ props }: { props?: any }) {
             </div>
           </>
         )}
-        <div>
-          <span
-            style={{
-              fontFamily: 'silkscreen',
-              fontSize: '18px',
-            }}
-          >
-            <span style={{ marginRight: '41px' }}>USE POINTS :</span>
+        {totalPrice !== 0 && (
+          <div>
             <span
               style={{
-                display: 'inline-block',
-                width: '202px',
-                textAlign: 'right',
+                fontFamily: 'silkscreen',
+                fontSize: '18px',
               }}
             >
-              <span style={{ marginRight: '8px' }}>-</span>
-              <input
-                value={comma(point)}
+              <span style={{ marginRight: '50px' }}>USE POINTS :</span>
+              <span
                 style={{
-                  width: '100px',
+                  display: 'inline-block',
+                  width: '202px',
                   textAlign: 'right',
-                  height: '30px',
-                  border: isPointInputFocused
-                    ? '1px solid #75C3FE'
-                    : '1px solid lightgray',
-                  fontFamily: 'silkscreen',
-                  fontSize: '16px',
-                  outline: 'none',
                 }}
-                onFocus={() => setIsPointInputFocused(true)}
-                onBlur={() => setIsPointInputFocused(false)}
-                onChange={(e) => {
-                  const maxPoint = userInfo?.point ?? 0;
-                  const inputVal = Number(e.target.value) || 0;
-                  if (inputVal >= maxPoint) {
-                    setPoint(maxPoint);
-                  } else if (inputVal >= finalPrice - 1000) {
-                    setPoint(finalPrice - 1000);
-                  } else {
-                    setPoint(inputVal);
-                  }
-                }}
-              />
-              <span style={{ marginLeft: '8px' }}>POINT</span>
+              >
+                <span style={{ marginRight: '8px' }}>-</span>
+                <Image
+                  src='/images/point.png'
+                  alt='point'
+                  width={20}
+                  height={20}
+                  style={{ marginRight: '5px' }}
+                ></Image>
+                <input
+                  value={point}
+                  style={{
+                    width: '100px',
+                    textAlign: 'right',
+                    height: '30px',
+                    border: isPointInputFocused
+                      ? '1px solid #75C3FE'
+                      : '1px solid lightgray',
+                    fontFamily: 'silkscreen',
+                    fontSize: '16px',
+                    outline: 'none',
+                  }}
+                  onFocus={() => setIsPointInputFocused(true)}
+                  onBlur={() => setIsPointInputFocused(false)}
+                  onChange={(e) => {
+                    const maxPoint = userInfo?.point ?? 0;
+                    const inputVal = Number(e.target.value);
+                    const positiveVal = Math.max(0, inputVal);
+                    const priceLimit = finalPrice - 1000;
+                    console.log(inputVal);
+                    if (positiveVal > priceLimit) {
+                      setPoint(priceLimit);
+                      return;
+                    }
+                    if (positiveVal > maxPoint) {
+                      setPoint(maxPoint);
+                      return;
+                    }
+                    setPoint(positiveVal);
+                  }}
+                />
+                <span style={{ marginLeft: '8px' }}>P</span>
+              </span>
             </span>
-          </span>
-        </div>
+          </div>
+        )}
         <div
           style={{
             width: '700px',
@@ -243,7 +282,9 @@ export default function CartTemplate({ props }: { props?: any }) {
                 justifyContent: 'center',
               }}
             >
-              {userInfo?.address || '주소를 입력해주세요'}
+              {userInfo?.address || (
+                <span style={{ color: '#3aaaff' }}>주소를 입력해주세요</span>
+              )}
             </div>
           </div>
           <Image
@@ -263,7 +304,7 @@ export default function CartTemplate({ props }: { props?: any }) {
           price: finalPrice,
           usedPoint: point,
           addPoint: totalPrice * 0.01,
-          list: props.reduce((acc: any, item: any) => {
+          list: checkedProduct.reduce((acc: any, item: any) => {
             console.log(item.title);
             if (item && item.product) {
               acc.push({
@@ -281,7 +322,7 @@ export default function CartTemplate({ props }: { props?: any }) {
         width={
           userInfo?.address !== undefined
             ? userInfo?.address.length * 12 + 75
-            : 350
+            : 320
         }
       />
     </>

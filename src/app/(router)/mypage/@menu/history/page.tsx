@@ -51,10 +51,10 @@ export default function HistoryPage() {
           style={{
             padding: '20px 0 0 0',
             display: 'grid',
-            gridTemplateColumns: 'repeat(2, 620px)',
+            gridTemplateColumns: 'repeat(4, 310px)',
             justifyContent: 'space-between',
             margin: '0 auto',
-            gap: '30px',
+            gap: '10px',
           }}
         >
           {data.map((val: any) => {

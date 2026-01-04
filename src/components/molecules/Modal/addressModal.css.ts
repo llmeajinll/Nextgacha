@@ -39,4 +39,5 @@ export const writeBtn = style({
   cursor: 'pointer',
   fontSize: '14px',
   color: vars.color.black1,
+  fontWeight: '500',
 });

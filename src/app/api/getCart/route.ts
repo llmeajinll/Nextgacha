@@ -47,8 +47,17 @@ export async function GET(req: Request) {
     },
   ];
 
-  const data = await cartColl.aggregate(pipeline).toArray();
+  const result = await cartColl.aggregate(pipeline).toArray();
   // console.log('aggregated cart : ', data);
+
+  const data = result.map((item) => {
+    return {
+      ...item,
+      check: true,
+    };
+  });
+
+  console.log(data);
 
   return NextResponse.json({ ok: true, data }, { status: 200 });
 }

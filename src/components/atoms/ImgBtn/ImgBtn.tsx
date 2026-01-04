@@ -41,6 +41,7 @@ export default function ImgBtn({
       src={image[img]}
       width={size || width}
       height={size || height}
+      quality={100}
       alt='like'
       onClick={onClick}
       style={{ cursor: 'pointer', ...style }}

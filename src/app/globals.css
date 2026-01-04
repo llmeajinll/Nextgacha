@@ -52,6 +52,11 @@ body {
   src: url('/fonts/Silkscreen-Regular.woff2') format('woff2');
 }
 
+@font-face {
+  font-family: 'silkscreen_bold';
+  src: url('/fonts/Silkscreen-Bold.ttf') format('truetype');
+}
+
 /* @font-face {
   font-family: 'slikscreenwoff2';
   src: url('./font/Silkscreen-Regular.woff2') format('woff2');
