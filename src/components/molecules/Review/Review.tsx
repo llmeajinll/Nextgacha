@@ -5,19 +5,19 @@ import StarRating from '../StarRating/StarRating';
 import dayjs from 'dayjs';
 
 export default function Review({ props }: { props: ReviewProps }) {
-  const changeStar = (name: string) => {
-    if (!name) return '';
+  // const changeStar = (name: string) => {
+  //   if (!name) return '';
 
-    const [id] = name.split('@');
+  //   const [id] = name.split('@');
 
-    if (id.length <= 3) {
-      return '*'.repeat(id.length);
-    }
+  //   if (id.length <= 3) {
+  //     return '*'.repeat(id.length);
+  //   }
 
-    const visible = id.slice(0, 3);
-    const masked = '*'.repeat(id.length - 3);
-    return visible + masked;
-  };
+  //   const visible = id.slice(0, 3);
+  //   const masked = '*'.repeat(id.length - 3);
+  //   return visible + masked;
+  // };
 
   return (
     <Range preset='column' key={props.orderId} style={{ width: '460px' }}>
