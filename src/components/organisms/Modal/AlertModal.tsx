@@ -1,10 +1,12 @@
 'use client';
 
 import React, { useEffect } from 'react';
+import { usePathname } from 'next/navigation';
 import { Range, ImgBtn } from '@/components/atoms';
 import * as styles from './alertModal.css';
 import { modalAtom } from '@/jotai/store';
 import { useAtom } from 'jotai';
+import { useModal } from '@/app/hooks';
 
 // {
 //   onCheck,
@@ -15,13 +17,16 @@ import { useAtom } from 'jotai';
 // }
 
 export default function AlertModal() {
+  const pathname = usePathname();
   const [modalState, setModalState] = useAtom(modalAtom);
+  const { closeModal } = useModal();
 
   console.log('modalState : ', modalState);
 
   useEffect(() => {
-    console.log('Modal state changed: ', modalState);
-  }, [modalState]);
+    // console.log('Modal state changed: ', modalState);
+    closeModal();
+  }, [pathname]);
 
   const ModalBtn = () => {
     return (

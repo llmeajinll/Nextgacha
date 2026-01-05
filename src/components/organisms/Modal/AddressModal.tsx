@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useDaumPostcodePopup } from 'react-daum-postcode';
 import {
   addressInput,
@@ -19,7 +19,7 @@ export default function AddressModal() {
   const [editDetailAddress, setEditDetailAddress] = useState('');
 
   const [userInfo, setUserInfo] = useAtom(userInfoAtom);
-  const { openModal } = useModal();
+  const { openModal, closeModal } = useModal();
 
   const scriptUrl =
     'https://t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js';
