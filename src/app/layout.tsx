@@ -10,7 +10,7 @@ import { layoutContainer } from './layout.css';
 import { Provider } from 'jotai';
 import { MSWProvider } from '@/mocks/MSWComponent';
 import { Analytics } from '@vercel/analytics/next';
-import { AlertModal } from '@/components/molecules';
+import { AlertModal } from '@/components/organisms';
 // import { RecoilRoot } from 'recoil';
 
 // const geistSans = Geist({
@@ -41,19 +41,16 @@ export default function RootLayout({
 }>) {
   return (
     <html lang='en'>
-      {/* ${layoutContainer} */}
       <body className={`${notoSans.className}`}>
         <MSWProvider>
           <Analytics />
           <SessionProvider>
-            {/* <Provider> */}
-            <AlertModal />
-
             <div className={`${layoutContainer}`}>
               <Header />
               {children}
             </div>
-            {/* </Provider> */}
+            <AlertModal />
+            <div id='modal-root' />
           </SessionProvider>
         </MSWProvider>
       </body>

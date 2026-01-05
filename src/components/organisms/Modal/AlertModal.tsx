@@ -16,20 +16,16 @@ import { useAtom } from 'jotai';
 
 export default function AlertModal() {
   const [modalState, setModalState] = useAtom(modalAtom);
+
   console.log('modalState : ', modalState);
+
   useEffect(() => {
     console.log('Modal state changed: ', modalState);
   }, [modalState]);
 
   const ModalBtn = () => {
     return (
-      <Range
-      // preset='between'
-      // height='45'
-      // style={{
-      //   width: '100px',
-      // }}
-      >
+      <Range>
         <button
           className={styles.modalBtn}
           onClick={() => {
@@ -84,25 +80,8 @@ export default function AlertModal() {
                 }}
               ></button>
             </Range>
-            <div
-              style={{
-                width: '100%',
-                padding: '25px 20px 20px 20px',
-                boxSizing: 'border-box',
-                display: 'flex',
-                flexDirection: 'column',
-                alignItems: 'center',
-                justifyContent: 'center',
-              }}
-            >
+            <div className={styles.contentContainer}>
               <div className={styles.messageText}>{modalState.message}</div>
-              {/* <button
-                onClick={() => {
-                  setModalState({ ...modalState, isOpen: false, message: '' });
-                }}
-              >
-                ok
-              </button> */}
               <ModalBtn />
             </div>
           </div>

@@ -9,7 +9,7 @@ import { totalPriceStyle } from './carttemplate.css';
 import { comma } from '@/shared/comma';
 import { BuyBtn } from '@/components/atoms';
 import { userInfoAtom } from '@/jotai/store';
-import { AddressModal } from '@/components/molecules';
+import { AddressModal } from '@/components/organisms';
 
 export default function CartTemplate({ props }: { props?: any }) {
   console.log('props : ', props);

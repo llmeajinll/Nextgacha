@@ -1,7 +1,7 @@
 // import React, { use } from 'react';
 import { headers } from 'next/headers';
 import { ProductPurchasePanel } from '@/components/organisms';
-import { AlertModal, DetailTab } from '@/components/molecules';
+import { DetailTab } from '@/components/molecules';
 import ScrollToTop from '@/components/atoms/ScrollToTop';
 
 export default async function DetailLayout({

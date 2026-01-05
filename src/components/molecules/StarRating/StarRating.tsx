@@ -3,24 +3,45 @@
 import React, { useState, useEffect } from 'react';
 import { Range, StarBtn } from '@/components/atoms';
 
+type MyComponentProps = (
+  | {
+      disabled: true;
+      value: number;
+      setValue?: never;
+    }
+  | {
+      disabled?: false;
+      value: number;
+      setValue: React.Dispatch<React.SetStateAction<number>>;
+    }
+) & {
+  size?: 'medium' | 'big';
+};
+
 export default function StarRating({
   disabled = false,
-  value = 0,
-}: {
-  disabled?: boolean;
-  value?: number;
-}) {
+  // value = 0,
+  value,
+  setValue,
+  size = 'medium',
+}: MyComponentProps) {
   let list = [1, 2, 3, 4, 5];
-  const [score, setScore] = useState(value);
+  const [score, setScore] = useState<number>(value);
 
-  const onClickBtn = (score: number) => {
-    // console.log(score);
-    setScore(score);
+  const onClickBtn = (nextScore: number) => {
+    setScore(nextScore);
+
+    if (typeof setValue === 'function') {
+      setValue(nextScore);
+    }
   };
 
   useEffect(() => {
-    setScore(score);
-  }, [score]);
+    if (typeof setValue === 'function') {
+      setValue(score);
+    }
+  }, [score, setValue]);
+
   return (
     <Range gap='4'>
       {list.map((val: number) => (
@@ -29,6 +50,7 @@ export default function StarRating({
           value={score >= val}
           onClick={() => onClickBtn(val)}
           disabled={disabled}
+          size={size}
         />
       ))}
     </Range>

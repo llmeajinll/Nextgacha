@@ -117,6 +117,11 @@ export const rangePresetVariant = styleVariants({
     justifyContent: 'space-between',
     // alignItems: 'center',
   },
+  columnAlignCenter: {
+    flexDirection: 'column',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
 });
 
 export const directionVariant = styleVariants({

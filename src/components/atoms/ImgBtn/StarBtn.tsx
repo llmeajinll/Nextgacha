@@ -8,10 +8,12 @@ export default function StarBtn({
   value,
   onClick,
   disabled = false,
+  size = 'medium',
 }: {
   value: boolean;
   onClick?: React.MouseEventHandler<HTMLImageElement>;
   disabled?: boolean;
+  size?: 'medium' | 'big';
 }) {
   return (
     <Image
@@ -20,8 +22,8 @@ export default function StarBtn({
       }}
       src={`/images/star_${value ? 'fill' : 'empty'}.png`}
       alt='star'
-      width={25}
-      height={25}
+      width={size === 'big' ? 40 : 25}
+      height={size === 'big' ? 40 : 25}
       onClick={disabled ? undefined : onClick}
     />
   );

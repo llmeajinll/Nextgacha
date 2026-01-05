@@ -20,18 +20,21 @@ export default function Review({ props }: { props: ReviewProps }) {
   };
 
   return (
-    <Range preset='column' key={props._id} style={{ width: '460px' }}>
+    <Range preset='column' key={props.orderId} style={{ width: '460px' }}>
       <StarRating value={props.rate} disabled={true} />
 
-      <Range gap='5' style={{ marginBottom: '10px' }}>
-        {props.buy.map((v) => (
-          <div key={v.code} style={{ color: 'gray', fontSize: '14px' }}>
-            {v.name} | {v.count}개
+      <Range gap='8' style={{ marginBottom: '10px' }}>
+        {props.list.map((v) => (
+          <div
+            key={v.name + v.count}
+            style={{ color: 'gray', fontSize: '14px' }}
+          >
+            {v.name} : {v.count}개
           </div>
         ))}
       </Range>
 
-      <div style={{ fontSize: '18px' }}>{props.title}</div>
+      <div style={{ fontSize: '18px' }}>{props.content}</div>
       <Writer writer={props.user} created_at={props.created_at} />
     </Range>
   );

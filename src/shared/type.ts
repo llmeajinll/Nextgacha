@@ -52,14 +52,13 @@ export type CardProps = {
 };
 
 export interface ReviewProps {
-  _id: string;
+  orderId: string;
   user: string;
-  buy: { code: string; count: number; name: string }[];
+  list: { count: number; name: string }[];
   created_at: string;
   rate: number;
-  title: string;
-  num: number;
-  purchase_date: string;
+  content: string;
+  purchasDate: string;
 }
 
 export interface QnaProps {

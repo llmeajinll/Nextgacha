@@ -35,6 +35,11 @@ export default function History({ props }: { props: any }) {
   const [middleHeight, setMiddleHeight] = useState(150);
   const [bottomHeight, setBottomHeight] = useState(150);
 
+  const onClickReviewBtn = () => {
+    sessionStorage.setItem('productInfo', JSON.stringify(props));
+    route.push(`/mypage/history/review/${props.orderId}`);
+  };
+
   useEffect(() => {
     if (middleRef.current) {
       const middleHeight = middleRef.current.offsetHeight;
@@ -72,6 +77,7 @@ export default function History({ props }: { props: any }) {
         : content;
 
     console.log(STATUS_TEXT['상품 확인중'], content === '상품 확인중');
+
     return (
       <Range preset='between'>
         <Range className={size === 'big' ? bigLabelTitle : labelTitle}>
@@ -93,7 +99,20 @@ export default function History({ props }: { props: any }) {
   };
 
   return (
-    <Range style={{ width: '310px' }} preset='column'>
+    <Range style={{ position: 'relative', width: '310px' }} preset='column'>
+      {props.review === true && (
+        <img
+          src='/images/stamp.png'
+          width={290}
+          height={290}
+          style={{
+            position: 'absolute',
+            top: '20px',
+            left: '10px',
+            opacity: '0.4',
+          }}
+        />
+      )}
       <img src='/images/receipt_top.png' width={310} height={61} />
       <div style={{ position: 'relative', width: '310px', height: topHeight }}>
         <div
@@ -186,13 +205,8 @@ export default function History({ props }: { props: any }) {
             size='big'
           />
 
-          {props.status === '배송 완료' && (
-            <button
-              className={reviewBtn}
-              onClick={() =>
-                route.push(`/mypage/history/review/${props.orderId}`)
-              }
-            >
+          {props.status === '배송 완료' && props.review === false && (
+            <button className={reviewBtn} onClick={onClickReviewBtn}>
               GIVE A REVIEW
             </button>
           )}

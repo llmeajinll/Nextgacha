@@ -7,26 +7,43 @@ import getReview from '@/api/getReview';
 import { Review } from '@/components/molecules';
 
 export default function ReviewTab() {
-  const [review, setReview] = useState([]);
+  const [review, setReview] = useState<any[]>([]);
+  const [page, setPage] = useState(0);
+  const [hasMore, setHasMore] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const [mounted, setMounted] = useState(false);
   const { firstRoute } = useSplitRoute();
 
-  useEffect(() => {
-    async function fetchReview() {
-      const review = await getReview(firstRoute)
-        .then((res) => {
-          // console.log('review:', res);
-          return res;
-        })
-        .catch((err) => {
-          console.log(err);
-          return [];
-        });
-
-      setReview(review.result);
+  async function fetchReview(page: number) {
+    console.log('page : ', page);
+    setIsLoading(true);
+    try {
+      const res = await fetch(`/api/getReview?num=${firstRoute}&page=${page}`);
+      const { result, hasMore } = await res.json();
+      console.log(result);
+      setReview((prev) => [...prev, ...result]);
+      setHasMore(hasMore);
+    } catch (err) {
+      console.error(err);
+    } finally {
+      setIsLoading(false);
     }
+  }
 
-    fetchReview();
+  useEffect(() => {
+    setMounted(true);
+    fetchReview(0);
   }, []);
+
+  if (!mounted) {
+    return <button disabled>더보기</button>;
+  }
+
+  const handleMore = () => {
+    const nextPage = page + 1;
+    setPage(nextPage);
+    fetchReview(nextPage);
+  };
 
   return (
     <>
@@ -45,19 +62,15 @@ export default function ReviewTab() {
         ) : (
           <>
             {review &&
-              review.map((val: ReviewProps) => (
-                <Review props={val} key={val._id} />
-              ))}
-            {review &&
-              review.map((val: ReviewProps) => (
-                <Review props={val} key={val._id} />
-              ))}
-
-            {review &&
-              review.map((val: ReviewProps) => (
-                <Review props={val} key={val._id} />
+              review.map((val: ReviewProps, idx: number) => (
+                <Review props={val} key={val.orderId + idx} />
               ))}
           </>
+        )}
+        {hasMore && (
+          <button onClick={handleMore} disabled={isLoading}>
+            {isLoading ? '로딩 중...' : '더보기'}
+          </button>
         )}
       </div>
     </>

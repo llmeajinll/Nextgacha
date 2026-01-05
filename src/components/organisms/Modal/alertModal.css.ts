@@ -38,6 +38,16 @@ export const closeBtn = style({
   margin: '4px 4px 0px 0px',
 });
 
+export const contentContainer = style({
+  justifyContent: 'center',
+  width: '100%',
+  padding: '25px 20px 20px 20px',
+  boxSizing: 'border-box',
+  display: 'flex',
+  flexDirection: 'column',
+  alignItems: 'center',
+});
+
 export const modalBtn = style({
   width: 'fit-content',
   border: 'none',
@@ -45,7 +55,6 @@ export const modalBtn = style({
   color: 'white',
   fontSize: '20px',
   fontWeight: '700',
-  //   backgroundColor: vars.color.blue1,
   backgroundColor: '#99D3FF',
   padding: '2px 5px 4px 5px',
   cursor: 'pointer',
