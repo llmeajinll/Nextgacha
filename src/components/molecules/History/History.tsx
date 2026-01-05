@@ -68,6 +68,7 @@ export default function History({ props }: { props: any }) {
       '상품 확인중': 'checking product',
       배송중: 'sending',
       '배송 완료': 'finish',
+      환불: 'refund',
     };
     const displayContent =
       title === 'status'

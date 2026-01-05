@@ -78,7 +78,9 @@ export default function Order({
             )}
           </div>
         )}
-
+        <div>
+          주문일<span style={{ marginLeft: '20px' }}>{props.created_at}</span>
+        </div>
         <div>{props.address}</div>
         <div>{props.customer}</div>
         <Range>

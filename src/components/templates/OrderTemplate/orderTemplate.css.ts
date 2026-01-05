@@ -12,3 +12,14 @@ export const orderTemplateContainer = style({
 
   // border: '1px solid red',
 });
+
+export const sendBtnStyle = style({
+  width: '220px',
+  height: '50px',
+  border: 'none',
+  fontSize: '18px',
+  color: 'white',
+  marginTop: '30px',
+  backgroundColor: vars.color.blue1,
+  cursor: 'pointer',
+});

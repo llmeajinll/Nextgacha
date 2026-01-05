@@ -45,12 +45,14 @@ export default function RootLayout({
         <MSWProvider>
           <Analytics />
           <SessionProvider>
-            <div className={`${layoutContainer}`}>
-              <Header />
-              {children}
+            <div style={{ position: 'relative' }}>
+              <AlertModal />
+              <div className={`${layoutContainer}`}>
+                <Header />
+                {children}
+              </div>
             </div>
-            <AlertModal />
-            <div id='modal-root' />
+            {/* <div id='modal-root' /> */}
           </SessionProvider>
         </MSWProvider>
       </body>

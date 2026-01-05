@@ -30,67 +30,68 @@ export default function BuyBtn({
   const [userInfo] = useAtom(userInfoAtom);
   const { openModal } = useModal();
 
-  const onClickPayment = useCallback(
-    async (e: React.MouseEvent<HTMLButtonElement>) => {
-      e.stopPropagation();
-      console.log('buyBtn userInfo : ', userInfo?.address === '');
-      if (props?.list?.length === 0) {
-        openModal('장바구니가 비어있습니다.');
-        // return;
-      }
+  const onClickPayment = async (e: React.MouseEvent<HTMLButtonElement>) => {
+    // e.stopPropagation();
+    console.log('buyBtn userInfo : ', userInfo?.address === '', props?.list);
 
-      if (userInfo?.address === '') {
-        openModal('배송지를 입력해주세요.');
-        return;
-      }
+    if (props?.list?.length === 0) {
+      console.log('list no');
+      openModal('장바구니가 비어있습니다.');
+      return;
+    }
 
-      const orderId = `order_${Date.now()}`;
-      const customerKey = uuidv4();
-      const result = await fetch('/api/postCheckStock', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ list: props.list }),
-      }).then((res) => {
-        return res.json();
+    if (userInfo?.address === '') {
+      openModal('배송지를 입력해주세요.');
+      return;
+    }
+
+    const orderId = `order_${Date.now()}`;
+    const customerKey = uuidv4();
+    const result = await fetch('/api/postCheckStock', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ list: props.list }),
+    }).then((res) => {
+      return res.json();
+    });
+
+    if (result.ok !== true) {
+      return;
+    } else {
+      // console.log('통과');
+      localStorage.setItem('pending_order_items', JSON.stringify(props.list));
+      localStorage.setItem('address', JSON.stringify(userInfo?.address));
+      localStorage.setItem('used_point', JSON.stringify(props.usedPoint));
+      localStorage.setItem('add_point', JSON.stringify(props.addPoint));
+    }
+
+    const tossPayments = await loadTossPayments(
+      // 'test_gck_docs_Ovk5rk1EwkEbP0W43n07xlzm'
+      process.env.NEXT_PUBLIC_TOSSPAYMENTS_CLIENT_KEY || ''
+    );
+    const payment = tossPayments.payment({
+      customerKey: customerKey,
+    });
+    await payment
+      .requestPayment({
+        method: 'CARD',
+        amount: {
+          currency: 'KRW',
+          value: props.price,
+        },
+        orderId: orderId,
+        orderName: 'NextGacha 결재',
+        successUrl: `${window.location.origin}/success`,
+        failUrl: `${window.location.origin}/fail`,
+        // windowTarget: 'popup',
+      })
+      .catch((err) => {
+        console.log('err : ', err);
+        // alert('결재 취소');
       });
-
-      if (result.ok !== true) {
-        return;
-      } else {
-        // console.log('통과');
-        localStorage.setItem('pending_order_items', JSON.stringify(props.list));
-        localStorage.setItem('address', JSON.stringify(userInfo?.address));
-        localStorage.setItem('used_point', JSON.stringify(props.usedPoint));
-        localStorage.setItem('add_point', JSON.stringify(props.addPoint));
-      }
-
-      const tossPayments = await loadTossPayments(
-        // 'test_gck_docs_Ovk5rk1EwkEbP0W43n07xlzm'
-        process.env.NEXT_PUBLIC_TOSSPAYMENTS_CLIENT_KEY || ''
-      );
-      const payment = tossPayments.payment({
-        customerKey: customerKey,
-      });
-      await payment
-        .requestPayment({
-          method: 'CARD',
-          amount: {
-            currency: 'KRW',
-            value: props.price,
-          },
-          orderId: orderId,
-          orderName: 'NextGacha 결재',
-          successUrl: `${window.location.origin}/success`,
-          failUrl: `${window.location.origin}/fail`,
-          // windowTarget: 'popup',
-        })
-        .catch((err) => {
-          console.log('err : ', err);
-          // alert('결재 취소');
-        });
-    },
-    [props, userInfo]
-  );
+  };
+  //   [props, userInfo, openModal]
+  // );
 
   return (
     <>
