@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { useSearchParams, useRouter } from 'next/navigation';
+import { useSearchParams, useRouter, redirect } from 'next/navigation';
 import Link from 'next/link';
 import { Range } from '@/components/atoms';
 import { useModal } from '@/app/hooks';
@@ -76,34 +76,9 @@ export default function page() {
 
   if (isProcessing)
     return <div>결제 승인 중입니다. 잠시만 기다려주세요...</div>;
+  else {
+    redirect(`/checkout/${orderId}`);
+  }
 
-  return (
-    <div>
-      <h1>결제가 완료되었습니다!</h1>
-      <h3>주문 번호: {orderId}</h3>
-      <div>배송지: {result?.address}</div>
-      <div>결제 금액: {result?.amount}원</div>
-      <div>
-        주문 상품:{' '}
-        {result?.list.map((value: any, index: number) => (
-          <div key={index}>
-            <div>{value.title}</div>
-            {value.product.map((val: any, idx: number) => (
-              <div key={idx} style={{ marginLeft: '15px' }}>
-                {val.name} : {val.count}개
-              </div>
-            ))}
-          </div>
-        ))}
-      </div>
-      <Range gap='30'>
-        <Link href='/' style={{ fontFamily: 'silkscreen' }}>
-          HOME
-        </Link>
-        <Link href='/mypage/history' style={{ fontFamily: 'silkscreen' }}>
-          MYPAGE
-        </Link>
-      </Range>
-    </div>
-  );
+  return <></>;
 }

@@ -11,6 +11,7 @@ export async function POST(req: Request) {
     qna: [],
     review: [],
     like: [],
+    keep: [],
     point: 0,
     address: '',
   });

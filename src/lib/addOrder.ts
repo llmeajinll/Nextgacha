@@ -50,6 +50,7 @@ export async function addOrder({
         addPoint: addPoint,
         created_at: dayjs(new Date()).format('YYYY-MM-DD HH:mm:ss'),
         arrivedDate: '',
+        review: false,
       },
       { session: mongodbSession }
     )
@@ -64,6 +65,7 @@ export async function addOrder({
           totalPrice: amount,
           addPoint: addPoint,
           arrivedDate: '',
+          review: false,
         },
       };
     })

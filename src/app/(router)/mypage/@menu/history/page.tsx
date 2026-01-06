@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState } from 'react';
 import getHistory from '@/api/getHistory';
-import { History } from '@/components/molecules';
+import { EmptyCard, History } from '@/components/molecules';
 
 export default function HistoryPage() {
   const [data, setData] = useState([]);
@@ -26,26 +26,7 @@ export default function HistoryPage() {
   return (
     <>
       {data.length === 0 ? (
-        <div
-          style={{
-            boxSizing: 'border-box',
-            width: '100%',
-            height: '130px',
-            padding: '20px',
-            border: '1px solid lightgray',
-            fontFamily: 'silkscreen',
-            color: 'gray',
-            fontSize: '30px',
-            textAlign: 'center',
-            alignItems: 'center',
-            display: 'flex',
-            justifyContent: 'center',
-            lineHeight: '24px',
-            marginTop: '15px',
-          }}
-        >
-          HISTORY IS EMPTY
-        </div>
+        <EmptyCard data='History' />
       ) : (
         <div
           style={{

@@ -11,6 +11,8 @@ import { Provider } from 'jotai';
 import { MSWProvider } from '@/mocks/MSWComponent';
 import { Analytics } from '@vercel/analytics/next';
 import { AlertModal } from '@/components/organisms';
+import QueryProvider from '@/query/QueryProviders';
+
 // import { RecoilRoot } from 'recoil';
 
 // const geistSans = Geist({
@@ -44,16 +46,18 @@ export default function RootLayout({
       <body className={`${notoSans.className}`}>
         <MSWProvider>
           <Analytics />
-          <SessionProvider>
-            <div style={{ position: 'relative' }}>
-              <AlertModal />
-              <div className={`${layoutContainer}`}>
-                <Header />
-                {children}
+          <QueryProvider>
+            <SessionProvider>
+              <div style={{ position: 'relative' }}>
+                <AlertModal />
+                <div className={`${layoutContainer}`}>
+                  <Header />
+                  {children}
+                </div>
               </div>
-            </div>
-            {/* <div id='modal-root' /> */}
-          </SessionProvider>
+              {/* <div id='modal-root' /> */}
+            </SessionProvider>
+          </QueryProvider>
         </MSWProvider>
       </body>
     </html>

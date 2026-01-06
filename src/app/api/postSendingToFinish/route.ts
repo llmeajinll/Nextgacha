@@ -39,7 +39,7 @@ export async function POST(req: Request) {
           filter: { orderId: order.orderId },
           update: {
             $set: {
-              arriveDate: nowDate,
+              arrivedDate: nowDate,
               status: '배송 완료',
             },
           },

@@ -1,10 +1,12 @@
 'use client';
 
 import React, { useState } from 'react';
+import { useRouter } from 'next/navigation';
 import { search } from './search.css';
 import Image from 'next/image';
 
 export default function Search() {
+  const router = useRouter();
   const [input, setInput] = useState('');
   return (
     <div className={search}>
@@ -16,7 +18,8 @@ export default function Search() {
         onKeyDown={(e) => {
           if (e.key === 'Enter') {
             // const target = e.target as HTMLInputElement;
-            document.location.href = `/search?search=${input}`;
+            // document.location.href = `/search?search=${input}`;
+            router.replace(`/search?search=${input}`, { scroll: false });
           }
         }}
         style={{

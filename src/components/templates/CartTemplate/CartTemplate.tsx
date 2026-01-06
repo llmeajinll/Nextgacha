@@ -4,7 +4,7 @@ import React, { useEffect, useState, useRef, useMemo } from 'react';
 import Image from 'next/image';
 import { useAtom } from 'jotai';
 import { Range, Btn } from '@/components/atoms';
-import { Cart } from '@/components/molecules';
+import { Cart, EmptyCard } from '@/components/molecules';
 import { totalPriceStyle } from './carttemplate.css';
 import { comma } from '@/shared/comma';
 import { BuyBtn } from '@/components/atoms';
@@ -53,10 +53,6 @@ export default function CartTemplate({ props }: { props?: any }) {
     console.log(cartItems);
   };
 
-  // const handleSelectAll = () => {
-  //   setItems((prev) => prev.map((item) => ({ ...item, check: true })));
-  // };
-
   const finalPrice = useMemo(() => {
     if (totalPrice === 0) return 0;
     else {
@@ -70,55 +66,72 @@ export default function CartTemplate({ props }: { props?: any }) {
 
   return (
     <>
-      <Range
-        preset='columnCenter'
-        gap='10'
-        style={{
-          width: '100%',
-          marginBottom: '50px',
-          padding: '15px 0px',
-        }}
-      >
-        {props.length === 0 ? (
-          <div
-            style={{
-              boxSizing: 'border-box',
-              width: '100%',
-              height: '130px',
-              padding: '20px',
-              border: '1px solid lightgray',
-              fontFamily: 'silkscreen',
-              color: 'gray',
-              fontSize: '30px',
-              textAlign: 'center',
-              alignItems: 'center',
-              display: 'flex',
-              justifyContent: 'center',
-              lineHeight: '24px',
-            }}
-          >
-            CART IS EMPTY
-          </div>
-        ) : (
-          cartItems?.map((item: any, index: number) => (
+      {props.length === 0 ? (
+        <EmptyCard data='CART' />
+      ) : (
+        <Range
+          preset='columnCenter'
+          gap='10'
+          style={{
+            width: '100%',
+            marginBottom: '50px',
+            padding: '15px 0px',
+          }}
+        >
+          {cartItems?.map((item: any, index: number) => (
             <Cart key={index} props={item} onUpdate={handleUpdateItem} />
-          ))
-        )}
-        {totalPrice < 50000 && totalPrice > 1 && (
-          <>
-            <div style={{ fontFamily: 'silkscreen', fontSize: '24px' }}>
-              PRICE :{' '}
-              <span
+          ))}
+          {totalPrice < 50000 && totalPrice > 1 && (
+            <>
+              <div
                 style={{
-                  display: 'inline-block',
-                  width: '270px',
-                  textAlign: 'right',
+                  fontFamily: 'silkscreen',
+                  fontSize: '24px',
                 }}
               >
-                {comma(totalPrice)} WON
-              </span>
-            </div>
+                PRICE :
+                <span
+                  style={{
+                    display: 'inline-block',
+                    width: '270px',
+                    textAlign: 'right',
+                  }}
+                >
+                  {comma(totalPrice)} WON
+                </span>
+              </div>
 
+              <div>
+                <span
+                  style={{
+                    fontFamily: 'silkscreen',
+                    fontSize: '18px',
+                  }}
+                >
+                  <span style={{ marginRight: '20px' }}>Delivery Fee :</span>
+                  <span
+                    style={{
+                      display: 'inline-block',
+                      width: '202px',
+                      textAlign: 'right',
+                    }}
+                  >
+                    + 3,000<span style={{ marginLeft: '8px' }}>WON</span>
+                  </span>
+                  <span
+                    style={{
+                      marginLeft: '10px',
+                      fontSize: '16px',
+                      color: 'gray',
+                    }}
+                  >
+                    [50,000원 이상 구매 시 무료배송]
+                  </span>
+                </span>
+              </div>
+            </>
+          )}
+          {totalPrice !== 0 && (
             <div>
               <span
                 style={{
@@ -126,7 +139,7 @@ export default function CartTemplate({ props }: { props?: any }) {
                   fontSize: '18px',
                 }}
               >
-                <span style={{ marginRight: '20px' }}>Delivery Fee :</span>
+                <span style={{ marginRight: '50px' }}>USE POINTS :</span>
                 <span
                   style={{
                     display: 'inline-block',
@@ -134,112 +147,86 @@ export default function CartTemplate({ props }: { props?: any }) {
                     textAlign: 'right',
                   }}
                 >
-                  + 3,000<span style={{ marginLeft: '8px' }}>WON</span>
-                </span>
-                <span
-                  style={{
-                    marginLeft: '10px',
-                    fontSize: '16px',
-                    color: 'gray',
-                  }}
-                >
-                  [50,000원 이상 구매 시 무료배송]
+                  <span style={{ marginRight: '8px' }}>-</span>
+                  <Image
+                    src='/images/point.png'
+                    alt='point'
+                    width={20}
+                    height={20}
+                    style={{ marginRight: '5px' }}
+                  ></Image>
+                  <input
+                    value={point}
+                    style={{
+                      width: '100px',
+                      textAlign: 'right',
+                      height: '30px',
+                      border: isPointInputFocused
+                        ? '1px solid #75C3FE'
+                        : '1px solid lightgray',
+                      fontFamily: 'silkscreen',
+                      fontSize: '16px',
+                      outline: 'none',
+                    }}
+                    onFocus={() => setIsPointInputFocused(true)}
+                    onBlur={() => setIsPointInputFocused(false)}
+                    onChange={(e) => {
+                      const inputVal = Number(e.target.value);
+
+                      const limitPrice =
+                        totalPrice >= 50000
+                          ? totalPrice - 1000
+                          : totalPrice + 2000;
+                      const maxPoint = userInfo?.point ?? 0;
+
+                      const limit =
+                        maxPoint >= limitPrice ? limitPrice : maxPoint;
+
+                      console.log(
+                        'limitPrice, maxPoint, limit : ',
+                        limitPrice,
+                        maxPoint,
+                        limit
+                      );
+
+                      if (limit < inputVal) {
+                        setPoint(limit);
+                      } else {
+                        setPoint(inputVal);
+                      }
+                    }}
+                  />
+                  <span style={{ marginLeft: '8px' }}>P</span>
                 </span>
               </span>
             </div>
-          </>
-        )}
-        {totalPrice !== 0 && (
-          <div>
-            <span
-              style={{
-                fontFamily: 'silkscreen',
-                fontSize: '18px',
-              }}
-            >
-              <span style={{ marginRight: '50px' }}>USE POINTS :</span>
-              <span
-                style={{
-                  display: 'inline-block',
-                  width: '202px',
-                  textAlign: 'right',
-                }}
-              >
-                <span style={{ marginRight: '8px' }}>-</span>
-                <Image
-                  src='/images/point.png'
-                  alt='point'
-                  width={20}
-                  height={20}
-                  style={{ marginRight: '5px' }}
-                ></Image>
-                <input
-                  value={point}
-                  style={{
-                    width: '100px',
-                    textAlign: 'right',
-                    height: '30px',
-                    border: isPointInputFocused
-                      ? '1px solid #75C3FE'
-                      : '1px solid lightgray',
-                    fontFamily: 'silkscreen',
-                    fontSize: '16px',
-                    outline: 'none',
-                  }}
-                  onFocus={() => setIsPointInputFocused(true)}
-                  onBlur={() => setIsPointInputFocused(false)}
-                  onChange={(e) => {
-                    const maxPoint = userInfo?.point ?? 0;
-                    const inputVal = Number(e.target.value);
-                    const positiveVal = Math.max(0, inputVal);
-                    const priceLimit = finalPrice - 1000;
-                    console.log(inputVal);
-                    if (positiveVal > priceLimit) {
-                      setPoint(priceLimit);
-                      return;
-                    }
-                    if (positiveVal > maxPoint) {
-                      setPoint(maxPoint);
-                      return;
-                    }
-                    setPoint(positiveVal);
-                  }}
-                />
-                <span style={{ marginLeft: '8px' }}>P</span>
-              </span>
-            </span>
-          </div>
-        )}
-        <div
-          style={{
-            width: '700px',
-            height: '1px',
-            backgroundColor: 'lightgray',
-          }}
-        ></div>
-        <Range gap='30'>
-          <div className={totalPriceStyle}>
-            <span style={{ color: '#75C3FE' }}>TOTAL</span> :{' '}
-            {comma(
-              finalPrice
-              // totalPrice < 50000 && totalPrice > 1
-              //   ? totalPrice + 3000
-              //   : totalPrice
-            )}
-            <span style={{ marginLeft: '10px' }}>WON</span>
-          </div>
-          <Range preset='center' gap='8' className={totalPriceStyle}>
-            <span style={{ color: '#75C3FE' }}>REWARD</span> :{' '}
-            <Image
-              src='/images/point.png'
-              alt='point'
-              width={24}
-              height={24}
-            ></Image>
-            {totalPrice * 0.01}p
+          )}
+          <div
+            style={{
+              width: '700px',
+              height: '1px',
+              backgroundColor: 'lightgray',
+            }}
+          ></div>
+          <Range gap='30'>
+            <div className={totalPriceStyle}>
+              <span style={{ color: '#75C3FE' }}>TOTAL</span> :{' '}
+              {comma(finalPrice)}
+              <span style={{ marginLeft: '10px' }}>WON</span>
+            </div>
+            <Range preset='center' gap='8' className={totalPriceStyle}>
+              <span style={{ color: '#75C3FE' }}>REWARD</span> :{' '}
+              <Image
+                src='/images/point.png'
+                alt='point'
+                width={24}
+                height={24}
+              ></Image>
+              {totalPrice * 0.01}p
+            </Range>
           </Range>
         </Range>
-      </Range>
+      )}
       {/* <Btn size='big'>BUY</Btn> */}
       <Range preset='column'>
         <AddressModal />
@@ -298,9 +285,6 @@ export default function CartTemplate({ props }: { props?: any }) {
 
       <BuyBtn
         props={{
-          // size: 'big',
-
-          // price: totalPrice < 50000 ? totalPrice + 3000 : totalPrice,
           price: finalPrice,
           usedPoint: point,
           addPoint: totalPrice * 0.01,

@@ -2,10 +2,7 @@
 
 import { useState, useEffect, useRef } from 'react';
 import { useRouter } from 'next/navigation';
-import Image from 'next/image';
 import { Range } from '@/components/atoms';
-import { LabelTitle } from '@/components/molecules';
-import dayjs from 'dayjs';
 import { comma } from '@/shared/comma';
 import {
   reviewBtn,
@@ -70,15 +67,6 @@ export default function History({ props }: { props: any }) {
       '배송 완료': 'finish',
       환불: 'refund',
     };
-    const displayContent =
-      title === 'status'
-        ? STATUS_TEXT[content.trim()]
-        : title === 'delivery'
-        ? 'processing'
-        : content;
-
-    console.log(STATUS_TEXT['상품 확인중'], content === '상품 확인중');
-
     return (
       <Range preset='between'>
         <Range className={size === 'big' ? bigLabelTitle : labelTitle}>
@@ -93,7 +81,9 @@ export default function History({ props }: { props: any }) {
               : labelContent
           }
         >
-          {displayContent || 'processing'}
+          {title === 'status'
+            ? STATUS_TEXT[content.trim()]
+            : content || 'processing'}
         </Range>
       </Range>
     );
