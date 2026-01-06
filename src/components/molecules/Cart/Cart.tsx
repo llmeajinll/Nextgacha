@@ -34,7 +34,7 @@ export default function Cart({
 
     el.addEventListener('wheel', handleWheel, { passive: false });
     return () => el.removeEventListener('wheel', handleWheel);
-  }, []);
+  }, [props]);
 
   return (
     <Range gap='10' style={{ alignItems: 'center' }}>
