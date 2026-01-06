@@ -15,11 +15,12 @@ export default function OrderTemplate({
   props: any[];
   getLastId: string | null;
 }) {
-  console.log('ordertemplate : ', props, getLastId);
+  // console.log('ordertemplate : ', props, getLastId);
 
   const [items, setItems] = useState(props);
   const [lastId, setLastId] = useState(getLastId);
   const [loading, setLoading] = useState(false);
+  const [check, setCheck] = useState(true);
 
   const { openModal } = useModal();
 
@@ -50,7 +51,8 @@ export default function OrderTemplate({
   };
 
   const handleSelectAll = () => {
-    setItems((prev) => prev.map((item) => ({ ...item, check: true })));
+    setItems((prev) => prev.map((item) => ({ ...item, check: check })));
+    setCheck(!check);
   };
 
   const SendBtn = () => {
@@ -59,12 +61,50 @@ export default function OrderTemplate({
       return (
         <button
           onClick={() => {
-            openModal('선택된 주문을 모두 배송중으로 전환하시겠습니까?', () => {
-              console.log('ok');
-            });
+            openModal(
+              '선택된 주문을 모두 배송중으로 전환하시겠습니까?',
+              async () => {
+                const isValidate = items
+                  .filter((item) => item.check)
+                  .every((item) => item.courier && item.invoice);
+                if (!isValidate) {
+                  alert('택배사나 송장번호가 적혀있지 않은 주문이 있습니다.');
+                  return;
+                }
+
+                const orders = items.filter((val) => val.check === true);
+                console.log(orders);
+
+                try {
+                  const res = await fetch('/api/postCheckToSending', {
+                    method: 'POST',
+                    body: JSON.stringify({
+                      send: 'many',
+                      orders,
+                    }),
+                    headers: {
+                      'Content-Type': 'application/json',
+                    },
+                  });
+
+                  const result = await res.json();
+                  console.log(result);
+                  if (result.ok === true) {
+                    alert('전체 반영되엇습니다.');
+                    window.location.reload();
+                  } else {
+                    alert('전체 반영되지 못했습니다.');
+                    window.location.reload();
+                  }
+                } catch (err) {
+                  alert('오류가 발생했습니다.');
+                  window.location.reload();
+                }
+              }
+            );
           }}
           style={{
-            width: '220px',
+            padding: '0 20px',
             height: '50px',
             border: 'none',
             fontSize: '18px',
@@ -80,19 +120,87 @@ export default function OrderTemplate({
     } else if (status === '배송중') {
       // Handle send button click for 'sending' status
       return (
-        <button onClick={handleSelectAll}>선택 모두 배송 완료로 변경</button>
+        <Range gap='5'>
+          <button
+            onClick={handleSelectAll}
+            style={{
+              padding: '0 20px',
+              height: '50px',
+              border: 'none',
+              fontSize: '18px',
+              color: 'white',
+              marginTop: '30px',
+              backgroundColor: '#75C3FE',
+              cursor: 'pointer',
+            }}
+          >
+            전체 선택
+          </button>
+          <button
+            onClick={async () => {
+              const orders = items.filter((val) => val.check === true);
+              try {
+                const res = await fetch('/api/postSendingToFinish', {
+                  method: 'POST',
+                  body: JSON.stringify({
+                    send: 'many',
+                    orders,
+                  }),
+                  headers: {
+                    'Content-Type': 'application/json',
+                  },
+                });
+
+                const result = await res.json();
+                console.log(result);
+                if (result.ok === true) {
+                  alert('전체 반영되었습니다.');
+                  window.location.reload();
+                } else {
+                  alert('전체 반영되지 못했습니다.');
+                  window.location.reload();
+                }
+              } catch (err) {
+                alert('오류가 발생했습니다.');
+                window.location.reload();
+              }
+            }}
+            style={{
+              padding: '0 20px',
+              height: '50px',
+              border: 'none',
+              fontSize: '18px',
+              color: 'white',
+              marginTop: '30px',
+              backgroundColor: '#5bdb44',
+              cursor: 'pointer',
+            }}
+          >
+            선택된 주문 배송 완료로 변경
+          </button>
+        </Range>
       );
+    } else {
+      return;
     }
   };
 
   return (
     <>
       <SendBtn />
-      <div className={orderTemplateContainer}>
-        {items.map((item) => (
-          <Order key={item.orderId} props={item} onUpdate={handleUpdateItem} />
-        ))}
-      </div>
+      {items.length === 0 ? (
+        <div>주문건이 없습니다.</div>
+      ) : (
+        <div className={orderTemplateContainer}>
+          {items.map((item) => (
+            <Order
+              key={item.orderId}
+              props={item}
+              onUpdate={handleUpdateItem}
+            />
+          ))}
+        </div>
+      )}
       <div>
         {lastId && (
           <button
@@ -104,7 +212,7 @@ export default function OrderTemplate({
               height: '50px',
               border: 'none',
               backgroundColor: 'lightgray',
-              color: 'black',
+              color: '#444',
               fontSize: '18px',
               cursor: 'pointer',
             }}

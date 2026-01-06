@@ -15,7 +15,7 @@ export default async function SendingPage() {
     cache: 'no-store',
   }).then(async (res) => {
     const data = await res.json();
-    console.log(data);
+    // console.log(data);
     return data;
   });
 
