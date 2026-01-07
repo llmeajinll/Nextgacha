@@ -71,6 +71,7 @@ export async function POST(req: Request) {
           usedPoint,
           email: email as string,
           mongodbSession,
+          list,
         });
         const reduceStockRes = await reduceStock({
           list,

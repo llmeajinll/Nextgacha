@@ -13,7 +13,7 @@ export async function GET(req: Request) {
   if (lastId) {
     query._id = { $lt: new ObjectId(lastId) };
   }
-  console.log(query);
+  // console.log(query);
   const data = await orderColl
     .find(query)
     .sort({ _id: -1 })
@@ -27,7 +27,7 @@ export async function GET(req: Request) {
     };
   });
 
-  console.log(result);
+  // console.log(result);
   const nextCursor = result[result.length - 1]?._id || '';
   return NextResponse.json({ result, nextCursor });
 }

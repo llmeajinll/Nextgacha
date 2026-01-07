@@ -61,7 +61,7 @@ export async function POST(req: Request) {
 
   // 환불
   else if (send === 'refund') {
-    const { send, reason, orderId } = data;
+    const { send, reason, orderId, orders } = data;
     console.log(send, reason);
     try {
       const result = await orderColl.updateOne(

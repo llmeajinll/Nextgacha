@@ -78,6 +78,7 @@ export const gapVariant = styleVariants({
   '10': { gap: '10px' } as const,
   '15': { gap: '15px' } as const,
   '30': { gap: '30px' } as const,
+  '50': { gap: '50px' } as const,
   '10 30': { gap: '10px 30px' } as const,
   '10 0': { gap: '10px 0px' } as const,
   // dynamic: { gap: rangeGap } as const,

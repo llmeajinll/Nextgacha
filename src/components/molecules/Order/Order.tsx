@@ -21,6 +21,8 @@ export default function Order({
   const [reason, setReason] = useState('');
   const { openModal } = useModal();
 
+  console.log(props);
+
   const OrderBtn = () => {
     if (status === 'check') {
       return (
@@ -82,6 +84,7 @@ export default function Order({
                 orderId: props.orderId,
                 addPoint: props.addPoint,
                 email: props.email,
+                order: props.list,
               }),
               headers: {
                 'Content-Type': 'application/json',
@@ -228,6 +231,7 @@ export default function Order({
                         send: 'refund',
                         orderId: props.orderId,
                         reason,
+                        orders: props.item,
                       }),
                       headers: {
                         'Content-Type': 'application/json',

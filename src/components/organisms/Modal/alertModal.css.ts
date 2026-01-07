@@ -18,7 +18,7 @@ export const modalContainer = style({
   backgroundColor: 'white',
   transform: 'translate(50%, 0%)',
   border: `3px solid ${vars.color.blue1}`,
-  boxShadow: '5px 5px 0px 0px #3aaaff',
+  boxShadow: '5px 5px 0px 0px #3AAAFF',
 });
 export const alertText = style({
   color: 'white',

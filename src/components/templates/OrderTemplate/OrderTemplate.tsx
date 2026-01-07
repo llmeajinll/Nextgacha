@@ -189,7 +189,7 @@ export default function OrderTemplate({
     <>
       <SendBtn />
       {items.length === 0 ? (
-        <div>주문건이 없습니다.</div>
+        <h2>주문건이 없습니다.</h2>
       ) : (
         <div className={orderTemplateContainer}>
           {items.map((item) => (

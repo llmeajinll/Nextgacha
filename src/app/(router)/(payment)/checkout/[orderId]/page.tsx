@@ -17,9 +17,7 @@ export default function page({
 
   const fetchData = async () => {
     try {
-      const res = await fetch(
-        `/api/protected/getOneHistory?orderId=${orderId}`
-      );
+      const res = await fetch(`/api/getOneHistory?orderId=${orderId}`);
       const data = await res.json();
       if (data.ok) {
         console.log('res: ', data.result);
@@ -34,25 +32,85 @@ export default function page({
     fetchData();
   }, []);
   return (
-    <div>
-      <h1>결제가 완료되었습니다!</h1>
-      <h3>주문 번호: {orderId}</h3>
-      <div>배송지: {order?.address}</div>
-      <div>결제 금액: {comma(order?.totalPrice)}원</div>
+    <div
+      style={{
+        width: '900px',
+        padding: '10px 30px 40px 30px',
+        margin: '40px auto 0 auto',
+        border: '4px solid #75C3FE',
+      }}
+    >
+      <h1 style={{ color: '#3AAAFF' }}>결제가 완료되었습니다!</h1>
+      <h3>
+        <span style={{ display: 'inline-block', width: '100px' }}>
+          주문 번호
+        </span>
+        {orderId}
+      </h3>
       <div>
-        주문 상품:
+        <span
+          style={{
+            display: 'inline-block',
+            width: '80px',
+            fontWeight: '500',
+            color: '#4C4C4C',
+          }}
+        >
+          배송지
+        </span>
+        <span style={{ color: '#6F6F6F', fontWidth: '400' }}>
+          {order?.address}
+        </span>
+      </div>
+      <div>
+        <span
+          style={{
+            display: 'inline-block',
+            width: '80px',
+            fontWeight: '500',
+            color: '#4C4C4C',
+          }}
+        >
+          결제 금액
+        </span>
+        <span style={{ color: '#6F6F6F', fontWidth: '400' }}>
+          {comma(order?.totalPrice)}원
+        </span>
+      </div>
+      <Range>
+        <span
+          style={{
+            display: 'inline-block',
+            width: '80px',
+            fontWeight: '500',
+            color: '#4C4C4C',
+          }}
+        >
+          주문 상품
+        </span>
         {(order?.list || [])?.map((value: any, index: number) => (
           <div key={index}>
-            <div>{value.title}</div>
-            {value.product.map((val: any, idx: number) => (
-              <div key={idx} style={{ marginLeft: '15px' }}>
-                {val.name} : {val.count}개
-              </div>
-            ))}
+            <div style={{ color: '#6F6F6F', fontWidth: '400' }}>
+              {value.title}
+            </div>
+            <Range>
+              {value.product.map((val: any, idx: number) => (
+                <div
+                  key={idx}
+                  style={{
+                    marginRight: '15px',
+                    fontWidth: '400',
+                    fontSize: '14px',
+                  }}
+                >
+                  {val.name} : {val.count}개
+                </div>
+              ))}
+            </Range>
           </div>
         ))}
-      </div>
-      <Range gap='30'>
+      </Range>
+      <Range gap='50' style={{ margin: '30px auto 0 auto' }}>
         <Link href='/' style={{ fontFamily: 'silkscreen' }}>
           HOME
         </Link>
