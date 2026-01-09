@@ -6,139 +6,61 @@ import { revalidateTag } from 'next/cache';
 export async function POST(req: Request) {
   const data = await req.json();
   const session = await auth();
-  console.log('data : ', data, 'email : ', session?.user?.email);
-  // 갯수 증가할 때
-  if (data.preset === 'increase') {
-    const result = await cartColl
-      .updateOne(
-        {
-          user: data.email,
-          'cart.product.code': data.code,
-        },
-        {
-          $inc: { 'cart.$[].product.$[p].count': 1 },
-        },
-        {
-          arrayFilters: [{ 'p.code': data.code }],
-        }
-      )
-      .then((res) => {
-        // console.log('mongodb getUser res:', res);
-        return res;
-      })
-      .catch((err) => {
-        console.log('mongodb getUser error:', err);
-        return { acknowledged: false, modifiedCount: 0 };
-      });
+  const email = session?.user?.email;
+  // console.log('data : ', data.code, 'email : ', session?.user?.email);
 
-    return NextResponse.json({ result }, { status: 200 });
+  const { name, num, preset } = data;
+  console.log('name, num, preset : ', name, num, preset);
+
+  // 갯수 증가할 때
+  if (preset === 'increase') {
+    const result = await cartColl.updateOne(
+      { user: email, 'cart.num': num },
+      { $inc: { 'cart.$[outer].product.$[inner].count': 1 } },
+      { arrayFilters: [{ 'outer.num': num }, { 'inner.name': name }] }
+    );
+
+    console.log('increase result : ', result);
+    return NextResponse.json({ ok: true, result });
   }
   // 갯수 감소할 때
-  else if (data.preset === 'decrease') {
-    const result = await cartColl
-      .updateOne(
-        {
-          user: data.email,
-          'cart.product.code': data.code,
-        },
-        {
-          $inc: { 'cart.$[].product.$[p].count': -1 },
-        },
-        {
-          arrayFilters: [{ 'p.code': data.code }],
-        }
-      )
-      .then((res) => {
-        // console.log('mongodb getUser res:', res);
-        return res;
-      })
-      .catch((err) => {
-        console.log('mongodb getUser error:', err);
-        return { acknowledged: false, modifiedCount: 0 };
-      });
-    // if (result.acknowledged === true && result.modifiedCount > 0) {
-    //   revalidateTag('cart', 'default');
-    //   console.log('revalidated cart tag after decrease');
-    // }
-
-    return NextResponse.json({ result }, { status: 200 });
+  else if (preset === 'decrease') {
+    const result = await cartColl.updateOne(
+      {
+        user: email,
+        'cart.num': num, // 어떤 카트 그룹인지 식별
+      },
+      {
+        // cart 배열에서 num이 일치하는 요소의 product 배열 안에서 code가 일치하는 p 요소를 찾음
+        $inc: { 'cart.$[outer].product.$[inner].count': -1 },
+      },
+      {
+        arrayFilters: [
+          { 'outer.num': num }, // 외부 cart 배열 필터
+          { 'inner.name': name }, // 내부 product 배열 필터
+        ],
+      }
+    );
+    console.log(`decrease result : `, result);
+    return NextResponse.json({ ok: true, result }, { status: 200 });
   }
   // 상품 삭제할 때
-  else if (data.preset === 'erase') {
-    const result = await cartColl
-      .updateOne(
-        {
-          user: data.email,
-          'cart.product.code': data.code,
-        },
-        [
-          {
-            // 1️⃣ product 안에서 code 제거
-            $set: {
-              cart: {
-                $map: {
-                  input: '$cart',
-                  as: 'c',
-                  in: {
-                    num: '$$c.num',
-                    product: {
-                      $filter: {
-                        input: '$$c.product',
-                        as: 'p',
-                        cond: { $ne: ['$$p.code', data.code] },
-                      },
-                    },
-                  },
-                },
-              },
-            },
-          },
-          {
-            // 2️⃣ product가 빈 cart 제거
-            $set: {
-              cart: {
-                $filter: {
-                  input: '$cart',
-                  as: 'c',
-                  cond: { $gt: [{ $size: '$$c.product' }, 0] },
-                },
-              },
-            },
-          },
-        ]
-        // {
-        //   $pull: {
-        //     'cart.$[].product': { code: data.code },
-        //   },
-        // } as any
-      )
-      .then((res) => {
-        // console.log('mongodb getUser res:', res);
-        return res;
-      })
-      .catch((err) => {
-        console.log('mongodb getUser error:', err);
-        return { acknowledged: false, modifiedCount: 0 };
-      });
-    // if (result.acknowledged === true && result.modifiedCount > 0) {
-    //   revalidateTag('cart', 'default');
-    //   console.log('revalidated cart tag after decrease');
-    // }
-    return NextResponse.json({ result }, { status: 200 });
+  else if (preset === 'erase') {
+    const result = await cartColl.updateOne(
+      { user: email, 'cart.num': num },
+      {
+        $pull: { 'cart.$.product': { name } } as any,
+      }
+    );
+
+    // 만약 product 배열이 비었다면 해당 num 그룹 자체를 제거 (선택사항)
+    await cartColl.updateOne(
+      { user: email },
+      { $pull: { cart: { product: { $size: 0 } } } as any }
+    );
+
+    return NextResponse.json({ ok: true, result }, { status: 200 });
   } else {
     return NextResponse.json({ error: 'Invalid preset' }, { status: 400 });
   }
-
-  //   revalidateTag('cart', 'default');
-  // return NextResponse.json({ result }, { status: 200 });
-
-  //   if (
-  //     revalidateTag &&
-  //     result.acknowledged === true &&
-  //     (result.modifiedCount > 0 || data.preset === 'erase')
-  //   ) {
-  //     revalidateTag('cart', 'default');
-  //     console.log(`revalidated cart tag after ${data.preset}`);
-  //   }
-  //   return NextResponse.json({ result }, { status: 200 });
 }

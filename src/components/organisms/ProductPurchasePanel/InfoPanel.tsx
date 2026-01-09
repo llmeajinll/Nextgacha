@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState, useMemo, useRef } from 'react';
+import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 import Cookies from 'js-cookie';
 import dayjs from 'dayjs';
@@ -20,19 +21,23 @@ import {
 import { DropDown, LabelTitle } from '@/components/molecules';
 import { CardProps } from '@/shared/type';
 import { comma } from '@/shared/comma';
-
+import { useTempCart } from '@/app/hooks';
 import { panelTitle, copyText } from './productPurchasePanel.css';
 import { postCart } from '@/api/postCart';
 import postLike from '@/api/updateLike';
 
 export default function InfoPanel({ props }: { props: CardProps }) {
   console.log('infopanel', props);
+  const router = useRouter();
   const { openModal } = useModal();
+
   const [tempCart] = useAtom(tempCartAtom);
   const [showText, setShowText] = useState(false);
   const textDomRef = useRef<HTMLDivElement | null>(null);
+
+  console.log('jotai tempCart : ', tempCart);
   const totalPrice = useMemo(() => {
-    return tempCart.reduce((a, b) => {
+    return tempCart?.list.reduce((a: any, b: any) => {
       return a + b.count * b.price;
     }, 0);
   }, [tempCart]);
@@ -99,53 +104,29 @@ export default function InfoPanel({ props }: { props: CardProps }) {
           <DropDown props={props} status={props.reserve !== ''} />
 
           <Range gap='10' width='full' preset='right'>
-            {/* <Btn>BUY</Btn> */}
-            {/* <BuyBtn
-              props={{
-                // email,
-                price: totalPrice,
-                size: 'medium',
-              }}
-            /> */}
-
             <Btn
               color='primary'
               // size='extra'
               onClick={async () => {
-                if (tempCart.length === 0) {
+                if (tempCart.list.length === 0) {
                   openModal('담은 상품이 없습니다.');
                   return;
                 }
-                const data = tempCart.map(({ name, code, count }) => ({
-                  name,
-                  code,
-                  count,
-                }));
-
+                console.log('POST cart', tempCart.list, tempCart.num);
                 await postCart({
-                  // email: email,
-                  num: props.num,
-                  updatedArray: data,
+                  num: tempCart.num,
+                  updatedArray: tempCart.list,
                 }).then(async (res) => {
                   if (res.ok === true) {
                     openModal(
                       '장바구니에 정상적으로 들어갔습니다.\n장바구니로 이동하시겠습니까?',
                       () => {
-                        window.location.href = '/mypage/cart';
+                        router.push('/mypage/cart');
                       },
                       () => {
-                        window.location.reload();
+                        router.refresh();
                       }
                     );
-                    // if (
-                    //   window.confirm(
-                    //     `장바구니에 정상적으로 들어갔습니다.\n장바구니로 이동하시겠습니까?`
-                    //   )
-                    // ) {
-                    //   window.location.href = '/mypage/cart';
-                    // } else {
-                    //   window.location.reload();
-                    // }
                   } else {
                     openModal('로그인 후 장바구니에 담을 수 있습니다.');
                   }

@@ -1,153 +1,192 @@
-import React from 'react';
+import React, { useState } from 'react';
 import useSWR from 'swr';
 import { useAtom } from 'jotai';
 import { tempCartAtom } from '@/jotai/store';
 import { ProductProps } from '@/shared/type';
-import { useModal } from '@/app/hooks';
+import { useModal, useCart } from '@/app/hooks';
+import {
+  useMutation,
+  useQueryClient,
+  useSuspenseQuery,
+} from '@tanstack/react-query';
+import { baseUrl } from '@/shared/baseUrl';
 
-const fetcher = (url: string) =>
-  fetch(url, { credentials: 'include' }).then(async (res) => {
-    const result = await res.json();
-    // console.log(result);
-    if (result.ok === true) {
-      return result.data.cart;
-    } else if (result.ok === false) {
-      // openModal('로그인 후 장바구니에 담을 수 있습니다.');
-      return [];
-    } else {
-      // openModal('로그인 후 장바구니에 담을 수 있습니다.');
-      return [];
-    }
+// const fetcher = (url: string) =>
+//   fetch(url, { credentials: 'include' }).then(async (res) => {
+//     const result = await res.json();
+//     // console.log(result);
+//     if (result.ok === true) {
+//       return result.data.cart;
+//     } else if (result.ok === false) {
+//       // openModal('로그인 후 장바구니에 담을 수 있습니다.');
+//       return [];
+//     } else {
+//       // openModal('로그인 후 장바구니에 담을 수 있습니다.');
+//       return [];
+//     }
+//   });
+const MAX_LIMIT = 5;
+export default function useTempCart(num: number | string) {
+  // const
+  console.log('useTempCart : ', num);
+  const queryClient = useQueryClient();
+  const { openModal } = useModal();
+  const [tempCart, setTempCart] = useAtom(tempCartAtom);
+  // const [tempCart, setTempCart] = useState<{ num: number; list: any[] }>();
+
+  const isValidNum = num !== null && num !== '' && !isNaN(Number(num));
+
+  // if (!num) {
+  //   return {
+  //     data: { cart: { list: [] }, stock: { list: [] }, keep: { list: [] } },
+  //     increase: () => {},
+  //   };
+  // }
+
+  const { data } = useSuspenseQuery({
+    queryKey: ['tempCartData'],
+    queryFn: async () => {
+      if (!isValidNum) return {};
+      const res = await fetch(
+        `${baseUrl}/api/protected/getSimpleCart?num=${num}`,
+        {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        } as any
+      ).then(async (res) => {
+        const data = await res.json();
+        if (data.ok === true) {
+          console.log('tempCartData : ', data.result);
+          setTempCart({
+            title: data.result.stock.title,
+            price: data.result.stock.price,
+            num: data.result.num,
+            list: [],
+          });
+          return data.result;
+        } else {
+          return { cart: {}, keep: {}, stock: {}, num: null };
+        }
+      });
+      return res;
+    },
   });
 
-export default function useTempCart() {
-  const { openModal } = useModal();
-  const { data: DBcart, mutate } = useSWR(
-    '/api/protected/getSimpleCart',
-    fetcher,
-    {
-      revalidateOnFocus: false, // 창 포커스 시 자동 갱신 끄기
-      revalidateOnReconnect: false, // 네트워크 재연결 시 자동 갱신 끄기
-      dedupingInterval: 10000, // 10초 동안은 중복 요청 방지
-    }
-  );
+  const { cart, stock, keep } = data;
+  console.log(data);
 
-  const [tempCart, setTempCart] = useAtom(tempCartAtom);
+  const increase = ({ name }: { name: string }) => {
+    console.log('increase, name : ', name);
+    console.log(cart, stock, keep);
+    if (!isValidNum) return;
+    const tempCount =
+      tempCart?.list?.find((v: any) => v.name === name)?.count ?? 0;
+    const cartCount = cart.find((v: any) => v.name === name)?.count ?? 0;
+    const keepCount = keep.find((v: any) => v.name === name)?.count ?? 0;
+    const stockCount = stock.list.find((v: any) => v.name === name)?.count ?? 0;
 
-  // console.log('swr getCart : ', DBcart);
+    console.log(
+      'tempCount, cartCount, keepCount, stockCount : ',
+      tempCount,
+      cartCount,
+      keepCount,
+      stockCount
+    );
 
-  const MAX = 5;
+    const owned = cartCount + keepCount + tempCount;
+    const baseCap = Math.min(MAX_LIMIT, stockCount);
+    const effectiveCap = owned >= MAX_LIMIT ? MAX_LIMIT : baseCap;
+    const ableGet = owned < effectiveCap;
 
-  // 예비 장바구니 값 증가
-  const TempCartAdd = (newItem: ProductProps) => {
-    // console.log('newItem: ', newItem);
+    if (ableGet === true) {
+      // setTempCart;
+      console.log('가농');
+      setTempCart((prev: any) => {
+        const current = prev ?? { num: Number(num), list: [] };
 
-    const DBGroup = (DBcart ?? [])?.find((val: any) => val.num === newItem.num);
-    const DBcartCount =
-      DBGroup?.product?.find((p: any) => {
-        return p.code === newItem.code;
-      })?.count ?? 0;
+        const exists = current?.list?.find((item: any) => item.name === name);
 
-    // const preGroup = tempCart.find((val: any) => val.num === newItem.num);
-    const preCount =
-      tempCart?.find((p: any) => p.code === newItem.code)?.count ?? 0;
+        if (exists) {
+          return {
+            ...current,
+            list: current.list.map((item: any) =>
+              item.name === name ? { ...item, count: item.count + 1 } : item
+            ),
+          };
+        }
 
-    // console.log(
-    //   'DBGroup, DBcartCount, preGroup, preCount : ',
-    //   DBGroup,
-    //   DBcartCount,
-    //   tempCart,
-    //   preCount
-    // );
-
-    const limitCount = newItem.limit.count >= 5 ? 5 : newItem.limit.count;
-    const count = limitCount - preCount - DBcartCount;
-
-    // console.log('limitCount, count : ', limitCount, count);
-
-    if (count <= 0) {
-      console.log('장바구니 최대치 도달1');
-      // alert(
-      //   `재고가 ${limitCount}개 남아있습니다. (현재 장바구니: ${DBcartCount}, 예비 장바구니: ${preCount})`
-      // );
-      openModal(
-        `재고가 ${limitCount}개 남아있습니다. (현재 장바구니: ${DBcartCount}, 예비 장바구니: ${preCount})`
-      );
-      return;
-    }
-
-    if (DBcartCount + preCount >= MAX) {
-      console.log('장바구니 최대치 도달2');
-      // console.log(
-      //   `장바구니는 최대 ${MAX}개까지만 이용 가능합니다. (현재 DB: ${DBcartCount}, 예비: ${preCount})`
-      // );
-      //       alert(
-      //   `장바구니는 최대 ${MAX}개까지만 담을 수 있습니다. (현재 장바구니: ${DBcartCount}, 예비 장바구니: ${preCount})`
-      // );
-      openModal(
-        `장바구니는 최대 ${MAX}개까지만 담을 수 있습니다. (현재 장바구니: ${DBcartCount}, 예비 장바구니: ${preCount})`
-      );
-
-      return;
-      //   return false;
-    } else if (DBcartCount + preCount < MAX && preCount === 0) {
-      // console.log(`jotai 없음 (현재 DB: ${DBcartCount}, 예비: ${preCount})`);
-      const data = {
-        num: newItem.num,
-        code: newItem.name + newItem.num,
-        name: newItem.name,
-        title: newItem.title,
-        count: 1,
-        price: newItem.price,
-        limit: { name: newItem.name, count: newItem.limit.count },
-      };
-      setTempCart((prev) => [...prev, data]);
-    }
-    // jotai 있음
-    else if (DBcartCount + preCount < MAX && preCount !== 0) {
-      // console.log(`jotai 있음 (현재 DB: ${DBcartCount}, 예비: ${preCount})`);
-      const updated = tempCart.map((item) =>
-        item.code === newItem.code ? { ...item, count: item.count + 1 } : item
-      );
-      setTempCart(updated);
-    }
-  };
-
-  // 예비 장바구니 값 감소
-  const TempCartMinus = (newItem: ProductProps) => {
-    const preCount =
-      tempCart?.find((p: any) => p.code === newItem.code)?.count ?? 0;
-
-    if (preCount > 1) {
-      const updated = tempCart.map((item) =>
-        item.code === newItem.code ? { ...item, count: item.count - 1 } : item
-      );
-      setTempCart(updated);
-
-      return;
-      //   return false;
-    } else if (preCount === 1) {
-      openModal('삭제하시겠습니까?', () => {
-        const updated = tempCart.filter((item) => item.code !== newItem.code);
-        setTempCart(updated);
+        return {
+          ...current,
+          list: [...current.list, { name, count: 1 }],
+        };
       });
-
-      // if (window.confirm('삭제하시겠습니까?')) {
-      //   const updated = tempCart.filter((item) => item.code !== newItem.code);
-      //   setTempCart(updated);
-      // } else {
-      //   return;
-      // }
+      console.log('임시 수량 증가:', name);
+    } else {
+      openModal(
+        `더 담울 수 없습니다. (장바구니 : ${cartCount}개, 배송중: ${keepCount}, 재고: ${stockCount})`
+      );
     }
+
+    console.log('after ADd : ', tempCart);
   };
 
-  // 예비 장바구니 삭제
-  const TempCartDelete = (newItem: ProductProps) => {
-    // console.log('newItem: ', newItem);
-
-    const updated = tempCart.filter((item) => item.code !== newItem.code);
-    setTempCart(updated);
+  const decrease = ({ name }: { name: string }) => {
+    console.log('decrease name : ', name);
   };
 
-  return { TempCartAdd, TempCartMinus, TempCartDelete };
+  const erase = ({ name }: { name: string }) => {
+    console.log('erase name : ', name);
+  };
+
+  const mutation = useMutation({
+    mutationFn: async ({
+      num,
+      name,
+      preset,
+    }: // newData,
+    {
+      num: number;
+      name: string;
+      preset: 'increase' | 'decrease' | 'erase';
+      // newData?: any;
+    }) => {
+      const response = await fetch(`${baseUrl}/api/updateCart`, {
+        method: 'POST', // 또는 POST
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ preset, name, num }),
+        // body: JSON.stringify({ num, ...newData }),
+      });
+      return response.json();
+    },
+    onMutate: async ({ preset, name, num }) => {
+      await queryClient.cancelQueries({ queryKey: ['tempCartData'] });
+      const previousData = queryClient.getQueryData<any[]>(['tempCartData']);
+      if (previousData && Array.isArray(previousData)) {
+        console.log('previousData : ', previousData);
+
+        return { previousData };
+      }
+    },
+    // 2. 서버 업데이트 성공 후 실행
+    onSuccess: async () => {
+      // 'cartData' 키를 가진 쿼리를 무효화하여 서버에서 최신 데이터를 다시 읽어옵니다.
+      queryClient.invalidateQueries({ queryKey: ['tempCartData'] });
+      const previousData = queryClient.getQueryData(['tempCartData']);
+      console.log(previousData);
+    },
+    onError: (error) => {
+      console.error('업데이트 실패:', error);
+      alert('변경사항을 저장하지 못했습니다.');
+    },
+  });
+
+  return {
+    tempCart,
+    increase,
+    decrease,
+    erase,
+    data: isValidNum ? data : null,
+  };
 }

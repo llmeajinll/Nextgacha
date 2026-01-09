@@ -1,84 +1,160 @@
 import { ProductProps } from '@/shared/type';
 import Cookies from 'js-cookie';
 import updateCart from '@/api/updateCart';
+import getCart from '@/api/getCart';
+
 import { useRouter } from 'next/navigation';
 import { useModal } from '@/app/hooks';
 
+import {
+  useQuery,
+  useSuspenseQuery,
+  useMutation,
+  useQueryClient,
+  QueryKey,
+} from '@tanstack/react-query';
+import { baseUrl } from '@/shared/baseUrl';
+
 export default function useCart() {
-  const router = useRouter();
-  const { openModal } = useModal();
+  const queryClient = useQueryClient();
 
-  const increase = async (props: ProductProps) => {
-    // console.log('increase props: ', props);
-    const limitCount = props.limit.count >= 5 ? 5 : props.limit.count;
-    const count = limitCount - props.count;
+  const { data } = useSuspenseQuery({
+    queryKey: ['cartData'],
+    queryFn: async () =>
+      await fetch(`${baseUrl}/api/getCart`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      } as any).then(async (res) => {
+        const data = await res.json();
+        if (data.ok === true) {
+          console.log('useSuspenseQuery : ', data.result);
+          return data.result;
+        } else {
+          return { cart: {}, keep: {}, stock: {} };
+        }
+      }),
+  });
 
-    console.log('count : ', count);
+  const mutation = useMutation({
+    mutationFn: async ({
+      num,
+      name,
+      preset,
+    }: // newData,
+    {
+      num: number;
+      name: string;
+      preset: 'increase' | 'decrease' | 'erase';
+      // newData?: any;
+    }) => {
+      const response = await fetch(`${baseUrl}/api/updateCart`, {
+        method: 'POST', // 또는 POST
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ preset, name, num }),
+        // body: JSON.stringify({ num, ...newData }),
+      });
+      return response.json();
+    },
+    onMutate: async ({ preset, name, num }) => {
+      await queryClient.cancelQueries({ queryKey: ['cartData'] });
+      const previousData = queryClient.getQueryData<any[]>(['cartData']);
+      if (previousData && Array.isArray(previousData)) {
+        console.log('previousData : ', previousData);
 
-    if (count > 0) {
-      // plus cart api 호출
-      await updateCart({
+        return { previousData };
+        // console.log('maxLimit : ', maxLimit);
+        // const currentKeepCount = keepItem.length ? keepItem[0]?.count ?? 0 : 0;
+      }
+    },
+    // 2. 서버 업데이트 성공 후 실행
+    onSuccess: async () => {
+      // 'cartData' 키를 가진 쿼리를 무효화하여 서버에서 최신 데이터를 다시 읽어옵니다.
+      queryClient.invalidateQueries({ queryKey: ['cartData'] });
+      const previousData = queryClient.getQueryData(['cartData']);
+      console.log(previousData);
+    },
+    onError: (error) => {
+      console.error('업데이트 실패:', error);
+      alert('변경사항을 저장하지 못했습니다.');
+    },
+  });
+
+  const increase = (
+    keepCount: number,
+    stockCount: number,
+    num: number,
+    name: string,
+    count: number
+    // newData: any
+  ) => {
+    console.log('INCREASE num, name, count : ', num, name, count);
+
+    console.log('keepCount : ', keepCount);
+
+    // B. 해당 물건의 실제 재고 (stock)
+
+    console.log('stockCount : ', stockCount);
+    // const stockCount = stockItem ? stockItem.count : 0;
+
+    // C. 최대 한도 계산 (재고량 vs 5개 중 작은 값)
+    // const maxLimit = Math.min(5, stockCount);
+    const isLeft = keepCount + count < Math.min(5, stockCount + keepCount);
+    console.log(isLeft, keepCount + count, Math.min(5, stockCount + keepCount));
+
+    if (isLeft === true) {
+      mutation.mutate({
+        num,
+        name,
         preset: 'increase',
-        code: props.code,
-      }).then((res) => {
-        // console.log('router refresh after increase');
-        return res;
       });
-      // console.log('increase result: ', await result);
-      router.refresh();
     } else {
-      // alert('더 이상 추가할 수 없습니다.');
-      console.log('왜 모달이 안뜨지');
-      openModal('더 이상 추가할 수 없습니다.');
+      window.alert(
+        `더 담을 수 없습니다. (재고 : ${stockCount}, 배송중 : ${keepCount}, 최대로 담을 수 있는 갯수 : ${Math.min(
+          5,
+          stockCount + keepCount
+        )})`
+      );
     }
   };
 
-  const decrease = async (props: ProductProps) => {
-    // console.log('decrease props: ', props);
+  const decrease = (
+    num: number,
+    name: string,
+    count: number
+    // newData: any
+  ) => {
+    console.log('DECREASE num, name, count : ', num, name, count);
 
-    if (props.count > 1) {
-      // decrease cart api 호출
-      await updateCart({
+    if (count > 1) {
+      mutation.mutate({
+        num,
+        name,
         preset: 'decrease',
-        code: props.code,
-      }).then((res) => {
-        return res;
       });
-      // console.log('decrease result: ', await result);
-      router.refresh();
-    } else if (props.count === 1) {
-      // erase cart api 호출
-      openModal('삭제하시겠습니까?', async () => {
-        await updateCart({
+    } else if (count === 1) {
+      console.log('decrease count is 1');
+      if (window.confirm('상품을 삭제하시겠습니까?')) {
+        mutation.mutate({
+          num,
+          name,
           preset: 'erase',
-          code: props.code,
-        }).then((res) => {
-          return res;
         });
-        // console.log('decrease erase result: ', await result);
-        router.refresh();
-      });
-      // if (window.confirm('삭제하시겠습니까?')) {
-
-      // }
-    } else {
-      alert('error');
+      }
     }
   };
 
-  const erase = async (props: ProductProps) => {
-    // console.log('erase code: ', props.code);
-
-    const result = await updateCart({
-      preset: 'erase',
-      code: props.code,
-    }).then((res) => {
-      return res;
-    });
-    // console.log('decrease result: ', await result);
-    router.refresh();
-    return result;
+  const erase = (num: number, name: string) => {
+    console.log('ERASE num, name, count : ', num, name);
+    if (window.confirm('상품을 삭제하시겠습니까?')) {
+      mutation.mutate({
+        num,
+        name,
+        preset: 'erase',
+      });
+    }
   };
 
-  return { increase, decrease, erase };
+  return { data, increase, decrease, erase };
 }

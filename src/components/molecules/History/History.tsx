@@ -146,10 +146,16 @@ export default function History({ props }: { props: any }) {
         >
           <Range className={labelTitle}>list</Range>
           {props.list.map((value: any, index: number) => {
+            console.log(
+              'value.list : ',
+              value?.product.map((val: any, idx: number) => {
+                console.log(val);
+              })
+            );
             return (
               <div key={props.orderId + index} className={listContainer}>
                 <div className={title}>{value?.title || 'error'}</div>
-                {value.product.map((val: any) => (
+                {value?.product.map((val: any) => (
                   <Range
                     key={props.orderId + val.name + value.num}
                     className={contentContainer}

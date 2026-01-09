@@ -1,15 +1,17 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, Suspense } from 'react';
 import { Provider } from 'jotai';
 import { CardProps } from '@/shared/type';
 import TicketPanel from './TicketPanel';
 import InfoPanel from './InfoPanel';
+import { useTempCart } from '@/app/hooks';
 
 export default function ProductPurchasePanel({ num }: { num: string }) {
   console.log(num);
 
   const [info, setInfo] = useState<CardProps>({} as CardProps);
+  const { data, increase, tempCart } = useTempCart(num);
 
   useEffect(() => {
     const fetchInfo = async () => {
@@ -26,13 +28,18 @@ export default function ProductPurchasePanel({ num }: { num: string }) {
         });
     };
     fetchInfo();
-  }, []);
+    console.log('tempCart : ', tempCart);
+  }, [tempCart]);
 
   return (
     <>
       {/* <Provider> */}
-      <InfoPanel props={info} />
-      <TicketPanel />
+      <Suspense fallback={<div>loading...</div>}>
+        <InfoPanel props={info} />
+        {/* <TicketPanel tempCart={tempCart} increase={() => increase} /> */}
+        <TicketPanel />
+      </Suspense>
+
       {/* </Provider> */}
     </>
   );

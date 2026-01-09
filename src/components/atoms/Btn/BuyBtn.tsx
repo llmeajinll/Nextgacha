@@ -25,23 +25,24 @@ export default function BuyBtn({
   props: BuyBtnType;
   width?: number;
 }) {
-  console.log('buyBtn list : ', props?.list, width);
+  console.log('buyBtn list : ', props);
 
   const [userInfo] = useAtom(userInfoAtom);
   const { openModal } = useModal();
 
   const onClickPayment = async (e: React.MouseEvent<HTMLButtonElement>) => {
-    // e.stopPropagation();
-    console.log('buyBtn userInfo : ', userInfo?.address === '', props?.list);
+    e.stopPropagation();
 
-    if (props?.list?.length === 0) {
+    console.log('buyBtn userInfo : ', props?.list);
+
+    if (props?.list?.length === 0 || !props?.list) {
       console.log('list no');
-      openModal('장바구니가 비어있습니다.');
+      alert('장바구니가 비어있습니다.');
       return;
     }
 
     if (userInfo?.address === '') {
-      openModal('배송지를 입력해주세요.');
+      alert('배송지를 입력해주세요.');
       return;
     }
 
@@ -50,13 +51,17 @@ export default function BuyBtn({
     const result = await fetch('/api/postCheckStock', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ list: props.list }),
-    }).then((res) => {
-      return res.json();
-    });
+      body: JSON.stringify({ list: props?.list }),
+    })
+      .then((res) => {
+        return res.json();
+      })
+      .catch((err) => {
+        console.log(err);
+      });
 
     if (result.ok !== true) {
-      return;
+      window.alert(result.message);
     } else {
       // console.log('통과');
       localStorage.setItem('pending_order_items', JSON.stringify(props.list));

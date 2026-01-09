@@ -17,3 +17,4 @@ export { default as TicketContainer } from './Ticket/TicketContainer';
 export { default as DetailTab } from './DetailTab/DetailTab';
 export { default as TagContainer } from './TagContainer/TagContainer';
 export { default as StarRating } from './StarRating/StarRating';
+export { default as AddressTruck } from './AddressTruck/AddressTruck';

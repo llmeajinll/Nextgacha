@@ -12,15 +12,18 @@ export async function reducePoint({
   list: any[];
   mongodbSession: ClientSession;
 }) {
-  console.log('reducePoint usedPoint, email : ', usedPoint, email, list);
+  // console.log('reducePoint usedPoint, email : ', usedPoint, email, list);
+
+  console.log('========== reducePoint ==========');
 
   try {
     const bulkOps = [];
 
     for (const item of list) {
-      const { num, product: newProducts } = item;
+      const { num, product } = item;
 
-      for (const prod of newProducts) {
+      console.log('num, product : ', num, product);
+      for (const prod of product) {
         // (A) num과 name이 모두 존재하는 경우: count 증가
         bulkOps.push({
           updateOne: {

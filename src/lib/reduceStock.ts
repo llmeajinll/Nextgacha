@@ -10,7 +10,8 @@ export async function reduceStock({
   email: string;
   mongodbSession: ClientSession;
 }) {
-  console.log('reduceStock list, email : ', list, email);
+  // console.log('reduceStock list, email : ', list, email);
+  console.log('========== reduceStock ==========');
 
   const bulkOps = list.flatMap((item) =>
     item.product.map((p: any) => ({

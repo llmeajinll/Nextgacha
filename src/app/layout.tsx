@@ -12,6 +12,7 @@ import { MSWProvider } from '@/mocks/MSWComponent';
 import { Analytics } from '@vercel/analytics/next';
 import { AlertModal } from '@/components/organisms';
 import QueryProvider from '@/query/QueryProviders';
+import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 
 // import { RecoilRoot } from 'recoil';
 
@@ -46,8 +47,10 @@ export default function RootLayout({
       <body className={`${notoSans.className}`}>
         <MSWProvider>
           <Analytics />
+
           <QueryProvider>
             <SessionProvider>
+              <ReactQueryDevtools initialIsOpen={false} />
               <div style={{ position: 'relative' }}>
                 <AlertModal />
                 <div className={`${layoutContainer}`}>

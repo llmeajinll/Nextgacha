@@ -10,4 +10,5 @@ export const search = style({
   border: `2px solid ${vars.color.gray1}`,
   padding: '0 10px',
   color: vars.color.black1,
+  fontFamily: 'notosans',
 });

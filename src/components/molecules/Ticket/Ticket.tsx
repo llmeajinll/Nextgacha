@@ -21,24 +21,16 @@ export default function Ticket({
   increase,
   decrease,
   erase,
-}: {
-  props: ProductProps;
+}: // onClick,
+{
+  props: any;
+  // props: ProductProps;
   increase: (props: ProductProps) => void;
   decrease: (props: ProductProps) => void;
   erase: (props: ProductProps) => void;
 }) {
   const { openModal } = useModal();
-  // console.log('ticket props: ', props);
-  // const data = { ...props, count: 1 };
-
-  // code: val.name + props.num,
-  //                   name: val.name,
-  //                   title: props.title,
-  //                   count: 1,
-  //                   price: props.price,
-  //                   num: props.num,
-  //                   limit: val.count,
-
+  // console.log('ticket : ', props);
   return (
     <div className={ticketContainer}>
       <div className={contentContainer}>
@@ -46,7 +38,7 @@ export default function Ticket({
         <div className={title}>{props.title}</div>
         <Range preset='between' style={{ marginTop: '15px' }}>
           <div className={priceStyle}>
-            {comma(props.price * props.count)}won
+            {comma(props.price * props.count)} won
           </div>
           <Image
             className={deleteBtn}
@@ -55,22 +47,14 @@ export default function Ticket({
             width={20}
             height={20}
             onClick={() => {
-              // if (window.confirm('삭제하시겠습니까?')) {
-              //   // deleteToTempCart(props.code);
-              //   erase(props);
-              // }
-
-              openModal('삭제하시겠습니까?', () => {
-                erase(props);
-              });
-
-              // openModal('삭제하시겠습니까?');
+              erase(props);
             }}
           />
         </Range>
       </div>
       <Range preset='columnCenter' style={{ marginTop: '8px' }}>
         <CountBtn type='plus' onClick={() => increase(props)} />
+        {/* <CountBtn type='plus' onClick={() => onClick(props)} /> */}
         <div className={countNumber}>{props.count}</div>
         <CountBtn type='minus' onClick={() => decrease(props)} />
       </Range>

@@ -13,7 +13,7 @@ export default function HistoryPage() {
 
       await getHistory().then(async (res) => {
         const data = await res?.json();
-        // console.log('history : ', data);
+        console.log('history : ', data);
         setData(data.result);
         // return data;
       });
@@ -26,7 +26,7 @@ export default function HistoryPage() {
   return (
     <>
       {data.length === 0 ? (
-        <EmptyCard data='History' />
+        <EmptyCard>HISTORY IS EMPTY</EmptyCard>
       ) : (
         <div
           style={{

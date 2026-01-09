@@ -12,6 +12,7 @@
   "dependencies": {
     "@auth/core": "^0.40.0",
     "@tanstack/react-query": "^5.90.10",
+    "@tanstack/react-query-devtools": "^5.91.2",
     "@tosspayments/payment-widget-sdk": "^0.12.1",
     "@tosspayments/tosspayments-sdk": "^2.5.0",
     "@vanilla-extract/css": "^1.17.4",

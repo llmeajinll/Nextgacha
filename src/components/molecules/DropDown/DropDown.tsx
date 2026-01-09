@@ -30,7 +30,7 @@ export default function DropDown({
   status?: boolean;
 }) {
   console.log(props);
-  const { TempCartAdd } = useTempCart();
+  const { increase } = useTempCart(props.num);
 
   const { isOpen, selected, toggle, setSelected, dropdownRef } =
     useDropDown('');
@@ -64,28 +64,11 @@ export default function DropDown({
               onClick={() => {
                 if (val.count !== 0 || status) {
                   setSelected(`${idx + 1}. ${val.name}`);
-                  // addToTempCart({
-                  //   code: val.name + props.num,
-                  //   name: val.name,
-                  //   title: props.title,
-                  //   count: 1,
-                  //   price: props.price,
-                  //   num: props.num,
-                  //   limit: { name: val.name, count: val.count },
-                  // });
-                  TempCartAdd({
-                    code: val.name + props.num,
-                    name: val.name,
-                    title: props.title,
-                    count: 1,
-                    price: props.price,
-                    num: props.num,
-                    limit: { name: val.name, count: val.count },
-                  });
+                  increase({ name: val.name });
                 } else {
                   setSelected('');
                 }
-                toggle;
+                toggle();
               }}
             >
               {idx + 1}. {val.name}{' '}

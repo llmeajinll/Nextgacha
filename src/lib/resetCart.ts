@@ -10,6 +10,7 @@ export async function resetCart({
   list: any[];
   mongodbSession: ClientSession;
 }) {
+  console.log('========== resetCart ==========');
   const num = list.filter((val) => val.num).map((val) => val.num);
   try {
     const result = await cartColl.updateOne(

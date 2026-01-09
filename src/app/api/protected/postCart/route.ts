@@ -10,7 +10,7 @@ export async function POST(req: Request) {
   const session = await auth();
   const email = session?.user?.email;
 
-  // console.log('email, num, updatedArray : ', email, num, updatedArray);
+  console.log('email, num, updatedArray : ', email, num, updatedArray);
 
   try {
     await cartColl.updateOne(
@@ -26,13 +26,13 @@ export async function POST(req: Request) {
         {
           user: email,
           'cart.num': num,
-          'cart.product.code': newItem.code,
+          'cart.product.name': newItem.name,
         },
         {
           $inc: { 'cart.$[outer].product.$[inner].count': newItem.count },
         },
         {
-          arrayFilters: [{ 'outer.num': num }, { 'inner.code': newItem.code }],
+          arrayFilters: [{ 'outer.num': num }, { 'inner.name': newItem.name }],
         }
       );
       // console.log('res1 : ', res1);

@@ -1,6 +1,12 @@
 import React from 'react';
 
-export default function EmptyCard({ data }: { data: string }) {
+export default function EmptyCard({
+  children,
+  style,
+}: {
+  children: React.ReactNode;
+  style?: React.CSSProperties;
+}) {
   return (
     <div
       style={{
@@ -18,9 +24,10 @@ export default function EmptyCard({ data }: { data: string }) {
         justifyContent: 'center',
         lineHeight: '24px',
         marginTop: '15px',
+        ...style,
       }}
     >
-      {data} is empty
+      {children}
     </div>
   );
 }

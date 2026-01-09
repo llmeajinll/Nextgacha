@@ -31,7 +31,7 @@ export default function page() {
   return (
     <>
       {like.length === 0 ? (
-        <EmptyCard data='LIKE' />
+        <EmptyCard>LIKE IS EMPTY</EmptyCard>
       ) : (
         <div className={cardTemplateContainer}>
           {like?.map((item: CardProps) => (

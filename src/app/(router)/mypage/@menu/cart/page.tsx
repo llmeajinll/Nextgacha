@@ -1,12 +1,14 @@
-// 'use client';
+'use client';
 
-// import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, Suspense } from 'react';
 import { CartTemplate } from '@/components/templates';
 import getCart from '@/api/getCart';
 import { baseUrl } from '@/shared/baseUrl';
+import { Cart, EmptyCard, AddressTruck } from '@/components/molecules';
 
-export default async function page() {
-  const data = await getCart();
+export default function page() {
+  // const data = await getCart();
+
   // const [data, setData] = useState();
   // useEffect(() => {
   //   const fetchCartData = async () => {
@@ -16,10 +18,12 @@ export default async function page() {
   //   };
   //   fetchCartData();
   // }, []);
-  console.log('result from getCart in page: ', data, baseUrl);
+  // console.log('result from getCart in page: ', data);
   return (
     <>
-      <CartTemplate props={data} />
+      <Suspense fallback={<EmptyCard>LOADING...</EmptyCard>}>
+        <CartTemplate />
+      </Suspense>
     </>
   );
 }

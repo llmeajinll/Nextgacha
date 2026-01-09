@@ -33,9 +33,10 @@ export async function POST(req: Request) {
 
   // 1. [최종 재고 확인] DB에서 수량을 다시 확인
   const isStillAvailable = await validateStock(list);
+  console.log('isStillAvailable.isAvailable : ', isStillAvailable.isAvailable);
   if (isStillAvailable.isAvailable === false) {
     return NextResponse.json(
-      { message: '결제 진행 중 품절되었습니다.', ok: false },
+      { message: isStillAvailable.message, ok: false },
       { status: 400 }
     );
   }
@@ -94,7 +95,7 @@ export async function POST(req: Request) {
           mongodbSession,
         });
         console.log(
-          'addOrderRes?.result.ok, reduceStockRes?.ok : ',
+          'addOrderRes?.result.ok, reduceStockRes?.ok, resetCartRes?.ok, reducePointRes?.ok, result : ',
           addOrderRes?.result.ok,
           reduceStockRes?.ok,
           resetCartRes?.ok,

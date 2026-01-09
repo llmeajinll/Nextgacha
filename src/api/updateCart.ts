@@ -6,14 +6,16 @@ import { baseUrl } from '@/shared/baseUrl';
 
 export default async function updateCart({
   preset,
-  code,
+  name,
+  num,
 }: {
   preset: 'increase' | 'decrease' | 'erase';
-  code: string;
+  name: string;
+  num: string;
 }) {
-  // console.log('updateCart data input:', preset, code);
+  // console.log('updateCart data input:', preset);
   const session = await auth();
-  const data = { preset, code, email: session?.user?.email };
+  const data = { preset, name, num, email: session?.user?.email };
   const res = await fetch(`${baseUrl}/api/updateCart`, {
     method: 'POST',
     body: JSON.stringify(data),

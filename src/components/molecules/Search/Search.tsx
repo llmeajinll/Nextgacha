@@ -1,25 +1,34 @@
 'use client';
 
-import React, { useState } from 'react';
-import { useRouter } from 'next/navigation';
+import React, { useState, useEffect } from 'react';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { search } from './search.css';
 import Image from 'next/image';
 
 export default function Search() {
   const router = useRouter();
-  const [input, setInput] = useState('');
+  const [keyword, setKeyword] = useState('');
+  const searchParams = useSearchParams();
+  const searchInput = searchParams.get('search');
+
+  useEffect(() => {
+    console.log('searchInput : ', searchInput);
+    setKeyword(searchInput || '');
+  }, []);
+
   return (
     <div className={search}>
       <Image src='/images/search.png' alt='search' width={22} height={22} />
       <input
         type='text'
         placeholder='SEARCH...'
-        onChange={(e) => setInput(e.target.value)}
+        onChange={(e) => setKeyword(e.target.value)}
+        value={keyword}
         onKeyDown={(e) => {
           if (e.key === 'Enter') {
             // const target = e.target as HTMLInputElement;
             // document.location.href = `/search?search=${input}`;
-            router.replace(`/search?search=${input}`, { scroll: false });
+            router.replace(`/search?search=${keyword}`, { scroll: false });
           }
         }}
         style={{
