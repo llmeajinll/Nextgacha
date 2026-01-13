@@ -1,7 +1,7 @@
 // import React, { use } from 'react';
 import { headers } from 'next/headers';
 import { ProductPurchasePanel } from '@/components/organisms';
-import { DetailTab } from '@/components/molecules';
+import { DetailTab, EmptyCard } from '@/components/molecules';
 import ScrollToTop from '@/components/atoms/ScrollToTop';
 import { Suspense } from 'react';
 
@@ -18,9 +18,8 @@ export default async function DetailLayout({
 
   return (
     <>
-      <Suspense fallback={<div> loading...</div>}>
+      <Suspense fallback={<EmptyCard>LOADING ...</EmptyCard>}>
         <ScrollToTop />
-
         <div style={{ width: 'fit-content', margin: '50px auto 0 auto' }}>
           <ProductPurchasePanel num={code} />
           <DetailTab />

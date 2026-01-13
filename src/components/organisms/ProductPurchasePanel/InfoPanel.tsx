@@ -36,11 +36,37 @@ export default function InfoPanel({ props }: { props: CardProps }) {
   const textDomRef = useRef<HTMLDivElement | null>(null);
 
   console.log('jotai tempCart : ', tempCart);
+
   const totalPrice = useMemo(() => {
     return tempCart?.list.reduce((a: any, b: any) => {
       return a + b.count * b.price;
     }, 0);
   }, [tempCart]);
+
+  const onClickCart = async () => {
+    if (tempCart.list.length === 0) {
+      openModal('담은 상품이 없습니다.');
+      return;
+    }
+    console.log('POST cart', tempCart.list, tempCart.num);
+    await postCart({
+      num: tempCart.num,
+      updatedArray: tempCart.list,
+    }).then(async (res) => {
+      if (res.ok === true) {
+        openModal(
+          '장바구니에 정상적으로 들어갔습니다.\n장바구니로 이동하시겠습니까?',
+          {
+            onClickCheck: () => router.push('/mypage/cart'),
+            onClickCancel: () => window.location.reload(),
+            onClickClose: () => window.location.reload(),
+          }
+        );
+      } else {
+        openModal('로그인 후 장바구니에 담을 수 있습니다.');
+      }
+    });
+  };
 
   return (
     <Range
@@ -103,35 +129,20 @@ export default function InfoPanel({ props }: { props: CardProps }) {
 
           <DropDown props={props} status={props.reserve !== ''} />
 
-          <Range gap='10' width='full' preset='right'>
-            <Btn
-              color='primary'
-              // size='extra'
-              onClick={async () => {
-                if (tempCart.list.length === 0) {
-                  openModal('담은 상품이 없습니다.');
-                  return;
-                }
-                console.log('POST cart', tempCart.list, tempCart.num);
-                await postCart({
-                  num: tempCart.num,
-                  updatedArray: tempCart.list,
-                }).then(async (res) => {
-                  if (res.ok === true) {
-                    openModal(
-                      '장바구니에 정상적으로 들어갔습니다.\n장바구니로 이동하시겠습니까?',
-                      () => {
-                        router.push('/mypage/cart');
-                      },
-                      () => {
-                        router.refresh();
-                      }
-                    );
-                  } else {
-                    openModal('로그인 후 장바구니에 담을 수 있습니다.');
-                  }
-                });
+          <Range width='full' preset='between'>
+            <BuyBtn
+              props={{
+                price: totalPrice,
+                size: 'medium',
+                list: tempCart,
+                usedPoint: 0,
+                addPoint: Number(totalPrice * 0.01),
               }}
+            />
+            <Btn
+              color='reversePrimary'
+              // size='extra'
+              onClick={onClickCart}
             >
               CART
             </Btn>

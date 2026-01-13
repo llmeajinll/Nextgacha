@@ -44,10 +44,10 @@ export default function AlertModal() {
             setModalState({ ...modalState, isOpen: false, message: '' });
           }}
         >
-          {modalState.onClickCheck ? 'YES' : 'OK'}
+          {modalState.onClickCancel ? 'YES' : 'OK'}
         </button>
 
-        {modalState.onClickCheck && (
+        {modalState.onClickCancel && (
           <button
             className={styles.modalBtn}
             style={{ marginLeft: '15px' }}
@@ -87,6 +87,7 @@ export default function AlertModal() {
               <button
                 className={styles.closeBtn}
                 onClick={() => {
+                  if (modalState.onClickClose) modalState.onClickClose();
                   setModalState({ ...modalState, isOpen: false, message: '' });
                 }}
               ></button>

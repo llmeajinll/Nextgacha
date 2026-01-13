@@ -62,12 +62,11 @@ export interface ReviewProps {
 }
 
 export interface QnaProps {
-  _id: string;
-  user: string;
+  qna_num: number;
+  email: string;
   request: { writer: string; content: string }[];
   created_at: string;
   updated_at: string;
-  title: string;
-  num: number;
+  question: string;
   private: boolean;
 }

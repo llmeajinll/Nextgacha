@@ -51,7 +51,7 @@ export default function page({
         <span
           style={{
             display: 'inline-block',
-            width: '80px',
+            width: '100px',
             fontWeight: '500',
             color: '#4C4C4C',
           }}
@@ -66,7 +66,7 @@ export default function page({
         <span
           style={{
             display: 'inline-block',
-            width: '80px',
+            width: '100px',
             fontWeight: '500',
             color: '#4C4C4C',
           }}
@@ -81,7 +81,7 @@ export default function page({
         <span
           style={{
             display: 'inline-block',
-            width: '80px',
+            width: '100px',
             fontWeight: '500',
             color: '#4C4C4C',
           }}
@@ -111,10 +111,13 @@ export default function page({
         ))}
       </Range>
       <Range gap='50' style={{ margin: '30px auto 0 auto' }}>
-        <Link href='/' style={{ fontFamily: 'silkscreen' }}>
+        <Link href='/' style={{ fontFamily: 'silkscreen', color: '#75C3FE' }}>
           HOME
         </Link>
-        <Link href='/mypage/history' style={{ fontFamily: 'silkscreen' }}>
+        <Link
+          href='/mypage/history'
+          style={{ fontFamily: 'silkscreen', color: '#999999' }}
+        >
           MYPAGE
         </Link>
       </Range>

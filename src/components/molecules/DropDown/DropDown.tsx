@@ -17,10 +17,7 @@ import { CardProps } from '@/shared/type';
 import useSplitRoute from '@/app/hooks/useSplitRoute';
 import { useTempCart } from '@/app/hooks';
 
-type DropDownType = Pick<
-  CardProps,
-  'list' | 'group' | 'num' | 'price' | 'title'
->;
+type DropDownType = Pick<CardProps, 'list' | 'num'>;
 
 export default function DropDown({
   props,
@@ -58,9 +55,9 @@ export default function DropDown({
         <div className={listContainer}>
           {props?.list?.map((val, idx) => (
             <div
+              className={listStyle}
               id={val.name + props.num}
               key={idx}
-              className={listStyle}
               onClick={() => {
                 if (val.count !== 0 || status) {
                   setSelected(`${idx + 1}. ${val.name}`);

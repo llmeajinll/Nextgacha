@@ -4,7 +4,13 @@ import { Writer } from '@/components/atoms';
 import { Range } from '@/components/atoms';
 import { privateContainer } from './private.css';
 
-export default function Private({ props }: { props: any }) {
+export default function Private({
+  props,
+  style,
+}: {
+  props: any;
+  style?: React.CSSProperties;
+}) {
   return (
     <Range
       width='full'
@@ -12,6 +18,7 @@ export default function Private({ props }: { props: any }) {
       key={props._id}
       gap='10'
       className={privateContainer}
+      style={{ ...style }}
     >
       <Image src='/images/lock.png' alt='lock' width={24} height={24} />
       <div style={{ lineHeight: '26px' }}>비밀 문의입니다.</div>

@@ -10,8 +10,26 @@ export async function GET(req: Request) {
     return NextResponse.json({ ok: false, error: 'num is required' });
   }
 
-  const result = await qnaColl.find({ num }).sort({ create: -1 }).toArray();
-  // console.log('qna collection:', result);
+  const findResult = await qnaColl
+    .aggregate([
+      { $match: { num: Number(num) } },
+      {
+        $project: {
+          num: 1,
+          // qna 배열을 정렬하여 새로운 필드로 덮어씌움
+          qna: {
+            $sortArray: {
+              input: '$qna',
+              sortBy: { created_at: -1 }, // 내림차순 정렬
+            },
+          },
+        },
+      },
+    ])
+    .toArray();
+  const data = findResult[0];
 
-  return NextResponse.json({ result, ok: true });
+  console.log('qna collection:', data);
+
+  return NextResponse.json({ result: data, ok: true });
 }

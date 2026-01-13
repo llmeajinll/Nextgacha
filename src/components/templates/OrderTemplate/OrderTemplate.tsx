@@ -61,9 +61,8 @@ export default function OrderTemplate({
       return (
         <button
           onClick={() => {
-            openModal(
-              '선택된 주문을 모두 배송중으로 전환하시겠습니까?',
-              async () => {
+            openModal('선택된 주문을 모두 배송중으로 전환하시겠습니까?', {
+              onClickCheck: async () => {
                 const isValidate = items
                   .filter((item) => item.check)
                   .every((item) => item.courier && item.invoice);
@@ -100,8 +99,8 @@ export default function OrderTemplate({
                   alert('오류가 발생했습니다.');
                   window.location.reload();
                 }
-              }
-            );
+              },
+            });
           }}
           style={{
             padding: '0 20px',

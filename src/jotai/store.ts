@@ -28,6 +28,7 @@ export const modalAtom = atom<{
   // onClickClose: () => void;
   onClickCheck?: () => void;
   onClickCancel?: () => void;
+  onClickClose?: () => void;
 }>({
   isOpen: false,
   message: 'test',
@@ -35,6 +36,7 @@ export const modalAtom = atom<{
   // onClickClose: () => {},
   onClickCheck: () => {},
   onClickCancel: () => {},
+  onClickClose: () => {},
 });
 
 // export const setUserInfoAtom = atom(null, (_get, set, updated: any) => {

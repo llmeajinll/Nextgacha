@@ -7,6 +7,7 @@ const image = {
   share: '/images/share.png',
   dropdown: '/images/dropdown.png',
   close: '/images/closeBtn.png',
+  post: '/images/post.png',
 } as const;
 type ImageKey = keyof typeof image; // "share" | "close" | "dropdown"
 
@@ -37,13 +38,13 @@ export default function ImgBtn({
   onClick,
 }: Props) {
   return (
-    <Image
+    <img
       src={image[img]}
       width={size || width}
       height={size || height}
       alt='like'
       onClick={onClick}
       style={{ cursor: 'pointer', ...style }}
-    ></Image>
+    />
   );
 }
