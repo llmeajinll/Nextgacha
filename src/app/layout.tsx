@@ -13,8 +13,8 @@ import { Analytics } from '@vercel/analytics/next';
 import { AlertModal } from '@/components/organisms';
 import QueryProvider from '@/query/QueryProviders';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
-import { DevTools } from 'jotai-devtools';
-import 'jotai-devtools/styles.css';
+// import { DevTools } from 'jotai-devtools';
+// import 'jotai-devtools/styles.css';
 
 // import { RecoilRoot } from 'recoil';
 
