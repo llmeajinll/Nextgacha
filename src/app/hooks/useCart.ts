@@ -17,7 +17,7 @@ import { baseUrl } from '@/shared/baseUrl';
 
 export default function useCart() {
   const queryClient = useQueryClient();
-
+  const { openModal } = useModal();
   const { data } = useSuspenseQuery({
     queryKey: ['cartData'],
     queryFn: async () =>
@@ -110,11 +110,17 @@ export default function useCart() {
         preset: 'increase',
       });
     } else {
-      window.alert(
+      // window.alert(
+      //   `더 담을 수 없습니다. (재고 : ${stockCount}, 배송중 : ${keepCount}, 최대로 담을 수 있는 갯수 : ${Math.min(
+      //     5,
+      //     stockCount + keepCount
+      //   )})`
+      // );
+      openModal(
         `더 담을 수 없습니다. (재고 : ${stockCount}, 배송중 : ${keepCount}, 최대로 담을 수 있는 갯수 : ${Math.min(
           5,
           stockCount + keepCount
-        )})`
+        )}`
       );
     }
   };
@@ -135,25 +141,48 @@ export default function useCart() {
       });
     } else if (count === 1) {
       console.log('decrease count is 1');
-      if (window.confirm('상품을 삭제하시겠습니까?')) {
-        mutation.mutate({
-          num,
-          name,
-          preset: 'erase',
-        });
-      }
+      // if (window.confirm('상품을 삭제하시겠습니까?')) {
+      //   mutation.mutate({
+      //     num,
+      //     name,
+      //     preset: 'erase',
+      //   });
+      // }
+      openModal('상품을 삭제하시겠습니까?', {
+        onClickCheck: () =>
+          mutation.mutate({
+            num,
+            name,
+            preset: 'erase',
+          }),
+      });
     }
   };
 
   const erase = (num: number, name: string) => {
     console.log('ERASE num, name, count : ', num, name);
-    if (window.confirm('상품을 삭제하시겠습니까?')) {
-      mutation.mutate({
-        num,
-        name,
-        preset: 'erase',
-      });
-    }
+    // if (window.confirm('상품을 삭제하시겠습니까?')) {
+    //   mutation.mutate({
+    //     num,
+    //     name,
+    //     preset: 'erase',
+    //   });
+    // }
+
+    // openModal('상품을 삭제하시겠습니까?', {
+    //   onClickCheck: () =>
+    //     mutation.mutate({
+    //       num,
+    //       name,
+    //       preset: 'erase',
+    //     }),
+    // });
+
+    mutation.mutate({
+      num,
+      name,
+      preset: 'erase',
+    });
   };
 
   return { data, increase, decrease, erase };

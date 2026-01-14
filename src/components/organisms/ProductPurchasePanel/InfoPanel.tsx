@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useMemo, useRef } from 'react';
+import React, { useState, useMemo, useRef, Suspense } from 'react';
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 import Cookies from 'js-cookie';
@@ -38,20 +38,20 @@ export default function InfoPanel({ props }: { props: CardProps }) {
   console.log('jotai tempCart : ', tempCart);
 
   const totalPrice = useMemo(() => {
-    return tempCart?.list.reduce((a: any, b: any) => {
-      return a + b.count * b.price;
+    return tempCart?.product.reduce((a: any, b: any) => {
+      return a + b.count * (tempCart?.price || 0);
     }, 0);
   }, [tempCart]);
 
   const onClickCart = async () => {
-    if (tempCart.list.length === 0) {
+    if (tempCart.product.length === 0) {
       openModal('담은 상품이 없습니다.');
       return;
     }
-    console.log('POST cart', tempCart.list, tempCart.num);
+    console.log('POST cart', tempCart.product, tempCart.num);
     await postCart({
       num: tempCart.num,
-      updatedArray: tempCart.list,
+      updatedArray: tempCart.product,
     }).then(async (res) => {
       if (res.ok === true) {
         openModal(
@@ -69,111 +69,119 @@ export default function InfoPanel({ props }: { props: CardProps }) {
   };
 
   return (
-    <Range
-      width='960'
-      gap='30'
-      style={{
-        position: 'relative',
-        marginBottom: '60px',
-      }}
-    >
-      {showText && (
-        <div className={copyText} ref={textDomRef}>
-          COPY!
-        </div>
-      )}
-      <div>
-        {props?.image?.length ? (
-          <ReactSlick image={props?.image} preset='small' />
-        ) : (
-          <Image
-            src='/images/defaultImg.png'
-            alt='image'
-            width={450}
-            height={450}
-          />
+    <Suspense fallback={<div>InfoPanel loading...</div>}>
+      <Range
+        width='960'
+        gap='30'
+        style={{
+          position: 'relative',
+          marginBottom: '60px',
+        }}
+      >
+        {showText && (
+          <div className={copyText} ref={textDomRef}>
+            COPY!
+          </div>
         )}
-      </div>
-
-      <Range height='450' preset='columnBetween'>
-        <Range preset='column' gap='10'>
-          <div className={panelTitle}>{props?.title}</div>
-
-          {props.reserve && (
-            <LabelTitle
-              label='배송일'
-              content={`${dayjs(props?.reserve).format('YYYY년 MM월 DD일')}`}
+        <div>
+          {props?.image?.length ? (
+            <ReactSlick image={props?.image} preset='small' />
+          ) : (
+            <Image
+              src='/images/defaultImg.png'
+              alt='image'
+              width={450}
+              height={450}
             />
           )}
-          <LabelTitle label='가격' content={`${comma(props?.price || 0)}원`} />
-          <LabelTitle
-            label='종류'
-            content={`${props?.list?.length || 0}가지`}
-          />
-          <LabelTitle label='제조사' content={props?.company || ''} />
-          <LabelTitle
-            label='택배비'
-            content='3,000원 [50,000원 이상 구매시 무료]'
-          />
-          <LabelTitle label='적립금' content={`${props?.price * 0.01 || 0}p`} />
-        </Range>
+        </div>
 
-        <Range preset='column' gap='10'>
-          <Range width='full' preset='right'>
+        <Range height='450' preset='columnBetween'>
+          <Range preset='column' gap='10'>
+            <div className={panelTitle}>{props?.title}</div>
+
+            {props.reserve && (
+              <LabelTitle
+                label='배송일'
+                content={`${dayjs(props?.reserve).format('YYYY년 MM월 DD일')}`}
+              />
+            )}
             <LabelTitle
-              label='TOTAL'
-              content={`${comma(totalPrice || 0)} WON`}
-              status='large'
+              label='가격'
+              content={`${comma(props?.price || 0)}원`}
+            />
+            <LabelTitle
+              label='종류'
+              content={`${props?.list?.length || 0}가지`}
+            />
+            <LabelTitle label='제조사' content={props?.company || ''} />
+            <LabelTitle
+              label='택배비'
+              content='3,000원 [50,000원 이상 구매시 무료]'
+            />
+            <LabelTitle
+              label='적립금'
+              content={`${props?.price * 0.01 || 0}p`}
             />
           </Range>
 
-          <DropDown props={props} status={props.reserve !== ''} />
+          <Range preset='column' gap='10'>
+            <Range width='full' preset='right'>
+              <LabelTitle
+                label='TOTAL'
+                content={`${comma(totalPrice || 0)} WON`}
+                status='large'
+              />
+            </Range>
 
-          <Range width='full' preset='between'>
-            <BuyBtn
-              props={{
-                price: totalPrice,
-                size: 'medium',
-                list: tempCart,
-                usedPoint: 0,
-                addPoint: Number(totalPrice * 0.01),
-              }}
-            />
-            <Btn
-              color='reversePrimary'
-              // size='extra'
-              onClick={onClickCart}
-            >
-              CART
-            </Btn>
-            <HeartBtn
-              size={45}
-              num={props.num}
-              // isLogin={false}
-              status={props.like}
-            />
-            <ImgBtn
-              width={38}
-              height={45}
-              onClick={() => {
-                navigator.clipboard.writeText(window.location.href);
-                const el = textDomRef.current;
+            <DropDown props={props} status={props.reserve !== ''} />
 
-                if (el) {
-                  el.classList.remove(copyText);
-                  void el.offsetWidth;
-                  el.classList.add(copyText);
-                }
-                setShowText(true);
-                window.setTimeout(() => {
-                  setShowText(false);
-                }, 1500);
-              }}
-            />
+            <Range width='full' preset='between'>
+              <BuyBtn
+                props={{
+                  price: totalPrice,
+                  size: 'medium',
+                  list: [{ product: tempCart.product, num: tempCart.num }],
+                  usedPoint: 0,
+                  addPoint: Number(totalPrice * 0.01),
+                }}
+              />
+              <Btn
+                color='reversePrimary'
+                // size='extra'
+                onClick={onClickCart}
+              >
+                CART
+              </Btn>
+              <HeartBtn
+                size={45}
+                num={props.num}
+                // isLogin={false}
+                status={props.like}
+              />
+              <ImgBtn
+                width={38}
+                height={45}
+                onClick={() => {
+                  navigator.clipboard.writeText(window.location.href);
+                  const el = textDomRef.current;
+
+                  if (el) {
+                    el.classList.remove(copyText);
+                    void el.offsetWidth;
+                    el.classList.add(copyText);
+                  }
+                  setShowText(true);
+                  window.setTimeout(() => {
+                    setShowText(false);
+                  }, 1500);
+                }}
+              />
+            </Range>
           </Range>
         </Range>
       </Range>
-    </Range>
+    </Suspense>
   );
 }
 // const data = { status: !liked, num: num };

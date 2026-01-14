@@ -1,9 +1,7 @@
-// import React, { use } from 'react';
-import { headers } from 'next/headers';
+import { Suspense } from 'react';
 import { ProductPurchasePanel } from '@/components/organisms';
 import { DetailTab, EmptyCard } from '@/components/molecules';
 import ScrollToTop from '@/components/atoms/ScrollToTop';
-import { Suspense } from 'react';
 
 export default async function DetailLayout({
   children,

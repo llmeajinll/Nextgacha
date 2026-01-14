@@ -13,6 +13,8 @@ import { Analytics } from '@vercel/analytics/next';
 import { AlertModal } from '@/components/organisms';
 import QueryProvider from '@/query/QueryProviders';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
+import { DevTools } from 'jotai-devtools';
+import 'jotai-devtools/styles.css';
 
 // import { RecoilRoot } from 'recoil';
 
@@ -51,6 +53,7 @@ export default function RootLayout({
           <QueryProvider>
             <SessionProvider>
               <ReactQueryDevtools initialIsOpen={false} />
+              {/* <DevTools isInitialOpen={false} /> */}
               <div style={{ position: 'relative' }}>
                 <AlertModal />
                 <div className={`${layoutContainer}`}>

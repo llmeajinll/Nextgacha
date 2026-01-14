@@ -46,9 +46,7 @@ export default function Ticket({
             alt={'trash'}
             width={20}
             height={20}
-            onClick={() => {
-              erase(props);
-            }}
+            onClick={() => erase(props)}
           />
         </Range>
       </div>

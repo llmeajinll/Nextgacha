@@ -37,7 +37,7 @@ export default function Qna({
   const [isEdit, setIsEdit] = useState(false);
   const [requestInput, setRequestInput] = useState('');
   const [editInput, setEditInput] = useState(props.question);
-  const { openModal } = useModal();
+  const { openModal, closeModal } = useModal();
   console.log(props);
 
   const onSendRequest = async () => {
@@ -82,6 +82,30 @@ export default function Qna({
           }
         );
       });
+  };
+
+  const onClickDeleteQuestion = async () => {
+    openModal('질문을 삭제하시겠습니까?', {
+      onClickCheck: async () => {
+        await fetch('/api/protected/deleteQuestion', {
+          method: 'POST',
+          body: JSON.stringify({ num, qna_num: props.qna_num }),
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        }).then((res) => {
+          if (res.ok === true) {
+            openModal('삭제되었습니다.');
+            window.location.reload();
+          } else {
+            openModal('오류가 발생하였습니다.');
+          }
+        });
+      },
+      onClickCancel: () => {
+        closeModal();
+      },
+    });
   };
 
   const onClickEditQuestion = async () => {
@@ -187,6 +211,7 @@ export default function Qna({
             <button
               className={qnaDeleteBtn}
               style={{ marginLeft: '28px', color: '#75C3FE' }}
+              onClick={onClickDeleteQuestion}
             >
               delete
             </button>

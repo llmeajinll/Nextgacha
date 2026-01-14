@@ -67,7 +67,6 @@ export async function GET(req: Request) {
   //   };
   // }
   else if (!isNaN(Number(search))) {
-    console.log('search query');
     query = { num: Number(search) };
   }
 
@@ -79,7 +78,6 @@ export async function GET(req: Request) {
   }
 
   if (num) {
-    console.log('search query');
     query = { num };
   }
 
@@ -96,7 +94,7 @@ export async function GET(req: Request) {
   // }
 
   const isLogin = email ? true : false;
-  console.log('isLogin : ', isLogin, email);
+  // console.log('isLogin : ', isLogin, email);
 
   // return NextResponse.json(user?.like || []);
 
@@ -108,7 +106,7 @@ export async function GET(req: Request) {
       { projection: { like: 1, _id: 0 } }
     );
 
-    console.log('========== like:', user?.like);
+    // console.log('========== like:', user?.like);
 
     const result = product.map((item) => {
       const isLike = (user?.like || [])?.includes(item.num);

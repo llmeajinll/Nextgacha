@@ -13,7 +13,7 @@ interface BuyBtnType {
   // email: string;
   price: number;
   size?: 'big' | 'medium';
-  list?: { num: number; product: { name: string; count: number }[] }[];
+  list: { num: number | null; product: { name: string; count: number }[] }[];
   usedPoint: number;
   addPoint: number;
 }
@@ -40,6 +40,13 @@ export default function BuyBtn({
       alert('장바구니가 비어있습니다.');
       return;
     }
+
+    props.list.map((val) => {
+      if (val.num === null) {
+        alert('빈값이 들어있습니다.');
+      }
+      return;
+    });
 
     if (userInfo?.address === '') {
       alert('배송지를 입력해주세요.');

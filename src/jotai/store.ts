@@ -2,16 +2,27 @@ import { atom } from 'jotai';
 import { ProductProps } from '@/shared/type';
 import Cookie from 'js-cookie';
 
-export const tempCartAtom = atom<any>({
+interface tempCartAtomType {
+  num: number | null;
+  title: string;
+  price: number | null;
+  product: { name: string; count: number }[];
+}
+
+export const tempCartAtom = atom<tempCartAtomType>({
   num: null,
   title: '',
   price: null,
-  list: [],
+  product: [],
 });
+tempCartAtom.debugLabel = '임시장바구니';
 // export const tempCartAtom = atom<ProductProps[]>([]);
-export const setTempCartAtom = atom(null, (_get, set, updated: any[]) => {
-  set(tempCartAtom, updated);
-});
+export const setTempCartAtom = atom(
+  null,
+  (_get, set, updated: tempCartAtomType) => {
+    set(tempCartAtom, updated);
+  }
+);
 
 export const userInfoAtom = atom<{
   email: string;

@@ -30,7 +30,7 @@ export default function useTempCart(num: number | string) {
   // const
   console.log('useTempCart : ', num);
   const queryClient = useQueryClient();
-  const { openModal } = useModal();
+  const { openModal, closeModal } = useModal();
   const [tempCart, setTempCart] = useAtom(tempCartAtom);
   // const [tempCart, setTempCart] = useState<{ num: number; list: any[] }>();
 
@@ -44,7 +44,7 @@ export default function useTempCart(num: number | string) {
   // }
 
   const { data } = useSuspenseQuery({
-    queryKey: ['tempCartData'],
+    queryKey: ['tempCartData', Number(num)],
     queryFn: async () => {
       if (!isValidNum) return {};
       const res = await fetch(
@@ -63,7 +63,7 @@ export default function useTempCart(num: number | string) {
             title: data.result.stock.title,
             price: data.result.stock.price,
             num: data.result.num,
-            list: [],
+            product: [],
           });
           return data.result;
         } else {
@@ -82,7 +82,7 @@ export default function useTempCart(num: number | string) {
     console.log(cart, stock, keep);
     if (!isValidNum) return;
     const tempCount =
-      tempCart?.list?.find((v: any) => v.name === name)?.count ?? 0;
+      tempCart?.product?.find((v: any) => v.name === name)?.count ?? 0;
     const cartCount = cart.find((v: any) => v.name === name)?.count ?? 0;
     const keepCount = keep.find((v: any) => v.name === name)?.count ?? 0;
     const stockCount = stock.list.find((v: any) => v.name === name)?.count ?? 0;
@@ -104,14 +104,16 @@ export default function useTempCart(num: number | string) {
       // setTempCart;
       console.log('가농');
       setTempCart((prev: any) => {
-        const current = prev ?? { num: Number(num), list: [] };
+        const current = prev ?? { num: Number(num), product: [] };
 
-        const exists = current?.list?.find((item: any) => item.name === name);
+        const exists = current?.product?.find(
+          (item: any) => item.name === name
+        );
 
         if (exists) {
           return {
             ...current,
-            list: current.list.map((item: any) =>
+            product: current.product.map((item: any) =>
               item.name === name ? { ...item, count: item.count + 1 } : item
             ),
           };
@@ -119,7 +121,7 @@ export default function useTempCart(num: number | string) {
 
         return {
           ...current,
-          list: [...current.list, { name, count: 1 }],
+          product: [...current.product, { name, count: 1 }],
         };
       });
       console.log('임시 수량 증가:', name);
@@ -134,10 +136,45 @@ export default function useTempCart(num: number | string) {
 
   const decrease = ({ name }: { name: string }) => {
     console.log('decrease name : ', name);
+
+    // 1. 현재 리스트에서 해당 아이템을 먼저 찾습니다.
+    const targetItem = tempCart.product.find((v: any) => v.name === name);
+    if (!targetItem) return;
+
+    // 2. 수량이 1보다 크면 숫자를 줄이고, 1이면 삭제 모달을 띄웁니다.
+    if (targetItem.count > 1) {
+      setTempCart((prev: any) => ({
+        ...prev,
+        product: prev.product.map((v: any) =>
+          v.name === name ? { ...v, count: v.count - 1 } : v
+        ),
+      }));
+    } else {
+      // 수량이 1인 경우 (0으로 만들지 않고 바로 삭제 의사를 묻습니다)
+      openModal('삭제하시겠습니까?', {
+        onClickCheck: () => {
+          setTempCart((prev: any) => ({
+            ...prev,
+            product: prev.product.filter((v: any) => v.name !== name),
+          }));
+        },
+      });
+    }
   };
 
   const erase = ({ name }: { name: string }) => {
     console.log('erase name : ', name);
+    console.log(tempCart);
+    openModal('삭제하시겠습니까?', {
+      onClickCheck: () => {
+        console.log('onclickcheck');
+        setTempCart((prev: any) => ({
+          ...prev,
+          product: prev.product.filter((v: any) => v.name !== name),
+        }));
+      },
+      onClickCancel: () => closeModal(),
+    });
   };
 
   const mutation = useMutation({
