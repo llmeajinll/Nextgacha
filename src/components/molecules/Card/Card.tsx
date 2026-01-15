@@ -19,7 +19,7 @@ import Cookies from 'js-cookie';
 
 export default function Card({ props }: { props: CardProps }) {
   // const [like, setLike] = useState(false);
-  console.log(props);
+  // console.log(props);
   // const userCookie = Cookies.get('userInfo');
   // let userInfo = null;
   // let isLogin = false;

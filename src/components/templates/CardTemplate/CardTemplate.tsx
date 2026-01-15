@@ -3,9 +3,11 @@
 import React, { useState, useEffect } from 'react';
 import { Card } from '@/components/molecules';
 import { cardTemplateContainer } from './cardtemplate.css';
-import { Title } from '@/components/atoms';
-import { CardProps } from '@/shared/type';
+import { Title, Range, ScrollToTop } from '@/components/atoms';
 
+import { CardProps } from '@/shared/type';
+import Pagination from 'rc-pagination';
+import 'rc-pagination/assets/index.css';
 export default function CardTemplate({
   tag,
   search,
@@ -18,6 +20,8 @@ export default function CardTemplate({
   props?: CardProps[];
 }) {
   const [products, setProducts] = useState([] as CardProps[]);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [total, setTotal] = useState(0);
 
   // console.log(
   //   'CardTemplate tag:',
@@ -30,12 +34,12 @@ export default function CardTemplate({
   //   props
   // );
 
-  const handleSearch = async () => {
+  const handleSearch = async (page: number) => {
     let url = '';
     if (tag) {
-      url = `/api/getProduct?tag=${tag}&count=${count || 8}`;
+      url = `/api/getProduct?tag=${tag}&count=${count || 8}&page=${page}`;
     } else if (search) {
-      url = `/api/getProduct?search=${search}&count=20`;
+      url = `/api/getProduct?search=${search}&count=20&page=${page}`;
     }
     const res = await fetch(url, {
       method: 'GET',
@@ -43,9 +47,10 @@ export default function CardTemplate({
         'Content-Type': 'application/json',
       },
     });
-    const data = await res.json();
-    // console.log(data);
-    setProducts(data);
+    const result = await res.json();
+    console.log(result.data);
+    setProducts(result.data);
+    setTotal(result.total);
   };
 
   useEffect(() => {
@@ -53,17 +58,30 @@ export default function CardTemplate({
       setProducts(props);
       return;
     } else {
-      handleSearch();
+      handleSearch(currentPage);
     }
-  }, [tag, search, count, props]);
+  }, [tag, search, count, props, currentPage]);
 
   return (
     <div style={{ width: '1272px', margin: '0 auto' }}>
+      <ScrollToTop />
       <div className={cardTemplateContainer}>
         {products.map((item: CardProps) => (
           <Card props={item} key={item._id} />
         ))}
       </div>
+      <Range style={{ margin: '40px auto' }}>
+        <Pagination
+          current={currentPage}
+          total={total}
+          pageSize={20}
+          onChange={(page) => {
+            console.log('onChange page : ', page);
+            setCurrentPage(page);
+            handleSearch(page);
+          }}
+        />
+      </Range>
     </div>
   );
 }

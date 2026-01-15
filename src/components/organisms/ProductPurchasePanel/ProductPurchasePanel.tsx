@@ -15,11 +15,11 @@ export default function ProductPurchasePanel({ num }: { num: string }) {
 
   useEffect(() => {
     const fetchInfo = async () => {
-      await fetch(`/api/getProduct?num=${num}`)
+      await fetch(`/api/getOneProduct?num=${num}`)
         .then(async (res) => {
           const data = await res.json();
-          console.log('res : ', data);
-          setInfo(data[0]);
+          console.log('res : ', data.result);
+          setInfo(data.result);
           // return data;
         })
         .catch((err) => {

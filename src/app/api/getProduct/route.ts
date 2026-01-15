@@ -9,25 +9,14 @@ export async function GET(req: Request) {
   const { searchParams } = new URL(req.url);
   const session = await auth();
   const email = session?.user?.email;
-
-  // const userInfoCookie = (await cookieStore).get('userInfo');
-  // let likeList: number[] = [];
-
-  // if (userInfoCookie) {
-  //   try {
-  //     const parsed = JSON.parse(userInfoCookie.value);
-  //     likeList = parsed.like || [];
-  //   } catch (e) {
-  //     likeList = [];
-  //   }
-  // }
+  const isLogin = email ? true : false;
 
   const search = searchParams.get('search') || '';
   const tag = searchParams.get('tag');
-  const count = searchParams.get('count');
-  const num = Number(searchParams.get('num'));
+  const count = Number(searchParams.get('count') || 20);
+  const page = Number(searchParams.get('page'));
 
-  console.log('mongodb params', Number(search), tag, search);
+  console.log('mongodb params', Number(search), tag, search, page);
 
   const twoMonthsAgo = new Date();
   twoMonthsAgo.setMonth(twoMonthsAgo.getMonth() - 2);
@@ -57,16 +46,7 @@ export async function GET(req: Request) {
     query = {};
   } else if (tag === 'reserve') {
     query = { reserve: { $exists: true, $ne: '' } };
-  }
-  // else if (search && search.trim() !== '') {
-  //   query = {
-  //     $or: [
-  //       { title: { $regex: search, $options: 'i' } },
-  //       { company: { $regex: search, $options: 'i' } },
-  //     ],
-  //   };
-  // }
-  else if (!isNaN(Number(search))) {
+  } else if (!isNaN(Number(search))) {
     query = { num: Number(search) };
   }
 
@@ -77,28 +57,19 @@ export async function GET(req: Request) {
     };
   }
 
-  if (num) {
-    query = { num };
-  }
-
-  let func = productColl.find(query).sort({ create: -1 });
+  let func = productColl
+    .find(query)
+    .skip((page - 1) * count)
+    .sort({ create: -1 });
 
   if (count) {
-    func = func.limit(Number(count));
+    func = func.limit(count);
   }
-
-  // console.log(func);
-  // if (!session?.user?.email) {
-  // return NextResponse.json({ error: 'User not login' }, { status: 401 });
-  // console.log(session?.user?.email);
-  // }
-
-  const isLogin = email ? true : false;
-  // console.log('isLogin : ', isLogin, email);
-
-  // return NextResponse.json(user?.like || []);
-
   const product = await func.toArray();
+  const total = await productColl.countDocuments(query);
+  console.log('total count : ', total);
+
+  let data = null;
 
   if (isLogin === true) {
     const user = await userColl.findOne(
@@ -108,7 +79,7 @@ export async function GET(req: Request) {
 
     // console.log('========== like:', user?.like);
 
-    const result = product.map((item) => {
+    data = product.map((item) => {
       const isLike = (user?.like || [])?.includes(item.num);
       return {
         ...item,
@@ -117,10 +88,8 @@ export async function GET(req: Request) {
     });
 
     // console.log('[server] if result : ', result);
-
-    return NextResponse.json(result);
   } else {
-    const result = product.map((item) => {
+    data = product.map((item) => {
       return {
         ...item,
         like: false,
@@ -128,7 +97,8 @@ export async function GET(req: Request) {
     });
 
     // console.log('[server] else result : ', result);
-
-    return NextResponse.json(result);
   }
+  const result = { data, total };
+
+  return NextResponse.json(result);
 }

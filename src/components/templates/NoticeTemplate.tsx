@@ -3,8 +3,9 @@
 import React, { Fragment, useState } from 'react';
 import { Notice } from '../molecules';
 import { notice } from '@/shared/notice';
-import Pagination from 'rc-pagination';
+
 import { Range } from '../atoms';
+import Pagination from 'rc-pagination';
 import 'rc-pagination/assets/index.css';
 
 export default function NoticeTemplate() {
