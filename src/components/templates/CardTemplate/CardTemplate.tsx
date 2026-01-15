@@ -70,18 +70,20 @@ export default function CardTemplate({
           <Card props={item} key={item._id} />
         ))}
       </div>
-      <Range style={{ margin: '40px auto' }}>
-        <Pagination
-          current={currentPage}
-          total={total}
-          pageSize={20}
-          onChange={(page) => {
-            console.log('onChange page : ', page);
-            setCurrentPage(page);
-            handleSearch(page);
-          }}
-        />
-      </Range>
+      {count && (
+        <Range style={{ margin: '40px auto' }}>
+          <Pagination
+            current={currentPage}
+            total={total}
+            pageSize={20}
+            onChange={(page) => {
+              console.log('onChange page : ', page);
+              setCurrentPage(page);
+              handleSearch(page);
+            }}
+          />
+        </Range>
+      )}
     </div>
   );
 }
