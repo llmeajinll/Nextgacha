@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import { category, categoryMatch } from '@/shared/category';
 import dayjs from 'dayjs';
+import { Range } from '@/components/atoms';
 import { useRouter } from 'next/navigation';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
@@ -28,8 +29,18 @@ export default function ManageProductPage() {
   const [checkBox, setCheckBox] = useState(false);
 
   return (
-    <>
-      <div>
+    <div
+      style={{
+        boxSizing: 'border-box',
+        padding: '0px 30px 50px 30px',
+        display: 'flex',
+        flexDirection: 'column',
+        gap: '8px',
+      }}
+    >
+      <h1>상품 추가</h1>
+      <Range gap='8' style={{ alignItems: 'center' }}>
+        <div style={{ width: '110px', fontSize: '18px' }}>이미지</div>
         <input
           placeholder=''
           type='file'
@@ -40,29 +51,54 @@ export default function ManageProductPage() {
               setImage(file);
             }
           }}
+          style={{
+            width: '200px',
+            height: '200px',
+            border: '1px solid lightgray',
+          }}
         />
-      </div>
+      </Range>
 
-      <div>
+      <Range gap='8' style={{ alignItems: 'center' }}>
+        <div style={{ width: '110px', fontSize: '18px' }}>제목</div>
         <input
           placeholder='title'
           value={title}
           onChange={(e) => setTitle(e.target.value)}
           maxLength={100}
-          style={{ width: '400px' }}
+          style={{
+            width: '400px',
+            height: '30px',
+            border: '1px solid lightgray',
+            padding: '4px 8px',
+            fontSize: '18px',
+          }}
           required
         />
-      </div>
+      </Range>
 
-      <div>
+      <Range gap='8' style={{ alignItems: 'center' }}>
+        <div style={{ width: '110px', fontSize: '18px' }}>가격</div>
         <input
           placeholder='price'
           onChange={(e) => setPrice(Number(e.target.value))}
+          style={{
+            width: '200px',
+            height: '30px',
+            border: '1px solid lightgray',
+            padding: '4px 8px',
+            fontSize: '18px',
+          }}
           required
         />
-      </div>
-      <div>
-        <label>출시일 선택 </label>
+        원
+      </Range>
+      <Range gap='8' style={{ alignItems: 'center' }}>
+        <label
+          style={{ display: 'inline-block', width: '110px', fontSize: '18px' }}
+        >
+          출시일 선택
+        </label>
         <DatePicker
           selected={create}
           onChange={(newDate) => setCreate(newDate)}
@@ -70,9 +106,13 @@ export default function ManageProductPage() {
           placeholderText='Select a date'
           disabled={checkBox}
         />
-      </div>
-      <div>
-        <label>예약판매 선택 </label>
+      </Range>
+      <Range gap='8' style={{ alignItems: 'center' }}>
+        <label
+          style={{ display: 'inline-block', width: '110px', fontSize: '18px' }}
+        >
+          예약판매 선택
+        </label>
         <DatePicker
           selected={reserve}
           onChange={(newDate) => setReserve(newDate)}
@@ -84,13 +124,13 @@ export default function ManageProductPage() {
           type='checkbox'
           checked={checkBox}
           onChange={(e) => setCheckBox(e.target.checked)}
-        />{' '}
+        />
         예약 판매
-      </div>
-      <label>가챠 리스트</label>
-      <div>
+      </Range>
+      <label style={{ fontSize: '18px' }}>가챠 리스트</label>
+      <Range preset='column' gap='8'>
         {list.map((val, idx) => (
-          <div key={idx}>
+          <Range gap='8' key={idx}>
             <input
               placeholder='이름'
               value={val.name}
@@ -99,53 +139,112 @@ export default function ManageProductPage() {
                 newList[idx].name = e.target.value;
                 setList(newList);
               }}
-            />
-            <input
-              placeholder='갯수'
-              value={val.count}
-              type='number'
-              onChange={(e) => {
-                const newList = [...list];
-                newList[idx].count = Number(e.target.value);
-                setList(newList);
+              style={{
+                width: '200px',
+                height: '30px',
+                border: '1px solid lightgray',
+                padding: '4px 8px',
+                fontSize: '18px',
               }}
-              disabled={checkBox}
             />
-          </div>
+            <Range gap='4' style={{ fontSize: '18px', alignItems: 'center' }}>
+              <input
+                placeholder='갯수'
+                value={val.count}
+                type='number'
+                onChange={(e) => {
+                  const newList = [...list];
+                  newList[idx].count = Number(e.target.value);
+                  setList(newList);
+                }}
+                disabled={checkBox}
+                style={{
+                  width: '100px',
+                  height: '30px',
+                  border: '1px solid lightgray',
+                  padding: '4px 8px',
+                  fontSize: '18px',
+                }}
+              />
+              개
+            </Range>
+          </Range>
         ))}
         <button
           onClick={() => setList((list) => [...list, { name: '', count: 0 }])}
+          style={{
+            width: '344px',
+            height: '40px',
+            border: '1px solid lightgray',
+            fontSize: '40px',
+            lineHeight: '39px',
+            color: 'gray',
+          }}
         >
           +
         </button>
-      </div>
-      <div>
-        <label>회사 선택 </label>
+      </Range>
+      <Range gap='8' style={{ alignItems: 'center' }}>
+        <label
+          style={{ display: 'inline-block', width: '110px', fontSize: '18px' }}
+        >
+          회사 선택
+        </label>
         <select
           onChange={(e) => {
             setCompany(e.target.value);
             // console.log(e.target.value);
           }}
+          style={{
+            width: '200px',
+            height: '40px',
+            border: '1px solid lightgray',
+            padding: '4px 8px',
+            fontSize: '18px',
+          }}
         >
+          <option value='' onClick={() => undefined}>
+            회사를 선택하세요
+          </option>
           {Object.keys(category.series).map((val) => (
             <option key={val} value={val}>
               {val}
             </option>
           ))}
         </select>
-      </div>
-      <div>{company}</div>
+        <div style={{ fontSize: '18px' }}>선택한 회사 : {company}</div>
+      </Range>
 
-      <div>
-        <label>그룹 선택 </label>
+      <Range gap='8' style={{ alignItems: 'center' }}>
+        <label
+          style={{ display: 'inline-block', width: '110px', fontSize: '18px' }}
+        >
+          그룹 선택
+        </label>
         <select
           onChange={(e) => {
             setGroup((group) => [...group, e.target.value]);
             // console.log(group);
           }}
+          style={{
+            width: '200px',
+            height: '40px',
+            border: '1px solid lightgray',
+            padding: '4px 8px',
+            fontSize: '18px',
+          }}
         >
+          <option value='' onClick={() => undefined}>
+            그룹을 선택하세요
+          </option>
+          <option disabled>===== 캐릭터 =====</option>
           {category.character.map((val) => (
             <option
+              onClick={() => {
+                if (group.includes(val)) {
+                  setGroup((prev) => prev.filter((v) => val !== v));
+                }
+              }}
               key={val}
               value={
                 categoryMatch.character[
@@ -156,45 +255,79 @@ export default function ManageProductPage() {
               {val}
             </option>
           ))}
+          <option disabled>===== 애니 =====</option>
           {category.ani.map((val) => (
             <option
               key={val}
               value={categoryMatch.ani[val as keyof typeof categoryMatch.ani]}
+              onClick={() => {
+                if (group.includes(val)) {
+                  setGroup((prev) => prev.filter((v) => val !== v));
+                }
+              }}
             >
               {val}
             </option>
           ))}
 
+          <option disabled>===== 시리즈 =====</option>
           {Object.entries(category.series).map(([seriesName, seriesList]) => {
             // console.log('seriesName, seriesList:', seriesName, seriesList);
-            const seriesMap = (
-              categoryMatch.series as Record<string, Record<string, string>>
-            )[seriesName];
-            return seriesList.map((series) => (
-              <option
-                key={series}
-                value={seriesMap ? seriesMap[series] ?? series : series}
-              >
-                {series}
-              </option>
-            ));
+            const seriesMap =
+              categoryMatch.series[
+                seriesName as keyof typeof categoryMatch.series
+              ];
+            return seriesList.map((val) => {
+              const seriesValue =
+                seriesMap[val as keyof typeof seriesMap] || val;
+              return (
+                <option
+                  key={val}
+                  value={seriesValue}
+                  onClick={() => {
+                    if (group.includes(val)) {
+                      setGroup((prev) => prev.filter((v) => val !== v));
+                    }
+                  }}
+                >
+                  {val}
+                </option>
+              );
+            });
           })}
         </select>
-      </div>
-      <div>
-        {group.map((val) => {
-          return (
-            <span key={val} style={{ marginRight: '10px' }}>
-              {val}
-              <button onClick={() => group.filter((v, idx) => val === v)}>
-                x
-              </button>
-            </span>
-          );
-        })}
-      </div>
+        <div style={{ fontSize: '18px' }}>선택한 그룹 : </div>
+
+        <Range gap='10'>
+          {group.map((val) => {
+            return (
+              <span key={val} style={{ fontSize: '18px', marginRight: '4px' }}>
+                {val}
+                <button
+                  onClick={() => {
+                    console.log('group', group);
+                    // group.filter((v) => val !== v);
+                    setGroup((prev) => prev.filter((v) => val !== v));
+                  }}
+                  style={{
+                    backgroundColor: 'white',
+                    border: 'none',
+                    height: '26px',
+                    fontSize: '18px',
+                    lineHeight: '30px',
+                    color: 'red',
+                    cursor: 'pointer',
+                  }}
+                >
+                  x
+                </button>
+              </span>
+            );
+          })}
+        </Range>
+      </Range>
       <button
-        onClick={() => {
+        onClick={async () => {
           formData.append('title', title);
           formData.append('price', String(price)); // 숫자는 string으로 변환
           formData.append('company', company);
@@ -227,13 +360,16 @@ export default function ManageProductPage() {
           //   group,
 
           // });
-          fetch('/api/postProduct', {
+          await fetch('/api/postProduct', {
             method: 'POST',
             body: formData,
           })
             .then((res) => {
-              if (res.status === 201) {
+              if (res.ok === true) {
                 alert('상품이 성공적으로 등록되었습니다.');
+                window.location.reload();
+              } else {
+                alert('오류로 인해 등록하지 못했습니다.');
                 window.location.reload();
               }
             })
@@ -243,9 +379,19 @@ export default function ManageProductPage() {
               window.location.reload();
             });
         }}
+        style={{
+          height: '60px',
+          border: '1px solid gray',
+          marginTop: '50px',
+          backgroundColor: 'gray',
+          color: 'white',
+          fontSize: '20px',
+          lineHeight: '20px',
+          cursor: 'pointer',
+        }}
       >
-        상품등록
+        상품 등록
       </button>
-    </>
+    </div>
   );
 }

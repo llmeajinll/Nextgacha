@@ -3,6 +3,7 @@
 import { useSearchParams } from 'next/navigation';
 import React from 'react';
 import { CardTemplate } from '../templates';
+import { getStandardCategory } from '@/shared/getStandardCategory';
 
 export default function SearchPage() {
   const searchParams = useSearchParams();
@@ -10,6 +11,8 @@ export default function SearchPage() {
 
   const search = searchParams.get('search');
   // console.log('search page search:', search);
+  const targetCategory = getStandardCategory(search);
+  console.log(`${search} 로 검색하여 ${targetCategory} 결과를 찾습니다.`);
 
   const type = searchParams.get('type');
   const company = searchParams.get('company');
@@ -33,7 +36,11 @@ export default function SearchPage() {
       <div>{type}</div>
       <div>{detail}</div>
       <div>{company}</div> */}
-      <CardTemplate search={search || detail || ''} tag={tag} count={20} />
+      <CardTemplate
+        search={targetCategory || detail || ''}
+        tag={tag}
+        count={20}
+      />
     </>
   );
 }

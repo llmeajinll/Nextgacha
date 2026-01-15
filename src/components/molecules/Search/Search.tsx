@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { search } from './search.css';
+import { getStandardCategory } from '@/shared/getStandardCategory';
 import Image from 'next/image';
 
 export default function Search() {
@@ -28,7 +29,7 @@ export default function Search() {
           if (e.key === 'Enter') {
             // const target = e.target as HTMLInputElement;
             // document.location.href = `/search?search=${input}`;
-            router.replace(`/search?search=${keyword}`, { scroll: false });
+            router.push(`/search?search=${keyword}`, { scroll: false });
           }
         }}
         style={{
