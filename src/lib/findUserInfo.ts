@@ -13,7 +13,7 @@ export async function findUserInfo({
 }) {
   try {
     const user = await userColl.findOne({ email }, { session: mongodbSession });
-    console.log('user : ', user?.address);
+    // console.log('user : ', user?.address);
     const address = user?.address;
 
     return { ok: true, address };

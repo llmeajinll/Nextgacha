@@ -1,7 +1,7 @@
 import { Suspense } from 'react';
+import { ScrollToTop } from '@/components/atoms';
 import { ProductPurchasePanel } from '@/components/organisms';
 import { DetailTab, EmptyCard } from '@/components/molecules';
-import ScrollToTop from '@/components/atoms/ScrollToTop';
 
 export default async function DetailLayout({
   children,

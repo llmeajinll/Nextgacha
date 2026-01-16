@@ -55,7 +55,7 @@ export async function addOrder({
       { session: mongodbSession }
     )
     .then((res) => {
-      console.log('Insert Result:', res);
+      // console.log('Insert Result:', res);
       return {
         ok: res.acknowledged,
         data: {

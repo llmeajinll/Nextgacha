@@ -28,7 +28,7 @@ export default function QnaTemplate() {
       })
         .then(async (res) => {
           const data = await res.json();
-          console.log('qna page: ', data.result);
+          // console.log('qna page: ', data.result);
 
           return data.result.qna;
         })
@@ -52,7 +52,7 @@ export default function QnaTemplate() {
         'Content-Type': 'application/json',
       },
     }).then((res) => {
-      console.log('res : ', res);
+      // console.log('res : ', res);
       if (res.ok) {
         setSecret(false);
         setQuestion('');

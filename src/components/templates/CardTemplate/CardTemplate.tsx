@@ -8,6 +8,7 @@ import { Title, Range, ScrollToTop } from '@/components/atoms';
 import { CardProps } from '@/shared/type';
 import Pagination from 'rc-pagination';
 import 'rc-pagination/assets/index.css';
+
 export default function CardTemplate({
   tag,
   search,
@@ -48,7 +49,6 @@ export default function CardTemplate({
       },
     });
     const result = await res.json();
-    console.log(result.data);
     setProducts(result.data);
     setTotal(result.total);
   };

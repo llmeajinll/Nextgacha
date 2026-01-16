@@ -6,17 +6,21 @@ export async function GET(req: Request) {
   const session = await auth();
   const email = session?.user?.email;
 
-  console.log(session?.user, email);
-  const order = orderColl
-    .aggregate([
-      {
-        $match: {
-          email: email,
-        },
-      },
-    ])
-    .sort({ _id: -1 });
-  const result = await order.toArray();
+  const { searchParams } = new URL(req.url);
+  const pageStr = searchParams.get('page') || '';
+  const page = Number(pageStr);
 
-  return NextResponse.json({ result: result, status: 200 });
+  const historyResult = await orderColl
+    .find({ email })
+
+    .sort({ _id: -1 })
+    .skip((page - 1) * 8)
+    .limit(8)
+    .toArray();
+  const total = await orderColl.countDocuments({ email });
+
+  console.log('historyResult : ', historyResult, 'total', total);
+  const result = { historyResult, total };
+
+  return NextResponse.json({ result, status: 200, ok: true });
 }

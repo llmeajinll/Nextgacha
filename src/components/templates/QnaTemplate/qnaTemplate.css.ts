@@ -15,7 +15,7 @@ export const qnaTemplateContainer = style({
 
 export const textareaStyle = style({
   boxSizing: 'border-box',
-  width: '100%',
+  width: '842px',
   height: '100px',
   border: 'none',
   fontSize: '16px',
@@ -35,7 +35,7 @@ export const wrapQnaContainer = style({
 
 export const wrapTextareaContainer = style({
   boxSizing: 'border-box',
-  width: '100%',
+  width: '930px',
   border: '2px solid #75C3FE',
   padding: '10px',
   backgroundColor: 'white',

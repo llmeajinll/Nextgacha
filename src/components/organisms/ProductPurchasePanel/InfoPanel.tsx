@@ -27,7 +27,7 @@ import { postCart } from '@/api/postCart';
 import postLike from '@/api/updateLike';
 
 export default function InfoPanel({ props }: { props: CardProps }) {
-  console.log('infopanel', props);
+  // console.log('infopanel', props);
   const router = useRouter();
   const { openModal } = useModal();
 

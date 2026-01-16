@@ -7,7 +7,7 @@ export const getStandardCategory = (userInput) => {
   const cleanInput = userInput.trim().toLowerCase().replace(/\s+/g, '');
 
   // const Align = Object.entries(align);
-  console.log('align', align);
+  // console.log('align', align);
 
   // 2. align 객체를 순회하며 일치하는 항목을 찾습니다.
   for (const [standardName, aliases] of Object.entries(align)) {
