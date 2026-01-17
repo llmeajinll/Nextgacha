@@ -10,16 +10,17 @@ export default function Banner() {
   // const [angle, setAngle] = useState(0);
   let imgUrl = [
     {
-      url: '/images/event1.png',
+      url: '/images/event/event1.png',
       // onClick: () =>
       //   (document.location.href = `${process.env.NEXT_PUBLIC_URL}/search?type=series&company=bandai`),
     },
     {
-      url: '/images/event2.png',
+      url: '/images/event/event2.png',
       // onClick: () =>
       //   (document.location.href = `${process.env.NEXT_PUBLIC_URL}/search?type=character&detail=치이카와`),
     },
-    { url: '/images/event3.png' },
+    { url: '/images/event/event3.png' },
+    { url: '/images/event/event4.png' },
   ];
 
   // let imgCount = imgUrl.length;
