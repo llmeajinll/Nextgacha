@@ -79,6 +79,8 @@ export async function POST(req: Request) {
         image = url;
       }
 
+      const nowDate = new Date();
+
       const insertData = {
         title,
         image: [
@@ -92,8 +94,11 @@ export async function POST(req: Request) {
         list,
         company,
         group,
-        created_at: new Date(),
+        created_at: nowDate,
+        updated_at: nowDate,
         num: counter,
+        discount: 0,
+        isDiscounted: false,
       };
 
       // productCollection에 값 추가
