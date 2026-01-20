@@ -9,16 +9,19 @@ import {
   writeBtn,
 } from './addressModal.css';
 import { userInfoAtom } from '@/jotai/store';
-import { useAtom } from 'jotai';
+import { useAtom, useAtomValue } from 'jotai';
 import { useModal } from '@/app/hooks';
 import { Range } from '@/components/atoms';
+import { queryClientAtom } from 'jotai-tanstack-query';
 
 export default function AddressModal() {
+  const queryClient = useAtomValue(queryClientAtom);
+
   const [show, setShow] = useState(false);
   const [editMainAddress, setEditMainAddress] = useState('');
   const [editDetailAddress, setEditDetailAddress] = useState('');
 
-  const [userInfo, setUserInfo] = useAtom(userInfoAtom);
+  const [{ data, isPending, error }] = useAtom(userInfoAtom);
   const { openModal, closeModal } = useModal();
 
   const scriptUrl =
@@ -115,11 +118,12 @@ export default function AddressModal() {
                 console.log(res);
                 if (res.ok === true) {
                   const data = await res.json();
-                  setUserInfo((prev: any) => ({
-                    ...prev,
-                    address: data.address,
-                  }));
-                  console.log('after userInfo : ', userInfo);
+                  // setUserInfo((prev: any) => ({
+                  //   ...prev,
+                  //   address: data.address,
+                  // }));
+                  // console.log('after userInfo : ', userInfo);
+                  queryClient.invalidateQueries({ queryKey: ['userInfo'] });
                   setEditMainAddress('');
                   setEditDetailAddress('');
                   setShow(false);

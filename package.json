@@ -11,6 +11,7 @@
   },
   "dependencies": {
     "@auth/core": "^0.40.0",
+    "@tanstack/query-core": "^5.90.19",
     "@tanstack/react-query": "^5.90.10",
     "@tanstack/react-query-devtools": "^5.91.2",
     "@tosspayments/payment-widget-sdk": "^0.12.1",
@@ -25,6 +26,7 @@
     "dayjs": "^1.11.19",
     "jotai": "^2.15.0",
     "jotai-devtools": "^0.13.0",
+    "jotai-tanstack-query": "^0.11.0",
     "js-cookie": "^3.0.5",
     "mongodb": "^6.20.0",
     "mongoose": "^8.19.1",

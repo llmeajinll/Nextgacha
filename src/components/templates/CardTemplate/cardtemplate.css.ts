@@ -9,6 +9,7 @@ export const cardTemplateContainer = style({
   gridTemplateColumns: 'repeat(4, 300px)',
   justifyContent: 'space-between',
   margin: '0 auto',
+  gap: '10px',
 
   // border: '1px solid red',
 });

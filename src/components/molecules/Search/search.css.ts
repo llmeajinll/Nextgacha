@@ -12,3 +12,12 @@ export const search = style({
   color: vars.color.black1,
   fontFamily: 'notosans',
 });
+
+export const inputStyle = style({
+  outline: 'none',
+  marginLeft: '5px',
+  border: 'none',
+  flex: 1,
+  fontFamily: 'silkscreen',
+  lineHeight: '21px',
+});

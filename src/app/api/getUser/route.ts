@@ -11,7 +11,17 @@ export async function GET(req: Request) {
 
   if (!email || email.trim() === '') {
     return NextResponse.json(
-      { ok: false, error: 'Email parameter is required' },
+      {
+        ok: false,
+        error: 'Email parameter is required',
+        result: {
+          email: '',
+          nickname: '',
+          point: 0,
+          address: '',
+          image: '',
+        },
+      },
       { status: 400 }
     );
   }

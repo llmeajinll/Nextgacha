@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import useSWR from 'swr';
 import { useAtom } from 'jotai';
-import { tempCartAtom } from '@/jotai/store';
+import { tempCartAtom, userInfoAtom } from '@/jotai/store';
 import { ProductProps } from '@/shared/type';
 import { useModal, useCart } from '@/app/hooks';
 import {
@@ -32,6 +32,7 @@ export default function useTempCart(num: number | string) {
   const queryClient = useQueryClient();
   const { openModal, closeModal } = useModal();
   const [tempCart, setTempCart] = useAtom(tempCartAtom);
+  const [{ data: userData, isPending, error }] = useAtom(userInfoAtom);
   // const [tempCart, setTempCart] = useState<{ num: number; list: any[] }>();
 
   const isValidNum = num !== null && num !== '' && !isNaN(Number(num));
@@ -61,7 +62,8 @@ export default function useTempCart(num: number | string) {
           console.log('tempCartData : ', data.result);
           setTempCart({
             title: data.result.stock.title,
-            price: data.result.stock.price,
+            price:
+              data.result.stock.price * (1 - data.result.stock.discount / 100),
             num: data.result.num,
             product: [],
           });
@@ -80,6 +82,10 @@ export default function useTempCart(num: number | string) {
   const increase = ({ name }: { name: string }) => {
     console.log('increase, name : ', name);
     console.log(cart, stock, keep);
+    if (userData === undefined) {
+      alert('로그인 후 장바구니를 담을 수 있습니다.');
+      return;
+    }
     if (!isValidNum) return;
     const tempCount =
       tempCart?.product?.find((v: any) => v.name === name)?.count ?? 0;

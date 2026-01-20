@@ -38,7 +38,19 @@ export default function Ticket({
         <div className={title}>{props.title}</div>
         <Range preset='between' style={{ marginTop: '15px' }}>
           <div className={priceStyle}>
-            {comma(props.price * props.count)} won
+            {props.discount !== 0 && (
+              <span
+                style={{
+                  fontSize: '12px',
+                  color: 'lightgray',
+                  textDecoration: 'line-through',
+                  marginRight: '4px',
+                }}
+              >
+                {props.price}
+              </span>
+            )}
+            {comma(props.price * (1 - props.discount / 100) * props.count)} won
           </div>
           <Image
             className={deleteBtn}

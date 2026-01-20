@@ -18,21 +18,38 @@ import { comma } from '@/shared/comma';
 import Cookies from 'js-cookie';
 
 export default function Card({ props }: { props: CardProps }) {
-  // const [like, setLike] = useState(false);
-  // console.log(props);
-  // const userCookie = Cookies.get('userInfo');
-  // let userInfo = null;
-  // let isLogin = false;
+  const ShowPrice = (props: {
+    price: number;
+    isDiscount: boolean;
+    discount: number;
+  }) => {
+    const { price, isDiscount, discount } = props;
+    if (isDiscount === true && discount !== 0) {
+      return (
+        <>
+          <span
+            style={{ color: '#75C3FE', fontSize: '20px', marginRight: '5px' }}
+          >
+            {discount}%
+          </span>
+          <span
+            style={{
+              color: 'lightgray',
+              textDecoration: 'line-through',
+              fontSize: '20px',
+            }}
+          >
+            {comma(price)}
+          </span>
+          <span style={{ margin: '0 5px' }}>→ </span>
+          <span>{comma(price * (1 - discount / 100))}</span>
+        </>
+      );
+    } else {
+      return <span>{price}</span>;
+    }
+  };
 
-  // if (userCookie) {
-  //   try {
-  //     userInfo = JSON.parse(userCookie);
-  //     isLogin = userInfo?.email ? true : false;
-  //     console.log(isLogin);
-  //   } catch (err) {
-  //     console.error('userInfo parse error:', err);
-  //   }
-  // }
   return (
     <div className={cardContainer}>
       <Link href={`/${props.num || 0}/info`}>
@@ -57,7 +74,11 @@ export default function Card({ props }: { props: CardProps }) {
 
         <div className={bottomContainer}>
           <div>
-            {comma(props.price)}
+            <ShowPrice
+              price={props.price}
+              isDiscount={props.isDiscount}
+              discount={props.discount}
+            />
             <span style={{ fontSize: '18px' }}> 원</span>
           </div>
           <HeartBtn status={props.like} num={props.num} />

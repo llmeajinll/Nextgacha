@@ -107,6 +107,7 @@ export default function Cart({
                     count: item.count,
                     title: stock.title,
                     price: stock.price,
+                    discount: stock.discount,
                     code: item.code,
                     num: cart.num,
                     name: item.name,

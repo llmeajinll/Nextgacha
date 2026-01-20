@@ -1,6 +1,8 @@
 import { atom } from 'jotai';
 import { ProductProps } from '@/shared/type';
 import Cookie from 'js-cookie';
+import { atomWithQuery } from 'jotai-tanstack-query';
+import { useQuery } from '@tanstack/react-query';
 
 interface tempCartAtomType {
   num: number | null;
@@ -24,13 +26,32 @@ export const setTempCartAtom = atom(
   }
 );
 
-export const userInfoAtom = atom<{
+// export const userInfoAtom = atom<{
+//   email: string;
+//   nickname: string;
+//   address: string;
+//   point: number;
+//   image: string;
+// } | null>(null);
+
+export const userInfoAtom = atomWithQuery<{
   email: string;
   nickname: string;
   address: string;
   point: number;
   image: string;
-} | null>(null);
+}>(() => ({
+  queryKey: ['userInfo'],
+  queryFn: async () => {
+    const res = await fetch('/api/getUser');
+
+    if (!res.ok) throw new Error('유저 정보를 가져오지 못했습니다.');
+
+    const data = await res.json();
+    return data.result;
+  },
+  staleTime: 1000 * 60 * 10,
+}));
 
 export const modalAtom = atom<{
   isOpen: boolean;

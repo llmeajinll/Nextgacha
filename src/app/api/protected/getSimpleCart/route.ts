@@ -67,7 +67,12 @@ export async function GET(req: Request) {
           $project: {
             _id: 0,
             num: 1,
-            stock: { list: '$list', price: '$price', title: '$title' },
+            stock: {
+              list: '$list',
+              price: '$price',
+              discount: '$discount',
+              title: '$title',
+            },
             cart: {
               $ifNull: ['$cart.product', []],
             },

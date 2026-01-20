@@ -7,9 +7,10 @@ import {
   useMutation,
 } from '@tanstack/react-query';
 import Image from 'next/image';
-import { useAtom } from 'jotai';
+import { useAtom, useAtomValue } from 'jotai';
 import { Range, Btn } from '@/components/atoms';
 import { Cart, EmptyCard, AddressTruck } from '@/components/molecules';
+import { queryClientAtom } from 'jotai-tanstack-query';
 import {
   CartContainer,
   pointInput,
@@ -30,7 +31,7 @@ export default function CartTemplate() {
   // console.log('props : ', props);
   // const data = await getCart();
 
-  const [userInfo] = useAtom(userInfoAtom);
+  const [{ data: userData, isPending, error }] = useAtom(userInfoAtom);
   const [point, setPoint] = useState(0);
   const [isPointInputFocused, setIsPointInputFocused] = useState(false);
 
@@ -40,7 +41,8 @@ export default function CartTemplate() {
     setPoint(0);
 
     return data.reduce((accumulator: number, currentValue: any) => {
-      const price = currentValue.stock.price;
+      const price =
+        currentValue.stock.price * (1 - currentValue.stock.discount / 100);
       return (
         accumulator +
         currentValue.cart.list.reduce((acc: number, item: any) => {
@@ -66,7 +68,7 @@ export default function CartTemplate() {
     }
   }, [Price, point]);
 
-  const queryClient = useQueryClient();
+  const queryClient = useAtomValue(queryClientAtom);
 
   const handleUpdateItem = (num: number, newData: any) => {
     // 'cartData'라는 키를 가진 캐시 데이터를 직접 수정합니다.
@@ -195,7 +197,7 @@ export default function CartTemplate() {
 
                     const limitPrice =
                       Price >= 50000 ? Price - 1000 : Price + 2000;
-                    const maxPoint = userInfo?.point ?? 0;
+                    const maxPoint = userData?.point ?? 0;
 
                     const limit =
                       maxPoint >= limitPrice ? limitPrice : maxPoint;
@@ -247,26 +249,26 @@ export default function CartTemplate() {
               height={24}
               style={{ marginRight: '5px' }}
             ></Image>
-            {Price * 0.01}p
+            {Math.round(Price * 0.01)}p
           </Range>
         </Range>
 
         {/* <Btn size='big'>BUY</Btn> */}
         <Range preset='column'>
           <AddressModal />
-          <AddressTruck address={userInfo?.address || ''} />
+          <AddressTruck address={userData?.address || ''} />
         </Range>
 
         <BuyBtn
           props={{
             price: ToTalPrice,
             usedPoint: point,
-            addPoint: Number(Price * 0.01),
+            addPoint: Number(Math.round(Price * 0.01)),
             list: checkedProduct,
           }}
           width={
-            userInfo?.address !== undefined
-              ? userInfo?.address.length * 12 + 75
+            userData?.address !== undefined
+              ? userData?.address.length * 12 + 75
               : 320
           }
         />

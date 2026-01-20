@@ -3,7 +3,7 @@ import React from 'react';
 
 export default function page() {
   return (
-    <div>
+    <div style={{ padding: '30px' }}>
       <input />
       <input />
       <div>

@@ -73,7 +73,16 @@ export async function GET(req: Request) {
                     },
                   },
                 },
-                { $project: { _id: 0, num: 1, price: 1, list: 1, title: 1 } },
+                {
+                  $project: {
+                    _id: 0,
+                    num: 1,
+                    price: 1,
+                    list: 1,
+                    title: 1,
+                    discount: 1,
+                  },
+                },
               ],
               as: 'products',
             },

@@ -21,9 +21,11 @@ type BtnType = MajorBtnType | MoreBtnType;
 
 type Props = BtnType & {
   children?: React.ReactNode | string;
-  onClick?: React.MouseEventHandler<HTMLButtonElement> | undefined;
   className?: string | undefined;
   style?: React.CSSProperties | undefined;
+  onClick?: React.MouseEventHandler<HTMLButtonElement> | undefined;
+  onMouseEnter?: React.MouseEventHandler<HTMLButtonElement>;
+  onMouseLeave?: React.MouseEventHandler<HTMLButtonElement>;
 };
 
 export default function Btn(props: Props) {
@@ -43,6 +45,8 @@ export default function Btn(props: Props) {
     <button
       onClick={props.onClick}
       style={props.style}
+      onMouseEnter={props.onMouseEnter}
+      onMouseLeave={props.onMouseLeave}
       className={`
         ${styles.btnSizeVariants[props.size ?? 'medium']} 
         ${styles.colorVariants[props.color ?? 'primary']} 

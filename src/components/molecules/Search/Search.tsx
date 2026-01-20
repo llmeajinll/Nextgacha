@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
-import { search } from './search.css';
+import { search, inputStyle } from './search.css';
 import { getStandardCategory } from '@/shared/getStandardCategory';
 import Image from 'next/image';
 
@@ -21,6 +21,7 @@ export default function Search() {
     <div className={search}>
       <Image src='/images/search.png' alt='search' width={22} height={22} />
       <input
+        className={inputStyle}
         type='text'
         placeholder='SEARCH...'
         onChange={(e) => setKeyword(e.target.value)}
@@ -31,14 +32,6 @@ export default function Search() {
             // document.location.href = `/search?search=${input}`;
             router.push(`/search?search=${keyword}`, { scroll: false });
           }
-        }}
-        style={{
-          outline: 'none',
-          marginLeft: '5px',
-          border: 'none',
-          flex: 1,
-          fontFamily: 'silkscreen',
-          lineHeight: '21px',
         }}
       />
     </div>

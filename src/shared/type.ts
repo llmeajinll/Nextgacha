@@ -43,6 +43,9 @@ export type CardProps = {
   group: string[];
   num: number;
   created_at: string;
+  updated_at: string;
+  discount: number;
+  isDiscount: boolean;
   like: boolean;
   list: {
     name: string;

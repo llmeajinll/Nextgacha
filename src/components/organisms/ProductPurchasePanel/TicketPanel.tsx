@@ -48,7 +48,14 @@ export default function TicketPanel({}: // tempCart,
             console.log('tempCart val : ', val.name);
             return (
               <Ticket
-                props={{ title, price, num, name: val.name, count: val.count }}
+                props={{
+                  title,
+                  price,
+                  num,
+                  name: val.name,
+                  count: val.count,
+                  discount: val.discount,
+                }}
                 key={key}
                 increase={increase}
                 decrease={decrease}

@@ -11,7 +11,7 @@ export default function ProductPurchasePanel({ num }: { num: string }) {
   console.log('url num', num);
 
   const [info, setInfo] = useState<CardProps>({} as CardProps);
-  const { data, increase, tempCart } = useTempCart(num);
+  const { tempCart } = useTempCart(num);
 
   useEffect(() => {
     const fetchInfo = async () => {

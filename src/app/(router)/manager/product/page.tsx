@@ -167,6 +167,22 @@ export default function ManageProductPage() {
                 }}
               />
               개
+              <button
+                onClick={() => {
+                  setList((prev) => prev.filter((_, i) => i !== idx));
+                }}
+                style={{
+                  backgroundColor: 'white',
+                  border: 'none',
+                  height: '26px',
+                  fontSize: '30px',
+                  lineHeight: '10px',
+                  color: 'red',
+                  cursor: 'pointer',
+                }}
+              >
+                ✕
+              </button>
             </Range>
           </Range>
         ))}
@@ -179,6 +195,7 @@ export default function ManageProductPage() {
             fontSize: '40px',
             lineHeight: '39px',
             color: 'gray',
+            cursor: 'pointer',
           }}
         >
           +
@@ -319,7 +336,7 @@ export default function ManageProductPage() {
                     cursor: 'pointer',
                   }}
                 >
-                  x
+                  ✕
                 </button>
               </span>
             );

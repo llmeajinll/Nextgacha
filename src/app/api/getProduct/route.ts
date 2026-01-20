@@ -67,7 +67,7 @@ export async function GET(req: Request) {
   }
   const product = await func.toArray();
   const total = await productColl.countDocuments(query);
-  console.log('total count : ', total);
+  console.log('product : ', product);
 
   let data = null;
 

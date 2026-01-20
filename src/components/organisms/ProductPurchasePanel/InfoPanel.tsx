@@ -43,6 +43,12 @@ export default function InfoPanel({ props }: { props: CardProps }) {
     }, 0);
   }, [tempCart]);
 
+  const discountPrice = useMemo(() => {
+    const price = props.price * (1 - props.discount / 100);
+    props.price = price;
+    return price;
+  }, [props]);
+
   const onClickCart = async () => {
     if (tempCart.product.length === 0) {
       openModal('담은 상품이 없습니다.');
@@ -67,6 +73,8 @@ export default function InfoPanel({ props }: { props: CardProps }) {
       }
     });
   };
+
+  console.log('discountPrice : ', discountPrice);
 
   return (
     <Suspense fallback={<div>InfoPanel loading...</div>}>
@@ -108,7 +116,14 @@ export default function InfoPanel({ props }: { props: CardProps }) {
             )}
             <LabelTitle
               label='가격'
-              content={`${comma(props?.price || 0)}원`}
+              content={`${
+                props.isDiscount === true
+                  ? comma(discountPrice || 0) +
+                    '원 [' +
+                    props.discount +
+                    ' % 할인]'
+                  : comma(discountPrice || 0) + '원'
+              }`}
             />
             <LabelTitle
               label='종류'
@@ -146,6 +161,31 @@ export default function InfoPanel({ props }: { props: CardProps }) {
                   addPoint: Number(totalPrice * 0.01),
                 }}
               />
+
+              {/* addPoint
+: 
+180
+list
+: 
+Array(2)
+0
+: 
+{num: 12, product: Array(1)}
+1
+: 
+{num: 28, product: Array(3)}
+length
+: 
+2
+[[Prototype]]
+: 
+Array(0)
+price
+: 
+21000
+usedPoint
+: 
+0 */}
               <Btn
                 color='reversePrimary'
                 // size='extra'
