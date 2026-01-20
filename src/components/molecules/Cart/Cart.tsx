@@ -61,7 +61,8 @@ export default function Cart({
                 width={26}
                 height={48}
                 onClick={() => {
-                  onClickCheck?.(cart.num, { check: !cart.check });
+                  console.log('check click');
+                  onClickCheck(cart.num, { check: !cart.check });
                 }}
               />
             ) : (
@@ -70,7 +71,7 @@ export default function Cart({
                 width={26}
                 height={48}
                 onClick={() => {
-                  onClickCheck?.(cart.num, { check: !cart.check });
+                  onClickCheck(cart.num, { check: !cart.check });
                 }}
               />
             )}

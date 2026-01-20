@@ -24,8 +24,6 @@ import { BuyBtn } from '@/components/atoms';
 import { userInfoAtom } from '@/jotai/store';
 import { AddressModal } from '@/components/organisms';
 import { useCart } from '@/app/hooks';
-import getCart from '@/api/getCart';
-import { baseUrl } from '@/shared/baseUrl';
 
 export default function CartTemplate() {
   // console.log('props : ', props);
@@ -34,6 +32,8 @@ export default function CartTemplate() {
   const [{ data: userData, isPending, error }] = useAtom(userInfoAtom);
   const [point, setPoint] = useState(0);
   const [isPointInputFocused, setIsPointInputFocused] = useState(false);
+  const jotaiQueryClient = useAtomValue(queryClientAtom);
+  const queryClient = useQueryClient();
 
   const { data } = useCart();
 
@@ -67,8 +67,6 @@ export default function CartTemplate() {
       }
     }
   }, [Price, point]);
-
-  const queryClient = useAtomValue(queryClientAtom);
 
   const handleUpdateItem = (num: number, newData: any) => {
     // 'cartData'라는 키를 가진 캐시 데이터를 직접 수정합니다.
@@ -249,7 +247,7 @@ export default function CartTemplate() {
               height={24}
               style={{ marginRight: '5px' }}
             ></Image>
-            {Math.round(Price * 0.01)}p
+            {Math.floor(Price * 0.01)}p
           </Range>
         </Range>
 
@@ -263,7 +261,7 @@ export default function CartTemplate() {
           props={{
             price: ToTalPrice,
             usedPoint: point,
-            addPoint: Number(Math.round(Price * 0.01)),
+            addPoint: Number(Math.floor(Price * 0.01)),
             list: checkedProduct,
           }}
           width={

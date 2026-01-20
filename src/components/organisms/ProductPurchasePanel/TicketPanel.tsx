@@ -22,7 +22,8 @@ export default function TicketPanel({}: // tempCart,
 
   const { increase, decrease, erase } = useTempCart(firstRoute);
   const [tempCart, setTempCart] = useAtom(tempCartAtom);
-  const { title, price, num } = tempCart;
+  const { title, price, num, discount } = tempCart;
+  console.log(`title, price, num, discount`, title, price, num, discount);
 
   if (!isValid) return null;
   useEffect(() => {
@@ -31,7 +32,8 @@ export default function TicketPanel({}: // tempCart,
         title: '',
         price: 0,
         num: null,
-        product: [], // reduce가 에러 나지 않도록 빈 배열을 넣어줍니다.
+        discount,
+        product: [],
       });
   }, []);
   // const data = tempCartQuery?.data;
@@ -54,7 +56,7 @@ export default function TicketPanel({}: // tempCart,
                   num,
                   name: val.name,
                   count: val.count,
-                  discount: val.discount,
+                  discount: discount,
                 }}
                 key={key}
                 increase={increase}

@@ -39,7 +39,10 @@ export default function InfoPanel({ props }: { props: CardProps }) {
 
   const totalPrice = useMemo(() => {
     return tempCart?.product.reduce((a: any, b: any) => {
-      return a + b.count * (tempCart?.price || 0);
+      return (
+        a +
+        b.count * ((tempCart?.price || 0) * (1 - tempCart.discount / 100) || 0)
+      );
     }, 0);
   }, [tempCart]);
 
@@ -136,7 +139,7 @@ export default function InfoPanel({ props }: { props: CardProps }) {
             />
             <LabelTitle
               label='적립금'
-              content={`${props?.price * 0.01 || 0}p`}
+              content={`${Math.floor(props?.price * 0.01) || 0}p`}
             />
           </Range>
 

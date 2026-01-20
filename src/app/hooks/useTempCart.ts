@@ -62,10 +62,10 @@ export default function useTempCart(num: number | string) {
           console.log('tempCartData : ', data.result);
           setTempCart({
             title: data.result.stock.title,
-            price:
-              data.result.stock.price * (1 - data.result.stock.discount / 100),
+            price: data.result.stock.price,
             num: data.result.num,
             product: [],
+            discount: data.result.stock.discount,
           });
           return data.result;
         } else {
