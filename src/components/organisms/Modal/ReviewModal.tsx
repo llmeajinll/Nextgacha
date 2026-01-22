@@ -21,7 +21,7 @@ export default function ReviewModal() {
   const [value, setValue] = useState(0);
   const [reviewInput, setreviewInput] = useState('');
   const [show, setShow] = useState(false);
-  const [warningSize, setWarningSize] = useState(14);
+  const [warningSize1, setWarningSize1] = useState(14);
   const [warningSize2, setWarningSize2] = useState(10);
   interface ProductInfo {
     orderId?: string;
@@ -128,7 +128,7 @@ export default function ReviewModal() {
                 <div
                   className={Text}
                   style={assignInlineVars({
-                    [fontSizeVar]: warningSize + 'px',
+                    [fontSizeVar]: warningSize1 + 'px',
                   })}
                 >
                   별점은 필수입니다!
@@ -158,7 +158,10 @@ export default function ReviewModal() {
                 className={styles.modalBtn}
                 onClick={async () => {
                   if (value === 0) {
-                    setWarningSize((prev) => (prev <= 40 ? prev : (prev += 4)));
+                    console.log('왜 안돼');
+                    setWarningSize1((prev) =>
+                      prev <= 40 ? (prev += 4) : prev,
+                    );
                     return;
                   } else if (
                     reviewInput.length < 10 &&
@@ -166,7 +169,7 @@ export default function ReviewModal() {
                   ) {
                     setShow(true);
                     setWarningSize2((prev) =>
-                      prev >= 40 ? prev : (prev += 4)
+                      prev <= 40 ? (prev += 4) : prev,
                     );
                     return;
                   }

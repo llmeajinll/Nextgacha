@@ -1,14 +1,10 @@
 'use client';
 
-import React, { useEffect, useState, useRef, useMemo, Suspense } from 'react';
-import {
-  useSuspenseQuery,
-  useQueryClient,
-  useMutation,
-} from '@tanstack/react-query';
+import { useState, useMemo } from 'react';
+import { useQueryClient } from '@tanstack/react-query';
 import Image from 'next/image';
 import { useAtom, useAtomValue } from 'jotai';
-import { Range, Btn } from '@/components/atoms';
+import { Range } from '@/components/atoms';
 import { Cart, EmptyCard, AddressTruck } from '@/components/molecules';
 import { queryClientAtom } from 'jotai-tanstack-query';
 import {
@@ -18,7 +14,7 @@ import {
   bigText,
   smallText,
   line,
-} from './carttemplate.css';
+} from './cartTemplate.css';
 import { comma } from '@/shared/comma';
 import { BuyBtn } from '@/components/atoms';
 import { userInfoAtom } from '@/jotai/store';
@@ -32,10 +28,11 @@ export default function CartTemplate() {
   const [{ data: userData, isPending, error }] = useAtom(userInfoAtom);
   const [point, setPoint] = useState(0);
   const [isPointInputFocused, setIsPointInputFocused] = useState(false);
-  const jotaiQueryClient = useAtomValue(queryClientAtom);
   const queryClient = useQueryClient();
 
   const { data } = useCart();
+
+  // console.log(data);
 
   const Price = useMemo(() => {
     setPoint(0);
@@ -98,11 +95,12 @@ export default function CartTemplate() {
 
   const checkedProduct = useMemo(() => {
     setPoint(0);
-    // console.log('checkedProduct data  : ', data);
+    console.log('checkedProduct data  : ', data);
     return data
       .filter((item: any) => item.cart?.check === true)
       .map((item: any) => ({
         num: item.cart.num,
+        title: item.stock.title,
         product: item.cart.list ?? [],
       }));
   }, [data]);
@@ -204,7 +202,7 @@ export default function CartTemplate() {
                       'limitPrice, maxPoint, limit : ',
                       limitPrice,
                       maxPoint,
-                      limit
+                      limit,
                     );
 
                     if (limit < inputVal) {

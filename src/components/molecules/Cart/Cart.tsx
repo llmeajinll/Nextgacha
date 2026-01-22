@@ -30,7 +30,7 @@ export default function Cart({
   const { cart, keep, stock } = props;
   const { increase, decrease, erase } = useCart();
 
-  console.log('cart, keep, stock : ', cart, keep, stock);
+  // console.log('cart, keep, stock : ', cart, keep, stock);
 
   useEffect(() => {
     const el = scrollRef.current;
@@ -134,7 +134,7 @@ export default function Cart({
                           stockCount,
                           cart.num,
                           item.name,
-                          item.count
+                          item.count,
                         );
                       }}
                       decrease={() => decrease(cart.num, item.name, item.count)}
