@@ -15,6 +15,20 @@ export async function GET(req: Request) {
   const tag = searchParams.get('tag');
   const count = Number(searchParams.get('count') || 20);
   const page = Number(searchParams.get('page'));
+  const filter = searchParams.get('filter');
+
+  console.log(filter);
+
+  // 여러 filter를 사용하게 된다면 사용
+
+  //   const filterParam = searchParams.get('filter');
+  // if (filterParam) {
+  //   const filters = filterParam.split(',');
+  //   query = {
+  //     ...query,
+  //     'list.name': { $in: filters }
+  //   };
+  // }
 
   console.log('mongodb params', Number(search), tag, search, page);
 
@@ -57,6 +71,13 @@ export async function GET(req: Request) {
     };
   }
 
+  if (filter) {
+    query = {
+      ...query,
+      'list.name': { $regex: filter, $options: 'i' },
+    };
+  }
+
   let func = productColl
     .find(query)
     .skip((page - 1) * count)
@@ -68,13 +89,14 @@ export async function GET(req: Request) {
   const product = await func.toArray();
   const total = await productColl.countDocuments(query);
   console.log('product : ', product);
+  console.log('length : ', product.length);
 
   let data = null;
 
   if (isLogin === true) {
     const user = await userColl.findOne(
       { email: session?.user?.email },
-      { projection: { like: 1, _id: 0 } }
+      { projection: { like: 1, _id: 0 } },
     );
 
     // console.log('========== like:', user?.like);

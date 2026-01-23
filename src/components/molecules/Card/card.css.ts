@@ -2,9 +2,12 @@ import { style } from '@vanilla-extract/css';
 import { vars } from '@/styles/theme.css';
 
 export const cardContainer = style({
+  display: 'flex',
+  flexDirection: 'column',
+  justifyContent: 'space-between',
   // backgroundColor: 'red',
   width: 300,
-  height: 'fit-content',
+  height: 422,
   paddingBottom: '25px',
 });
 

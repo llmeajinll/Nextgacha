@@ -27,6 +27,7 @@ export default function Category({ status = 'header', setShow }: Props) {
   const type = searchParams.get('type');
   const detail = searchParams.get('detail');
   const company = searchParams.get('company');
+  const tag = searchParams.get('tag');
 
   return (
     <div
@@ -53,16 +54,16 @@ export default function Category({ status = 'header', setShow }: Props) {
         <Range gap='15'>
           {['전체 상품', '인기 상품', '신규 상품', '예약 판매'].map(
             (val, idx) => (
-              <Link href={`/search?type=main&detail=${val}`} key={val}>
+              <Link href={`/search?type=main&tag=${val}&page=1`} key={val}>
                 <div
                   className={`${content} ${
-                    detail === val && status === 'menu' ? select : null
+                    tag === val && status === 'menu' ? select : null
                   }`}
                 >
                   {val}
                 </div>
               </Link>
-            )
+            ),
           )}
         </Range>
       </Range>
@@ -79,7 +80,10 @@ export default function Category({ status = 'header', setShow }: Props) {
         </div>
         <Range gap='15'>
           {category.character.map((val, idx) => (
-            <Link href={`/search?type=character&detail=${val}`} key={val}>
+            <Link
+              href={`/search?type=character&detail=${val}&page=1&filter=전체`}
+              key={val}
+            >
               <div
                 className={`${content} ${
                   detail === val && status === 'menu' ? select : null
@@ -110,7 +114,10 @@ export default function Category({ status = 'header', setShow }: Props) {
           }}
         >
           {category.ani.map((val, idx) => (
-            <Link href={`/search?type=ani&detail=${val}`} key={val}>
+            <Link
+              href={`/search?type=ani&detail=${val}&page=1&filter=전체`}
+              key={val}
+            >
               <div
                 className={`${content} ${
                   detail === val && status === 'menu' ? select : null
@@ -153,7 +160,7 @@ export default function Category({ status = 'header', setShow }: Props) {
             >
               {category.series.BANDAI.map((val, idx) => (
                 <Link
-                  href={`/search?type=series&company=bandai&detail=${val}`}
+                  href={`/search?type=series&company=bandai&detail=${val}&page=1&filter=전체`}
                   key={val}
                 >
                   <div
@@ -186,7 +193,7 @@ export default function Category({ status = 'header', setShow }: Props) {
             >
               {category.series.TOMY.map((val, idx) => (
                 <Link
-                  href={`/search?type=series&company=tomy&detail=${val}`}
+                  href={`/search?type=series&company=tomy&detail=${val}&page=1&filter=전체`}
                   key={val}
                 >
                   <div
@@ -219,7 +226,7 @@ export default function Category({ status = 'header', setShow }: Props) {
             >
               {category.series.STANDSTONES.map((val, idx) => (
                 <Link
-                  href={`/search?type=series&company=standstones&detail=${val}`}
+                  href={`/search?type=series&company=standstones&detail=${val}&page=1&filter=전체`}
                   key={val}
                 >
                   <div

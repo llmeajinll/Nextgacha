@@ -1,5 +1,5 @@
 import { atom } from 'jotai';
-import { ProductProps } from '@/shared/type';
+import { CardProps, ProductProps } from '@/shared/type';
 import Cookie from 'js-cookie';
 import { atomWithQuery } from 'jotai-tanstack-query';
 import { useQuery } from '@tanstack/react-query';
@@ -27,7 +27,7 @@ export const setTempCartAtom = atom(
   null,
   (_get, set, updated: tempCartAtomType) => {
     set(tempCartAtom, updated);
-  }
+  },
 );
 
 // export const userInfoAtom = atom<{
@@ -80,3 +80,6 @@ export const modalAtom = atom<{
 //   set(userInfoAtom, updated);
 //   console.log('userInfoAtom : ', userInfoAtom);
 // });
+
+export const searchProductsAtom = atom<CardProps[]>([]);
+export const filterSearchProductsAtom = atom<CardProps[]>;

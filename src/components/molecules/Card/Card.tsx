@@ -28,7 +28,12 @@ export default function Card({ props }: { props: CardProps }) {
       return (
         <>
           <span
-            style={{ color: '#75C3FE', fontSize: '20px', marginRight: '5px' }}
+            style={{
+              color: '#75C3FE',
+              fontSize: '20px',
+              marginRight: '5px',
+              fontWeight: '500',
+            }}
           >
             {discount}%
           </span>
@@ -46,7 +51,7 @@ export default function Card({ props }: { props: CardProps }) {
         </>
       );
     } else {
-      return <span>{price}</span>;
+      return <span>{comma(price)}</span>;
     }
   };
 
@@ -70,18 +75,20 @@ export default function Card({ props }: { props: CardProps }) {
           create={props?.create || ''}
           reserve={props?.reserve || ''}
         />
-        <div className={cardTitle}>{props.title}</div>
+        <div>
+          <div className={cardTitle}>{props.title}</div>
 
-        <div className={bottomContainer}>
-          <div>
-            <ShowPrice
-              price={props.price}
-              isDiscount={props.isDiscount}
-              discount={props.discount}
-            />
-            <span style={{ fontSize: '18px' }}> 원</span>
+          <div className={bottomContainer}>
+            <div>
+              <ShowPrice
+                price={props.price}
+                isDiscount={props.isDiscount}
+                discount={props.discount}
+              />
+              <span style={{ fontSize: '18px' }}> 원</span>
+            </div>
+            <HeartBtn status={props.like} num={props.num} />
           </div>
-          <HeartBtn status={props.like} num={props.num} />
         </div>
       </div>
     </div>
