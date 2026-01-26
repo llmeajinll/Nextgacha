@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { Card } from '@/components/molecules';
-import { cardTemplateContainer } from './cardtemplate.css';
+import { cardTemplateContainer, noProductContainer } from './cardtemplate.css';
 import { Title, Range, ScrollToTop } from '@/components/atoms';
 import { useAtom } from 'jotai';
 import { searchProductsAtom } from '@/jotai/store';
@@ -25,34 +25,23 @@ export default function CardTemplate({
 
   console.log('serachProducts : ', searchProducts);
 
-  // console.log(
-  //   'CardTemplate tag:',
-  //   tag,
-  //   'search:',
-  //   search,
-  //   'count:',
-  //   count,
-  //   'props:',
-  //   props
-  // );
+  console.log(
+    'CardTemplate tag:',
+    tag,
+    'search:',
+    search,
+    'count:',
+    count,
+    'props:',
+    props,
+  );
 
   return (
     <div style={{ width: '1272px', margin: '0 auto' }}>
       <ScrollToTop />
       {searchProducts && searchProducts.length === 0 ? (
-        <Range
-          width='full'
-          style={{
-            height: '300px',
-            // padding: '50px 0px',
-            textAlign: 'center',
-            alignItems: 'center',
-            border: '1px solid lightgray',
-            fontSize: '30px',
-            fontFamily: 'silkscreen',
-          }}
-        >
-          NO RESULT :(
+        <Range width='full' className={noProductContainer}>
+          NO RESULT :{'('}
         </Range>
       ) : (
         <div className={cardTemplateContainer}>

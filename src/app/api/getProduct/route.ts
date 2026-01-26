@@ -11,13 +11,11 @@ export async function GET(req: Request) {
   const email = session?.user?.email;
   const isLogin = email ? true : false;
 
-  const search = searchParams.get('search') || '';
+  const search = searchParams.get('search');
   const tag = searchParams.get('tag');
   const count = Number(searchParams.get('count') || 20);
-  const page = Number(searchParams.get('page'));
+  const page = Number(searchParams.get('page')) || 1;
   const filter = searchParams.get('filter');
-
-  console.log(filter);
 
   // 여러 filter를 사용하게 된다면 사용
 
@@ -30,7 +28,7 @@ export async function GET(req: Request) {
   //   };
   // }
 
-  console.log('mongodb params', Number(search), tag, search, page);
+  console.log('mongodb params', tag, search, page, count, filter);
 
   const twoMonthsAgo = new Date();
   twoMonthsAgo.setMonth(twoMonthsAgo.getMonth() - 2);
@@ -38,8 +36,6 @@ export async function GET(req: Request) {
   let query = {};
 
   function buildSearchQuery(search: string) {
-    if (!search || !search.trim()) return {};
-
     const keyword = search.trim();
 
     return {
@@ -64,10 +60,12 @@ export async function GET(req: Request) {
     query = { num: Number(search) };
   }
 
-  if (search && search.trim()) {
+  if (search && search.trim().length > 0) {
+    console.log('search 실행 search : ', search);
+    console.log('keyword : ', search);
     query = {
       ...query,
-      ...buildSearchQuery(search),
+      ...buildSearchQuery(search.trim()),
     };
   }
 
@@ -77,6 +75,7 @@ export async function GET(req: Request) {
       'list.name': { $regex: filter, $options: 'i' },
     };
   }
+  console.log('query : ', query);
 
   let func = productColl
     .find(query)
@@ -121,6 +120,8 @@ export async function GET(req: Request) {
     // console.log('[server] else result : ', result);
   }
   const result = { data, total };
+
+  // console.log('result : ', result);
 
   return NextResponse.json(result);
 }

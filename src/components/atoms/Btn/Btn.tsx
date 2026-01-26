@@ -14,7 +14,7 @@ type MajorBtnType = {
 type MoreBtnType = {
   type: 'more';
   href: string;
-  query?: { type?: string; detail?: string };
+  query?: { type?: string; detail?: string; tag?: string };
 };
 
 type BtnType = MajorBtnType | MoreBtnType;

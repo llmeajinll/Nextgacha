@@ -12,6 +12,7 @@ import Pagination from 'rc-pagination';
 import 'rc-pagination/assets/index.css';
 import { useAtom } from 'jotai';
 import { searchProductsAtom } from '@/jotai/store';
+import getProducts from '@/api/getProudcts';
 
 export default function SearchPage() {
   const router = useRouter();
@@ -23,6 +24,7 @@ export default function SearchPage() {
   const search = searchParams.get('search');
   // console.log('search page search:', search);
   const targetCategory = getStandardCategory(search);
+
   console.log(`${search} 로 검색하여 ${targetCategory} 결과를 찾습니다.`);
 
   const type = searchParams.get('type');
@@ -44,12 +46,18 @@ export default function SearchPage() {
   console.log('TAG : ', TAG);
 
   const handleSearch = async (page: number) => {
+    const params = new URLSearchParams();
+    if (TAG) params.set('tag', TAG);
+    if (search || detail)
+      params.set('search', detail ? detail : targetCategory);
+    if (filter) params.set('filter', filter === '전체' ? '' : filter);
+    if (page) params.set('page', page.toString());
     let url = '';
-    if (TAG) {
-      url = `/api/getProduct?tag=${TAG}&count=20&page=${page}`;
-    } else if (targetCategory || detail) {
-      url = `/api/getProduct?search=${targetCategory || detail}&count=20&page=${page}&filter=${filter === '전체' ? '' : filter}`;
-    }
+
+    url = `/api/getProduct?${params.toString()}&count=20`;
+
+    console.log('url : ', url);
+
     const res = await fetch(url, {
       method: 'GET',
       headers: {
@@ -63,7 +71,7 @@ export default function SearchPage() {
 
   useEffect(() => {
     handleSearch(currentPage);
-  }, [tag, search, detail, filter]);
+  }, [tag, search, detail, filter, page]);
 
   return (
     <>

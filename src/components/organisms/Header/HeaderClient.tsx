@@ -49,7 +49,7 @@ export default function Header({ session }: { session: Session | null }) {
                   onMouseLeave={() => setShowCategory(false)}
                 >
                   <Link
-                    href='/search?type=main&detail=전체 상품'
+                    href='/search?type=main&tag=전체 상품&page=1'
                     style={{
                       color: `${firstRoute === 'search' ? '#75C3FE' : ''}`,
                     }}

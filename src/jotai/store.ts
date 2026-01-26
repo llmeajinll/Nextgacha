@@ -82,4 +82,3 @@ export const modalAtom = atom<{
 // });
 
 export const searchProductsAtom = atom<CardProps[]>([]);
-export const filterSearchProductsAtom = atom<CardProps[]>;
