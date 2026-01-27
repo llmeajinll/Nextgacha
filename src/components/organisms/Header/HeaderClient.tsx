@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { useRouter } from 'next/navigation';
 
 // import { signIn, signOut } from '@/auth';
@@ -32,7 +32,7 @@ import { textareaStyle } from '@/components/organisms/Modal/reviewModal.css';
 
 export default function Header({ session }: { session: Session | null }) {
   const [showCategory, setShowCategory] = useState(false);
-  const [showReport, setShowReport] = useState(true);
+  const [showReport, setShowReport] = useState(false);
   const [textareaValue, setTextAreaValue] = useState('');
   const { firstRoute } = useSpliteRoute();
   const [{ data, isPending, error }] = useAtom(userInfoAtom);

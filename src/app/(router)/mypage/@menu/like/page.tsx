@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 // import getLike from '@/api/getLike';
-import { cardTemplateContainer } from '@/components/templates/CardTemplate/cardtemplate.css';
+import { cardTemplateContainer } from '@/components/templates/CardTemplate/cardTemplate.css';
 import { Range } from '@/components/atoms';
 import { Card, EmptyCard } from '@/components/molecules';
 import { CardProps } from '@/shared/type';

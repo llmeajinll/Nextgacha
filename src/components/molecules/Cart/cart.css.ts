@@ -8,7 +8,7 @@ export const cartContainer = style({
 
 export const ticketContainer = style({
   display: 'flex',
-  width: '1040px',
+  width: '1105px',
   maxWidth: '1070',
   overflowX: 'auto',
 
