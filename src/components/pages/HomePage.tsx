@@ -16,13 +16,13 @@ export default function HomePage() {
 
   const fetchProducts = async () => {
     const hotResult = await getProducts({ tag: 'hot', count: 8 });
-    console.log('hotResult : ', hotResult);
+    // console.log('hotResult : ', hotResult);
     setHotProduct(hotResult.data);
     const newResult = await getProducts({ tag: 'new', count: 8 });
-    console.log('newResult : ', newResult);
+    // console.log('newResult : ', newResult);
     setNewProduct(newResult.data);
     const reserveResult = await getProducts({ tag: 'reserve', count: 8 });
-    console.log('reserveResult : ', reserveResult);
+    // console.log('reserveResult : ', reserveResult);
     setReserveProduct(reserveResult.data);
   };
 
