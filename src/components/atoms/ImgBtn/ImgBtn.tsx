@@ -18,6 +18,7 @@ type Props =
       size: number;
       width?: never;
       height?: never;
+      title?: string;
       style?: any;
       onClick?: () => void;
     }
@@ -26,6 +27,7 @@ type Props =
       size?: never;
       width?: number;
       height?: number;
+      title?: string;
       style?: any;
       onClick?: () => void;
     };
@@ -35,6 +37,7 @@ export default function ImgBtn({
   size,
   width,
   height,
+  title,
   style,
   onClick,
 }: Props) {
@@ -43,6 +46,7 @@ export default function ImgBtn({
       src={image[img]}
       width={size || width}
       height={size || height}
+      title={title}
       alt='like'
       onClick={onClick}
       style={{ cursor: 'pointer', ...style }}

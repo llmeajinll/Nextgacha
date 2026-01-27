@@ -11,7 +11,7 @@ export default function page() {
       <div>
         <input />
       </div>
-      <div>
+      <div style={{ marginTop: '10px' }}>
         <Link href='/manager/user'>1. 회원 관리</Link>
       </div>
       <div>

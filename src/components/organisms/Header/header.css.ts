@@ -22,8 +22,9 @@ export const wrapTextarea = style({
   boxSizing: 'border-box',
   padding: '10px',
   width: 'fit-content',
-  border: '1px solid lightgray',
-  backgroundColor: 'white',
+  border: `3px solid ${vars.color.blue1}`,
+  borderRight: `3px solid ${vars.color.blue1}`,
+  backgroundColor: '#ddf0fd',
 });
 
 export const menuContainer = style({

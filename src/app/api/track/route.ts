@@ -86,7 +86,7 @@ export async function POST(req: Request) {
 
     // --- 상황 B: 상품 페이지(숫자)인 경우 ---
     else if (!isNaN(Number(segments[0]))) {
-      const code = segments[0];
+      const code = Number(segments[0]);
       const tabName = segments[1] || 'info';
 
       const result = await pageViewsColl.updateOne(

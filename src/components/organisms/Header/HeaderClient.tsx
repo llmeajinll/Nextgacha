@@ -34,24 +34,49 @@ export default function Header({ session }: { session: Session | null }) {
   const [showCategory, setShowCategory] = useState(false);
   const [showReport, setShowReport] = useState(false);
   const [textareaValue, setTextAreaValue] = useState('');
+  const reportRef = useRef<HTMLDivElement | null>(null);
   const { firstRoute } = useSpliteRoute();
   const [{ data, isPending, error }] = useAtom(userInfoAtom);
   const pathname = usePathname();
   console.log(firstRoute);
   console.log('JOTAI userInfoAtom : ', data);
 
+  useEffect(() => {
+    function handleClickOutside(e: MouseEvent) {
+      if (reportRef.current && !reportRef.current.contains(e.target as Node)) {
+        setShowReport(false);
+      }
+    }
+
+    document.addEventListener('mousedown', handleClickOutside);
+
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [setShowReport]);
+
   return (
     <>
       {firstRoute !== 'manager' && (
         <div className={headerContainer}>
           {showReport && (
-            <div className={reportContainer}>
+            <div className={reportContainer} ref={reportRef}>
               <div className={wrapTextarea}>
+                <div
+                  style={{
+                    fontSize: '20px',
+                    marginBottom: '10px',
+                    fontWeight: 500,
+                  }}
+                >
+                  🚨 오류 신고 🚨
+                </div>
                 <textarea
                   placeholder='오류를 입력해주세요 (최소 4자, 최대 200자)'
                   className={textareaStyle}
                   maxLength={200}
                   value={textareaValue}
+                  style={{ border: '2px solid #75C3FE' }}
                   onChange={(e) => {
                     setTextAreaValue(e.target.value);
                   }}
@@ -166,10 +191,12 @@ export default function Header({ session }: { session: Session | null }) {
               )}
               <ImgBtn
                 img='report'
-                width={28}
-                height={30}
+                title='오류 신고'
+                width={30}
+                height={28}
                 style={{
                   marginLeft: '5px',
+                  marginTop: '2px',
                   // marginBottom: '5px',
                   // marginRight: '-1px',
                   // border: '1px solid lightgray',

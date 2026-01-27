@@ -3,6 +3,7 @@ import { errorColl } from '@/lib/mongodb';
 import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
 import timezone from 'dayjs/plugin/timezone';
+import { koreaTime } from '@/shared/koreaTime';
 
 dayjs.extend(utc);
 dayjs.extend(timezone);
@@ -12,13 +13,13 @@ export async function POST(req: Request) {
 
   const { textareaValue, pathname } = data;
 
-  const koreaTime = dayjs().tz('Asia/Seoul');
+  // const koreaTime = dayjs().tz('Asia/Seoul');
 
   try {
     const discountResult = await errorColl.insertOne({
       textareaValue,
       pathname,
-      created_at: koreaTime.format('YYYY-MM-DD hh-mm-ss'),
+      created_at: koreaTime,
     });
 
     console.log('discountResult : ', discountResult);
