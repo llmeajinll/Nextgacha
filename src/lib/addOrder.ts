@@ -3,6 +3,7 @@ import dayjs from 'dayjs';
 import { ClientSession } from 'mongodb';
 import { findUserInfo } from './findUserInfo';
 import { NextResponse } from 'next/server';
+import { koreaTime } from '@/shared/koreaTime';
 
 export async function addOrder({
   orderId,
@@ -48,11 +49,11 @@ export async function addOrder({
         invoice: '',
         totalPrice: amount,
         addPoint: addPoint,
-        created_at: dayjs(new Date()).format('YYYY-MM-DD HH:mm:ss'),
+        created_at: koreaTime,
         arrivedDate: '',
         review: false,
       },
-      { session: mongodbSession }
+      { session: mongodbSession },
     )
     .then((res) => {
       // console.log('Insert Result:', res);

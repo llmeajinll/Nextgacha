@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import { productColl, counterColl, mongodbClient } from '@/lib/mongodb';
 import { put } from '@vercel/blob';
+import { koreaTime } from '@/shared/koreaTime';
 
 export async function POST(req: Request) {
   // const { data } = await req.json();
@@ -37,7 +38,7 @@ export async function POST(req: Request) {
           .findOneAndUpdate(
             { id: 'num' },
             { $inc: { num: 1 } },
-            { returnDocument: 'after', upsert: true, session: mongodbSession }
+            { returnDocument: 'after', upsert: true, session: mongodbSession },
           )
           .then((result) => {
             // console.log('result:', result);
@@ -56,7 +57,7 @@ export async function POST(req: Request) {
       if (counter === null) {
         return NextResponse.json(
           { message: 'Failed to get next sequence number' },
-          { status: 500 }
+          { status: 500 },
         );
       }
 
@@ -73,13 +74,13 @@ export async function POST(req: Request) {
             console.error('Error uploading image to blob storage:', err);
             return NextResponse.json(
               { message: 'Failed to save image' },
-              { status: 500 }
+              { status: 500 },
             );
           });
         image = url;
       }
 
-      const nowDate = new Date();
+      // const nowDate = new Date();
 
       const insertData = {
         title,
@@ -94,8 +95,8 @@ export async function POST(req: Request) {
         list,
         company,
         group,
-        created_at: nowDate,
-        updated_at: nowDate,
+        created_at: koreaTime,
+        updated_at: koreaTime,
         num: counter,
         discount: 0,
         isDiscounted: false,
@@ -112,7 +113,7 @@ export async function POST(req: Request) {
           console.error('Error inserting product:', err);
           return NextResponse.json(
             { message: 'Failed to insert product' },
-            { status: 500 }
+            { status: 500 },
           );
         });
 
@@ -120,12 +121,12 @@ export async function POST(req: Request) {
         return NextResponse.json(
           { message: 'Product inserted successfully', url: image },
 
-          { status: 201 }
+          { status: 201 },
         );
       } else {
         return NextResponse.json(
           { message: 'Failed to insert product' },
-          { status: 500 }
+          { status: 500 },
         );
       }
     });
@@ -143,7 +144,7 @@ export async function POST(req: Request) {
         message: `오류가 발생하였습니다.`,
         ok: false,
       },
-      { status: 400 }
+      { status: 400 },
     );
   } finally {
     await mongodbSession.endSession(); // 3. 세션 종료 (필수)

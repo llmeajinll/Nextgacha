@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server';
 import { reviewColl, orderColl, mongodbClient } from '@/lib/mongodb';
 import { auth } from '@/auth';
 import dayjs from 'dayjs';
+import { koreaTime } from '@/shared/koreaTime';
 
 export async function POST(req: Request) {
   const authSession = await auth();
@@ -13,7 +14,7 @@ export async function POST(req: Request) {
   const { rate, orderId, text, purchaseDate, list } = info.data;
   console.log(rate, orderId, text, purchaseDate, list);
 
-  const nowDate = dayjs(new Date()).format('YYYY-MM-DD HH:mm:ss');
+  // const nowDate = dayjs(new Date()).format('YYYY-MM-DD HH:mm:ss');
   const session = mongodbClient.startSession();
 
   try {
@@ -22,7 +23,7 @@ export async function POST(req: Request) {
       const orderResult = await orderColl.updateOne(
         { orderId },
         { $set: { review: true } },
-        { session } // 세션 전달
+        { session }, // 세션 전달
       );
 
       if (orderResult.matchedCount === 0) {
@@ -32,7 +33,7 @@ export async function POST(req: Request) {
       // 2. 리뷰 일괄 등록 작업 생성
       const operations = list.map((val: any) => {
         const reviewInfo = {
-          created_at: nowDate,
+          created_at: koreaTime,
           purchaseDate,
           list: val.product,
           user: email,

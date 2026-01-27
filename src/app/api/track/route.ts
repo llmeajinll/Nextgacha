@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
 import { pageViewsColl } from '@/lib/mongodb';
+import { koreaTime } from '@/shared/koreaTime';
 
 export async function POST(req: Request) {
   try {
@@ -59,7 +60,7 @@ export async function POST(req: Request) {
     //   { upsert: true },
     // );
 
-    const now = new Date();
+    // const now = new Date();
 
     // --- 상황 A: 검색 페이지인 경우 ---
     if (segments[0] === 'search') {
@@ -73,9 +74,9 @@ export async function POST(req: Request) {
           $inc: { count: 1 }, // 있으면 1 증가
           $set: {
             params: params,
-            lastVisit: now,
+            lastVisit: koreaTime,
           },
-          $setOnInsert: { timestamp: now }, // 처음 생성될 때만 기록
+          $setOnInsert: { timestamp: koreaTime }, // 처음 생성될 때만 기록
         },
         { upsert: true },
       );
@@ -92,9 +93,9 @@ export async function POST(req: Request) {
         { page: code },
         {
           $inc: { [`tab.${tabName}`]: 1 }, // tab 객체 내부의 해당 탭 숫자만 1 증가
-          $set: { lastVisit: now },
+          $set: { lastVisit: koreaTime },
           $setOnInsert: {
-            timestamp: now,
+            timestamp: koreaTime,
             tab: { info: 0, qna: 0, review: 0 }, // 처음 생성 시 기본 구조 세팅
           },
         },

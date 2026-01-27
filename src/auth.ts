@@ -3,6 +3,7 @@ import KakaoProvider from 'next-auth/providers/kakao';
 // import Kakao from 'next-auth/providers/kakao';
 import { authConfig } from './auth.config';
 import { userColl } from './lib/mongodb';
+import { koreaTime } from './shared/koreaTime';
 
 export const { handlers, signIn, signOut, auth } = NextAuth({
   // providers: [
@@ -39,7 +40,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
               review: [],
               like: [],
               point: 0,
-              created_at: new Date(),
+              created_at: koreaTime,
             });
           }
           return true; // 로그인 승인

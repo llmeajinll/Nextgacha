@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import { mongodbClient, qnaColl, counterColl } from '@/lib/mongodb';
 import dayjs from 'dayjs';
+import { koreaTime } from '@/shared/koreaTime';
 
 export async function POST(req: Request) {
   //   const authSession = await auth();
@@ -13,7 +14,7 @@ export async function POST(req: Request) {
   const { email, question, secret, num } = data;
   console.log(email, question, secret, num);
 
-  const nowDate = dayjs(new Date()).format('YYYY-MM-DD HH:mm:ss');
+  // const nowDate = dayjs(new Date()).format('YYYY-MM-DD HH:mm:ss');
   const session = mongodbClient.startSession();
 
   try {
@@ -25,7 +26,7 @@ export async function POST(req: Request) {
           session,
           upsert: true,
           returnDocument: 'after',
-        }
+        },
       );
 
       const nextQnaNum = counterResult?.qna_num;
@@ -41,8 +42,8 @@ export async function POST(req: Request) {
             $push: {
               qna: {
                 email,
-                updated_at: nowDate,
-                created_at: nowDate,
+                updated_at: koreaTime,
+                created_at: koreaTime,
                 secret,
                 question,
                 qna_num: nextQnaNum,
@@ -53,7 +54,7 @@ export async function POST(req: Request) {
           {
             session,
             upsert: true,
-          }
+          },
         )
         .then((res) => {
           console.log(res);

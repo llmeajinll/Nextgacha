@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
 import { mongodbClient, qnaColl } from '@/lib/mongodb';
+import { koreaTime } from '@/shared/koreaTime';
 
 import dayjs from 'dayjs';
 
@@ -13,7 +14,7 @@ export async function POST(req: Request) {
   const session = mongodbClient.startSession();
 
   try {
-    const nowDate = dayjs(new Date()).format('YYYY-MM-DD hh:mm:ss');
+    // const nowDate = dayjs(new Date()).format('YYYY-MM-DD hh:mm:ss');
     const result = await session.withTransaction(async () => {
       await qnaColl
         .updateOne(
@@ -23,13 +24,13 @@ export async function POST(req: Request) {
               'qna.$.request': {
                 writer: 'user',
                 content: requestInput,
-                created_at: nowDate,
+                created_at: koreaTime,
               },
             } as any,
           },
           {
             session,
-          }
+          },
         )
         .then((res) => {
           console.log(res);

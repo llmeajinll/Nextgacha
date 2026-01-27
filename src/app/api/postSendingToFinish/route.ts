@@ -3,13 +3,14 @@ import { orderColl, mongodbClient, userColl } from '@/lib/mongodb';
 import { validateStock } from '@/lib/validateStock';
 import dayjs from 'dayjs';
 import { AnyBulkWriteOperation } from 'mongodb';
+import { koreaTime } from '@/shared/koreaTime';
 
 export async function POST(req: Request) {
   const data = await req.json();
 
   const { send } = data;
-  const nowDate = dayjs(new Date()).format('YYYY-MM-DD HH:mm:ss');
-  const session = mongodbClient.startSession();
+  // const nowDate = dayjs(new Date()).format('YYYY-MM-DD HH:mm:ss');
+  // const session = mongodbClient.startSession();
 
   // 한개만
   if (send === 'one') {
@@ -67,7 +68,7 @@ export async function POST(req: Request) {
       const [orderResult, userResult, keepResult] = await Promise.all([
         orderColl.updateOne(
           { orderId },
-          { $set: { arriveDate: nowDate, status: '배송 완료' } }
+          { $set: { arriveDate: koreaTime, status: '배송 완료' } },
         ),
         userColl.updateOne({ email }, { $inc: { point: addPoint } }),
         userColl.bulkWrite(bulkOps as AnyBulkWriteOperation<any>[], {
@@ -139,7 +140,7 @@ export async function POST(req: Request) {
           filter: { orderId: order.orderId },
           update: {
             $set: {
-              arrivedDate: nowDate,
+              arrivedDate: koreaTime,
               status: '배송 완료',
             },
           },
@@ -165,7 +166,7 @@ export async function POST(req: Request) {
       ]);
 
       console.log(
-        `${orderResult.modifiedCount}개 주문 완료, ${userResult.modifiedCount}명 포인트 지급, ${keepResult}`
+        `${orderResult.modifiedCount}개 주문 완료, ${userResult.modifiedCount}명 포인트 지급, ${keepResult}`,
       );
 
       return NextResponse.json({

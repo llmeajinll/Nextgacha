@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
 import { mongodbClient, qnaColl } from '@/lib/mongodb';
-
+import { koreaTime } from '@/shared/koreaTime';
 import dayjs from 'dayjs';
 
 export async function POST(req: Request) {
@@ -13,7 +13,7 @@ export async function POST(req: Request) {
   const session = mongodbClient.startSession();
 
   try {
-    const nowDate = dayjs(new Date()).format('YYYY-MM-DD hh:mm:ss');
+    // const nowDate = dayjs(new Date()).format('YYYY-MM-DD hh:mm:ss');
     const result = await session.withTransaction(async () => {
       await qnaColl
         .updateOne(
@@ -22,12 +22,12 @@ export async function POST(req: Request) {
             $set: {
               // $는 위에서 매칭된 qna 배열의 인덱스를 가리킵니다.
               'qna.$.question': edit,
-              'qna.$.updated_at': nowDate,
+              'qna.$.updated_at': koreaTime,
             },
           },
           {
             session,
-          }
+          },
         )
         .then((res) => {
           console.log(res);
