@@ -75,7 +75,7 @@ export async function GET(req: Request) {
       'list.name': { $regex: filter, $options: 'i' },
     };
   }
-  console.log('query : ', query);
+  // console.log('query : ', query);
 
   let func = productColl
     .find(query)

@@ -4,13 +4,30 @@ import React from 'react';
 export default function page() {
   return (
     <div style={{ padding: '30px' }}>
-      <input />
-      <input />
+      <h1>관리자 페이지</h1>
       <div>
-        <Link href='/manager/product'>상품 추가</Link>
+        <input />
       </div>
       <div>
-        <Link href='/manager/order/check'>주문 관리</Link>
+        <input />
+      </div>
+      <div>
+        <Link href='/manager/user'>1. 회원 관리</Link>
+      </div>
+      <div>
+        <Link href='/manager/product_add'>2. 상품 추가</Link>
+      </div>
+      <div>
+        <Link href='/manager/product_manage'>3. 상품 관리</Link>
+      </div>
+      <div>
+        <Link href='/manager/order/check'>4. 주문 관리</Link>
+      </div>
+      <div>
+        <Link href='/manager/event'>5. 이벤트 관리</Link>
+      </div>
+      <div>
+        <Link href='/manager/statistics'>6. 통계</Link>
       </div>
     </div>
   );

@@ -27,7 +27,7 @@ export async function GET(req: Request) {
   if (isLogin === true) {
     const user = await userColl.findOne(
       { email: session?.user?.email },
-      { projection: { like: 1, _id: 0 } }
+      { projection: { like: 1, _id: 0 } },
     );
 
     // console.log('========== like:', user?.like);
@@ -47,7 +47,7 @@ export async function GET(req: Request) {
 
     // console.log('[server] else result : ', result);
   }
-  console.log('getOneProduct ; ', result);
+  // console.log('getOneProduct ; ', result);
 
   return NextResponse.json({ result, ok: true });
 }

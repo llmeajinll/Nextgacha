@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useEffect, useState } from 'react';
+import { useRouter } from 'next/navigation';
 
 // import { signIn, signOut } from '@/auth';
 import { Search, Category } from '@/components/molecules';
@@ -10,6 +11,8 @@ import {
   menuContainer,
   wrap,
   menu,
+  reportContainer,
+  wrapTextarea,
   search,
 } from './header.css';
 
@@ -20,15 +23,20 @@ import { signIn, signOut } from 'next-auth/react';
 
 // import { kakaoSignIn, kakaoSignOut } from '@/shared/authActions';
 import { Session } from 'next-auth';
-import { useSearchParams } from 'next/navigation';
+import { useSearchParams, usePathname } from 'next/navigation';
 import { useSpliteRoute } from '@/app/hooks';
 import { useAtom } from 'jotai';
 import { userInfoAtom } from '@/jotai/store';
+import { Range, ImgBtn, Btn } from '@/components/atoms';
+import { textareaStyle } from '@/components/organisms/Modal/reviewModal.css';
 
 export default function Header({ session }: { session: Session | null }) {
   const [showCategory, setShowCategory] = useState(false);
+  const [showReport, setShowReport] = useState(true);
+  const [textareaValue, setTextAreaValue] = useState('');
   const { firstRoute } = useSpliteRoute();
   const [{ data, isPending, error }] = useAtom(userInfoAtom);
+  const pathname = usePathname();
   console.log(firstRoute);
   console.log('JOTAI userInfoAtom : ', data);
 
@@ -36,6 +44,61 @@ export default function Header({ session }: { session: Session | null }) {
     <>
       {firstRoute !== 'manager' && (
         <div className={headerContainer}>
+          {showReport && (
+            <div className={reportContainer}>
+              <div className={wrapTextarea}>
+                <textarea
+                  placeholder='오류를 입력해주세요 (최소 4자, 최대 200자)'
+                  className={textareaStyle}
+                  maxLength={200}
+                  value={textareaValue}
+                  onChange={(e) => {
+                    setTextAreaValue(e.target.value);
+                  }}
+                />
+                <Btn
+                  style={{ margin: '5px auto 0 auto' }}
+                  onClick={async () => {
+                    if (textareaValue.length === 0) {
+                      alert('오류를 입력해주세요.');
+                      return;
+                    }
+                    if (
+                      textareaValue.length >= 1 &&
+                      textareaValue.length <= 4
+                    ) {
+                      alert('5자 이상 입력해주세요.');
+                      return;
+                    }
+                    await fetch('/api/postError', {
+                      method: 'POST',
+                      body: JSON.stringify({
+                        textareaValue,
+                        pathname: decodeURIComponent(pathname),
+                      }),
+                      headers: {
+                        'Content-Type': 'application/json',
+                      },
+                    }).then(async (res) => {
+                      const data = await res.json();
+                      console.log(data);
+                      if (data.ok === true) {
+                        alert('전송되었습니다.');
+                        setTextAreaValue('');
+                        setShowReport(false);
+                      } else {
+                        alert('오류가 발생하여 전송되지 못했습니다.');
+                        setTextAreaValue('');
+                        setShowReport(false);
+                      }
+                    });
+                  }}
+                >
+                  SEND ({textareaValue.length})
+                </Btn>
+              </div>
+            </div>
+          )}
           {showCategory && <Category setShow={setShowCategory} />}
           <div className={menuContainer}>
             <div className={wrap}>
@@ -101,6 +164,24 @@ export default function Header({ session }: { session: Session | null }) {
                   LOGIN
                 </button>
               )}
+              <ImgBtn
+                img='report'
+                width={28}
+                height={30}
+                style={{
+                  marginLeft: '5px',
+                  // marginBottom: '5px',
+                  // marginRight: '-1px',
+                  // border: '1px solid lightgray',
+                  // borderRight: '1px solid white',
+                  // padding: '5px 6px 7px 7px',
+                  // backgroundColor: 'white',
+                  // zIndex: 30,
+                }}
+                onClick={() => {
+                  setShowReport((prev) => !prev);
+                }}
+              />
             </div>
           </div>
         </div>

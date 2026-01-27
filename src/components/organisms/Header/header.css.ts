@@ -8,6 +8,24 @@ export const headerContainer = style({
   borderBottom: `1px solid ${vars.color.gray1}`,
 });
 
+export const reportContainer = style({
+  position: 'fixed',
+  display: 'flex',
+  // alignItems: 'center',
+  width: 'fit-content',
+  zIndex: '20',
+  right: 0,
+  top: 60,
+});
+
+export const wrapTextarea = style({
+  boxSizing: 'border-box',
+  padding: '10px',
+  width: 'fit-content',
+  border: '1px solid lightgray',
+  backgroundColor: 'white',
+});
+
 export const menuContainer = style({
   display: 'flex',
   alignItems: 'center',
@@ -53,4 +71,33 @@ export const search = style({
   height: 31,
   borderRadius: 35,
   border: `2px solid ${vars.color.gray1}`,
+});
+
+export const overlay = style({
+  position: 'fixed',
+  inset: 0,
+  background: 'rgba(0,0,0,0.4)',
+  opacity: 0,
+  pointerEvents: 'none',
+  transition: 'opacity 0.3s ease',
+});
+
+export const overlayShow = style({
+  opacity: 1,
+  pointerEvents: 'auto',
+});
+
+export const drawer = style({
+  position: 'fixed',
+  top: 0,
+  left: 0,
+  width: 280,
+  height: '100%',
+  background: '#fff',
+  transform: 'translateX(-100%)',
+  transition: 'transform 0.3s ease',
+});
+
+export const drawerOpen = style({
+  transform: 'translateX(0)',
 });

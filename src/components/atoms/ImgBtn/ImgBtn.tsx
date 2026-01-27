@@ -8,8 +8,9 @@ const image = {
   dropdown: '/images/dropdown.png',
   close: '/images/closeBtn.png',
   post: '/images/post.png',
+  report: '/images/report.png',
 } as const;
-type ImageKey = keyof typeof image; // "share" | "close" | "dropdown"
+type ImageKey = keyof typeof image; // "share" | "close" | "dropdown" | "post" | "report"
 
 type Props =
   | {

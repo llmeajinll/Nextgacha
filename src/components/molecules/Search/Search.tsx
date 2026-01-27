@@ -30,7 +30,7 @@ export default function Search() {
           if (e.key === 'Enter') {
             // const target = e.target as HTMLInputElement;
             // document.location.href = `/search?search=${input}`;
-            router.push(`/search?search=${keyword}`, { scroll: false });
+            router.push(`/search?search=${keyword}&page=1`, { scroll: false });
           }
         }}
       />
