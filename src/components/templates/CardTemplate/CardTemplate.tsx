@@ -2,7 +2,7 @@
 
 import React, { useState } from 'react';
 import { Card } from '@/components/molecules';
-import { cardTemplateContainer, noProductContainer } from './cardTemplate.css';
+import { cardTemplateContainer, noProductContainer } from './cardtemplate.css';
 import { Title, Range, ScrollToTop } from '@/components/atoms';
 import { useAtom } from 'jotai';
 import { searchProductsAtom } from '@/jotai/store';

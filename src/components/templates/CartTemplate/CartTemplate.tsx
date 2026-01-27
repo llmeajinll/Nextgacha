@@ -14,7 +14,7 @@ import {
   bigText,
   smallText,
   line,
-} from './cartTemplate.css';
+} from './carttemplate.css';
 import { comma } from '@/shared/comma';
 import { BuyBtn } from '@/components/atoms';
 import { userInfoAtom } from '@/jotai/store';

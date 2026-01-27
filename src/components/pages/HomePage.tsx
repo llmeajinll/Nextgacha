@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import { Banner } from '../organisms';
 import { CardTemplate } from '../templates';
-import { cardTemplateContainer } from '../templates/CardTemplate/cardTemplate.css';
+import { cardTemplateContainer } from '../templates/CardTemplate/cardtemplate.css';
 import getProducts from '@/api/getProudcts';
 import { Btn, Title, Range } from '../atoms';
 import { CardProps } from '@/shared/type';
