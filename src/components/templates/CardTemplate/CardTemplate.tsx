@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Card } from '@/components/molecules';
 import { cardTemplateContainer, noProductContainer } from './cardTemplate.css';
 import { Title, Range, ScrollToTop } from '@/components/atoms';
