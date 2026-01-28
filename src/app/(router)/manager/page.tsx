@@ -29,6 +29,9 @@ export default function page() {
       <div>
         <Link href='/manager/statistics'>6. 통계</Link>
       </div>
+      <div>
+        <Link href='/manager/statistics'>7. 오류 신고 수집</Link>
+      </div>
     </div>
   );
 }

@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useEffect, useState } from 'react';
+import { useSearchParams, useRouter, usePathname } from 'next/navigation';
 import getHistory from '@/api/getHistory';
 import { Range, ScrollToTop } from '@/components/atoms';
 import { EmptyCard, History } from '@/components/molecules';
@@ -8,6 +9,11 @@ import Pagination from 'rc-pagination';
 import 'rc-pagination/assets/index.css';
 
 export default function HistoryPage() {
+  const router = useRouter();
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
+  const page = searchParams.get('page');
+
   const [history, setHistory] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [total, setTotal] = useState(0);
@@ -20,6 +26,7 @@ export default function HistoryPage() {
       headers: {
         'Content-Type': 'application/json',
       },
+      next: { tags: ['history'] },
     })
       .then(async (res) => {
         const data = await res.json();
@@ -36,8 +43,8 @@ export default function HistoryPage() {
   }
 
   useEffect(() => {
-    fetchHistoryData(currentPage);
-  }, []);
+    fetchHistoryData(Number(page) || 1);
+  }, [page, pathname]);
 
   return (
     <>
@@ -70,6 +77,11 @@ export default function HistoryPage() {
                 console.log('onChange page : ', page);
                 setCurrentPage(page);
                 fetchHistoryData(page);
+
+                const params = new URLSearchParams(searchParams.toString());
+                params.set('page', String(page));
+
+                router.push(`${pathname}?${params.toString()}`);
                 window.scrollTo({ top: 0, left: 0, behavior: 'smooth' });
               }}
             />

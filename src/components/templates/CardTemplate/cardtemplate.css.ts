@@ -2,12 +2,12 @@ import { style } from '@vanilla-extract/css';
 import { vars } from '@/styles/theme.css';
 
 export const cardTemplateContainer = style({
-  //   width: '1274px',
-  width: '100%',
+  width: '1274px',
+  // width: '100%',
   display: 'grid',
   gridTemplateColumns: 'repeat(4, 300px)',
   justifyContent: 'space-between',
-  margin: '0 auto',
+  margin: '15px auto',
   gap: '10px',
 
   // border: '1px solid red',

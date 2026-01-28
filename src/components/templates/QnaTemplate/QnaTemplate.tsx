@@ -17,29 +17,29 @@ export default function QnaTemplate() {
   const session = useSession();
   const userInfo = session?.data?.user ?? null;
 
+  async function fetchQna() {
+    const qnaResult = await fetch(`/api/getQna?num=${firstRoute}`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    })
+      .then(async (res) => {
+        const data = await res.json();
+        // console.log('qna page: ', data.result);
+
+        return data.result.qna;
+      })
+      .catch((err) => {
+        console.log(err);
+        return [];
+      });
+
+    setQna(qnaResult);
+  }
+
   // QNA 가져오기
   useEffect(() => {
-    async function fetchQna() {
-      const qnaResult = await fetch(`/api/getQna?num=${firstRoute}`, {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      })
-        .then(async (res) => {
-          const data = await res.json();
-          // console.log('qna page: ', data.result);
-
-          return data.result.qna;
-        })
-        .catch((err) => {
-          console.log(err);
-          return [];
-        });
-
-      setQna(qnaResult);
-    }
-
     fetchQna();
   }, []);
 
@@ -58,10 +58,10 @@ export default function QnaTemplate() {
         setQuestion('');
         openModal('리뷰가 등록되었습니다.', {
           onClickCheck: () => {
-            window.location.reload();
+            fetchQna();
           },
           onClickClose: () => {
-            window.location.reload();
+            fetchQna();
           },
         });
       } else {
@@ -81,22 +81,22 @@ export default function QnaTemplate() {
 
   // 리뷰 작성 후 저장하는 button onClick 이벤트
   const onClickPostReview = async () => {
-    if (question.length === 0) {
-      openModal('문의를 작성해주세요.');
+    if (question.trim().length === 0) {
+      openModal('질문을 작성해주세요.');
       return;
     }
 
-    if (question.length > 1 && question.length <= 10) {
+    if (question.trim().length > 1 && question.trim().length <= 10) {
       openModal('10자 이상 적어주세요!');
       return;
     }
 
-    openModal('문의를 등록하시겠습니까?', {
+    openModal('질문을 등록하시겠습니까?', {
       onClickCheck: async () => {
         const data = {
           num: firstRoute,
           email: userInfo?.email || '',
-          question,
+          question: question.trim(),
           secret,
         };
         await fetchPostQna(data);

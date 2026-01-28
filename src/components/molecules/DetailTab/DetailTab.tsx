@@ -65,10 +65,7 @@ export default function DetailTab({ status = 'detail' }: { status?: string }) {
           </Btn>
           <Btn
             color={route[1] === 'history' ? 'primary' : 'reversePrimary'}
-            onClick={() =>
-              router.replace(`/${route[0]}/history
-                `)
-            }
+            onClick={() => router.replace(`/${route[0]}/history?page=1`)}
             style={{ marginLeft: '-1px' }}
           >
             HISTORY

@@ -1,6 +1,6 @@
 'use client';
 import React, { useState, useEffect } from 'react';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { useModal } from '@/app/hooks';
 import { Range } from '@/components/atoms';
 import { StarRating } from '@/components/molecules';
@@ -18,6 +18,9 @@ import {
 
 export default function ReviewModal() {
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const page = searchParams.get('page');
+
   const [value, setValue] = useState(0);
   const [reviewInput, setreviewInput] = useState('');
   const [show, setShow] = useState(false);
@@ -189,16 +192,20 @@ export default function ReviewModal() {
                     }),
                   })
                     .then(async (res) => {
-                      const result = await res;
-                      if (result.ok) {
+                      // const result = await res;
+                      if (res.ok) {
                         alert('리뷰가 성공적으로 등록되었습니다.');
+                        // router.replace(`/mypage/history?page=${page}`);
                         router.back();
+                        // router.refresh();
                         // openModal('리뷰가 성공적으로 등록되었습니다.', () => {
                         //   router.back();
                         // });
                       } else {
                         alert('오류가 발생했습니다.');
+                        // router.replace(`/mypage/history?page=${page}`);
                         router.back();
+                        // router.refresh();
                         // openModal('오류가 발생했습니다.', () => {
                         //   router.back();
                         // });
@@ -207,7 +214,9 @@ export default function ReviewModal() {
                     .catch((err) => {
                       console.log(err);
                       alert('오류가 발생했습니다.');
+                      // router.replace(`/mypage/history?page=${page}`);
                       router.back();
+                      // router.refresh();
                     });
                 }}
               >

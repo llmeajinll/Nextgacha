@@ -34,7 +34,6 @@ export async function GET(req: Request) {
       ])
       .toArray();
 
-    // 전체 개수를 알면 클라이언트에서 '더보기' 버튼을 숨길지 결정하기 좋습니다.
     const totalCount = await reviewColl.countDocuments({ num });
     const hasMore = (page + 1) * limit < totalCount;
 

@@ -59,71 +59,6 @@ export default function Header({ session }: { session: Session | null }) {
     <>
       {firstRoute !== 'manager' && (
         <div className={headerContainer}>
-          {showReport && (
-            <div className={reportContainer} ref={reportRef}>
-              <div className={wrapTextarea}>
-                <div
-                  style={{
-                    fontSize: '20px',
-                    marginBottom: '10px',
-                    fontWeight: 500,
-                  }}
-                >
-                  🚨 오류 신고 🚨
-                </div>
-                <textarea
-                  placeholder='오류를 입력해주세요 (최소 4자, 최대 200자)'
-                  className={textareaStyle}
-                  maxLength={200}
-                  value={textareaValue}
-                  style={{ border: '2px solid #75C3FE' }}
-                  onChange={(e) => {
-                    setTextAreaValue(e.target.value);
-                  }}
-                />
-                <Btn
-                  style={{ margin: '5px auto 0 auto' }}
-                  onClick={async () => {
-                    if (textareaValue.length === 0) {
-                      alert('오류를 입력해주세요.');
-                      return;
-                    }
-                    if (
-                      textareaValue.length >= 1 &&
-                      textareaValue.length <= 4
-                    ) {
-                      alert('5자 이상 입력해주세요.');
-                      return;
-                    }
-                    await fetch('/api/postError', {
-                      method: 'POST',
-                      body: JSON.stringify({
-                        textareaValue,
-                        pathname: decodeURIComponent(pathname),
-                      }),
-                      headers: {
-                        'Content-Type': 'application/json',
-                      },
-                    }).then(async (res) => {
-                      const data = await res.json();
-                      console.log(data);
-                      if (data.ok === true) {
-                        alert('전송되었습니다.');
-                        setTextAreaValue('');
-                        setShowReport(false);
-                      } else {
-                        alert('오류가 발생하여 전송되지 못했습니다.');
-                        setTextAreaValue('');
-                        setShowReport(false);
-                      }
-                    });
-                  }}
-                >
-                  SEND ({textareaValue.length})
-                </Btn>
-              </div>
-            </div>
-          )}
           {showCategory && <Category setShow={setShowCategory} />}
           <div className={menuContainer}>
             <div className={wrap}>
@@ -189,26 +124,94 @@ export default function Header({ session }: { session: Session | null }) {
                   LOGIN
                 </button>
               )}
-              <ImgBtn
-                img='report'
-                title='오류 신고'
-                width={30}
-                height={28}
-                style={{
-                  marginLeft: '5px',
-                  marginTop: '2px',
-                  // marginBottom: '5px',
-                  // marginRight: '-1px',
-                  // border: '1px solid lightgray',
-                  // borderRight: '1px solid white',
-                  // padding: '5px 6px 7px 7px',
-                  // backgroundColor: 'white',
-                  // zIndex: 30,
-                }}
-                onClick={() => {
-                  setShowReport((prev) => !prev);
-                }}
-              />
+              <div  ref={reportRef}>
+                <ImgBtn
+                  img='report'
+                  title='오류 신고'
+                  width={30}
+                  height={28}
+                  style={{
+                    marginLeft: '5px',
+                    marginTop: '2px',
+                    // marginBottom: '5px',
+                    // marginRight: '-1px',
+                    // border: '1px solid lightgray',
+                    // borderRight: '1px solid white',
+                    // padding: '5px 6px 7px 7px',
+                    // backgroundColor: 'white',
+                    // zIndex: 30,
+                  }}
+                  onClick={() => {
+                    setShowReport((prev) => !prev);
+                  }}
+                />
+
+                {showReport && (
+                  <div className={reportContainer}>
+                    <div className={wrapTextarea}>
+                      <div
+                        style={{
+                          fontSize: '20px',
+                          marginBottom: '10px',
+                          fontWeight: 500,
+                        }}
+                      >
+                        🚨 오류 신고 🚨
+                      </div>
+                      <textarea
+                        placeholder='오류를 입력해주세요 (최소 4자, 최대 200자)'
+                        className={textareaStyle}
+                        maxLength={200}
+                        value={textareaValue}
+                        style={{ border: '2px solid #75C3FE' }}
+                        onChange={(e) => {
+                          setTextAreaValue(e.target.value);
+                        }}
+                      />
+                      <Btn
+                        style={{ margin: '5px auto 0 auto' }}
+                        onClick={async () => {
+                          if (textareaValue.length === 0) {
+                            alert('오류를 입력해주세요.');
+                            return;
+                          }
+                          if (
+                            textareaValue.length >= 1 &&
+                            textareaValue.length <= 4
+                          ) {
+                            alert('5자 이상 입력해주세요.');
+                            return;
+                          }
+                          await fetch('/api/postError', {
+                            method: 'POST',
+                            body: JSON.stringify({
+                              textareaValue,
+                              pathname: decodeURIComponent(pathname),
+                            }),
+                            headers: {
+                              'Content-Type': 'application/json',
+                            },
+                          }).then(async (res) => {
+                            const data = await res.json();
+                            console.log(data);
+                            if (data.ok === true) {
+                              alert('전송되었습니다.');
+                              setTextAreaValue('');
+                              setShowReport(false);
+                            } else {
+                              alert('오류가 발생하여 전송되지 못했습니다.');
+                              setTextAreaValue('');
+                              setShowReport(false);
+                            }
+                          });
+                        }}
+                      >
+                        SEND ({textareaValue.length})
+                      </Btn>
+                    </div>
+                  </div>
+                )}
+              </div>
             </div>
           </div>
         </div>

@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect, useRef } from 'react';
-import { useRouter } from 'next/navigation';
+import { useRouter, usePathname, useSearchParams } from 'next/navigation';
 import { Range } from '@/components/atoms';
 import { comma } from '@/shared/comma';
 import {
@@ -23,6 +23,9 @@ export default function History({ props }: { props: any }) {
   console.log('props:', props);
 
   const route = useRouter();
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
+  const page = searchParams.get('page');
 
   const topRef = useRef<HTMLDivElement>(null);
   const middleRef = useRef<HTMLDivElement>(null);
@@ -34,7 +37,7 @@ export default function History({ props }: { props: any }) {
 
   const onClickReviewBtn = () => {
     sessionStorage.setItem('productInfo', JSON.stringify(props));
-    route.push(`/mypage/history/review/${props.orderId}`);
+    route.push(`${pathname}/review/${props.orderId}?page=${page}`);
   };
 
   useEffect(() => {
@@ -77,8 +80,8 @@ export default function History({ props }: { props: any }) {
             title === 'address'
               ? labelContentKor
               : size === 'big'
-              ? bigLabelContent
-              : labelContent
+                ? bigLabelContent
+                : labelContent
           }
         >
           {title === 'status'
@@ -150,7 +153,7 @@ export default function History({ props }: { props: any }) {
               'value.list : ',
               value?.product.map((val: any, idx: number) => {
                 console.log(val);
-              })
+              }),
             );
             return (
               <div key={props.orderId + index} className={listContainer}>

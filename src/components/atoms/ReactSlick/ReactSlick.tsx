@@ -30,7 +30,7 @@ export default function ReactSlick({ image, preset }: PropsType) {
 
   let imgCount = image?.length || 0;
   let show = 0;
-  let divideAngle = 360 * (1 / imgCount);
+  let divideAngle = 360 * (1 / imgCount) - 90;
 
   // useEffect(() => {
   //   const interval = setInterval(() => {
@@ -42,6 +42,16 @@ export default function ReactSlick({ image, preset }: PropsType) {
 
   const isStringArray = Array.isArray(image) && typeof image[0] === 'string';
 
+  const getShortestAngle = (current: number, target: number) => {
+    let diff = target - current;
+    console.log(diff);
+
+    if (diff > 180) diff -= 360;
+    if (diff < -180) diff += 360;
+
+    return current + diff;
+  };
+
   let settings = {
     dots: true,
     infinite: true,
@@ -52,8 +62,9 @@ export default function ReactSlick({ image, preset }: PropsType) {
     autoplaySpeed: 4000,
 
     beforeChange: (current: number, next: number) => {
-      // console.log('current:', current, 'next:', next);
-      setAngle((prev) => prev + divideAngle);
+      console.log('current:', current, 'next:', next);
+      const targetAngle = 360 * (next / imgCount);
+      setAngle((prev) => getShortestAngle(prev, targetAngle));
     },
   };
 
@@ -67,6 +78,7 @@ export default function ReactSlick({ image, preset }: PropsType) {
       autoplay: true,
     };
   }
+
   return (
     <div className={`${reactSlickVariant[preset ?? 'small']}`}>
       <Slider {...settings} ref={sliderRef}>
@@ -93,6 +105,7 @@ export default function ReactSlick({ image, preset }: PropsType) {
 
       {preset === 'banner' && (
         <div className={lever}>
+          {/* 레버 손잡이 */}
           <div
             className={handle}
             style={{
@@ -103,22 +116,26 @@ export default function ReactSlick({ image, preset }: PropsType) {
             <div className={dot}></div>
           </div>
 
+          {/* slider dots */}
           {image?.map((_, idx) => {
-            let angle = 360 * (idx / imgCount) - 90;
+            let angle = 360 * (idx / imgCount);
 
             return (
               <div
                 key={idx}
                 className={slices}
                 style={{
-                  transform: `rotate(${angle}deg) translate(58px)`,
+                  transform: `rotate(${angle}deg) translate(0px, -58px)`,
                 }}
                 onClick={() => {
                   // console.log(idx, divideAngle * idx);
                   sliderRef.current?.slickGoTo(idx);
-                  setAngle(divideAngle * (idx + 2));
+                  // setAngle(divideAngle * idx);
+                  setAngle(angle);
                 }}
-              ></div>
+              >
+                {/* {idx} */}
+              </div>
             );
           })}
         </div>

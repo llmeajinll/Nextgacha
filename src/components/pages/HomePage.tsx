@@ -41,7 +41,7 @@ export default function HomePage() {
           marginBottom: '10px',
         }}
       >
-        <Title text='인기 상품' style={{ marginBottom: '15px' }} />
+        <Title text='인기 상품' style={{ marginBottom: '20px' }} />
         <Range className={cardTemplateContainer}>
           {hotProduct.map((val, idx) => (
             <Card props={val} key={idx} />
@@ -61,7 +61,7 @@ export default function HomePage() {
           marginBottom: '10px',
         }}
       >
-        <Title text='신규 상품' style={{ marginBottom: '15px' }} />
+        <Title text='신규 상품' style={{ marginBottom: '20px' }} />
         <Range className={cardTemplateContainer}>
           {newProduct.map((val, idx) => (
             <Card props={val} key={idx} />
@@ -81,7 +81,7 @@ export default function HomePage() {
           marginBottom: '10px',
         }}
       >
-        <Title text='예약 판매' style={{ marginBottom: '15px' }} />
+        <Title text='예약 판매' style={{ marginBottom: '20px' }} />
         <Range className={cardTemplateContainer}>
           {reserveProduct.map((val, idx) => (
             <Card props={val} key={idx} />
