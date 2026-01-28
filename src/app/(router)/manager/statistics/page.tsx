@@ -37,7 +37,8 @@ export default function page() {
         {searchStatic.map((value: any, idx) => (
           <div key={value._id}>
             <div>
-              detail : {value.params.detail} || {value.params.filter} ||{' '}
+              detail : {value.params.detail} || {value.params.filter} ||
+              {value.params.page}
               {value.count}
             </div>
             <div> {value.timestamp}</div>

@@ -82,7 +82,7 @@ export default function QnaTemplate() {
   // 리뷰 작성 후 저장하는 button onClick 이벤트
   const onClickPostReview = async () => {
     if (question.length === 0) {
-      openModal('리뷰를 작성해주세요.');
+      openModal('문의를 작성해주세요.');
       return;
     }
 
@@ -91,7 +91,7 @@ export default function QnaTemplate() {
       return;
     }
 
-    openModal('리뷰를 등록하시겠습니까?', {
+    openModal('문의를 등록하시겠습니까?', {
       onClickCheck: async () => {
         const data = {
           num: firstRoute,
