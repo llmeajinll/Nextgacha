@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState, useEffect, useCallback } from 'react';
+import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 import { Range } from '@/components/atoms';
 import { Search } from '@/components/molecules';
@@ -10,6 +11,8 @@ import 'rc-pagination/assets/index.css';
 import { CardProps } from '@/shared/type';
 
 export default function page() {
+  const router = useRouter();
+
   const [search, setSearch] = useState('');
   const [product, setProduct] = useState([] as CardProps[]);
   const [currentPage, setCurrentPage] = useState(1);
@@ -22,7 +25,7 @@ export default function page() {
   const searchProduct = async (keyword: string) => {
     console.log('search : ', search);
     const result = await fetch(
-      `/api/getProduct?search=${keyword}&page=${currentPage}&count=100`
+      `/api/getProduct?search=${keyword}&page=${currentPage}&count=100`,
     )
       .then(async (res) => {
         const data = await res.json();
@@ -75,11 +78,13 @@ export default function page() {
         return <div>{props.price} 원</div>;
       }
     },
-    [discount, checkList]
+    [discount, checkList],
   );
 
   return (
     <div style={{ padding: '30px' }}>
+      <h4 onClick={() => router.push('/manager')}>HOME</h4>
+
       <h1>이벤트 추가</h1>
 
       <div style={{ marginBottom: '20px' }}>검색어 : {search}</div>
@@ -264,7 +269,7 @@ export default function page() {
                     for (const prod of product) {
                       if (checkList.includes(prod.num) && prod.reserve !== '') {
                         setCheckList((prev) =>
-                          prev.filter((val) => val !== prod.num)
+                          prev.filter((val) => val !== prod.num),
                         );
                       }
                     }

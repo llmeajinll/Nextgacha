@@ -1,9 +1,13 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
 import { Range } from '@/components/atoms';
 
 export default function page() {
+  
+  const router = useRouter();
+
   const [searchStatic, setSearchStatic] = useState([] as any[]);
   const [productStatic, setProductStatic] = useState([]);
 
@@ -32,6 +36,7 @@ export default function page() {
   }, []);
   return (
     <div>
+      <h4 onClick={() => router.push('/manager')}>HOME</h4>
       <h1>검색창 SEARCH</h1>
       <div>
         {searchStatic.map((value: any, idx) => (

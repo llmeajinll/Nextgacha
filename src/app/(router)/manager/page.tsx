@@ -30,7 +30,7 @@ export default function page() {
         <Link href='/manager/statistics'>6. 통계</Link>
       </div>
       <div>
-        <Link href='/manager/statistics'>7. 오류 신고 수집</Link>
+        <Link href='/manager/error'>7. 오류 신고 수집</Link>
       </div>
     </div>
   );

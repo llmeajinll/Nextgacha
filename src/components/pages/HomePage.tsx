@@ -4,7 +4,7 @@ import React, { useState, useEffect } from 'react';
 import { Banner } from '../organisms';
 import { CardTemplate } from '../templates';
 import { cardTemplateContainer } from '../templates/CardTemplate/cardtemplate.css';
-import getProducts from '@/api/getProudcts';
+import getProducts from '@/api/getProducts';
 import { Btn, Title, Range } from '../atoms';
 import { CardProps } from '@/shared/type';
 import { Card } from '../molecules';

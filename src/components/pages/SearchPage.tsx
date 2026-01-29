@@ -12,7 +12,7 @@ import Pagination from 'rc-pagination';
 import 'rc-pagination/assets/index.css';
 import { useAtom } from 'jotai';
 import { searchProductsAtom } from '@/jotai/store';
-import getProducts from '@/api/getProudcts';
+import getProducts from '@/api/getProducts';
 
 export default function SearchPage() {
   const router = useRouter();

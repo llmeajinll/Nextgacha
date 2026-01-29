@@ -1,5 +1,6 @@
 export { default as Search } from './Search/Search';
 export { default as Card } from './Card/Card';
+export { default as ProductManageCard } from './Card/ProductManageCard';
 export { default as EmptyCard } from './Card/EmptyCard';
 export { default as Cart } from './Cart/Cart';
 export { default as Review } from './Review/Review';

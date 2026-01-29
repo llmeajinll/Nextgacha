@@ -20,7 +20,7 @@ export default function ManageProductPage() {
     [] as {
       name: string;
       count: number;
-    }[]
+    }[],
   );
 
   const [company, setCompany] = useState('');
@@ -38,6 +38,7 @@ export default function ManageProductPage() {
         gap: '8px',
       }}
     >
+      <h4 onClick={() => router.push('/manager')}>HOME</h4>
       <h1>상품 추가</h1>
       <Range gap='8' style={{ alignItems: 'center' }}>
         <div style={{ width: '110px', fontSize: '18px' }}>이미지</div>
