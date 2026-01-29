@@ -10,7 +10,7 @@ export default function ProductManageCard(props: CardProps) {
   const [isEditMode, setIsEditMode] = useState(false);
 
   return (
-    <div key={props._id} style={{ width: '640px' }}>
+    <div key={props._id} style={{ width: '640px' }} >
       <h3>
         {props.num}. {props.title} {props.reserve ? '[예약 상품]' : ''}
       </h3>
@@ -109,7 +109,10 @@ export default function ProductManageCard(props: CardProps) {
               <span> 원</span>
             </div>
           ) : (
-            <div style={{ fontSize: '20px' }}>{productPrice}원</div>
+            <div style={{ fontSize: '20px' }}>
+              {productPrice}원{' '}
+              {props.isDiscount ? `[${props.discount}% 할인 중]` : ''}
+            </div>
           )}
         </div>
         <Range gap='4'>
