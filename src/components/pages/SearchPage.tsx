@@ -71,7 +71,7 @@ export default function SearchPage() {
 
   useEffect(() => {
     handleSearch(currentPage);
-  }, [tag, search, detail, filter, page]);
+  }, [tag, search, detail, filter, page, tag]);
 
   return (
     <>

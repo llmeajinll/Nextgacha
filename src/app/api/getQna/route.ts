@@ -15,7 +15,7 @@ export async function GET(req: Request) {
       { $match: { num: Number(num) } },
       {
         $project: {
-          num: 1,
+          // num: 1,
           // qna 배열을 정렬하여 새로운 필드로 덮어씌움
           qna: {
             $sortArray: {
@@ -27,6 +27,8 @@ export async function GET(req: Request) {
       },
     ])
     .toArray();
+
+  console.log('findResult:', findResult);
   const data = findResult[0];
 
   console.log('qna collection:', data);

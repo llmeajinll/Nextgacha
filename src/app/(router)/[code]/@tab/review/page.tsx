@@ -10,7 +10,7 @@ import { Review } from '@/components/molecules';
 export default function ReviewTab() {
   const [review, setReview] = useState<any[]>([]);
   const [page, setPage] = useState(0);
-  const [hasMore, setHasMore] = useState(false);
+  const [hasMore, setHasMore] = useState(true);
   const [isLoading, setIsLoading] = useState(false);
   const [mounted, setMounted] = useState(false);
   const { firstRoute } = useSplitRoute();
@@ -21,7 +21,7 @@ export default function ReviewTab() {
     try {
       const res = await fetch(`/api/getReview?num=${firstRoute}&page=${page}`);
       const { result, hasMore } = await res.json();
-      console.log(result);
+      console.log(result, hasMore);
       setReview((prev) => [...prev, ...result]);
       setHasMore(hasMore);
     } catch (err) {
@@ -69,7 +69,7 @@ export default function ReviewTab() {
               justifyContent: 'space-between',
               margin: '0 auto',
               width: '100%',
-              rowGap: '20px',
+              rowGap: '40px',
             }}
           >
             <>
@@ -81,7 +81,7 @@ export default function ReviewTab() {
 
             {/* {hasMore && ( */}
           </div>
-          {true && (
+          {hasMore && (
             <button
               onClick={handleMore}
               disabled={isLoading}
@@ -90,6 +90,11 @@ export default function ReviewTab() {
                 height: '30px',
                 backgroundColor: 'white',
                 color: 'gray',
+                marginTop: '30px',
+                border: 'none',
+                cursor: 'pointer',
+                fontFamily: 'silkscreen',
+                fontSize: '20px',
               }}
             >
               {isLoading ? 'LOADING ...' : 'MORE'}

@@ -259,7 +259,7 @@ export default function Category({ status = 'header', setShow }: Props) {
             >
               {category.series.ETC.map((val, idx) => (
                 <Link
-                  href={`/search?type=series&company=etc&detail=${val}`}
+                  href={`/search?type=series&company=etc&detail=${val}&page=1&filter=전체`}
                   key={val}
                 >
                   <div

@@ -35,48 +35,55 @@ export async function POST(req: Request) {
           // 3. 디코딩하여 한글 깨짐 방지 및 객체에 할당
           params[key] = decodeURIComponent(value || '');
         }
+
+        console.log('key:', key, 'value:', value, 'params:', params);
       });
     }
 
-    // 2. 첫 번째 세그먼트가 숫자인지 확인 (예: "27" -> 27)
-
-    const getTab = () => {
-      const firstSegmentAsNumber = Number(segments[0]);
-      const isProductPage =
-        !isNaN(firstSegmentAsNumber) && segments.length >= 1;
-
-      if (isProductPage) {
-        return segments[1];
-      }
-      return '';
-    };
-
-    // await pageViewsColl.updateOne(
-    //   { page: segments[0], params, timestamp: new Date(), tab: getTab() },
-    //   {
-    //     $inc: { count: 1 },
-    //     $set: { lastVisit: new Date() },
-    //   },
-    //   { upsert: true },
-    // );
-
-    // const now = new Date();
-
     // --- 상황 A: 검색 페이지인 경우 ---
-    if (segments[0] === 'search') {
+    if (
+      segments[0] === 'search' &&
+      (params.type === 'ani' ||
+        params.type === 'character' ||
+        params.detail === '오네무탄' ||
+        params.detail === '메지루시')
+    ) {
       const result = await pageViewsColl.updateOne(
         {
           page: 'search',
-          'params.type': params.type,
           'params.detail': params.detail,
         }, // 동일한 검색 조건이 있는지 확인
         {
-          $inc: { count: 1 }, // 있으면 1 증가
+          $inc: { [`params.filter.${params.filter}`]: 1 }, // 있으면 1 증가
           $set: {
-            params: params,
             lastVisit: koreaTime,
+            'params.detail': params.detail,
           },
-          $setOnInsert: { timestamp: koreaTime }, // 처음 생성될 때만 기록
+          $setOnInsert: {
+            created_at: koreaTime,
+          },
+        },
+        { upsert: true },
+      );
+
+      console.log(result);
+
+      // --- 상황 B: tag 검색일 경우 ---
+    } else if (segments[0] === 'search' && params.tag !== '') {
+      const result = await pageViewsColl.updateOne(
+        {
+          page: 'search',
+          'params.tag': params.tag,
+        }, // 동일한 검색 조건이 있는지 확인
+        {
+          $inc: { [`params.page.${params.page}`]: 1 }, // 있으면 1 증가
+          $set: {
+            lastVisit: koreaTime,
+            'params.tag': params.tag,
+          },
+          $setOnInsert: {
+            created_at: koreaTime,
+          },
         },
         { upsert: true },
       );
@@ -84,7 +91,7 @@ export async function POST(req: Request) {
       console.log(result);
     }
 
-    // --- 상황 B: 상품 페이지(숫자)인 경우 ---
+    // --- 상황 C: 상품 페이지(숫자)인 경우 ---
     else if (!isNaN(Number(segments[0]))) {
       const code = Number(segments[0]);
       const tabName = segments[1] || 'info';
@@ -94,10 +101,7 @@ export async function POST(req: Request) {
         {
           $inc: { [`tab.${tabName}`]: 1 }, // tab 객체 내부의 해당 탭 숫자만 1 증가
           $set: { lastVisit: koreaTime },
-          $setOnInsert: {
-            timestamp: koreaTime,
-            tab: { info: 0, qna: 0, review: 0 }, // 처음 생성 시 기본 구조 세팅
-          },
+          $setOnInsert: { created_at: koreaTime },
         },
         { upsert: true },
       );
@@ -111,3 +115,5 @@ export async function POST(req: Request) {
     return NextResponse.json({ ok: false }, { status: 500 });
   }
 }
+
+// type=main&tag=전체%20상품&page=1
