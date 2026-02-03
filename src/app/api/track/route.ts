@@ -33,7 +33,7 @@ export async function POST(req: Request) {
 
         if (key) {
           // 3. 디코딩하여 한글 깨짐 방지 및 객체에 할당
-          params[key] = decodeURIComponent(value || '');
+          params[key] = decodeURIComponent(value.replaceAll('+', ' ') || '');
         }
 
         console.log('key:', key, 'value:', value, 'params:', params);

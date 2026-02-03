@@ -15,12 +15,10 @@ export async function GET(req: Request) {
       { $match: { num: Number(num) } },
       {
         $project: {
-          // num: 1,
-          // qna 배열을 정렬하여 새로운 필드로 덮어씌움
           qna: {
             $sortArray: {
               input: '$qna',
-              sortBy: { created_at: -1 }, // 내림차순 정렬
+              sortBy: { created_at: -1 },
             },
           },
         },
