@@ -55,7 +55,7 @@ export default function useTempCart(num: number | string) {
           headers: {
             'Content-Type': 'application/json',
           },
-        } as any
+        } as any,
       ).then(async (res) => {
         const data = await res.json();
         if (data.ok === true) {
@@ -98,7 +98,7 @@ export default function useTempCart(num: number | string) {
       tempCount,
       cartCount,
       keepCount,
-      stockCount
+      stockCount,
     );
 
     const owned = cartCount + keepCount + tempCount;
@@ -113,14 +113,14 @@ export default function useTempCart(num: number | string) {
         const current = prev ?? { num: Number(num), product: [] };
 
         const exists = current?.product?.find(
-          (item: any) => item.name === name
+          (item: any) => item.name === name,
         );
 
         if (exists) {
           return {
             ...current,
             product: current.product.map((item: any) =>
-              item.name === name ? { ...item, count: item.count + 1 } : item
+              item.name === name ? { ...item, count: item.count + 1 } : item,
             ),
           };
         }
@@ -133,7 +133,7 @@ export default function useTempCart(num: number | string) {
       console.log('임시 수량 증가:', name);
     } else {
       openModal(
-        `더 담울 수 없습니다. (장바구니 : ${cartCount}개, 배송중: ${keepCount}, 재고: ${stockCount})`
+        `더 담울 수 없습니다. (장바구니 : ${cartCount}개, 배송중: ${keepCount}, 재고: ${stockCount})`,
       );
     }
 
@@ -152,7 +152,7 @@ export default function useTempCart(num: number | string) {
       setTempCart((prev: any) => ({
         ...prev,
         product: prev.product.map((v: any) =>
-          v.name === name ? { ...v, count: v.count - 1 } : v
+          v.name === name ? { ...v, count: v.count - 1 } : v,
         ),
       }));
     } else {

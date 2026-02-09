@@ -55,18 +55,36 @@ export default function useCart() {
         body: JSON.stringify({ preset, name, num }),
         // body: JSON.stringify({ num, ...newData }),
       });
+      if (!response.ok) throw new Error('useCart mutation error');
       return response.json();
     },
     onMutate: async ({ preset, name, num }) => {
       await queryClient.cancelQueries({ queryKey: ['cartData'] });
       const previousData = queryClient.getQueryData<any[]>(['cartData']);
-      if (previousData && Array.isArray(previousData)) {
-        console.log('previousData : ', previousData);
 
-        return { previousData };
-        // console.log('maxLimit : ', maxLimit);
-        // const currentKeepCount = keepItem.length ? keepItem[0]?.count ?? 0 : 0;
-      }
+      queryClient.setQueryData(['cartData'], (old: any) => {
+        if (!old) return old;
+
+        const next = structuredClone(old);
+
+        const item = next?.cart?.list?.find((v: any) => v.name === name);
+        if (!item) return old;
+
+        if (preset === 'increase') item.count += 1;
+        if (preset === 'decrease') item.count -= 1;
+        if (preset === 'erase') {
+          next.cart.list = next.cart.list.filter((v: any) => v.name !== name);
+        }
+
+        return next;
+      });
+
+      return { previousData };
+      // if (previousData && Array.isArray(previousData)) {
+      //   console.log('previousData : ', previousData);
+
+      //   return { previousData };
+      // }
     },
     // 2. 서버 업데이트 성공 후 실행
     onSuccess: async () => {
@@ -75,8 +93,11 @@ export default function useCart() {
       const previousData = queryClient.getQueryData(['cartData']);
       console.log(previousData);
     },
-    onError: (error) => {
+    onError: (error, vars, context) => {
       console.error('업데이트 실패:', error);
+      if (context?.previousData) {
+        queryClient.setQueryData(['cartData'], context.previousData);
+      }
       alert('변경사항을 저장하지 못했습니다.');
     },
   });
@@ -86,7 +107,7 @@ export default function useCart() {
     stockCount: number,
     num: number,
     name: string,
-    count: number
+    count: number,
     // newData: any
   ) => {
     console.log('INCREASE num, name, count : ', num, name, count);
@@ -113,8 +134,8 @@ export default function useCart() {
       window.alert(
         `더 담을 수 없습니다. (재고 : ${stockCount}, 배송중 : ${keepCount}, 최대로 담을 수 있는 갯수 : ${Math.min(
           5,
-          stockCount + keepCount
-        )})`
+          stockCount + keepCount,
+        )})`,
       );
       // openModal(
       //   `더 담을 수 없습니다. (재고 : ${stockCount}, 배송중 : ${keepCount}, 최대로 담을 수 있는 갯수 : ${Math.min(
@@ -128,7 +149,7 @@ export default function useCart() {
   const decrease = (
     num: number,
     name: string,
-    count: number
+    count: number,
     // newData: any
   ) => {
     console.log('DECREASE num, name, count : ', num, name, count);
@@ -185,5 +206,7 @@ export default function useCart() {
     });
   };
 
-  return { data, increase, decrease, erase };
+  const {mutate, isPending} = mutation;
+
+  return { data, increase, decrease, erase, mutate, isPending  };
 }

@@ -28,7 +28,7 @@ export default function Cart({
   const { openModal } = useModal();
 
   const { cart, keep, stock } = props;
-  const { increase, decrease, erase } = useCart();
+  const { increase, decrease, erase, isPending } = useCart();
 
   // console.log('cart, keep, stock : ', cart, keep, stock);
 
@@ -123,6 +123,7 @@ export default function Cart({
                       key={idx}
                       props={data}
                       increase={() => {
+                        if (isPending) return;
                         const keepCount =
                           keep?.list?.find((v: any) => v.name === item.name)
                             ?.count ?? 0;
@@ -137,8 +138,14 @@ export default function Cart({
                           item.count,
                         );
                       }}
-                      decrease={() => decrease(cart.num, item.name, item.count)}
-                      erase={() => erase(cart.num, item.name)}
+                      decrease={() => {
+                        if (isPending) return;
+                        decrease(cart.num, item.name, item.count);
+                      }}
+                      erase={() => {
+                        if (isPending) return;
+                        erase(cart.num, item.name);
+                      }}
                     />
                   );
                 })}
