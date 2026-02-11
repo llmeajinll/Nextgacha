@@ -17,7 +17,7 @@ export async function POST(req: Request) {
     const result = await cartColl.updateOne(
       { user: email, 'cart.num': num },
       { $inc: { 'cart.$[outer].product.$[inner].count': 1 } },
-      { arrayFilters: [{ 'outer.num': num }, { 'inner.name': name }] }
+      { arrayFilters: [{ 'outer.num': num }, { 'inner.name': name }] },
     );
 
     console.log('increase result : ', result);
@@ -39,7 +39,7 @@ export async function POST(req: Request) {
           { 'outer.num': num }, // 외부 cart 배열 필터
           { 'inner.name': name }, // 내부 product 배열 필터
         ],
-      }
+      },
     );
     console.log(`decrease result : `, result);
     return NextResponse.json({ ok: true, result }, { status: 200 });
@@ -50,13 +50,13 @@ export async function POST(req: Request) {
       { user: email, 'cart.num': num },
       {
         $pull: { 'cart.$.product': { name } } as any,
-      }
+      },
     );
 
     // 만약 product 배열이 비었다면 해당 num 그룹 자체를 제거 (선택사항)
     await cartColl.updateOne(
       { user: email },
-      { $pull: { cart: { product: { $size: 0 } } } as any }
+      { $pull: { cart: { product: { $size: 0 } } } as any },
     );
 
     return NextResponse.json({ ok: true, result }, { status: 200 });

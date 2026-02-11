@@ -27,7 +27,7 @@ export default function page() {
         <Link href='/manager/event'>5. 이벤트 관리</Link>
       </div>
       <div>
-        <Link href='/manager/statistics'>6. 통계</Link>
+        <Link href='/manager/statistics/search'>6. 통계</Link>
       </div>
       <div>
         <Link href='/manager/error'>7. 오류 신고 수집</Link>

@@ -53,7 +53,7 @@ export default function page() {
             <span
               style={{ color: '#8e75fe', fontSize: '14px', marginRight: '8px' }}
             >
-              이미 할인중
+              이미 {props.alreadyDiscount}% 할인중
             </span>
             <span
               style={{ color: 'lightgray', textDecoration: 'line-through' }}

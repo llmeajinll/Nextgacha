@@ -23,6 +23,7 @@ type Props = BtnType & {
   children?: React.ReactNode | string;
   className?: string | undefined;
   style?: React.CSSProperties | undefined;
+  disabled?: boolean | undefined;
   onClick?: React.MouseEventHandler<HTMLButtonElement> | undefined;
   onMouseEnter?: React.MouseEventHandler<HTMLButtonElement>;
   onMouseLeave?: React.MouseEventHandler<HTMLButtonElement>;
@@ -47,6 +48,7 @@ export default function Btn(props: Props) {
       style={props.style}
       onMouseEnter={props.onMouseEnter}
       onMouseLeave={props.onMouseLeave}
+      disabled={props.disabled}
       className={`
         ${styles.btnSizeVariants[props.size ?? 'medium']} 
         ${styles.colorVariants[props.color ?? 'primary']} 

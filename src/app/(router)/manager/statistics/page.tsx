@@ -22,61 +22,13 @@ export default function page() {
   // let tData: number[] = [];
   // let xLabels: number[] = [];
 
-  const getStatic = async () => {
-    await fetch('/api/getStatistics', {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    } as any)
-      .then(async (res) => {
-        const data = await res.json();
-        console.log(data);
-
-        const { searchResult, productResult } = data.result;
-        setSearchStatic(searchResult);
-        setProductStatic(productResult);
-
-        // 새로운 배열을 만들어 한 번에 setState
-        const newXLabels: number[] = [];
-        const newInfoData: number[] = [];
-        const newQnaData: number[] = [];
-        const newReviewData: number[] = [];
-
-        productResult.forEach((item: any) => {
-          newXLabels.push(item.page);
-          newInfoData.push(item.tab?.info ?? 0);
-          newQnaData.push(item.tab?.qna ?? 0);
-          newReviewData.push(item.tab?.review ?? 0);
-        });
-
-        setXLabels(newXLabels);
-        setInfoData(newInfoData);
-        setQnaData(newQnaData);
-        setReviewData(newReviewData);
-
-        // 새 배열을 로그로 출력
-        console.log('uData:', newQnaData);
-        console.log('pData:', newInfoData);
-        console.log('tData:', newReviewData);
-        console.log('xLabels:', newXLabels);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-  };
-
-  useEffect(() => {
-    getStatic();
-  }, []);
-
   console.log('uData:', qnaData);
   console.log('pData:', infoData);
   console.log('xLabels:', xLabels);
   return (
     <div>
-      <h4 onClick={() => router.push('/manager')}>HOME</h4>
-      <h1>검색창 SEARCH</h1>
+      {/* <h4 onClick={() => router.push('/manager')}>HOME</h4>
+      <h1>검색창 SEARCH</h1> */}
       <div>
         {searchStatic.map((value: any, idx) => (
           <div key={value._id}>
@@ -154,23 +106,6 @@ export default function page() {
           </div>
         ))}
       </div> */}
-
-      <Box sx={{ width: '100%', height: 300 }}>
-        <BarChart
-          series={[
-            { data: infoData, label: 'info', id: 'infoId', stack: 'total' },
-            { data: qnaData, label: 'qna', id: 'qnaId', stack: 'total' },
-            {
-              data: reviewData,
-              label: 'review',
-              id: 'reviewId',
-              stack: 'total',
-            },
-          ]}
-          xAxis={[{ data: xLabels, height: 28 }]}
-          yAxis={[{ width: 50 }]}
-        />
-      </Box>
 
       {/* {
     _id: new ObjectId('697e53fd0f61c9d62c66e988'),

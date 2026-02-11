@@ -143,7 +143,7 @@ export default function BuyBtn({
 
     const tossPayments = await loadTossPayments(
       // 'test_gck_docs_Ovk5rk1EwkEbP0W43n07xlzm'
-      process.env.NEXT_PUBLIC_TOSSPAYMENTS_CLIENT_KEY || ''
+      process.env.NEXT_PUBLIC_TOSSPAYMENTS_CLIENT_KEY || '',
     );
     const payment = tossPayments.payment({
       customerKey: customerKey,
@@ -151,6 +151,7 @@ export default function BuyBtn({
     await payment
       .requestPayment({
         method: 'CARD',
+
         amount: {
           currency: 'KRW',
           value: props.price,
@@ -160,6 +161,10 @@ export default function BuyBtn({
         successUrl: `${window.location.origin}/success`,
         failUrl: `${window.location.origin}/fail`,
         // windowTarget: 'popup',
+        card: {
+          useCardPoint: false,
+          useAppCardOnly: false, // 앱카드 전용 결제를 끄면 일반 선택창이 뜹니다
+        },
       })
       .catch((err) => {
         console.log('err : ', err);
@@ -182,6 +187,7 @@ export default function BuyBtn({
         onMouseLeave={() => {
           setIsHover(false);
         }}
+        disabled={isPending || props.list.length === 0}
       >
         BUY
       </Btn>

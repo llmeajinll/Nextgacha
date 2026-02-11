@@ -62,10 +62,19 @@ export default function useCart() {
       await queryClient.cancelQueries({ queryKey: ['cartData'] });
       const previousData = queryClient.getQueryData<any[]>(['cartData']);
 
+      if (
+        previousData
+          ?.find((i: any) => i.num === num)
+          ?.cart?.list?.find((v: any) => v.name === name)?.count > 5
+      ) {
+        return;
+      }
       queryClient.setQueryData(['cartData'], (old: any) => {
         if (!old) return old;
 
         const next = structuredClone(old);
+
+        console.log('======== oldData ======== : ', old);
 
         const item = next?.cart?.list?.find((v: any) => v.name === name);
         if (!item) return old;
@@ -100,7 +109,14 @@ export default function useCart() {
       }
       alert('변경사항을 저장하지 못했습니다.');
     },
+    onSettled: () => {
+      queryClient.invalidateQueries({ queryKey: ['cartData'] });
+    },
   });
+
+  const { mutate, isPending } = mutation;
+
+  console.log('useCart data : ', mutate, isPending, data);
 
   const increase = (
     keepCount: number,
@@ -125,6 +141,8 @@ export default function useCart() {
     console.log(isLeft, keepCount + count, Math.min(5, stockCount + keepCount));
 
     if (isLeft === true) {
+      if (isPending) return;
+
       mutation.mutate({
         num,
         name,
@@ -149,9 +167,25 @@ export default function useCart() {
   const decrease = (
     num: number,
     name: string,
-    count: number,
+    // count: number,
     // newData: any
   ) => {
+    console.log('DECREASE1', name);
+    if (isPending) return;
+
+    const current = queryClient.getQueryData<any>(['cartData']);
+    const item = current
+      ?.find((item: any) => item.num === num)
+      ?.cart?.list?.find((v: any) => v.name === name);
+
+    console.log(
+      'DECREASE current : ',
+      current?.find((item: any) => item.num === num),
+    );
+
+    if (!item) return;
+
+    const count = item.count;
     console.log('DECREASE num, name, count : ', num, name, count);
 
     if (count > 1) {
@@ -169,14 +203,13 @@ export default function useCart() {
           preset: 'erase',
         });
       }
-      // openModal('상품을 삭제하시겠습니까?', {
-      //   onClickCheck: () =>
-      //     mutation.mutate({
-      //       num,
-      //       name,
-      //       preset: 'erase',
-      //     }),
-      // });
+    } else if (count <= 0) {
+      console.log('count is 0 or less, doing nothing');
+      mutation.mutate({
+        num,
+        name,
+        preset: 'erase',
+      });
     }
   };
 
@@ -188,6 +221,8 @@ export default function useCart() {
         name,
         preset: 'erase',
       });
+    } else {
+      return;
     }
 
     // openModal('상품을 삭제하시겠습니까?', {
@@ -198,15 +233,7 @@ export default function useCart() {
     //       preset: 'erase',
     //     }),
     // });
-
-    mutation.mutate({
-      num,
-      name,
-      preset: 'erase',
-    });
   };
 
-  const {mutate, isPending} = mutation;
-
-  return { data, increase, decrease, erase, mutate, isPending  };
+  return { data, increase, decrease, erase, mutate, isPending };
 }

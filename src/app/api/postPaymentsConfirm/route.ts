@@ -18,7 +18,7 @@ export async function POST(req: Request) {
   if (!email) {
     return NextResponse.json(
       { message: '로그인이 되어있지 않습니다.', ok: false },
-      { status: 400 }
+      { status: 400 },
     );
   }
 
@@ -28,7 +28,7 @@ export async function POST(req: Request) {
     orderId,
     amount,
     list,
-    address
+    address,
   );
 
   // 1. [최종 재고 확인] DB에서 수량을 다시 확인
@@ -37,7 +37,7 @@ export async function POST(req: Request) {
   if (isStillAvailable.isAvailable === false) {
     return NextResponse.json(
       { message: isStillAvailable.message, ok: false },
-      { status: 400 }
+      { status: 400 },
     );
   }
 
@@ -56,13 +56,13 @@ export async function POST(req: Request) {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({ paymentKey, orderId, amount }),
-    }
+    },
   );
 
   const data = await confirmRes.json();
 
-  //   console.log('confirmRes : ', data.status);
-  //   return NextResponse.json({ status: confirmRes.status, ok: true });
+  console.log('confirmRes : ', data.status, data);
+  // return NextResponse.json({ status: confirmRes.status, ok: true });
 
   if (data.status === 'DONE') {
     // 3. [최종 처리] DB에서 재고를 깎고 결제 완료 처리
@@ -103,12 +103,12 @@ export async function POST(req: Request) {
           addOrderRes?.result.ok &&
             reduceStockRes?.ok &&
             resetCartRes?.ok &&
-            reducePointRes?.ok
+            reducePointRes?.ok,
         );
       });
       return NextResponse.json(
         { ok: true, data: { orderId, list, amount, address } },
-        { status: 201 }
+        { status: 201 },
       );
     } catch (err) {
       console.error('트랜잭션 실패! 모든 작업이 취소되었습니다:', err);
@@ -117,7 +117,7 @@ export async function POST(req: Request) {
           message: `오류가 발생하였습니다.`,
           ok: false,
         },
-        { status: 400 }
+        { status: 400 },
       );
     } finally {
       await mongodbSession.endSession(); // 3. 세션 종료 (필수)
@@ -125,7 +125,7 @@ export async function POST(req: Request) {
   } else {
     return NextResponse.json(
       { message: '결제 과정에서 오류가 발생하였습니다.', ok: false },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }
