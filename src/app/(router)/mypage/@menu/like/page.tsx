@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, Suspense } from 'react';
 // import getLike from '@/api/getLike';
 import { cardTemplateContainer } from '@/components/templates/CardTemplate/cardtemplate.css';
 import { Range } from '@/components/atoms';
@@ -13,19 +13,29 @@ export default function page() {
   const [like, setLike] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [total, setTotal] = useState(0);
+  const [loading, setLoading] = useState(true);
 
   const fetchLikeData = async (page: number) => {
-    await fetch(`/api/protected/getLike?page=${page}`)
-      .then(async (res) => {
-        // console.log(res);
-        const data = await res.json();
-        console.log(data);
-        if (data.ok === true) {
-          setLike(data.result.likeResult);
-          setTotal(data.result.total);
-        }
-      })
-      .catch((err) => console.log(err));
+    setLoading(true);
+    try {
+      await fetch(`/api/protected/getLike?page=${page}`)
+        .then(async (res) => {
+          // console.log(res);
+          const data = await res.json();
+          console.log(data);
+          if (data.ok === true) {
+            setLike(data.result.likeResult);
+            setTotal(data.result.total);
+          }
+        })
+        .catch((err) => console.log(err));
+    } catch (err) {
+      console.log('fetch getLike error:', err);
+      setLoading(false);
+      return null;
+    } finally {
+      setLoading(false);
+    }
   };
 
   useEffect(() => {
@@ -33,6 +43,10 @@ export default function page() {
   }, []);
 
   // console.log(like);
+
+  if (loading) {
+    return <EmptyCard>LIKE LOADING...</EmptyCard>;
+  }
 
   return (
     <>

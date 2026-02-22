@@ -34,7 +34,7 @@ export default function ProductPurchasePanel({ num }: { num: string }) {
   return (
     <>
       {/* <Provider> */}
-      <Suspense fallback={<div>loading...</div>}>
+      <Suspense fallback={<div>PROFILE LOADING ...</div>}>
         <InfoPanel props={info} />
         {/* <TicketPanel tempCart={tempCart} increase={() => increase} /> */}
         <TicketPanel />

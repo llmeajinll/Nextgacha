@@ -21,7 +21,7 @@ export default function page() {
   // console.log('result from getCart in page: ', data);
   return (
     <>
-      <Suspense fallback={<EmptyCard>LOADING...</EmptyCard>}>
+      <Suspense fallback={<EmptyCard>CART LOADING...</EmptyCard>}>
         <CartTemplate />
       </Suspense>
     </>

@@ -112,6 +112,7 @@ export async function POST(req: Request) {
       );
     } catch (err) {
       console.error('트랜잭션 실패! 모든 작업이 취소되었습니다:', err);
+      await mongodbSession.endSession();
       return NextResponse.json(
         {
           message: `오류가 발생하였습니다.`,

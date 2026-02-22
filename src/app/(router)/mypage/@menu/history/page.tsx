@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useEffect, useState } from 'react';
+import React, { Suspense, useEffect, useState } from 'react';
 import { useSearchParams, useRouter, usePathname } from 'next/navigation';
 import getHistory from '@/api/getHistory';
 import { Range, ScrollToTop } from '@/components/atoms';
@@ -17,38 +17,54 @@ export default function HistoryPage() {
   const [history, setHistory] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [total, setTotal] = useState(0);
+  const [loading, setLoading] = useState(true);
 
   async function fetchHistoryData(page: number) {
     // if (!email) return;
+    setLoading(true);
 
-    await fetch(`/api/protected/getHistory?page=${page}`, {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      next: { tags: ['history'] },
-    })
-      .then(async (res) => {
-        const data = await res.json();
-        console.log(data);
-        if (data.ok === true) {
-          setHistory(data.result.historyResult);
-          setTotal(data.result.total);
-        }
+    try {
+      await fetch(`/api/protected/getHistory?page=${page}`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        next: { tags: ['history'] },
       })
-      .catch((err) => {
-        console.log('fetch getHistory error:', err);
-        return null;
-      });
+        .then(async (res) => {
+          const data = await res.json();
+          console.log(data);
+          if (data.ok === true) {
+            setHistory(data.result.historyResult);
+            setTotal(data.result.total);
+          }
+        })
+        .catch((err) => {
+          console.log('fetch getHistory error:', err);
+          return null;
+        });
+    } catch (err) {
+      console.log('fetch getHistory error:', err);
+
+      setLoading(false);
+      return null;
+    } finally {
+      setLoading(false);
+    }
   }
 
   useEffect(() => {
     fetchHistoryData(Number(page) || 1);
   }, [page, pathname]);
 
+  if (loading) {
+    return <EmptyCard>HISTORY LOADING...</EmptyCard>;
+  }
+
   return (
     <>
       <ScrollToTop />
+
       {history.length === 0 ? (
         <EmptyCard>HISTORY IS EMPTY</EmptyCard>
       ) : (

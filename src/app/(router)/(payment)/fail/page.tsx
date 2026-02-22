@@ -25,11 +25,14 @@ export default function page() {
         {message}
       </div>
       <Range gap='50' style={{ margin: '30px auto 0 auto' }}>
-        <Link href='/' style={{ fontFamily: 'silkscreen' }}>
+        <Link href='/' style={{ fontFamily: 'silkscreen', color: '#75C3FE' }}>
           HOME
         </Link>
-        <Link href='/mypage/history' style={{ fontFamily: 'silkscreen' }}>
-          MYPAGE
+        <Link
+          href='/mypage/cart'
+          style={{ fontFamily: 'silkscreen', color: '#999999' }}
+        >
+          CART
         </Link>
       </Range>
     </div>
