@@ -6,7 +6,7 @@
 ** 왜 최대 5개인가?
 전시용, 보관용, 예비용1, 예비용2, 선물용으로 생각해서 넉넉하게 5개로 정하게 되었습니다.
 
-배포 사이트 : https://nextgacha.vercel.app
+배포 사이트 : https://nextgacha.vercel.app\n
 관리자 페이지 : https://nextgacha.vercel.app/manager 
 
 ## 구매 정책
