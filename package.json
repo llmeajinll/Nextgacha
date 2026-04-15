@@ -28,6 +28,7 @@
     "@vitejs/plugin-react": "^5.1.0",
     "blob": "^0.1.0",
     "dayjs": "^1.11.19",
+    "jest": "^30.3.0",
     "jotai": "^2.15.0",
     "jotai-devtools": "^0.13.0",
     "jotai-tanstack-query": "^0.11.0",
