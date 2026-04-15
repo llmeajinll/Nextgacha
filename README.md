@@ -1,13 +1,15 @@
-# Gacha Mall
+# Next Gacha
 
 요즘 정가에 물건을 구매해 웃돈을 붙여서 파는, 일명 되팔램이 중고거래에 성행하면서 정작 갖고 싶어하는 사람들이 돈을 더 주고 사야하는 불편함이 늘어나고 있습니다. 또 같은 제품을 파는 가게가 저렴한 가게의 제품을 대량 구매한 후 가격을 올려서 팔아 소비자들이 같은 제품을 비싸게 주고 사야하는 경우가 많아지고 있습니다.
 이런 불편함을 줄이기 위해 한 사람당 한 물건을 최대 5개까지만 구매할 수 있는 정책을 추가한 쇼핑몰을 만들게 되었습니다.
 
-** 왜 최대 5개인가?
+<b>왜 최대 5개인가?</b>
+
 전시용, 보관용, 예비용1, 예비용2, 선물용으로 생각해서 넉넉하게 5개로 정하게 되었습니다.
 
-배포 사이트 : https://nextgacha.vercel.app\n
-관리자 페이지 : https://nextgacha.vercel.app/manager 
+배포 사이트 : https://nextgacha.vercel.app
+
+관리자 페이지 : https://nextgacha.vercel.app/manager
 
 ## 구매 정책
 
@@ -19,29 +21,30 @@
    - 상품 확인, 배송중 상태일 때 사람1은 A가챠 a캐릭터는 2개까지 구매 가능, A가챠 b캐릭터 / B가챠 a캐릭터는 각각 5개 구매 가능
    - A가챠의 a캐릭터 3개가 배송 완료가 되면 사람1은 A가챠 a캐릭터를 다시 최대 5개까지 구매할 수 있음
 
-
 ## 인원
+
 1명
 
 ## 기술 스택
 
-| 분류 | 기술 |
-|------|------|
-| Framework | Next.js 16 (App Router) |
-| Language | TypeScript |
-| Database | MongoDB |
-| Auth | NextAuth v5 (카카오 OAuth) |
-| 결제 | TossPayments SDK |
-| 서버 상태 | TanStack React Query v5 |
-| 전역 상태 | Jotai |
-| 스타일링 | Vanilla Extract |
-| 이미지 저장 | Vercel Blob |
-| 테스트 | Jest + Testing Library + MSW |
-| 배포 & 모니터링 | Vercel |
+| 분류            | 기술                         |
+| --------------- | ---------------------------- |
+| Framework       | Next.js 16 (App Router)      |
+| Language        | TypeScript                   |
+| Database        | MongoDB                      |
+| Auth            | NextAuth v5 (카카오 OAuth)   |
+| 결제            | TossPayments SDK             |
+| 서버 상태       | TanStack React Query v5      |
+| 전역 상태       | Jotai                        |
+| 스타일링        | Vanilla Extract              |
+| 이미지 저장     | Vercel Blob                  |
+| 테스트          | Jest + Testing Library + MSW |
+| 배포 & 모니터링 | Vercel                       |
 
 ## 주요 기능
 
 ### 사용자
+
 - 카카오 소셜 로그인
 - 상품 탐색 및 검색, 카테고리 필터링
 - 상품 찜하기
@@ -51,6 +54,7 @@
 - 상품 리뷰 및 Q&A 작성
 
 ### 관리자
+
 - 회원 관리
 - 상품 등록 / 수정 / 관리
 - 상품 리뷰 조회
@@ -92,10 +96,10 @@ await mongodbSession.withTransaction(async () => {
 
 ### 이원화된 장바구니 구조
 
-| 구분 | 저장소 | 설명 |
-|------|--------|------|
+| 구분          | 저장소         | 설명                           |
+| ------------- | -------------- | ------------------------------ |
 | 임시 장바구니 | Jotai (메모리) | 상품 상세 페이지에서 수량 조정 |
-| 실제 장바구니 | MongoDB | 담기 버튼 클릭 후 DB에 저장 |
+| 실제 장바구니 | MongoDB        | 담기 버튼 클릭 후 DB에 저장    |
 
 실수로 장바구니에 추가되는 상황을 방지하고 탐색 중 자유로운 수량 조정을 지원합니다.
 
@@ -143,4 +147,3 @@ Vanilla Extract를 사용해 빌드 타임에 CSS를 생성합니다. 런타임 
 2. 최초 로그인 시 DB에 사용자 생성 (포인트 지급)
 3. 세션 토큰으로 인증 유지
 4. `/api/protected/*`, `/mypage/*` 는 미들웨어로 보호
-
