@@ -1,5 +1,6 @@
 'use client';
 
+import Image from 'next/image';
 import React, { useState } from 'react';
 import { Range } from '@/components/atoms';
 import { CardProps } from '@/shared/type';
@@ -10,17 +11,25 @@ export default function ProductManageCard(props: CardProps) {
   const [isEditMode, setIsEditMode] = useState(false);
 
   return (
-    <div key={props._id} style={{ width: '640px' }} >
+    <div key={props._id} style={{ width: '640px' }}>
       <h3>
         {props.num}. {props.title} {props.reserve ? '[예약 상품]' : ''}
       </h3>
+      <Image
+        src={`${process.env.NEXT_PUBLIC_VERCEL_IMAGE_URL}${props.num}.png`}
+        alt={props.title}
+        width={200}
+        height={200}
+      />
       {isEditMode ? (
+        // 수정 모드 카드
         <Range
           preset='between'
           gap='10'
           style={{
             display: 'grid',
             gridTemplateColumns: 'repeat(2, 300px)',
+            // border: '1px solid red',
           }}
         >
           {productList.map((val, idx) => (
@@ -70,12 +79,14 @@ export default function ProductManageCard(props: CardProps) {
           ))}
         </Range>
       ) : (
+        // 원래 보이는 카드
         <Range
           preset='between'
           gap='4'
           style={{
             display: 'grid',
             gridTemplateColumns: 'repeat(2, 300px)',
+            // border: '1px solid blue',
           }}
         >
           {props.list.map((val, idx) => (
