@@ -31,27 +31,27 @@ figma : https://www.figma.com/design/86ZlSugwRP6z3dXpoA90HP/Army-team-library?no
 #### 사용자 페이지
 
 <div>
-   <img src="./public/images/screenshot/mainpage.png" width="400" height="190"/>
-   <img src="./public/images/screenshot/filtered.png" width="400" height="190"/>
+   <img src="./public/images/screenshot/mainpage.png" width="400" height="200"/>
+   <img src="./public/images/screenshot/filtered.png" width="400" height="200"/>
 </div>
 <div>
-   <img src="./public/images/screenshot/detailpage.png" width="400" height="190"/>
-   <img src="./public/images/screenshot/cart.png" width="400" height="190"/>
+   <img src="./public/images/screenshot/detailpage.png" width="400" height="200"/>
+   <img src="./public/images/screenshot/cart.png" width="400" height="200"/>
 </div>
 <div>
-   <img src="./public/images/screenshot/detailpage.png" width="400" height="190"/>
-   <img src="./public/images/screenshot/history.png" width="400" height="190"/>
+   <img src="./public/images/screenshot/detailpage.png" width="400" height="200"/>
+   <img src="./public/images/screenshot/history.png" width="400" height="200"/>
 </div>
 
 #### 관리자 페이지
 
 <div>
-   <img src="./public/images/screenshot/manage_product.png" width="400" height="190"/>
-   <img src="./public/images/screenshot/statics.png" width="400" height="190"/>
+   <img src="./public/images/screenshot/manage_product.png" width="400" height="200"/>
+   <img src="./public/images/screenshot/statics.png" width="400" height="200"/>
 </div>
 <div>
-   <img src="./public/images/screenshot/productchecking.png" width="400" height="190"/>
-   <img src="./public/images/screenshot/finished.png" width="400" height="190"/>
+   <img src="./public/images/screenshot/productchecking.png" width="400" height="200"/>
+   <img src="./public/images/screenshot/finished.png" width="400" height="200"/>
 </div>
 
 ## 기술 스택
