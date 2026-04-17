@@ -3,11 +3,11 @@
 요즘 정가에 물건을 구매해 웃돈을 붙여서 파는, 일명 되팔램이 중고거래에 성행하면서 정작 갖고 싶어하는 사람들이 돈을 더 주고 사야하는 불편함이 늘어나고 있습니다. 또 같은 제품을 파는 가게가 저렴한 가게의 제품을 대량 구매한 후 가격을 올려서 팔아 소비자들이 같은 제품을 비싸게 주고 사야하는 경우가 많아지고 있습니다.
 이런 불편함을 줄이기 위해 한 사람당 한 물건을 최대 5개까지만 구매할 수 있는 정책을 추가한 쇼핑몰을 만들게 되었습니다.
 
-<span style="font-size: 18px; font-weight: 700">왜 최대 5개인가?</span>
+#### 왜 최대 5개인가?
 
 전시용, 보관용, 예비용1, 예비용2, 선물용으로 생각해서 넉넉하게 5개로 정하게 되었습니다.
 
-배포 사이트 : https://nextgacha.vercel.app
+배포 사이트 : https://nextgacha.vercel.app<br />
 관리자 페이지 : https://nextgacha.vercel.app/manager
 
 #### 구매 정책
@@ -26,7 +26,11 @@
 
 ## 화면 구현
 
-<img src="./public/images/screenshot/mainpage.png" width="400px" height="100px"/>
+<div>
+   <img src="./public/images/screenshot/mainpage.png" width="400" height="180"/>
+   <img src="./public/images/screenshot/filtered.png" width="400" height="180"/>
+</div>
+<img src="./public/images/screenshot/detailpage.png" width="400" height="180"/>
 
 ## 기술 스택
 
