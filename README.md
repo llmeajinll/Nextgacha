@@ -22,15 +22,37 @@
 
 ## 인원
 
-1명
+1명 (기획, 프론트, 백, 디자인)
+
+figma : https://www.figma.com/design/86ZlSugwRP6z3dXpoA90HP/Army-team-library?node-id=2694-2&t=HYY6mUp2SEcU4v8V-1
 
 ## 화면 구현
 
+#### 사용자 페이지
+
 <div>
-   <img src="./public/images/screenshot/mainpage.png" width="400" height="180"/>
-   <img src="./public/images/screenshot/filtered.png" width="400" height="180"/>
+   <img src="./public/images/screenshot/mainpage.png" width="400" height="190"/>
+   <img src="./public/images/screenshot/filtered.png" width="400" height="190"/>
 </div>
-<img src="./public/images/screenshot/detailpage.png" width="400" height="180"/>
+<div>
+   <img src="./public/images/screenshot/detailpage.png" width="400" height="190"/>
+   <img src="./public/images/screenshot/cart.png" width="400" height="190"/>
+</div>
+<div>
+   <img src="./public/images/screenshot/detailpage.png" width="400" height="190"/>
+   <img src="./public/images/screenshot/history.png" width="400" height="190"/>
+</div>
+
+#### 관리자 페이지
+
+<div>
+   <img src="./public/images/screenshot/manage_product.png" width="400" height="190"/>
+   <img src="./public/images/screenshot/statics.png" width="400" height="190"/>
+</div>
+<div>
+   <img src="./public/images/screenshot/productchecking.png" width="400" height="190"/>
+   <img src="./public/images/screenshot/finished.png" width="400" height="190"/>
+</div>
 
 ## 기술 스택
 
