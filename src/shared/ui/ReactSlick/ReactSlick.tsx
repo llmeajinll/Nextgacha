@@ -8,12 +8,7 @@ import 'slick-carousel/slick/slick-theme.css';
 
 import { reactSlickVariant } from '@/styles/variants.css';
 
-import {
-  lever,
-  handle,
-  dot,
-  slices,
-} from '@/components/organisms/Banner/banner.css';
+import { lever, handle, dot, slices } from './reactSlick.css';
 
 type Preset = keyof typeof reactSlickVariant;
 type PropsType1 = {

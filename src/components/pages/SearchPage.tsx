@@ -4,7 +4,7 @@ import { useRouter, useSearchParams, usePathname } from 'next/navigation';
 // import { useRouter } from 'next/router';
 import React, { Suspense, useEffect, useState } from 'react';
 import { CardProps } from '@/entities/product/model/types';
-import { CardTemplate } from '../templates';
+import { CardTemplate } from '@/widgets';
 import { Title, Range, ScrollToTop } from '@/shared/ui';
 import { getStandardCategory } from '@/entities/product/lib/getStandardCategory';
 import { tagCategory } from '@/entities/product/lib/category';

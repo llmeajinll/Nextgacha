@@ -8,7 +8,7 @@ import { Writer, Range, Btn, ImgBtn } from '@/shared/ui';
 import { Qna, Private } from '@/features/qna/ui';
 import Cookies from 'js-cookie';
 import Image from 'next/image';
-import { QnaTemplate } from '@/components/templates';
+import { QnaTemplate } from '@/widgets';
 
 export default function QnaTab() {
   return <QnaTemplate />;

@@ -5,7 +5,7 @@ import type { Metadata } from 'next';
 import { Noto_Sans_KR } from 'next/font/google';
 import './globals.css';
 import { SessionProvider } from 'next-auth/react';
-import { Header } from '@/components/organisms';
+import { Header } from '@/widgets';
 import { layoutContainer } from './layout.css';
 import { Provider } from 'jotai';
 import { MSWProvider } from '@/mocks/MSWComponent';

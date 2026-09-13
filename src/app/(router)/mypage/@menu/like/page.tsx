@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect, Suspense } from 'react';
 // import getLike from '@/features/like/api/getLike';
-import { cardTemplateContainer } from '@/components/templates/CardTemplate/cardtemplate.css';
+import { cardTemplateContainer } from '@/widgets/CardTemplate/cardtemplate.css';
 import { Range } from '@/shared/ui';
 import { Card } from '@/entities/product/ui';
 import { EmptyCard } from '@/shared/ui';

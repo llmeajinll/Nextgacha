@@ -1,9 +1,9 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { Banner } from '../organisms';
-import { CardTemplate } from '../templates';
-import { cardTemplateContainer } from '../templates/CardTemplate/cardtemplate.css';
+import { Banner } from '@/widgets';
+import { CardTemplate } from '@/widgets';
+import { cardTemplateContainer } from '@/widgets/CardTemplate/cardtemplate.css';
 import getProducts from '@/entities/product/api/getProducts';
 import { Btn, Title, Range } from '@/shared/ui';
 import { CardProps } from '@/entities/product/model/types';

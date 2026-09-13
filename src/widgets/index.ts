@@ -1,0 +1,10 @@
+export { default as Header } from './Header/Header';
+export { default as Banner } from './Banner/Banner';
+export { default as Footer } from './Footer/Footer';
+export { default as DetailTab } from './DetailTab/DetailTab';
+export { default as ManagerMenu } from './ManagerMenu/ManagerMenu';
+export { default as CardTemplate } from './CardTemplate/CardTemplate';
+export { default as CartTemplate } from './CartTemplate/CartTemplate';
+export { default as OrderTemplate } from './OrderTemplate/OrderTemplate';
+export { default as QnaTemplate } from './QnaTemplate/QnaTemplate';
+export { default as NoticeTemplate } from './NoticeTemplate/NoticeTemplate';

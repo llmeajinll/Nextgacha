@@ -1,4 +1,4 @@
-import OrderTemplate from '@/components/templates/OrderTemplate/OrderTemplate';
+import OrderTemplate from '@/widgets/OrderTemplate/OrderTemplate';
 import { baseUrl } from '@/shared/api/baseUrl';
 import React from 'react';
 

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { ObjectId } from 'mongodb';
 import { baseUrl } from '@/shared/api/baseUrl';
-import OrderTemplate from '@/components/templates/OrderTemplate/OrderTemplate';
+import OrderTemplate from '@/widgets/OrderTemplate/OrderTemplate';
 
 export default async function ArrivePage() {
   console.log('arrive');

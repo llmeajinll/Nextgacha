@@ -1,5 +1,5 @@
 import React from 'react';
-import { NoticeTemplate } from '@/components/templates';
+import { NoticeTemplate } from '@/widgets';
 
 export default function page() {
   return <NoticeTemplate />;

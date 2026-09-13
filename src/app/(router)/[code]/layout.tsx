@@ -1,7 +1,7 @@
 import { Suspense } from 'react';
 import { ScrollToTop } from '@/shared/ui';
 import ProductPurchasePanel from '@/features/purchase/ui/ProductPurchasePanel/ProductPurchasePanel';
-import { DetailTab } from '@/components/molecules';
+import { DetailTab } from '@/widgets';
 import { EmptyCard } from '@/shared/ui';
 import { Metadata } from 'next';
 

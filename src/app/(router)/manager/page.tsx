@@ -1,4 +1,4 @@
-import ManagerMenu from '@/components/molecules/ManagerMenu/ManagerMenu';
+import ManagerMenu from '@/widgets/ManagerMenu/ManagerMenu';
 
 export default function page() {
   return (

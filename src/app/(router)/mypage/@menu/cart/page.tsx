@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, useEffect, Suspense } from 'react';
-import { CartTemplate } from '@/components/templates';
+import { CartTemplate } from '@/widgets';
 import getCart from '@/features/cart/api/getCart';
 import { baseUrl } from '@/shared/api/baseUrl';
 import { Cart } from '@/features/cart/ui';
