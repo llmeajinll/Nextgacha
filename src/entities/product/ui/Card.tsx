@@ -13,6 +13,10 @@ import {
   // TagContainer,
   cardTitle,
   bottomContainer,
+  discountBadge,
+  originalPrice,
+  arrow,
+  unit,
 } from './card.css';
 import { CardProps } from '@/entities/product/model/types';
 import { comma } from '@/shared/lib/comma';
@@ -28,26 +32,9 @@ export default function Card({ props }: { props: CardProps }) {
     if (isDiscount === true && discount !== 0) {
       return (
         <>
-          <span
-            style={{
-              color: '#75C3FE',
-              fontSize: '20px',
-              marginRight: '5px',
-              fontWeight: '500',
-            }}
-          >
-            {discount}%
-          </span>
-          <span
-            style={{
-              color: 'lightgray',
-              textDecoration: 'line-through',
-              fontSize: '20px',
-            }}
-          >
-            {comma(price)}
-          </span>
-          <span style={{ margin: '0 5px' }}>→ </span>
+          <span className={discountBadge}>{discount}%</span>
+          <span className={originalPrice}>{comma(price)}</span>
+          <span className={arrow}>→ </span>
           <span>{comma(price * (1 - discount / 100))}</span>
         </>
       );
@@ -86,7 +73,7 @@ export default function Card({ props }: { props: CardProps }) {
                 isDiscount={props.isDiscount}
                 discount={props.discount}
               />
-              <span style={{ fontSize: '18px' }}> 원</span>
+              <span className={unit}> 원</span>
             </div>
             <HeartBtn status={props.like} num={props.num} />
           </div>

@@ -6,3 +6,7 @@ export const detailTabContainer = style({
   display: 'flex',
   margin: '0 auto',
 });
+
+export const tabOverlap = style({
+  marginLeft: '-1px',
+});

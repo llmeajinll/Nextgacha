@@ -3,7 +3,13 @@
 import React, { useState, useEffect } from 'react';
 import Order from '@/features/order-manage/ui/Order';
 import { Range } from '@/shared/ui';
-import { orderTemplateContainer } from './orderTemplate.css';
+import {
+  orderTemplateContainer,
+  toSendingBtn,
+  selectAllBtn,
+  toFinishBtn,
+  loadMoreBtn,
+} from './orderTemplate.css';
 import { useModal } from '@/shared/hooks';
 
 export default function OrderTemplate({
@@ -102,16 +108,7 @@ export default function OrderTemplate({
               },
             });
           }}
-          style={{
-            padding: '0 20px',
-            height: '50px',
-            border: 'none',
-            fontSize: '18px',
-            color: 'white',
-            marginTop: '30px',
-            backgroundColor: '#75C3FE',
-            cursor: 'pointer',
-          }}
+          className={toSendingBtn}
         >
           선택 모두 배송중으로 변경
         </button>
@@ -122,16 +119,7 @@ export default function OrderTemplate({
         <Range gap='5'>
           <button
             onClick={handleSelectAll}
-            style={{
-              padding: '0 20px',
-              height: '50px',
-              border: 'none',
-              fontSize: '18px',
-              color: 'white',
-              marginTop: '30px',
-              backgroundColor: '#75C3FE',
-              cursor: 'pointer',
-            }}
+            className={selectAllBtn}
           >
             전체 선택
           </button>
@@ -164,16 +152,7 @@ export default function OrderTemplate({
                 window.location.reload();
               }
             }}
-            style={{
-              padding: '0 20px',
-              height: '50px',
-              border: 'none',
-              fontSize: '18px',
-              color: 'white',
-              marginTop: '30px',
-              backgroundColor: '#5bdb44',
-              cursor: 'pointer',
-            }}
+            className={toFinishBtn}
           >
             선택된 주문 배송 완료로 변경
           </button>
@@ -205,16 +184,7 @@ export default function OrderTemplate({
           <button
             onClick={loadMore}
             disabled={loading}
-            style={{
-              width: '100%',
-              margin: '40px 0',
-              height: '50px',
-              border: 'none',
-              backgroundColor: 'lightgray',
-              color: '#444',
-              fontSize: '18px',
-              cursor: 'pointer',
-            }}
+            className={loadMoreBtn}
           >
             더 보기
           </button>

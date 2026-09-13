@@ -3,7 +3,7 @@
 import React, { useState } from 'react';
 import { useRouter, usePathname, useSearchParams } from 'next/navigation';
 import { Range, Btn } from '@/shared/ui';
-import { detailTabContainer } from './detailtab.css';
+import { detailTabContainer, tabOverlap } from './detailtab.css';
 import useSplitRoute from '@/shared/hooks/useSplitRoute';
 
 export default function DetailTab({ status = 'detail' }: { status?: string }) {
@@ -33,7 +33,7 @@ export default function DetailTab({ status = 'detail' }: { status?: string }) {
             onClick={() => {
               router.replace(`/${route[0]}/qna`);
             }}
-            style={{ marginLeft: '-1px' }}
+            className={tabOverlap}
           >
             Q&A
           </Btn>
@@ -43,7 +43,7 @@ export default function DetailTab({ status = 'detail' }: { status?: string }) {
             onClick={() => {
               router.replace(`/${route[0]}/review`);
             }}
-            style={{ marginLeft: '-1px' }}
+            className={tabOverlap}
           >
             REVIEW
           </Btn>
@@ -59,14 +59,14 @@ export default function DetailTab({ status = 'detail' }: { status?: string }) {
           <Btn
             color={route[1] === 'like' ? 'primary' : 'reversePrimary'}
             onClick={() => router.replace(`/${route[0]}/like`)}
-            style={{ marginLeft: '-1px' }}
+            className={tabOverlap}
           >
             LIKE
           </Btn>
           <Btn
             color={route[1] === 'history' ? 'primary' : 'reversePrimary'}
             onClick={() => router.replace(`/${route[0]}/history?page=1`)}
-            style={{ marginLeft: '-1px' }}
+            className={tabOverlap}
           >
             HISTORY
           </Btn>

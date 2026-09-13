@@ -23,3 +23,36 @@ export const sendBtnStyle = style({
   backgroundColor: vars.color.blue1,
   cursor: 'pointer',
 });
+
+const actionBtnBase = style({
+  padding: '0 20px',
+  height: '50px',
+  border: 'none',
+  fontSize: '18px',
+  color: 'white',
+  marginTop: '30px',
+  cursor: 'pointer',
+});
+
+export const toSendingBtn = style([
+  actionBtnBase,
+  { backgroundColor: vars.color.blue1 },
+]);
+
+export const selectAllBtn = style([
+  actionBtnBase,
+  { backgroundColor: vars.color.blue1 },
+]);
+
+export const toFinishBtn = style([actionBtnBase, { backgroundColor: '#5bdb44' }]);
+
+export const loadMoreBtn = style({
+  width: '100%',
+  margin: '40px 0',
+  height: '50px',
+  border: 'none',
+  backgroundColor: 'lightgray',
+  color: '#444',
+  fontSize: '18px',
+  cursor: 'pointer',
+});

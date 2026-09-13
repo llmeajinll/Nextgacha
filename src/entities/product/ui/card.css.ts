@@ -58,3 +58,24 @@ export const bottomContainer = style({
   letterSpacing: '-1.2px',
   marginTop: 10,
 });
+
+export const discountBadge = style({
+  color: '#75C3FE',
+  fontSize: '20px',
+  marginRight: '5px',
+  fontWeight: '500',
+});
+
+export const originalPrice = style({
+  color: 'lightgray',
+  textDecoration: 'line-through',
+  fontSize: '20px',
+});
+
+export const arrow = style({
+  margin: '0 5px',
+});
+
+export const unit = style({
+  fontSize: '18px',
+});

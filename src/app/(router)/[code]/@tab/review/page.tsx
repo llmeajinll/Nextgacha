@@ -6,6 +6,7 @@ import { ReviewProps } from '@/entities/review/model/types';
 import { Range } from '@/shared/ui';
 import getReview from '@/entities/review/api/getReview';
 import { Review } from '@/entities/review/ui';
+import { emptyState, listWrap, grid, moreBtn } from './page.css';
 
 export default function ReviewTab() {
   const [review, setReview] = useState<any[]>([]);
@@ -49,29 +50,12 @@ export default function ReviewTab() {
   return (
     <>
       {review.length === 0 ? (
-        <Range
-          width='full'
-          style={{
-            boxSizing: 'border-box',
-            border: '1px solid lightgray',
-            padding: '50px',
-            fontSize: '20px',
-          }}
-        >
+        <Range width='full' className={emptyState}>
           등록된 리뷰가 없습니다. 첫 리뷰를 남겨보세요!
         </Range>
       ) : (
-        <div style={{ width: '100%' }}>
-          <div
-            style={{
-              display: 'grid',
-              gridTemplateColumns: 'repeat(2, 460px)',
-              justifyContent: 'space-between',
-              margin: '0 auto',
-              width: '100%',
-              rowGap: '40px',
-            }}
-          >
+        <div className={listWrap}>
+          <div className={grid}>
             <>
               {review &&
                 review.map((val: ReviewProps, idx: number) => (
@@ -82,21 +66,7 @@ export default function ReviewTab() {
             {/* {hasMore && ( */}
           </div>
           {hasMore && (
-            <button
-              onClick={handleMore}
-              disabled={isLoading}
-              style={{
-                width: '100%',
-                height: '30px',
-                backgroundColor: 'white',
-                color: 'gray',
-                marginTop: '30px',
-                border: 'none',
-                cursor: 'pointer',
-                fontFamily: 'silkscreen',
-                fontSize: '20px',
-              }}
-            >
+            <button onClick={handleMore} disabled={isLoading} className={moreBtn}>
               {isLoading ? 'LOADING ...' : 'MORE'}
             </button>
           )}
