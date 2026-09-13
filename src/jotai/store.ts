@@ -1,5 +1,5 @@
 import { atom } from 'jotai';
-import { CardProps, ProductProps } from '@/shared/type';
+import { CardProps, ProductProps } from '@/shared/model/types';
 import Cookie from 'js-cookie';
 import { atomWithQuery } from 'jotai-tanstack-query';
 import { useQuery } from '@tanstack/react-query';

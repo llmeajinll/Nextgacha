@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { orderColl, mongodbClient, userColl, productColl } from '@/lib/mongodb';
+import { orderColl, mongodbClient, userColl, productColl } from '@/shared/api/mongodb';
 
 export async function POST(req: Request) {
   const data = await req.json();

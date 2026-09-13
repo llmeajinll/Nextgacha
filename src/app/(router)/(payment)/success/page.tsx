@@ -3,8 +3,8 @@
 import React, { useState, useEffect } from 'react';
 import { useSearchParams, useRouter, redirect } from 'next/navigation';
 import Link from 'next/link';
-import { Range } from '@/components/atoms';
-import { useModal } from '@/app/hooks';
+import { Range } from '@/shared/ui';
+import { useModal } from '@/shared/hooks';
 
 export default function page() {
   const router = useRouter();

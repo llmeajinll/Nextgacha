@@ -2,7 +2,7 @@
 
 import React, { useMemo } from 'react';
 import Image from 'next/image';
-import { useSpliteRoute } from '@/app/hooks';
+import { useSplitRoute as useSpliteRoute } from '@/shared/hooks';
 
 export default function InfoTab() {
   const { firstRoute } = useSpliteRoute();

@@ -1,6 +1,6 @@
 import { style } from '@vanilla-extract/css';
 import { vars } from '@/styles/theme.css';
-import { writerStyle } from '@/components/atoms/Writer/writer.css';
+import { writerStyle } from '@/shared/ui/Writer/writer.css';
 
 export const leftContent = style({
   fontSize: '14px',

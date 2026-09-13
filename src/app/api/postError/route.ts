@@ -1,9 +1,9 @@
 import { NextResponse } from 'next/server';
-import { errorColl } from '@/lib/mongodb';
+import { errorColl } from '@/shared/api/mongodb';
 import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
 import timezone from 'dayjs/plugin/timezone';
-import { koreaTime } from '@/shared/koreaTime';
+import { koreaTime } from '@/shared/lib/koreaTime';
 
 dayjs.extend(utc);
 dayjs.extend(timezone);

@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server';
-import { productColl, counterColl, mongodbClient } from '@/lib/mongodb';
+import { productColl, counterColl, mongodbClient } from '@/shared/api/mongodb';
 import { put } from '@vercel/blob';
-import { koreaTime } from '@/shared/koreaTime';
+import { koreaTime } from '@/shared/lib/koreaTime';
 
 export async function POST(req: Request) {
   // const { data } = await req.json();

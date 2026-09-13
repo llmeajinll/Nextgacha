@@ -8,7 +8,7 @@ import dayjs from 'dayjs';
 import { loadTossPayments } from '@tosspayments/tosspayments-sdk';
 import { useAtom } from 'jotai';
 import { tempCartAtom } from '@/jotai/store';
-import { useModal } from '@/app/hooks';
+import { useModal } from '@/shared/hooks';
 
 import {
   Btn,
@@ -17,10 +17,11 @@ import {
   ImgBtn,
   ReactSlick,
   Range,
-} from '@/components/atoms';
-import { DropDown, LabelTitle } from '@/components/molecules';
-import { CardProps } from '@/shared/type';
-import { comma } from '@/shared/comma';
+} from '@/shared/ui';
+import { DropDown } from '@/components/molecules';
+import { LabelTitle } from '@/shared/ui';
+import { CardProps } from '@/shared/model/types';
+import { comma } from '@/shared/lib/comma';
 import { useTempCart } from '@/app/hooks';
 import { panelTitle, copyText } from './productPurchasePanel.css';
 import { postCart } from '@/api/postCart';

@@ -3,8 +3,9 @@
 import React, { useState, useEffect, Suspense } from 'react';
 import { CartTemplate } from '@/components/templates';
 import getCart from '@/api/getCart';
-import { baseUrl } from '@/shared/baseUrl';
-import { Cart, EmptyCard, AddressTruck } from '@/components/molecules';
+import { baseUrl } from '@/shared/api/baseUrl';
+import { Cart, AddressTruck } from '@/components/molecules';
+import { EmptyCard } from '@/shared/ui';
 
 export default function page() {
   // const data = await getCart();

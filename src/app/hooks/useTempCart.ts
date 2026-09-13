@@ -2,14 +2,15 @@ import React, { useState } from 'react';
 import useSWR from 'swr';
 import { useAtom } from 'jotai';
 import { tempCartAtom, userInfoAtom } from '@/jotai/store';
-import { ProductProps } from '@/shared/type';
-import { useModal, useCart } from '@/app/hooks';
+import { ProductProps } from '@/shared/model/types';
+import { useCart } from '@/app/hooks';
+import { useModal } from '@/shared/hooks';
 import {
   useMutation,
   useQueryClient,
   useSuspenseQuery,
 } from '@tanstack/react-query';
-import { baseUrl } from '@/shared/baseUrl';
+import { baseUrl } from '@/shared/api/baseUrl';
 
 // const fetcher = (url: string) =>
 //   fetch(url, { credentials: 'include' }).then(async (res) => {

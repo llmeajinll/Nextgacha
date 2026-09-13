@@ -8,12 +8,14 @@ import {
 } from '@tanstack/react-query';
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
-import { Range } from '@/components/atoms';
-import { EmptyCard, Ticket } from '@/components/molecules';
+import { Range } from '@/shared/ui';
+import { Ticket } from '@/components/molecules';
+import { EmptyCard } from '@/shared/ui';
 import { cartContainer, ticketContainer } from './cart.css';
 import Link from 'next/link';
-import { baseUrl } from '@/shared/baseUrl';
-import { useModal, useCart } from '@/app/hooks';
+import { baseUrl } from '@/shared/api/baseUrl';
+import { useCart } from '@/app/hooks';
+import { useModal } from '@/shared/hooks';
 
 export default function Cart({
   props,

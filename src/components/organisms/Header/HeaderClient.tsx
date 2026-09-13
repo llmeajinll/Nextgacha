@@ -24,10 +24,10 @@ import { signIn, signOut } from 'next-auth/react';
 // import { kakaoSignIn, kakaoSignOut } from '@/shared/authActions';
 import { Session } from 'next-auth';
 import { useSearchParams, usePathname } from 'next/navigation';
-import { useSpliteRoute } from '@/app/hooks';
+import { useSplitRoute as useSpliteRoute } from '@/shared/hooks';
 import { useAtom } from 'jotai';
 import { userInfoAtom } from '@/jotai/store';
-import { Range, ImgBtn, Btn } from '@/components/atoms';
+import { Range, ImgBtn, Btn } from '@/shared/ui';
 import { textareaStyle } from '@/components/organisms/Modal/reviewModal.css';
 
 export default function Header({ session }: { session: Session | null }) {

@@ -5,8 +5,8 @@ import { Banner } from '../organisms';
 import { CardTemplate } from '../templates';
 import { cardTemplateContainer } from '../templates/CardTemplate/cardtemplate.css';
 import getProducts from '@/api/getProducts';
-import { Btn, Title, Range } from '../atoms';
-import { CardProps } from '@/shared/type';
+import { Btn, Title, Range } from '@/shared/ui';
+import { CardProps } from '@/shared/model/types';
 import { Card } from '../molecules';
 
 export default function HomePage() {

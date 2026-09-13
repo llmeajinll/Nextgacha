@@ -2,8 +2,8 @@
 
 import { useState, useEffect, useRef } from 'react';
 import { useRouter, usePathname, useSearchParams } from 'next/navigation';
-import { Range } from '@/components/atoms';
-import { comma } from '@/shared/comma';
+import { Range } from '@/shared/ui';
+import { comma } from '@/shared/lib/comma';
 import {
   reviewBtn,
   bigLabelTitle,

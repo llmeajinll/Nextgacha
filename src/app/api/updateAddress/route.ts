@@ -1,4 +1,4 @@
-import { userColl } from '@/lib/mongodb';
+import { userColl } from '@/shared/api/mongodb';
 import { NextResponse } from 'next/server';
 import { auth } from '@/auth';
 import { revalidateTag } from 'next/cache';

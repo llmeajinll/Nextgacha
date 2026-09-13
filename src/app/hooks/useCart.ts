@@ -1,10 +1,10 @@
-import { ProductProps } from '@/shared/type';
+import { ProductProps } from '@/shared/model/types';
 import Cookies from 'js-cookie';
 import updateCart from '@/api/updateCart';
 import getCart from '@/api/getCart';
 
 import { useRouter } from 'next/navigation';
-import { useModal } from '@/app/hooks';
+import { useModal } from '@/shared/hooks';
 
 import {
   useQuery,
@@ -13,7 +13,7 @@ import {
   useQueryClient,
   QueryKey,
 } from '@tanstack/react-query';
-import { baseUrl } from '@/shared/baseUrl';
+import { baseUrl } from '@/shared/api/baseUrl';
 
 export default function useCart() {
   const queryClient = useQueryClient();

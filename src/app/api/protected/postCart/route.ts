@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { userColl, cartColl } from '@/lib/mongodb';
+import { userColl, cartColl } from '@/shared/api/mongodb';
 import { auth } from '@/auth';
 
 export async function POST(req: Request) {

@@ -1,8 +1,8 @@
 'use client';
-import { Range } from '@/components/atoms';
+import { Range } from '@/shared/ui';
 import React, { useState, useEffect, use } from 'react';
 import Link from 'next/link';
-import { comma } from '@/shared/comma';
+import { comma } from '@/shared/lib/comma';
 
 export default function page({
   params,

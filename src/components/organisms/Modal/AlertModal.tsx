@@ -2,11 +2,11 @@
 
 import React, { useState, useEffect } from 'react';
 import { usePathname } from 'next/navigation';
-import { Range, ImgBtn } from '@/components/atoms';
+import { Range, ImgBtn } from '@/shared/ui';
 import * as styles from './alertModal.css';
 import { modalAtom } from '@/jotai/store';
 import { useAtom } from 'jotai';
-import { useModal } from '@/app/hooks';
+import { useModal } from '@/shared/hooks';
 
 // {
 //   onCheck,

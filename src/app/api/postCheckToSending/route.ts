@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { orderColl } from '@/lib/mongodb';
+import { orderColl } from '@/shared/api/mongodb';
 import { validateStock } from '@/lib/validateStock';
 
 export async function POST(req: Request) {

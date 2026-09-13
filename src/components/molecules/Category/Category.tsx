@@ -1,7 +1,7 @@
 'use client';
 
 import React from 'react';
-import { Range } from '@/components/atoms';
+import { Range } from '@/shared/ui';
 import {
   categoryContainer,
   label,

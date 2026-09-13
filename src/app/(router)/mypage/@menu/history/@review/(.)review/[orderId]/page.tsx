@@ -1,5 +1,5 @@
 import { ReviewModal } from '@/components/organisms';
-import ModalPortal from '@/components/atoms/ModalPortal';
+import ModalPortal from '@/shared/ui/ModalPortal';
 
 export default function page() {
   return <ReviewModal />;

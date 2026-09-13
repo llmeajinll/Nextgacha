@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
-import { pageViewsColl } from '@/lib/mongodb';
-import { koreaTime } from '@/shared/koreaTime';
+import { pageViewsColl } from '@/shared/api/mongodb';
+import { koreaTime } from '@/shared/lib/koreaTime';
 
 export async function POST(req: Request) {
   try {

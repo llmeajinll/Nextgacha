@@ -7,11 +7,11 @@ import { loadTossPayments } from '@tosspayments/tosspayments-sdk';
 import { v4 as uuidv4 } from 'uuid';
 import { useAtom, useAtomValue } from 'jotai';
 import { userInfoAtom } from '@/jotai/store';
-import { useModal } from '@/app/hooks';
+import { useModal } from '@/shared/hooks';
 import { transform } from 'next/dist/build/swc/generated-native';
 import { useDaumPostcodePopup } from 'react-daum-postcode';
 import { queryClientAtom } from 'jotai-tanstack-query';
-import useSplitRoute from '@/app/hooks/useSplitRoute';
+import useSplitRoute from '@/shared/hooks/useSplitRoute';
 
 interface BuyBtnType {
   // email: string;

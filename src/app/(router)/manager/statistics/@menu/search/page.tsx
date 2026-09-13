@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import dynamic from 'next/dynamic';
 import { useRouter } from 'next/navigation';
-import { Range } from '@/components/atoms';
+import { Range } from '@/shared/ui';
 // import Box from '@mui/material/Box';
 
 // import { BarChart } from '@mui/x-charts/BarChart';

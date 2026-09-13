@@ -1,4 +1,4 @@
-import { userColl, cartColl } from '@/lib/mongodb';
+import { userColl, cartColl } from '@/shared/api/mongodb';
 import { ClientSession, AnyBulkWriteOperation } from 'mongodb';
 
 export async function reducePoint({

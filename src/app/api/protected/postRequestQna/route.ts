@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
-import { mongodbClient, qnaColl } from '@/lib/mongodb';
-import { koreaTime } from '@/shared/koreaTime';
+import { mongodbClient, qnaColl } from '@/shared/api/mongodb';
+import { koreaTime } from '@/shared/lib/koreaTime';
 
 import dayjs from 'dayjs';
 

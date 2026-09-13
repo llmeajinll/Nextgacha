@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
 import { revalidateTag } from 'next/cache';
-import { orderColl } from '@/lib/mongodb';
+import { orderColl } from '@/shared/api/mongodb';
 import { auth } from '@/auth';
 
 export async function GET(req: Request) {

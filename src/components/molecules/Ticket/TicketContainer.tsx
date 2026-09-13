@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useEffect, useRef } from 'react';
-import { Range } from '@/components/atoms';
+import { Range } from '@/shared/ui';
 import { ticketContainer } from './ticketcontainer.css';
 import { ticketContainerVariant } from '@/styles/variants.css';
 

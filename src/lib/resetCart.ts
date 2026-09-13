@@ -1,4 +1,4 @@
-import { productColl, cartColl } from '@/lib/mongodb';
+import { productColl, cartColl } from '@/shared/api/mongodb';
 import { ClientSession } from 'mongodb';
 
 export async function resetCart({

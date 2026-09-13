@@ -3,7 +3,7 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import React, { useState, useEffect } from 'react';
-import { HeartBtn, Tag } from '@/components/atoms';
+import { HeartBtn, Tag } from '@/shared/ui';
 import { TagContainer } from '@/components/molecules';
 import {
   cardContainer,
@@ -13,8 +13,8 @@ import {
   cardTitle,
   bottomContainer,
 } from './card.css';
-import { CardProps } from '@/shared/type';
-import { comma } from '@/shared/comma';
+import { CardProps } from '@/shared/model/types';
+import { comma } from '@/shared/lib/comma';
 import Cookies from 'js-cookie';
 
 export default function Card({ props }: { props: CardProps }) {

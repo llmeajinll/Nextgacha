@@ -1,5 +1,5 @@
 import React from 'react';
-import { Range } from '@/components/atoms';
+import { Range } from '@/shared/ui';
 import { Category, DetailCategory } from '@/components/molecules';
 import { SearchPage } from '@/components/pages';
 

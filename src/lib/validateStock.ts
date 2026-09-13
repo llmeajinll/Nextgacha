@@ -1,4 +1,4 @@
-import { productColl, cartColl } from '@/lib/mongodb';
+import { productColl, cartColl } from '@/shared/api/mongodb';
 import { auth } from '@/auth';
 
 export async function validateStock(list: any[]) {

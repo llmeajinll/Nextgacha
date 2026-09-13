@@ -3,7 +3,7 @@
 import React from 'react';
 import { useSearchParams, useRouter, redirect } from 'next/navigation';
 import Link from 'next/link';
-import { Range } from '@/components/atoms';
+import { Range } from '@/shared/ui';
 
 export default function page() {
   const searchParams = useSearchParams();

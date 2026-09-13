@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server';
 import { cookies } from 'next/headers';
 import { auth } from '@/auth';
-import { userColl, productColl } from '@/lib/mongodb';
+import { userColl, productColl } from '@/shared/api/mongodb';
 
 export async function GET(req: Request) {
   const session = await auth();

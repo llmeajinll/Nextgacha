@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { auth } from '@/auth';
-import { baseUrl } from '@/shared/baseUrl';
+import { baseUrl } from '@/shared/api/baseUrl';
 
 export default async function getLike() {
   // console.log(like);

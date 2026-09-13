@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { qnaColl } from '@/lib/mongodb';
+import { qnaColl } from '@/shared/api/mongodb';
 
 export async function GET(req: Request) {
   const { searchParams } = new URL(req.url);

@@ -1,9 +1,9 @@
 'use client';
 
-import { QnaProps } from '@/shared/type';
+import { QnaProps } from '@/shared/model/types';
 import React, { useState } from 'react';
-import { Writer, Range, Btn } from '@/components/atoms';
-import { useModal } from '@/app/hooks';
+import { Writer, Range, Btn } from '@/shared/ui';
+import { useModal } from '@/shared/hooks';
 import {
   qnaContainer,
   rightContent,
@@ -19,7 +19,7 @@ import {
   qnaDeleteBtn,
   editQuestionInput,
 } from './qna.css';
-import { writerStyle } from '../../atoms/Writer/writer.css';
+import { writerStyle } from '@/shared/ui/Writer/writer.css';
 import dayjs from 'dayjs';
 
 export default function Qna({

@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import { category, categoryMatch } from '@/shared/category';
 import dayjs from 'dayjs';
-import { Range } from '@/components/atoms';
+import { Range } from '@/shared/ui';
 import { useRouter } from 'next/navigation';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';

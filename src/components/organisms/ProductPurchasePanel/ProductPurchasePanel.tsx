@@ -2,7 +2,7 @@
 
 import { useState, useEffect, Suspense } from 'react';
 import { Provider } from 'jotai';
-import { CardProps } from '@/shared/type';
+import { CardProps } from '@/shared/model/types';
 import TicketPanel from './TicketPanel';
 import InfoPanel from './InfoPanel';
 import { useTempCart } from '@/app/hooks';

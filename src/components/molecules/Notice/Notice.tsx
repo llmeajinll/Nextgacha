@@ -1,5 +1,5 @@
 import React from 'react';
-import { Range } from '@/components/atoms';
+import { Range } from '@/shared/ui';
 import dayjs from 'dayjs';
 import Link from 'next/link';
 import {

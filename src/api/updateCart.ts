@@ -2,7 +2,7 @@
 
 import { revalidateTag } from 'next/cache';
 import { auth } from '@/auth';
-import { baseUrl } from '@/shared/baseUrl';
+import { baseUrl } from '@/shared/api/baseUrl';
 
 export default async function updateCart({
   preset,

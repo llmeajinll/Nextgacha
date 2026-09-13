@@ -3,7 +3,7 @@
 import React, { useState, useMemo } from 'react';
 import { detailFilter } from '@/shared/category';
 import { useSearchParams, useRouter, usePathname } from 'next/navigation';
-import { Range } from '@/components/atoms';
+import { Range } from '@/shared/ui';
 import {
   filterContainer,
   filterStyle,

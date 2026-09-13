@@ -1,5 +1,5 @@
 import React from 'react';
-import { Tag } from '@/components/atoms';
+import { Tag } from '@/shared/ui';
 import { containter } from './tagContainer.css';
 import dayjs from 'dayjs';
 

@@ -2,8 +2,8 @@
 
 import React from 'react';
 import { useRouter } from 'next/navigation';
-import { Btn, Range } from '@/components/atoms';
-import { useSpliteRoute } from '@/app/hooks';
+import { Btn, Range } from '@/shared/ui';
+import { useSplitRoute as useSpliteRoute } from '@/shared/hooks';
 
 export default function ManagerOrderLayout({
   children,

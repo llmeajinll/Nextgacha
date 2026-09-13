@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { userColl, cartColl, orderColl } from '@/lib/mongodb';
+import { userColl, cartColl, orderColl } from '@/shared/api/mongodb';
 import { ObjectId } from 'mongodb';
 
 export async function GET(req: Request) {

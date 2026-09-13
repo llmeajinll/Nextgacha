@@ -2,8 +2,8 @@
 
 import Image from 'next/image';
 import React, { useState } from 'react';
-import { Range } from '@/components/atoms';
-import { CardProps } from '@/shared/type';
+import { Range } from '@/shared/ui';
+import { CardProps } from '@/shared/model/types';
 
 export default function ProductManageCard(props: CardProps) {
   const [productPrice, setProductPrice] = useState(props.price);

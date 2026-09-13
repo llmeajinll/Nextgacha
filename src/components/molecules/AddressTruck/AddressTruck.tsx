@@ -2,7 +2,7 @@
 
 import React from 'react';
 import Image from 'next/image';
-import { Range } from '@/components/atoms';
+import { Range } from '@/shared/ui';
 
 export default function AddressTruck({ address }: { address: string }) {
   return (

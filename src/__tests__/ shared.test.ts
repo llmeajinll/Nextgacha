@@ -1,4 +1,4 @@
-import { comma } from '@/shared/comma';
+import { comma } from '@/shared/lib/comma';
 // import {formatDate} from '@/shared/formatDate';
 
 describe('shared', () => {

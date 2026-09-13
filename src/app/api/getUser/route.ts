@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
 import { cookies } from 'next/headers';
-import { userColl } from '@/lib/mongodb';
+import { userColl } from '@/shared/api/mongodb';
 import { auth } from '@/auth';
 import { revalidateTag } from 'next/cache';
 

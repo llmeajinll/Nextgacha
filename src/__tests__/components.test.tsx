@@ -1,6 +1,6 @@
 import React from 'react';
 import { render, screen, fireEvent } from '@testing-library/react';
-import Btn from '@/components/atoms/Btn/Btn'; // 직접 import
+import Btn from '@/shared/ui/Btn/Btn'; // 직접 import
 
 // CSS Modules 모킹 (vanilla-extract 사용 중이라면)
 jest.mock('@/styles/variants.css', () => ({

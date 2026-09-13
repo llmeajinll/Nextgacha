@@ -1,5 +1,5 @@
 import OrderTemplate from '@/components/templates/OrderTemplate/OrderTemplate';
-import { baseUrl } from '@/shared/baseUrl';
+import { baseUrl } from '@/shared/api/baseUrl';
 import React from 'react';
 
 export default async function RefundPage() {

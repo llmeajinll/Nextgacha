@@ -1,7 +1,7 @@
 'use client';
 
 import React from 'react';
-import { Range } from '@/components/atoms';
+import { Range } from '@/shared/ui';
 import { contentStyle } from './labeltitle.css';
 import { labelVariant, contentVariant } from '@/styles/variants.css';
 

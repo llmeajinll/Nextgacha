@@ -8,13 +8,13 @@ import {
   listStyle,
 } from './dropdown.css';
 // import Image from 'next/image';
-import { ImgBtn } from '@/components/atoms';
+import { ImgBtn } from '@/shared/ui';
 
 import { useSetAtom } from 'jotai';
-import { useDropDown } from '@/app/hooks/useDropDown';
+import { useDropDown } from '@/shared/hooks/useDropDown';
 
-import { CardProps } from '@/shared/type';
-import useSplitRoute from '@/app/hooks/useSplitRoute';
+import { CardProps } from '@/shared/model/types';
+import useSplitRoute from '@/shared/hooks/useSplitRoute';
 import { useTempCart } from '@/app/hooks';
 
 type DropDownType = Pick<CardProps, 'list' | 'num'>;

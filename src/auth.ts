@@ -2,8 +2,8 @@ import NextAuth from 'next-auth';
 import KakaoProvider from 'next-auth/providers/kakao';
 // import Kakao from 'next-auth/providers/kakao';
 import { authConfig } from './auth.config';
-import { userColl } from './lib/mongodb';
-import { koreaTime } from './shared/koreaTime';
+import { userColl } from './shared/api/mongodb';
+import { koreaTime } from './shared/lib/koreaTime';
 
 export const { handlers, signIn, signOut, auth } = NextAuth({
   // providers: [

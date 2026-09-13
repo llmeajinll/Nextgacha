@@ -1,6 +1,6 @@
 'use client';
 
-import { Range } from '@/components/atoms';
+import { Range } from '@/shared/ui';
 import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 

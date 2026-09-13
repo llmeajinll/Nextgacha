@@ -1,7 +1,7 @@
 import React from 'react';
 import Image from 'next/image';
-import { Writer } from '@/components/atoms';
-import { Range } from '@/components/atoms';
+import { Writer } from '@/shared/ui';
+import { Range } from '@/shared/ui';
 import { privateContainer } from './private.css';
 
 export default function Private({

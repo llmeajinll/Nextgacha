@@ -2,10 +2,10 @@
 
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import { Range } from '@/components/atoms';
+import { Range } from '@/shared/ui';
 import { inputStyle, sendingBtn, checkBox } from './order.css';
-import useSplitRoute from '@/app/hooks/useSplitRoute';
-import { useModal } from '@/app/hooks';
+import useSplitRoute from '@/shared/hooks/useSplitRoute';
+import { useModal } from '@/shared/hooks';
 
 export default function Order({
   props,

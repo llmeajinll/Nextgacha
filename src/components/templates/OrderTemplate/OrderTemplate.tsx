@@ -2,9 +2,9 @@
 
 import React, { useState, useEffect } from 'react';
 import Order from '@/components/molecules/Order/Order';
-import { Range } from '@/components/atoms';
+import { Range } from '@/shared/ui';
 import { orderTemplateContainer } from './orderTemplate.css';
-import { useModal } from '@/app/hooks';
+import { useModal } from '@/shared/hooks';
 
 export default function OrderTemplate({
   status,

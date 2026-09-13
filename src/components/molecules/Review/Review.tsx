@@ -1,7 +1,7 @@
-import { ReviewProps } from '@/shared/type';
+import { ReviewProps } from '@/shared/model/types';
 import React from 'react';
-import { Range, Writer } from '@/components/atoms';
-import StarRating from '../StarRating/StarRating';
+import { Range, Writer } from '@/shared/ui';
+import { StarRating } from '@/shared/ui';
 import dayjs from 'dayjs';
 
 export default function Review({ props }: { props: ReviewProps }) {

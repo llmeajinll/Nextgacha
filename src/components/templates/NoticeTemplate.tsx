@@ -4,7 +4,7 @@ import React, { Fragment, useState } from 'react';
 import { Notice } from '../molecules';
 import { notice } from '@/shared/notice';
 
-import { Range } from '../atoms';
+import { Range } from '@/shared/ui';
 import Pagination from 'rc-pagination';
 import 'rc-pagination/assets/index.css';
 

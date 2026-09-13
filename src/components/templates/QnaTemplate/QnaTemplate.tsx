@@ -2,10 +2,10 @@
 import React, { useState, useEffect } from 'react';
 import Image from 'next/image';
 import { useSession } from 'next-auth/react';
-import { useModal } from '@/app/hooks';
-import { ImgBtn, Range, ToggleBtn } from '@/components/atoms';
+import { useModal } from '@/shared/hooks';
+import { ImgBtn, Range, ToggleBtn } from '@/shared/ui';
 import { Private, Qna } from '@/components/molecules';
-import useSplitRoute from '@/app/hooks/useSplitRoute';
+import useSplitRoute from '@/shared/hooks/useSplitRoute';
 import * as styles from './qnaTemplate.css';
 
 export default function QnaTemplate() {

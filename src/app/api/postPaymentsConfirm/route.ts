@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
 import { auth } from '@/auth';
-import { mongodbClient } from '@/lib/mongodb';
+import { mongodbClient } from '@/shared/api/mongodb';
 import { validateStock } from '@/lib/validateStock';
 import { reduceStock } from '@/lib/reduceStock';
 import { reducePoint } from '@/lib/reducePoint';

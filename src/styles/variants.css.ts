@@ -4,7 +4,7 @@ import { vars } from '@/styles/theme.css';
 //   rangeWidth,
 //   rangeHeight,
 //   rangeGap,
-// } from '@/components/atoms/Range/range.css';
+// } from '@/shared/ui/Range/range.css';
 
 // export const base = style({
 //   borderRadius: 8,

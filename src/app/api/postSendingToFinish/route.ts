@@ -1,9 +1,9 @@
 import { NextResponse } from 'next/server';
-import { orderColl, mongodbClient, userColl } from '@/lib/mongodb';
+import { orderColl, mongodbClient, userColl } from '@/shared/api/mongodb';
 import { validateStock } from '@/lib/validateStock';
 import dayjs from 'dayjs';
 import { AnyBulkWriteOperation } from 'mongodb';
-import { koreaTime } from '@/shared/koreaTime';
+import { koreaTime } from '@/shared/lib/koreaTime';
 
 export async function POST(req: Request) {
   const data = await req.json();

@@ -11,3 +11,7 @@ export { default as Range } from './Range/Range';
 export { default as CountBtn } from './Btn/CountBtn';
 export { default as StarBtn } from './ImgBtn/StarBtn';
 export { default as Writer } from './Writer/Writer';
+export { default as ModalPortal } from './ModalPortal';
+export { default as LabelTitle } from './LabelTitle/LabelTitle';
+export { default as StarRating } from './StarRating/StarRating';
+export { default as EmptyCard } from './EmptyCard';

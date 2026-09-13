@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { mongodbClient, qnaColl } from '@/lib/mongodb';
+import { mongodbClient, qnaColl } from '@/shared/api/mongodb';
 
 export async function POST(req: Request) {
   const data = await req.json();

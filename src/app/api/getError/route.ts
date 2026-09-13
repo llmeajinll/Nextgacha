@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { orderColl, errorColl } from '@/lib/mongodb';
+import { orderColl, errorColl } from '@/shared/api/mongodb';
 // import { auth } from '@/auth';
 
 export async function GET(req: Request) {

@@ -11,10 +11,10 @@ import {
   deleteBtn,
   priceStyle,
 } from './ticket.css';
-import { Range, CountBtn } from '@/components/atoms';
-import { ProductProps } from '@/shared/type';
-import { comma } from '@/shared/comma';
-import { useModal } from '@/app/hooks';
+import { Range, CountBtn } from '@/shared/ui';
+import { ProductProps } from '@/shared/model/types';
+import { comma } from '@/shared/lib/comma';
+import { useModal } from '@/shared/hooks';
 
 export default function Ticket({
   props,

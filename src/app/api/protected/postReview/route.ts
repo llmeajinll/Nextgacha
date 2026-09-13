@@ -1,8 +1,8 @@
 import { NextResponse } from 'next/server';
-import { reviewColl, orderColl, mongodbClient } from '@/lib/mongodb';
+import { reviewColl, orderColl, mongodbClient } from '@/shared/api/mongodb';
 import { auth } from '@/auth';
 import dayjs from 'dayjs';
-import { koreaTime } from '@/shared/koreaTime';
+import { koreaTime } from '@/shared/lib/koreaTime';
 
 export async function POST(req: Request) {
   const authSession = await auth();

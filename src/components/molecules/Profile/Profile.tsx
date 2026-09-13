@@ -6,12 +6,12 @@ import { useRouter } from 'next/navigation';
 import { auth } from '@/auth';
 import { cookies } from 'next/headers';
 import Image from 'next/image';
-import { Range } from '@/components/atoms';
+import { Range } from '@/shared/ui';
 import { profileImage, email, point, name } from './profile.css';
-import { comma } from '@/shared/comma';
+import { comma } from '@/shared/lib/comma';
 import { userInfoAtom } from '@/jotai/store';
 import { useAtom } from 'jotai';
-import { useModal } from '@/app/hooks';
+import { useModal } from '@/shared/hooks';
 
 export default function Profile() {
   const router = useRouter();

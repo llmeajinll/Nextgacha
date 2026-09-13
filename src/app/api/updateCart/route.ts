@@ -1,4 +1,4 @@
-import { cartColl } from '@/lib/mongodb';
+import { cartColl } from '@/shared/api/mongodb';
 import { NextResponse } from 'next/server';
 import { auth } from '@/auth';
 import { revalidateTag } from 'next/cache';

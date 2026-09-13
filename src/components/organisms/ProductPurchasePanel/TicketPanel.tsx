@@ -6,7 +6,7 @@ import Cookie from 'js-cookie';
 import { setTempCartAtom, tempCartAtom } from '@/jotai/store';
 import { Ticket, TicketContainer } from '@/components/molecules';
 import { useTempCart } from '@/app/hooks';
-import useSplitRoute from '@/app/hooks/useSplitRoute';
+import useSplitRoute from '@/shared/hooks/useSplitRoute';
 
 export default function TicketPanel({}: // tempCart,
 // increase,

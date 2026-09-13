@@ -3,7 +3,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import NextAuth from 'next-auth';
 import { authConfig } from './auth.config';
-import { baseUrl } from './shared/baseUrl';
+import { baseUrl } from './shared/api/baseUrl';
 
 const { auth } = NextAuth(authConfig);
 

@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { userColl, productColl } from '@/lib/mongodb';
+import { userColl, productColl } from '@/shared/api/mongodb';
 import { auth } from '@/auth';
 import { cookies } from 'next/headers';
 

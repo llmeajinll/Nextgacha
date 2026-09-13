@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
 import { auth } from '@/auth';
-import { userColl, cartColl, productColl } from '@/lib/mongodb';
+import { userColl, cartColl, productColl } from '@/shared/api/mongodb';
 
 export async function GET(req: Request) {
   const { searchParams } = new URL(req.url);

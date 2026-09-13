@@ -1,4 +1,4 @@
-import { userColl } from '@/lib/mongodb';
+import { userColl } from '@/shared/api/mongodb';
 import dayjs from 'dayjs';
 import { ClientSession } from 'mongodb';
 

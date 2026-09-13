@@ -1,9 +1,9 @@
-import { orderColl } from '@/lib/mongodb';
+import { orderColl } from '@/shared/api/mongodb';
 import dayjs from 'dayjs';
 import { ClientSession } from 'mongodb';
 import { findUserInfo } from './findUserInfo';
 import { NextResponse } from 'next/server';
-import { koreaTime } from '@/shared/koreaTime';
+import { koreaTime } from '@/shared/lib/koreaTime';
 
 export async function addOrder({
   orderId,

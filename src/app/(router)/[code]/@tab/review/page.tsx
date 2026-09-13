@@ -1,9 +1,9 @@
 'use client';
 
-import useSplitRoute from '@/app/hooks/useSplitRoute';
+import useSplitRoute from '@/shared/hooks/useSplitRoute';
 import React, { useState, useEffect } from 'react';
-import { ReviewProps } from '@/shared/type';
-import { Range } from '@/components/atoms';
+import { ReviewProps } from '@/shared/model/types';
+import { Range } from '@/shared/ui';
 import getReview from '@/api/getReview';
 import { Review } from '@/components/molecules';
 

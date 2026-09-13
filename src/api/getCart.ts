@@ -1,6 +1,6 @@
 // 'use server';
 import { auth } from '@/auth';
-import { baseUrl } from '@/shared/baseUrl';
+import { baseUrl } from '@/shared/api/baseUrl';
 
 export default async function getCart() {
   // console.log('getCart preview', session?.user?.email);

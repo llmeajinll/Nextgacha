@@ -1,5 +1,5 @@
 import { http, HttpResponse } from 'msw';
-import { baseUrl } from '@/shared/baseUrl';
+import { baseUrl } from '@/shared/api/baseUrl';
 
 // const baseUrl = 'http://localhost:3000';
 

@@ -3,8 +3,9 @@
 import React, { Suspense, useEffect, useState } from 'react';
 import { useSearchParams, useRouter, usePathname } from 'next/navigation';
 import getHistory from '@/api/getHistory';
-import { Range, ScrollToTop } from '@/components/atoms';
-import { EmptyCard, History } from '@/components/molecules';
+import { Range, ScrollToTop } from '@/shared/ui';
+import { History } from '@/components/molecules';
+import { EmptyCard } from '@/shared/ui';
 import Pagination from 'rc-pagination';
 import 'rc-pagination/assets/index.css';
 

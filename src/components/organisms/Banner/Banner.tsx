@@ -4,7 +4,7 @@ import React, { useEffect, useState } from 'react';
 import Image from 'next/image';
 import { bannerContainer, eventConatiner } from './banner.css';
 
-import { ReactSlick } from '@/components/atoms';
+import { ReactSlick } from '@/shared/ui';
 
 export default function Banner() {
   // const [angle, setAngle] = useState(0);

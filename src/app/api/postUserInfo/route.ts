@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { userColl } from '@/lib/mongodb';
+import { userColl } from '@/shared/api/mongodb';
 
 export async function POST(req: Request) {
   const { email, nickname } = await req.json();

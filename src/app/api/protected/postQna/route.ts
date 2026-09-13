@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server';
-import { mongodbClient, qnaColl, counterColl } from '@/lib/mongodb';
+import { mongodbClient, qnaColl, counterColl } from '@/shared/api/mongodb';
 import dayjs from 'dayjs';
-import { koreaTime } from '@/shared/koreaTime';
+import { koreaTime } from '@/shared/lib/koreaTime';
 
 export async function POST(req: Request) {
   //   const authSession = await auth();

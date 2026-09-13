@@ -3,12 +3,12 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
-import { Range } from '@/components/atoms';
+import { Range } from '@/shared/ui';
 import { Search } from '@/components/molecules';
 import { category, categoryMatch } from '@/shared/category';
 import Pagination from 'rc-pagination';
 import 'rc-pagination/assets/index.css';
-import { CardProps } from '@/shared/type';
+import { CardProps } from '@/shared/model/types';
 
 export default function page() {
   const router = useRouter();

@@ -3,9 +3,9 @@
 import { useRouter, useSearchParams, usePathname } from 'next/navigation';
 // import { useRouter } from 'next/router';
 import React, { Suspense, useEffect, useState } from 'react';
-import { CardProps } from '@/shared/type';
+import { CardProps } from '@/shared/model/types';
 import { CardTemplate } from '../templates';
-import { Title, Range, ScrollToTop } from '@/components/atoms';
+import { Title, Range, ScrollToTop } from '@/shared/ui';
 import { getStandardCategory } from '@/shared/getStandardCategory';
 import { tagCategory } from '@/shared/category';
 import Pagination from 'rc-pagination';

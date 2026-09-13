@@ -2,9 +2,9 @@
 
 import React, { useState } from 'react';
 import { useRouter, usePathname, useSearchParams } from 'next/navigation';
-import { Range, Btn } from '@/components/atoms';
+import { Range, Btn } from '@/shared/ui';
 import { detailTabContainer } from './detailtab.css';
-import useSplitRoute from '@/app/hooks/useSplitRoute';
+import useSplitRoute from '@/shared/hooks/useSplitRoute';
 
 export default function DetailTab({ status = 'detail' }: { status?: string }) {
   const router = useRouter();

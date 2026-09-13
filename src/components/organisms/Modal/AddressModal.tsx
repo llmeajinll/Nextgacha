@@ -10,8 +10,8 @@ import {
 } from './addressModal.css';
 import { userInfoAtom } from '@/jotai/store';
 import { useAtom, useAtomValue } from 'jotai';
-import { useModal } from '@/app/hooks';
-import { Range } from '@/components/atoms';
+import { useModal } from '@/shared/hooks';
+import { Range } from '@/shared/ui';
 import { queryClientAtom } from 'jotai-tanstack-query';
 
 export default function AddressModal() {

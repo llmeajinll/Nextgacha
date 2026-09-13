@@ -3,9 +3,10 @@
 import React, { useState, useEffect, Suspense } from 'react';
 // import getLike from '@/api/getLike';
 import { cardTemplateContainer } from '@/components/templates/CardTemplate/cardtemplate.css';
-import { Range } from '@/components/atoms';
-import { Card, EmptyCard } from '@/components/molecules';
-import { CardProps } from '@/shared/type';
+import { Range } from '@/shared/ui';
+import { Card } from '@/components/molecules';
+import { EmptyCard } from '@/shared/ui';
+import { CardProps } from '@/shared/model/types';
 import Pagination from 'rc-pagination';
 import 'rc-pagination/assets/index.css';
 

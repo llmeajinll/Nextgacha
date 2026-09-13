@@ -6,7 +6,7 @@ import { useAtom } from 'jotai';
 import updateLike from '@/api/updateLike';
 import Cookies from 'js-cookie';
 import { modalAtom } from '@/jotai/store';
-import { useModal } from '@/app/hooks';
+import { useModal } from '@/shared/hooks';
 
 export default function HeartBtn({
   size = 28,
