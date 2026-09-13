@@ -120,12 +120,7 @@ export default function QnaTemplate() {
               alt='profile'
               width={50}
               height={50}
-              style={{
-                border: '2px solid #BFE3FF',
-                borderRadius: '50px',
-                backgroundColor: 'white',
-                backgroundSize: '120%',
-              }}
+              className={styles.profileImage}
             />
             <Range width='full' preset='column'>
               <textarea
@@ -135,49 +130,32 @@ export default function QnaTemplate() {
                 onChange={(e) => setQuestion(e.target.value)}
                 className={styles.textareaStyle}
               />
-              <div style={{ marginLeft: 'auto', fontFamily: 'silkscreen' }}>
+              <div className={styles.charCount}>
                 {question.length} / 150
               </div>
             </Range>
           </Range>
           <Range width='full' preset='between'>
-            <Range
-              gap='5'
-              style={{
-                fontFamily: 'silkscreen',
-                alignItem: 'center',
-                paddingTop: '3px',
-              }}
-            >
+            <Range gap='5' className={styles.secretToggleRow}>
               <ToggleBtn
                 value={secret}
                 setValue={setSecret}
                 rotate='vertical'
               />
-              <Range style={{ paddingTop: '3px', color: '#6F6F6F' }}>
-                Private
-              </Range>
+              <Range className={styles.secretLabel}>Private</Range>
             </Range>
             <ImgBtn
               width={48}
               height={32}
               img='post'
-              style={{ marginLeft: 'auto' }}
+              className={styles.postBtn}
               onClick={onClickPostReview}
             />
           </Range>
         </Range>
       )}
       {qna.length === 0 ? (
-        <Range
-          width='full'
-          style={{
-            boxSizing: 'border-box',
-            border: '1px solid lightgray',
-            padding: '50px',
-            fontSize: '20px',
-          }}
-        >
+        <Range width='full' className={styles.emptyState}>
           등록된 질문이 없습니다. 첫 질문을 남겨보세요!
         </Range>
       ) : (
@@ -196,14 +174,10 @@ export default function QnaTemplate() {
                       props={val}
                       isWriter={val.email === userInfo?.email}
                       num={Number(firstRoute)}
-                      style={{ marginTop: idx !== 0 ? '-1px' : undefined }}
+                      stacked={idx !== 0}
                     />
                   ) : (
-                    <Private
-                      key={val.qna_num}
-                      props={val}
-                      style={{ marginTop: idx !== 0 ? '-1px' : undefined }}
-                    />
+                    <Private key={val.qna_num} props={val} stacked={idx !== 0} />
                   )}
                 </div>
               );

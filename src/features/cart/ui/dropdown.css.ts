@@ -50,3 +50,16 @@ export const listStyle = style({
     backgroundColor: '#F1F1F1',
   },
 });
+
+export const dropdownWrapper = style({
+  position: 'relative',
+  zIndex: 10,
+});
+
+export const arrowClosed = style({
+  transform: 'rotate(0deg)',
+});
+
+export const arrowOpen = style({
+  transform: 'rotate(180deg)',
+});

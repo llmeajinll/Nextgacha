@@ -5,3 +5,11 @@ export const privateContainer = style({
   padding: '8px 10px',
   boxSizing: 'border-box',
 });
+
+export const lockText = style({
+  lineHeight: '26px',
+});
+
+export const stacked = style({
+  marginTop: '-1px',
+});

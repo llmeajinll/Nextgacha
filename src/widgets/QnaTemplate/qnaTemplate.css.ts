@@ -40,3 +40,37 @@ export const wrapTextareaContainer = style({
   padding: '10px',
   backgroundColor: 'white',
 });
+
+export const profileImage = style({
+  border: '2px solid #BFE3FF',
+  borderRadius: '50px',
+  backgroundColor: 'white',
+  backgroundSize: '120%',
+});
+
+export const charCount = style({
+  marginLeft: 'auto',
+  fontFamily: 'silkscreen',
+});
+
+export const secretToggleRow = style({
+  fontFamily: 'silkscreen',
+  alignItems: 'center',
+  paddingTop: '3px',
+});
+
+export const secretLabel = style({
+  paddingTop: '3px',
+  color: '#6F6F6F',
+});
+
+export const postBtn = style({
+  marginLeft: 'auto',
+});
+
+export const emptyState = style({
+  boxSizing: 'border-box',
+  border: '1px solid lightgray',
+  padding: '50px',
+  fontSize: '20px',
+});

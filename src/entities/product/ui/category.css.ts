@@ -50,3 +50,11 @@ export const content = style({
 export const select = style({
   color: vars.color.blue1,
 });
+
+export const wrapRow = style({
+  flexWrap: 'wrap',
+});
+
+export const contentItem = style({
+  flex: '0 0 auto',
+});

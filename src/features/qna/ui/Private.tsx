@@ -2,14 +2,14 @@ import React from 'react';
 import Image from 'next/image';
 import { Writer } from '@/shared/ui';
 import { Range } from '@/shared/ui';
-import { privateContainer } from './private.css';
+import { privateContainer, lockText, stacked } from './private.css';
 
 export default function Private({
   props,
-  style,
+  stacked: isStacked,
 }: {
   props: any;
-  style?: React.CSSProperties;
+  stacked?: boolean;
 }) {
   return (
     <Range
@@ -17,11 +17,10 @@ export default function Private({
       preset='between'
       key={props._id}
       gap='10'
-      className={privateContainer}
-      style={{ ...style }}
+      className={`${privateContainer} ${isStacked ? stacked : ''}`}
     >
       <Image src='/images/lock.png' alt='lock' width={24} height={24} />
-      <div style={{ lineHeight: '26px' }}>비밀 문의입니다.</div>
+      <div className={lockText}>비밀 문의입니다.</div>
       <Writer
         writer='
   anonymity'

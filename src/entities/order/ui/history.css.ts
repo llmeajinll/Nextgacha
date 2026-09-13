@@ -1,5 +1,41 @@
-import { style } from '@vanilla-extract/css';
+import { createVar, style } from '@vanilla-extract/css';
 import { vars } from '@/styles/theme.css';
+
+export const sectionHeightVar = createVar();
+
+export const receiptWrap = style({
+  position: 'relative',
+  width: '310px',
+});
+
+export const stampImg = style({
+  position: 'absolute',
+  top: '20px',
+  left: '10px',
+  opacity: 0.4,
+});
+
+export const sectionOuter = style({
+  position: 'relative',
+  width: '310px',
+  height: sectionHeightVar,
+});
+
+const innerPadBase = style({
+  position: 'absolute',
+  width: '100%',
+  boxSizing: 'border-box',
+});
+
+export const innerPadTop = style([innerPadBase, { padding: '20px 12px 0 12px' }]);
+export const innerPadMiddle = style([
+  innerPadBase,
+  { padding: '10px 15px 0 12px' },
+]);
+export const innerPadBottom = style([
+  innerPadBase,
+  { padding: '10px 12px 0 12px' },
+]);
 
 export const imageStyle = style({
   border: `1px solid ${vars.color.gray1}`,

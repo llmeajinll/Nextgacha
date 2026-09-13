@@ -10,3 +10,7 @@ export const imgBtn = style({
   borderTop: `1px solid ${vars.color.gray1}`,
   marginTop: '15px',
 });
+
+export const imgBtnBase = style({
+  cursor: 'pointer',
+});

@@ -135,3 +135,20 @@ export const editQuestionInput = style({
   padding: '7px 10px 3px 10px',
   outline: 'none',
 });
+
+export const leftWrap = style({
+  marginLeft: 'auto',
+});
+
+export const questionText = style({
+  marginTop: '5px',
+});
+
+export const deleteBtn = style([
+  qnaDeleteBtn,
+  { marginLeft: '28px', color: vars.color.blue1 },
+]);
+
+export const stacked = style({
+  marginTop: '-1px',
+});

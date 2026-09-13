@@ -15,6 +15,11 @@ import {
   reportContainer,
   wrapTextarea,
   search,
+  activeMenu,
+  reportBtn,
+  reportTitle,
+  reportTextarea,
+  reportSendBtn,
 } from './header.css';
 
 import Link from 'next/link';
@@ -74,9 +79,7 @@ export default function Header({ session }: { session: Session | null }) {
                 >
                   <Link
                     href='/search?type=main&tag=전체 상품&page=1'
-                    style={{
-                      color: `${firstRoute === 'search' ? '#75C3FE' : ''}`,
-                    }}
+                    className={firstRoute === 'search' ? activeMenu : ''}
                   >
                     CATEGORY
                   </Link>
@@ -84,10 +87,7 @@ export default function Header({ session }: { session: Session | null }) {
 
                 <Link href='/notice'>
                   <span
-                    className={menu}
-                    style={{
-                      color: `${firstRoute === 'notice' ? '#75C3FE' : ''}`,
-                    }}
+                    className={`${menu} ${firstRoute === 'notice' ? activeMenu : ''}`}
                   >
                     NOTICE
                   </span>
@@ -95,10 +95,7 @@ export default function Header({ session }: { session: Session | null }) {
                 {session?.user && (
                   <Link href={`/mypage/cart`}>
                     <span
-                      className={menu}
-                      style={{
-                        color: `${firstRoute === 'mypage' ? '#75C3FE' : ''}`,
-                      }}
+                      className={`${menu} ${firstRoute === 'mypage' ? activeMenu : ''}`}
                     >
                       MYPAGE
                     </span>
@@ -131,17 +128,7 @@ export default function Header({ session }: { session: Session | null }) {
                   title='오류 신고'
                   width={30}
                   height={28}
-                  style={{
-                    marginLeft: '5px',
-                    marginTop: '2px',
-                    // marginBottom: '5px',
-                    // marginRight: '-1px',
-                    // border: '1px solid lightgray',
-                    // borderRight: '1px solid white',
-                    // padding: '5px 6px 7px 7px',
-                    // backgroundColor: 'white',
-                    // zIndex: 30,
-                  }}
+                  className={reportBtn}
                   onClick={() => {
                     setShowReport((prev) => !prev);
                   }}
@@ -150,27 +137,18 @@ export default function Header({ session }: { session: Session | null }) {
                 {showReport && (
                   <div className={reportContainer}>
                     <div className={wrapTextarea}>
-                      <div
-                        style={{
-                          fontSize: '20px',
-                          marginBottom: '10px',
-                          fontWeight: 500,
-                        }}
-                      >
-                        🚨 오류 신고 🚨
-                      </div>
+                      <div className={reportTitle}>🚨 오류 신고 🚨</div>
                       <textarea
                         placeholder='오류를 입력해주세요 (최소 4자, 최대 200자)'
-                        className={textareaStyle}
+                        className={`${textareaStyle} ${reportTextarea}`}
                         maxLength={200}
                         value={textareaValue}
-                        style={{ border: '2px solid #75C3FE' }}
                         onChange={(e) => {
                           setTextAreaValue(e.target.value);
                         }}
                       />
                       <Btn
-                        style={{ margin: '5px auto 0 auto' }}
+                        className={reportSendBtn}
                         onClick={async () => {
                           if (textareaValue.length === 0) {
                             alert('오류를 입력해주세요.');

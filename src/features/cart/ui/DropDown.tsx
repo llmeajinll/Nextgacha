@@ -6,6 +6,9 @@ import {
   dropdownTitle,
   listContainer,
   listStyle,
+  dropdownWrapper,
+  arrowClosed,
+  arrowOpen,
 } from './dropdown.css';
 // import Image from 'next/image';
 import { ImgBtn } from '@/shared/ui';
@@ -37,14 +40,12 @@ export default function DropDown({
   // const status = true;
   //   const [select, setSelect] = useState('');
   return (
-    <div style={{ position: 'relative', zIndex: 10 }} ref={dropdownRef}>
+    <div className={dropdownWrapper} ref={dropdownRef}>
       <div className={dropdownContainer} onClick={toggle}>
         <ImgBtn
           img='dropdown'
           size={45}
-          style={{
-            transform: isOpen ? 'rotate(180deg)' : 'rotate(0deg)',
-          }}
+          className={isOpen ? arrowOpen : arrowClosed}
         />
         <div className={dropdownTitle}>
           {selected || '[필수] 제품을 선택해 주세요.'}

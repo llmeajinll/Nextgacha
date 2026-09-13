@@ -18,6 +18,10 @@ import {
   countLength,
   qnaDeleteBtn,
   editQuestionInput,
+  leftWrap,
+  questionText,
+  deleteBtn,
+  stacked,
 } from './qna.css';
 import { writerStyle } from '@/shared/ui/Writer/writer.css';
 import dayjs from 'dayjs';
@@ -26,12 +30,12 @@ export default function Qna({
   props,
   isWriter = false,
   num,
-  style,
+  stacked: isStacked,
 }: {
   props: QnaProps;
   isWriter: boolean;
   num: number;
-  style?: React.CSSProperties;
+  stacked?: boolean;
 }) {
   const [show, setShow] = useState(false);
   const [isEdit, setIsEdit] = useState(false);
@@ -166,7 +170,7 @@ export default function Qna({
 
   const Left = ({ content }: { content: string }) => {
     return (
-      <Range style={{ marginLeft: 'auto' }}>
+      <Range className={leftWrap}>
         <Range className={leftContent}>{content}</Range>
       </Range>
     );
@@ -185,13 +189,12 @@ export default function Qna({
     <Range
       preset='column'
       key={props.qna_num}
-      className={qnaContainer}
-      style={{ ...style }}
+      className={`${qnaContainer} ${isStacked ? stacked : ''}`}
     >
       <Range gap='8'>
         <div className={question}>Q.</div>
         {isEdit === false ? (
-          <div style={{ marginTop: '5px' }}>{props.question}</div>
+          <div className={questionText}>{props.question}</div>
         ) : (
           <input
             value={editInput}
@@ -208,11 +211,7 @@ export default function Qna({
       >
         {isWriter && (
           <Range>
-            <button
-              className={qnaDeleteBtn}
-              style={{ marginLeft: '28px', color: '#75C3FE' }}
-              onClick={onClickDeleteQuestion}
-            >
+            <button className={deleteBtn} onClick={onClickDeleteQuestion}>
               delete
             </button>
 

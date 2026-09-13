@@ -102,3 +102,26 @@ export const drawer = style({
 export const drawerOpen = style({
   transform: 'translateX(0)',
 });
+
+export const activeMenu = style({
+  color: vars.color.blue1,
+});
+
+export const reportBtn = style({
+  marginLeft: '5px',
+  marginTop: '2px',
+});
+
+export const reportTitle = style({
+  fontSize: '20px',
+  marginBottom: '10px',
+  fontWeight: 500,
+});
+
+export const reportTextarea = style({
+  border: `2px solid ${vars.color.blue1}`,
+});
+
+export const reportSendBtn = style({
+  margin: '5px auto 0 auto',
+});

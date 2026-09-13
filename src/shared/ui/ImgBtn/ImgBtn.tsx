@@ -2,6 +2,7 @@
 
 import React from 'react';
 import Image from 'next/image';
+import { imgBtnBase } from './imgBtn.css';
 
 const image = {
   share: '/images/share.png',
@@ -19,7 +20,7 @@ type Props =
       width?: never;
       height?: never;
       title?: string;
-      style?: any;
+      className?: string;
       onClick?: () => void;
     }
   | {
@@ -28,7 +29,7 @@ type Props =
       width?: number;
       height?: number;
       title?: string;
-      style?: any;
+      className?: string;
       onClick?: () => void;
     };
 
@@ -38,7 +39,7 @@ export default function ImgBtn({
   width,
   height,
   title,
-  style,
+  className,
   onClick,
 }: Props) {
   return (
@@ -49,7 +50,7 @@ export default function ImgBtn({
       title={title}
       alt='like'
       onClick={onClick}
-      style={{ cursor: 'pointer', ...style }}
+      className={`${imgBtnBase} ${className ?? ''}`}
     />
   );
 }

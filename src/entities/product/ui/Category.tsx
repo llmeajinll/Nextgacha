@@ -9,6 +9,8 @@ import {
   content,
   line,
   select,
+  wrapRow,
+  contentItem,
 } from './category.css';
 import { categoryVariant } from '@/styles/variants.css';
 import { category } from '@/entities/product/lib/category';
@@ -106,24 +108,17 @@ export default function Category({ status = 'header', setShow }: Props) {
         >
           애니메이션
         </div>
-        <Range
-          preset='left'
-          gap='15'
-          style={{
-            flexWrap: 'wrap',
-          }}
-        >
+        <Range preset='left' gap='15' className={wrapRow}>
           {category.ani.map((val, idx) => (
             <Link
               href={`/search?type=ani&detail=${val}&page=1&filter=전체`}
               key={val}
             >
               <div
-                className={`${content} ${
+                className={`${content} ${contentItem} ${
                   detail === val && status === 'menu' ? select : null
                 }`}
                 key={val}
-                style={{ flex: '0 0 auto' }}
               >
                 {val}
               </div>
@@ -152,23 +147,17 @@ export default function Category({ status = 'header', setShow }: Props) {
             >
               반다이
             </div>
-            <Range
-              gap='15'
-              style={{
-                flexWrap: 'wrap',
-              }}
-            >
+            <Range gap='15' className={wrapRow}>
               {category.series.BANDAI.map((val, idx) => (
                 <Link
                   href={`/search?type=series&company=bandai&detail=${val}&page=1&filter=전체`}
                   key={val}
                 >
                   <div
-                    className={`${content} ${
+                    className={`${content} ${contentItem} ${
                       detail === val && status === 'menu' ? select : null
                     }`}
                     key={val}
-                    style={{ flex: '0 0 auto' }}
                   >
                     {val}
                   </div>
@@ -185,23 +174,17 @@ export default function Category({ status = 'header', setShow }: Props) {
             >
               토미
             </div>
-            <Range
-              gap='15'
-              style={{
-                flexWrap: 'wrap',
-              }}
-            >
+            <Range gap='15' className={wrapRow}>
               {category.series.TOMY.map((val, idx) => (
                 <Link
                   href={`/search?type=series&company=tomy&detail=${val}&page=1&filter=전체`}
                   key={val}
                 >
                   <div
-                    className={`${content} ${
+                    className={`${content} ${contentItem} ${
                       detail === val && status === 'menu' ? select : null
                     }`}
                     key={val}
-                    style={{ flex: '0 0 auto' }}
                   >
                     {val}
                   </div>
@@ -218,23 +201,17 @@ export default function Category({ status = 'header', setShow }: Props) {
             >
               STANDSTONES
             </div>
-            <Range
-              gap='15'
-              style={{
-                flexWrap: 'wrap',
-              }}
-            >
+            <Range gap='15' className={wrapRow}>
               {category.series.STANDSTONES.map((val, idx) => (
                 <Link
                   href={`/search?type=series&company=standstones&detail=${val}&page=1&filter=전체`}
                   key={val}
                 >
                   <div
-                    className={`${content} ${
+                    className={`${content} ${contentItem} ${
                       detail === val && status === 'menu' ? select : null
                     }`}
                     key={val}
-                    style={{ flex: '0 0 auto' }}
                   >
                     {val}
                   </div>
@@ -251,23 +228,17 @@ export default function Category({ status = 'header', setShow }: Props) {
             >
               기타
             </div>
-            <Range
-              gap='15'
-              style={{
-                flexWrap: 'wrap',
-              }}
-            >
+            <Range gap='15' className={wrapRow}>
               {category.series.ETC.map((val, idx) => (
                 <Link
                   href={`/search?type=series&company=etc&detail=${val}&page=1&filter=전체`}
                   key={val}
                 >
                   <div
-                    className={`${content} ${
+                    className={`${content} ${contentItem} ${
                       detail === val && status === 'menu' ? select : null
                     }`}
                     key={val}
-                    style={{ flex: '0 0 auto' }}
                   >
                     {val}
                   </div>
