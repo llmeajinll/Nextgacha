@@ -49,8 +49,7 @@ export default function AlertModal() {
 
         {modalState.onClickCancel && (
           <button
-            className={styles.modalBtn}
-            style={{ marginLeft: '15px' }}
+            className={`${styles.modalBtn} ${styles.secondBtn}`}
             onClick={() => {
               if (modalState.onClickCancel) modalState.onClickCancel();
               setModalState({
@@ -78,10 +77,7 @@ export default function AlertModal() {
               preset='between'
               width='full'
               height='45'
-              style={{
-                backgroundColor: '#75C3FE',
-                border: '1px solid #75C3FE',
-              }}
+              className={styles.headerBar}
             >
               <div className={styles.alertText}>ALERT</div>
               <button

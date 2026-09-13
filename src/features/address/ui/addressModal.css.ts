@@ -41,3 +41,17 @@ export const writeBtn = style({
   color: vars.color.black1,
   fontWeight: '500',
 });
+
+export const wrapper = style({
+  position: 'relative',
+});
+
+export const closeBtn = style({
+  backgroundImage: "url('/images/closeBtn.png')",
+  width: '25px',
+  height: '25px',
+  backgroundSize: '100%',
+  border: 'none',
+  marginLeft: 'auto',
+  cursor: 'pointer',
+});

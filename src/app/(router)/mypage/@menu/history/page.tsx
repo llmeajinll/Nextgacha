@@ -8,6 +8,7 @@ import { History } from '@/entities/order/ui';
 import { EmptyCard } from '@/shared/ui';
 import Pagination from 'rc-pagination';
 import 'rc-pagination/assets/index.css';
+import { grid, paginationWrap } from './page.css';
 
 export default function HistoryPage() {
   const router = useRouter();
@@ -70,22 +71,13 @@ export default function HistoryPage() {
         <EmptyCard>HISTORY IS EMPTY</EmptyCard>
       ) : (
         <>
-          <div
-            style={{
-              padding: '20px 0 0 0',
-              display: 'grid',
-              gridTemplateColumns: 'repeat(4, 310px)',
-              justifyContent: 'space-between',
-              margin: '0 auto',
-              gap: '10px',
-            }}
-          >
+          <div className={grid}>
             {history.map((val: any) => {
               // console.log(val);
               return <History props={val} key={val.orderId} />;
             })}
           </div>
-          <Range style={{ margin: '80px auto 30px auto' }}>
+          <Range className={paginationWrap}>
             <Pagination
               current={currentPage}
               total={total}

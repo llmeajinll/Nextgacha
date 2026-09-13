@@ -13,6 +13,7 @@ import 'rc-pagination/assets/index.css';
 import { useAtom } from 'jotai';
 import { searchProductsAtom } from '@/entities/product/model/store';
 import getProducts from '@/entities/product/api/getProducts';
+import { paginationWrap } from './searchPage.css';
 
 export default function SearchPage() {
   const router = useRouter();
@@ -83,7 +84,7 @@ export default function SearchPage() {
         <CardTemplate />
 
         {searchProducts.length !== 0 && (
-          <Range style={{ margin: '40px auto' }}>
+          <Range className={paginationWrap}>
             <Pagination
               current={currentPage}
               total={total}

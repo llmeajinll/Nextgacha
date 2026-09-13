@@ -7,6 +7,8 @@ import {
   addressBtn,
   addressContainer,
   writeBtn,
+  wrapper,
+  closeBtn,
 } from './addressModal.css';
 import { userInfoAtom } from '@/entities/user/model/store';
 import { useAtom, useAtomValue } from 'jotai';
@@ -57,7 +59,7 @@ export default function AddressModal() {
   };
 
   return (
-    <div style={{ position: 'relative' }}>
+    <div className={wrapper}>
       <div onClick={() => setShow(!show)} className={writeBtn}>
         [주소 수정]
       </div>
@@ -65,19 +67,7 @@ export default function AddressModal() {
         <Range preset='columnCenter' gap='8' className={addressContainer}>
           <Range preset='between'>
             <div>주소 수정</div>
-            <button
-              onClick={() => setShow(false)}
-              style={{
-                backgroundImage: "url('/images/closeBtn.png')",
-                width: '25px',
-                height: '25px',
-                backgroundSize: '100%',
-                border: 'none',
-                marginLeft: 'auto',
-
-                cursor: 'pointer',
-              }}
-            ></button>
+            <button onClick={() => setShow(false)} className={closeBtn}></button>
           </Range>
           <div>
             <input

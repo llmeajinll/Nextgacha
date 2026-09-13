@@ -9,6 +9,7 @@ import { EmptyCard } from '@/shared/ui';
 import { CardProps } from '@/entities/product/model/types';
 import Pagination from 'rc-pagination';
 import 'rc-pagination/assets/index.css';
+import { paginationWrap } from './page.css';
 
 export default function page() {
   const [like, setLike] = useState([]);
@@ -60,7 +61,7 @@ export default function page() {
               <Card props={item} key={item._id} />
             ))}
           </div>
-          <Range style={{ margin: '80px auto 30px auto' }}>
+          <Range className={paginationWrap}>
             <Pagination
               current={currentPage}
               total={total}

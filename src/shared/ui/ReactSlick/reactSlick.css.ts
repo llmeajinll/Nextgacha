@@ -1,5 +1,7 @@
-import { style } from '@vanilla-extract/css';
+import { createVar, style } from '@vanilla-extract/css';
 import { vars } from '@/styles/theme.css';
+
+export const rotateVar = createVar();
 
 export const sliderContainer = style({
   // width: '450px',
@@ -35,6 +37,8 @@ export const handle = style({
   left: '50%',
   top: '50%',
   zIndex: 5,
+  transform: `rotate(${rotateVar})`,
+  transition: 'transform 0.4s ease-in-out',
 });
 
 export const dot = style({
@@ -59,4 +63,5 @@ export const slices = style({
   left: '50%',
   top: '50%',
   cursor: 'pointer',
+  transform: `rotate(${rotateVar}) translate(0px, -58px)`,
 });

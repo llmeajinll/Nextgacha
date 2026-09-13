@@ -29,3 +29,11 @@ export const point = style({
   fontFamily: 'silkscreen',
   color: vars.color.black2,
 });
+
+export const wrapper = style({
+  marginBottom: '20px',
+});
+
+export const pointRow = style({
+  marginTop: '10px',
+});

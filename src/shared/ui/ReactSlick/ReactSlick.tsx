@@ -8,7 +8,8 @@ import 'slick-carousel/slick/slick-theme.css';
 
 import { reactSlickVariant } from '@/styles/variants.css';
 
-import { lever, handle, dot, slices } from './reactSlick.css';
+import { lever, handle, dot, slices, rotateVar } from './reactSlick.css';
+import { assignInlineVars } from '@vanilla-extract/dynamic';
 
 type Preset = keyof typeof reactSlickVariant;
 type PropsType1 = {
@@ -103,10 +104,7 @@ export default function ReactSlick({ image, preset }: PropsType) {
           {/* 레버 손잡이 */}
           <div
             className={handle}
-            style={{
-              transform: `rotate(${angle}deg)`,
-              transition: 'transform 0.4s ease-in-out',
-            }}
+            style={assignInlineVars({ [rotateVar]: `${angle}deg` })}
           >
             <div className={dot}></div>
           </div>
@@ -119,9 +117,7 @@ export default function ReactSlick({ image, preset }: PropsType) {
               <div
                 key={idx}
                 className={slices}
-                style={{
-                  transform: `rotate(${angle}deg) translate(0px, -58px)`,
-                }}
+                style={assignInlineVars({ [rotateVar]: `${angle}deg` })}
                 onClick={() => {
                   // console.log(idx, divideAngle * idx);
                   sliderRef.current?.slickGoTo(idx);

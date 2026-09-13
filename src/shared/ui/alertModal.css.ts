@@ -71,3 +71,12 @@ export const messageText = style({
   color: vars.color.black1,
   letterSpacing: '-0.5px',
 });
+
+export const headerBar = style({
+  backgroundColor: vars.color.blue1,
+  border: `1px solid ${vars.color.blue1}`,
+});
+
+export const secondBtn = style({
+  marginLeft: '15px',
+});
