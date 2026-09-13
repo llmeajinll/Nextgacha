@@ -68,3 +68,18 @@ export const priceStyle = style({
   color: vars.color.black1,
   fontFamily: 'silkscreen',
 });
+
+export const priceRow = style({
+  marginTop: '15px',
+});
+
+export const countRow = style({
+  marginTop: '8px',
+});
+
+export const strikePrice = style({
+  fontSize: '12px',
+  color: 'lightgray',
+  textDecoration: 'line-through',
+  marginRight: '4px',
+});

@@ -11,7 +11,13 @@ import Image from 'next/image';
 import { Range } from '@/shared/ui';
 import { Ticket } from '@/features/cart/ui';
 import { EmptyCard } from '@/shared/ui';
-import { cartContainer, ticketContainer } from './cart.css';
+import {
+  cartContainer,
+  ticketContainer,
+  cartRow,
+  toggleWrap,
+  productImage,
+} from './cart.css';
 import Link from 'next/link';
 import { baseUrl } from '@/shared/api/baseUrl';
 import { useCart } from '@/features/cart/model';
@@ -55,8 +61,8 @@ export default function Cart({
       {!cart || !cart.list || cart.list.length === 0 ? (
         <EmptyCard>CART IS EMPTY</EmptyCard>
       ) : (
-        <Range gap='10' style={{ alignItems: 'center' }}>
-          <div style={{ cursor: 'pointer' }}>
+        <Range gap='10' className={cartRow}>
+          <div className={toggleWrap}>
             {cart.check === true ? (
               <img
                 src={'/images/toggleOn.png'}
@@ -89,7 +95,7 @@ export default function Cart({
               width={130}
               height={130}
               alt='productImg'
-              style={{ borderRight: '1px solid lightgray', cursor: 'pointer' }}
+              className={productImage}
               onClick={() => router.push(`/${cart.num}/info`)}
             />
 

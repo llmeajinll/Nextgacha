@@ -3,6 +3,7 @@
 import { Range } from '@/shared/ui';
 import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
+import { row, dateCol, messageCol } from './page.css';
 
 type ErrorType = {
   textareaValue: string;
@@ -36,11 +37,9 @@ export default function Page() {
       <h4 onClick={() => router.push('/manager')}>HOME</h4>
       <h1>오류 페이지</h1>
       {getError?.map((val, idx) => (
-        <Range key={idx} gap='15' style={{ marginBottom: '10px' }}>
-          <div style={{ width: '160px' }}>{val.created_at}</div>
-          <div style={{ width: '900px', maxWidth: '900px' }}>
-            {val.textareaValue}
-          </div>
+        <Range key={idx} gap='15' className={row}>
+          <div className={dateCol}>{val.created_at}</div>
+          <div className={messageCol}>{val.textareaValue}</div>
           <div>{val.pathname}</div>
         </Range>
       ))}

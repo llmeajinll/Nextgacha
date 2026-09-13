@@ -6,6 +6,19 @@ export const cartContainer = style({
   border: `1px solid ${vars.color.gray1}`,
 });
 
+export const cartRow = style({
+  alignItems: 'center',
+});
+
+export const toggleWrap = style({
+  cursor: 'pointer',
+});
+
+export const productImage = style({
+  borderRight: `1px solid ${vars.color.gray1}`,
+  cursor: 'pointer',
+});
+
 export const ticketContainer = style({
   display: 'flex',
   width: '1105px',
