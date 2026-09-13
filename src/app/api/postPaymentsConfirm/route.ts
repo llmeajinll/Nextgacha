@@ -1,11 +1,11 @@
 import { NextResponse } from 'next/server';
 import { auth } from '@/auth';
 import { mongodbClient } from '@/shared/api/mongodb';
-import { validateStock } from '@/lib/validateStock';
-import { reduceStock } from '@/lib/reduceStock';
-import { reducePoint } from '@/lib/reducePoint';
-import { addOrder } from '@/lib/addOrder';
-import { resetCart } from '@/lib/resetCart';
+import { validateStock } from '@/features/purchase/lib/validateStock';
+import { reduceStock } from '@/features/purchase/lib/reduceStock';
+import { reducePoint } from '@/features/purchase/lib/reducePoint';
+import { addOrder } from '@/features/purchase/lib/addOrder';
+import { resetCart } from '@/features/purchase/lib/resetCart';
 
 export async function POST(req: Request) {
   const { paymentKey, orderId, amount, list, address, usedPoint, addPoint } =

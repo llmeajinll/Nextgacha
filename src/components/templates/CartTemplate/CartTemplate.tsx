@@ -5,7 +5,7 @@ import { useQueryClient } from '@tanstack/react-query';
 import Image from 'next/image';
 import { useAtom, useAtomValue } from 'jotai';
 import { Range } from '@/shared/ui';
-import { Cart } from '@/components/molecules';
+import { Cart } from '@/features/cart/ui';
 import { AddressTruck } from '@/entities/order/ui';
 import { EmptyCard } from '@/shared/ui';
 import { queryClientAtom } from 'jotai-tanstack-query';
@@ -20,8 +20,8 @@ import {
 import { comma } from '@/shared/lib/comma';
 import { BuyBtn } from '@/shared/ui';
 import { userInfoAtom } from '@/entities/user/model/store';
-import { AddressModal } from '@/components/organisms';
-import { useCart } from '@/app/hooks';
+import AddressModal from '@/features/address/ui/AddressModal';
+import { useCart } from '@/features/cart/model';
 
 export default function CartTemplate() {
   // console.log('props : ', props);

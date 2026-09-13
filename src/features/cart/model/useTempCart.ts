@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
 import useSWR from 'swr';
 import { useAtom } from 'jotai';
-import { tempCartAtom } from '@/jotai/store';
+import { tempCartAtom } from '@/features/cart/model/store';
 import { userInfoAtom } from '@/entities/user/model/store';
 import { ProductProps } from '@/entities/product/model/types';
-import { useCart } from '@/app/hooks';
+import { useCart } from '@/features/cart/model';
 import { useModal } from '@/shared/hooks';
 import {
   useMutation,

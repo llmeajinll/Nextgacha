@@ -3,9 +3,9 @@
 import React, { useEffect } from 'react';
 import { useAtom, useSetAtom } from 'jotai';
 import Cookie from 'js-cookie';
-import { setTempCartAtom, tempCartAtom } from '@/jotai/store';
-import { Ticket, TicketContainer } from '@/components/molecules';
-import { useTempCart } from '@/app/hooks';
+import { setTempCartAtom, tempCartAtom } from '@/features/cart/model/store';
+import { Ticket, TicketContainer } from '@/features/cart/ui';
+import { useTempCart } from '@/features/cart/model';
 import useSplitRoute from '@/shared/hooks/useSplitRoute';
 
 export default function TicketPanel({}: // tempCart,

@@ -9,12 +9,12 @@ import {
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 import { Range } from '@/shared/ui';
-import { Ticket } from '@/components/molecules';
+import { Ticket } from '@/features/cart/ui';
 import { EmptyCard } from '@/shared/ui';
 import { cartContainer, ticketContainer } from './cart.css';
 import Link from 'next/link';
 import { baseUrl } from '@/shared/api/baseUrl';
-import { useCart } from '@/app/hooks';
+import { useCart } from '@/features/cart/model';
 import { useModal } from '@/shared/hooks';
 
 export default function Cart({

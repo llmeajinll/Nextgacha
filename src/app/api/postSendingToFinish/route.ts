@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
 import { orderColl, mongodbClient, userColl } from '@/shared/api/mongodb';
-import { validateStock } from '@/lib/validateStock';
+import { validateStock } from '@/features/purchase/lib/validateStock';
 import dayjs from 'dayjs';
 import { AnyBulkWriteOperation } from 'mongodb';
 import { koreaTime } from '@/shared/lib/koreaTime';

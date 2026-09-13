@@ -5,7 +5,7 @@ import { useRouter, useSearchParams } from 'next/navigation';
 import getProducts from '@/entities/product/api/getProducts';
 import { CardProps } from '@/entities/product/model/types';
 import { Range } from '@/shared/ui';
-import { ProductManageCard } from '@/components/molecules';
+import ProductManageCard from '@/features/product-manage/ui/ProductManageCard';
 import { getStandardCategory } from '@/entities/product/lib/getStandardCategory';
 
 function page() {

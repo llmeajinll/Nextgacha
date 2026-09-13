@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
 import { orderColl } from '@/shared/api/mongodb';
-import { validateStock } from '@/lib/validateStock';
+import { validateStock } from '@/features/purchase/lib/validateStock';
 
 export async function POST(req: Request) {
   const data = await req.json();

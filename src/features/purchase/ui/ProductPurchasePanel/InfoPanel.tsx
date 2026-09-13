@@ -7,7 +7,7 @@ import Cookies from 'js-cookie';
 import dayjs from 'dayjs';
 import { loadTossPayments } from '@tosspayments/tosspayments-sdk';
 import { useAtom } from 'jotai';
-import { tempCartAtom } from '@/jotai/store';
+import { tempCartAtom } from '@/features/cart/model/store';
 import { useModal } from '@/shared/hooks';
 
 import {
@@ -18,14 +18,14 @@ import {
   ReactSlick,
   Range,
 } from '@/shared/ui';
-import { DropDown } from '@/components/molecules';
+import { DropDown } from '@/features/cart/ui';
 import { LabelTitle } from '@/shared/ui';
 import { CardProps } from '@/entities/product/model/types';
 import { comma } from '@/shared/lib/comma';
-import { useTempCart } from '@/app/hooks';
+import { useTempCart } from '@/features/cart/model';
 import { panelTitle, copyText } from './productPurchasePanel.css';
-import { postCart } from '@/api/postCart';
-import postLike from '@/api/updateLike';
+import { postCart } from '@/features/cart/api/postCart';
+import postLike from '@/features/like/api/updateLike';
 
 export default function InfoPanel({ props }: { props: CardProps }) {
   // console.log('infopanel', props);

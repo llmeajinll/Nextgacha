@@ -15,7 +15,7 @@ import { useDropDown } from '@/shared/hooks/useDropDown';
 
 import { CardProps } from '@/entities/product/model/types';
 import useSplitRoute from '@/shared/hooks/useSplitRoute';
-import { useTempCart } from '@/app/hooks';
+import { useTempCart } from '@/features/cart/model';
 
 type DropDownType = Pick<CardProps, 'list' | 'num'>;
 

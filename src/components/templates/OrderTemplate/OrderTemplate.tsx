@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import Order from '@/components/molecules/Order/Order';
+import Order from '@/features/order-manage/ui/Order';
 import { Range } from '@/shared/ui';
 import { orderTemplateContainer } from './orderTemplate.css';
 import { useModal } from '@/shared/hooks';

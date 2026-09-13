@@ -4,7 +4,7 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 import { Range } from '@/shared/ui';
-import { Search } from '@/components/molecules';
+import Search from '@/features/search/ui/Search';
 import { category, categoryMatch } from '@/entities/product/lib/category';
 import Pagination from 'rc-pagination';
 import 'rc-pagination/assets/index.css';

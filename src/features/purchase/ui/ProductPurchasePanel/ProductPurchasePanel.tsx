@@ -5,7 +5,7 @@ import { Provider } from 'jotai';
 import { CardProps } from '@/entities/product/model/types';
 import TicketPanel from './TicketPanel';
 import InfoPanel from './InfoPanel';
-import { useTempCart } from '@/app/hooks';
+import { useTempCart } from '@/features/cart/model';
 
 export default function ProductPurchasePanel({ num }: { num: string }) {
   console.log('url num', num);

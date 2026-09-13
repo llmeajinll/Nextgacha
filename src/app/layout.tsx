@@ -10,7 +10,7 @@ import { layoutContainer } from './layout.css';
 import { Provider } from 'jotai';
 import { MSWProvider } from '@/mocks/MSWComponent';
 import { Analytics } from '@vercel/analytics/next';
-import { AlertModal } from '@/components/organisms';
+import AlertModal from '@/shared/ui/AlertModal';
 import QueryProvider from '@/shared/api/QueryProviders';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 // import { DevTools } from 'jotai-devtools';

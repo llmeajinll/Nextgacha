@@ -1,6 +1,6 @@
 import { Suspense } from 'react';
 import { ScrollToTop } from '@/shared/ui';
-import { ProductPurchasePanel } from '@/components/organisms';
+import ProductPurchasePanel from '@/features/purchase/ui/ProductPurchasePanel/ProductPurchasePanel';
 import { DetailTab } from '@/components/molecules';
 import { EmptyCard } from '@/shared/ui';
 import { Metadata } from 'next';

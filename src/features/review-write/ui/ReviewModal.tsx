@@ -4,7 +4,7 @@ import { useRouter, useSearchParams } from 'next/navigation';
 import { useModal } from '@/shared/hooks';
 import { Range } from '@/shared/ui';
 import { StarRating } from '@/shared/ui';
-import * as styles from './alertModal.css';
+import * as styles from '@/shared/ui/alertModal.css';
 import { assignInlineVars } from '@vanilla-extract/dynamic';
 import {
   textareaStyle,

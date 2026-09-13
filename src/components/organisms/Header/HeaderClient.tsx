@@ -4,7 +4,7 @@ import React, { useEffect, useState, useRef } from 'react';
 import { useRouter } from 'next/navigation';
 
 // import { signIn, signOut } from '@/auth';
-import { Search } from '@/components/molecules';
+import Search from '@/features/search/ui/Search';
 import { Category } from '@/entities/product/ui';
 import {
   headerContainer,
@@ -29,7 +29,7 @@ import { useSplitRoute as useSpliteRoute } from '@/shared/hooks';
 import { useAtom } from 'jotai';
 import { userInfoAtom } from '@/entities/user/model/store';
 import { Range, ImgBtn, Btn } from '@/shared/ui';
-import { textareaStyle } from '@/components/organisms/Modal/reviewModal.css';
+import { textareaStyle } from '@/features/review-write/ui/reviewModal.css';
 
 export default function Header({ session }: { session: Session | null }) {
   const [showCategory, setShowCategory] = useState(false);

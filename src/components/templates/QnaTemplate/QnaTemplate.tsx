@@ -4,7 +4,7 @@ import Image from 'next/image';
 import { useSession } from 'next-auth/react';
 import { useModal } from '@/shared/hooks';
 import { ImgBtn, Range, ToggleBtn } from '@/shared/ui';
-import { Private, Qna } from '@/components/molecules';
+import { Private, Qna } from '@/features/qna/ui';
 import useSplitRoute from '@/shared/hooks/useSplitRoute';
 import * as styles from './qnaTemplate.css';
 
