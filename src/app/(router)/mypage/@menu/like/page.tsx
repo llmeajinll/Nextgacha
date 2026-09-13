@@ -1,7 +1,6 @@
 'use client';
 
 import React, { useState, useEffect, Suspense } from 'react';
-// import getLike from '@/entities/product/api/getLike';
 import { cardTemplateContainer } from '@/widgets/CardTemplate/cardtemplate.css';
 import { Range } from '@/shared/ui';
 import { Card } from '@/entities/product/ui';

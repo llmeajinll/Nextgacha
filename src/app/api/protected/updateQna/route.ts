@@ -2,8 +2,15 @@ import { NextResponse } from 'next/server';
 import { mongodbClient, qnaColl } from '@/shared/api/mongodb';
 import { koreaTime } from '@/shared/lib/koreaTime';
 import dayjs from 'dayjs';
+import { auth } from '@/auth';
 
 export async function POST(req: Request) {
+  const authSession = await auth();
+  const email = authSession?.user?.email;
+  if (!email) {
+    return NextResponse.json({ ok: false, message: 'unauthorized' }, { status: 401 });
+  }
+
   const data = await req.json();
 
   console.log(data);
@@ -17,7 +24,7 @@ export async function POST(req: Request) {
     const result = await session.withTransaction(async () => {
       await qnaColl
         .updateOne(
-          { num: Number(num), 'qna.qna_num': qna_num },
+          { num: Number(num), qna: { $elemMatch: { qna_num, email } } },
           {
             $set: {
               // $는 위에서 매칭된 qna 배열의 인덱스를 가리킵니다.

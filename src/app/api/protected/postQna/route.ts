@@ -2,16 +2,19 @@ import { NextResponse } from 'next/server';
 import { mongodbClient, qnaColl, counterColl } from '@/shared/api/mongodb';
 import dayjs from 'dayjs';
 import { koreaTime } from '@/shared/lib/koreaTime';
+import { auth } from '@/auth';
 
 export async function POST(req: Request) {
-  //   const authSession = await auth();
-  //   const email = authSession?.user?.email;
-  //   console.log('email :', email);
+  const authSession = await auth();
+  const email = authSession?.user?.email;
+  if (!email) {
+    return NextResponse.json({ ok: false, message: 'unauthorized' }, { status: 401 });
+  }
 
   const data = await req.json();
 
   console.log(data);
-  const { email, question, secret, num } = data;
+  const { question, secret, num } = data;
   console.log(email, question, secret, num);
 
   // const nowDate = dayjs(new Date()).format('YYYY-MM-DD HH:mm:ss');

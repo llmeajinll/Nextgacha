@@ -1,5 +1,3 @@
-import { auth } from '@/auth';
-import { headers } from 'next/headers';
 import { baseUrl } from '@/shared/api/baseUrl';
 
 export default async function getProducts(props: {

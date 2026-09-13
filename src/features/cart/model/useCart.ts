@@ -1,7 +1,5 @@
 import { ProductProps } from '@/entities/product/model/types';
 import Cookies from 'js-cookie';
-import updateCart from '@/features/cart/api/updateCart';
-import getCart from '@/features/cart/api/getCart';
 
 import { useRouter } from 'next/navigation';
 import { useModal } from '@/shared/hooks';

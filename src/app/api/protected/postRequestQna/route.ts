@@ -1,10 +1,17 @@
 import { NextResponse } from 'next/server';
 import { mongodbClient, qnaColl } from '@/shared/api/mongodb';
 import { koreaTime } from '@/shared/lib/koreaTime';
+import { auth } from '@/auth';
 
 import dayjs from 'dayjs';
 
 export async function POST(req: Request) {
+  const authSession = await auth();
+  const email = authSession?.user?.email;
+  if (!email) {
+    return NextResponse.json({ ok: false, message: 'unauthorized' }, { status: 401 });
+  }
+
   const data = await req.json();
 
   console.log(data);
@@ -18,7 +25,7 @@ export async function POST(req: Request) {
     const result = await session.withTransaction(async () => {
       await qnaColl
         .updateOne(
-          { num: Number(num), 'qna.qna_num': qna_num },
+          { num: Number(num), qna: { $elemMatch: { qna_num, email } } },
           {
             $push: {
               'qna.$.request': {
