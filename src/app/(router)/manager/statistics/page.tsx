@@ -5,6 +5,13 @@ import { useRouter } from 'next/navigation';
 import { Range } from '@/shared/ui';
 import Box from '@mui/material/Box';
 import { BarChart } from '@mui/x-charts/BarChart';
+import {
+  searchRow,
+  filterRow,
+  pageRow,
+  tagItem,
+  lastVisit,
+} from './page.css';
 
 export default function page() {
   const router = useRouter();
@@ -32,21 +39,18 @@ export default function page() {
       <div>
         {searchStatic.map((value: any, idx) => (
           <div key={value._id}>
-            <div
-              key={value._id}
-              style={{ borderBottom: '1px solid #eee', padding: '10px 0' }}
-            >
+            <div key={value._id} className={searchRow}>
               <div>
                 {/* 1. 검색어 출력 */}
                 <strong>상세: {value.params?.detail || '없음'}</strong> | 타입:{' '}
                 {value.params?.type || 'N/A'} | 총 조회: {value.count}
                 {/* 2. Filter 객체 렌더링 (에러 방지 처 포함) */}
-                <div style={{ marginLeft: '10px', color: '#666' }}>
+                <div className={filterRow}>
                   [필터 클릭]
                   {value.params?.filter
                     ? Object.entries(value.params.filter).map(
                         ([name, count]) => (
-                          <span key={name} style={{ marginRight: '8px' }}>
+                          <span key={name} className={tagItem}>
                             {name}({String(count)})
                           </span>
                         ),
@@ -54,13 +58,13 @@ export default function page() {
                     : ' -'}
                 </div>
                 {/* 3. Page 객체 렌더링 (여기가 에러 지점이었습니다!) */}
-                <div style={{ marginLeft: '10px', color: '#0070f3' }}>
+                <div className={pageRow}>
                   [페이지 도달]
                   {value.params?.page &&
                   typeof value.params.page === 'object' ? (
                     Object.entries(value.params.page).map(
                       ([pageNum, count]) => (
-                        <span key={pageNum} style={{ marginRight: '8px' }}>
+                        <span key={pageNum} className={tagItem}>
                           {pageNum === 'undefined' ? '기본' : pageNum}P(
                           {String(count)})
                         </span>
@@ -71,9 +75,7 @@ export default function page() {
                   )}
                 </div>
               </div>
-              <div style={{ fontSize: '12px', color: '#999' }}>
-                최근 방문: {value.lastVisit}
-              </div>
+              <div className={lastVisit}>최근 방문: {value.lastVisit}</div>
             </div>
             <div> {value.lastVisit}</div>
           </div>

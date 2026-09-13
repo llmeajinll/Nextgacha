@@ -7,6 +7,13 @@ import { notice } from '@/entities/notice/model/notice';
 import { Range } from '@/shared/ui';
 import Pagination from 'rc-pagination';
 import 'rc-pagination/assets/index.css';
+import {
+  pageWrap,
+  listWrap,
+  firstItem,
+  divider,
+  paginationWrap,
+} from './noticeTemplate.css';
 
 export default function NoticeTemplate() {
   const list = {
@@ -21,34 +28,20 @@ export default function NoticeTemplate() {
   const [pageSize, setPageSize] = useState(14);
   const [page, setPage] = useState(notice.slice(0, pageSize));
   return (
-    <div style={{ width: '960px', margin: '0 auto' }}>
-      <div style={{ height: '555px' }}>
-        <div style={{ marginTop: '40px' }}>
+    <div className={pageWrap}>
+      <div className={listWrap}>
+        <div className={firstItem}>
           <Notice props={list} />
         </div>
-        <div
-          style={{
-            width: '100%',
-            height: '1px',
-            backgroundColor: 'lightgray',
-          }}
-        ></div>
+        <div className={divider}></div>
         {page.map((v, i) => (
           <Fragment key={v.num}>
             <Notice props={v} />
-            {i !== notice.length - 1 && (
-              <div
-                style={{
-                  width: '100%',
-                  height: '1px',
-                  backgroundColor: 'lightgray',
-                }}
-              ></div>
-            )}
+            {i !== notice.length - 1 && <div className={divider}></div>}
           </Fragment>
         ))}
       </div>
-      <Range style={{ margin: '40px auto' }}>
+      <Range className={paginationWrap}>
         <Pagination
           current={currentPage}
           total={total}

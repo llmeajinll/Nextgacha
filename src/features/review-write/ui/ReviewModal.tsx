@@ -14,6 +14,9 @@ import {
   titleLabel,
   contentLabel,
   detailContentLabel,
+  overlay,
+  headerBar,
+  fieldGroup,
 } from './reviewModal.css';
 
 export default function ReviewModal() {
@@ -43,31 +46,14 @@ export default function ReviewModal() {
   console.log(productInfo);
 
   return (
-    <div
-      className='modal-overlay'
-      style={{
-        position: 'fixed',
-        top: 0,
-        left: 0,
-        right: 0,
-        bottom: 0,
-        backgroundColor: 'rgba(0,0,0,0.5)',
-        display: 'flex',
-        justifyContent: 'center',
-        alignItems: 'center',
-        zIndex: 50,
-      }}
-    >
+    <div className={`modal-overlay ${overlay}`}>
       <div className={styles.backgroundStyle}>
         <div className={styles.modalContainer}>
           <Range
             preset='between'
             width='full'
             height='45'
-            style={{
-              backgroundColor: '#75C3FE',
-              border: '1px solid #75C3FE',
-            }}
+            className={headerBar}
           >
             <div className={styles.alertText}>REVIEW</div>
             <button
@@ -80,7 +66,7 @@ export default function ReviewModal() {
             <Range
               width='full'
               preset='columnAlignCenter'
-              style={{ marginBottom: '10px' }}
+              className={fieldGroup}
               gap='5'
             >
               <Range

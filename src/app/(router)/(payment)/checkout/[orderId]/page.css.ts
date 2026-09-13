@@ -46,3 +46,8 @@ export const footerLinkMypage = style({
   fontFamily: 'silkscreen',
   color: '#999999',
 });
+
+export const messageText = style([
+  fieldValue,
+  { fontSize: '18px', marginBottom: '40px' },
+]);

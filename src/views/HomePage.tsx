@@ -8,6 +8,7 @@ import getProducts from '@/entities/product/api/getProducts';
 import { Btn, Title, Range } from '@/shared/ui';
 import { CardProps } from '@/entities/product/model/types';
 import { Card } from '@/entities/product/ui';
+import { section, sectionTitle } from './homePage.css';
 
 export default function HomePage() {
   const [hotProduct, setHotProduct] = useState([] as CardProps[]);
@@ -34,14 +35,8 @@ export default function HomePage() {
     <>
       <Banner />
 
-      <div
-        style={{
-          width: '1272px',
-          padding: '0 20px',
-          marginBottom: '10px',
-        }}
-      >
-        <Title text='인기 상품' style={{ marginBottom: '20px' }} />
+      <div className={section}>
+        <Title text='인기 상품' className={sectionTitle} />
         <Range className={cardTemplateContainer}>
           {hotProduct.map((val, idx) => (
             <Card props={val} key={idx} />
@@ -54,14 +49,8 @@ export default function HomePage() {
         />
       </div>
 
-      <div
-        style={{
-          width: '1272px',
-          padding: '0 20px',
-          marginBottom: '10px',
-        }}
-      >
-        <Title text='신규 상품' style={{ marginBottom: '20px' }} />
+      <div className={section}>
+        <Title text='신규 상품' className={sectionTitle} />
         <Range className={cardTemplateContainer}>
           {newProduct.map((val, idx) => (
             <Card props={val} key={idx} />
@@ -74,14 +63,8 @@ export default function HomePage() {
         />
       </div>
 
-      <div
-        style={{
-          width: '1272px',
-          padding: '0 20px',
-          marginBottom: '10px',
-        }}
-      >
-        <Title text='예약 판매' style={{ marginBottom: '20px' }} />
+      <div className={section}>
+        <Title text='예약 판매' className={sectionTitle} />
         <Range className={cardTemplateContainer}>
           {reserveProduct.map((val, idx) => (
             <Card props={val} key={idx} />

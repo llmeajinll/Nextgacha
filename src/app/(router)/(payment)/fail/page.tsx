@@ -4,34 +4,28 @@ import React from 'react';
 import { useSearchParams, useRouter, redirect } from 'next/navigation';
 import Link from 'next/link';
 import { Range } from '@/shared/ui';
+import {
+  pageContainer,
+  heading,
+  messageText,
+  footerRow,
+  footerLinkHome,
+  footerLinkMypage,
+} from '../checkout/[orderId]/page.css';
 
 export default function page() {
   const searchParams = useSearchParams();
   const message = searchParams.get('message');
 
   return (
-    <div
-      style={{
-        width: '900px',
-        padding: '10px 30px 40px 30px',
-        margin: '40px auto 0 auto',
-        border: '4px solid #75C3FE',
-      }}
-    >
-      <h1 style={{ color: '#3AAAFF' }}>
-        결제 과정에서 오류가 발생하였습니다 :{'('}
-      </h1>
-      <div style={{ fontSize: '18px', color: '#6F6F6F', marginBottom: '40px' }}>
-        {message}
-      </div>
-      <Range gap='50' style={{ margin: '30px auto 0 auto' }}>
-        <Link href='/' style={{ fontFamily: 'silkscreen', color: '#75C3FE' }}>
+    <div className={pageContainer}>
+      <h1 className={heading}>결제 과정에서 오류가 발생하였습니다 :{'('}</h1>
+      <div className={messageText}>{message}</div>
+      <Range gap='50' className={footerRow}>
+        <Link href='/' className={footerLinkHome}>
           HOME
         </Link>
-        <Link
-          href='/mypage/cart'
-          style={{ fontFamily: 'silkscreen', color: '#999999' }}
-        >
+        <Link href='/mypage/cart' className={footerLinkMypage}>
           CART
         </Link>
       </Range>
