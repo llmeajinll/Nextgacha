@@ -1,16 +1,14 @@
 import dayjs from 'dayjs';
 import React from 'react';
 import Range from '../Range/Range';
-import { writerStyle } from './writer.css';
+import { writerRight } from './writer.css';
 
 export default function Writer({
   writer,
   created_at,
-  style,
 }: {
   writer: string;
   created_at: string;
-  style?: React.CSSProperties;
 }) {
   const changeStar = (writer: string) => {
     if (!writer) return '';
@@ -28,13 +26,7 @@ export default function Writer({
   };
 
   return (
-    <Range
-      className={writerStyle}
-      style={{
-        marginLeft: 'auto',
-        ...style,
-      }}
-    >
+    <Range className={writerRight}>
       written by {changeStar(writer)} at{' '}
       {dayjs(created_at).format('YYYY-MM-DD hh:mm:ss')}
     </Range>

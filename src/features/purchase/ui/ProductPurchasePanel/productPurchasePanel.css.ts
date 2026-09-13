@@ -1,6 +1,11 @@
 import { vars } from '@/styles/theme.css';
 import { style, keyframes } from '@vanilla-extract/css';
 
+export const panelRoot = style({
+  position: 'relative',
+  marginBottom: '60px',
+});
+
 export const panelTitle = style({
   marginBottom: 10,
   height: 42,

@@ -2,7 +2,11 @@
 
 import React, { useState } from 'react';
 import { Card } from '@/entities/product/ui';
-import { cardTemplateContainer, noProductContainer } from './cardtemplate.css';
+import {
+  cardTemplateContainer,
+  noProductContainer,
+  pageWrap,
+} from './cardtemplate.css';
 import { Title, Range, ScrollToTop } from '@/shared/ui';
 import { useAtom } from 'jotai';
 import { searchProductsAtom } from '@/entities/product/model/store';
@@ -37,7 +41,7 @@ export default function CardTemplate({
   );
 
   return (
-    <div style={{ width: '1272px', margin: '0 auto' }}>
+    <div className={pageWrap}>
       <ScrollToTop />
       {searchProducts && searchProducts.length === 0 ? (
         <Range width='full' className={noProductContainer}>

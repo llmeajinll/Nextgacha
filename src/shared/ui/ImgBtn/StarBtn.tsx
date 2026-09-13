@@ -3,6 +3,7 @@
 import React, { useState } from 'react';
 import Image from 'next/image';
 import { Range } from '@/shared/ui';
+import { starPointer, starAuto } from './starBtn.css';
 
 export default function StarBtn({
   value,
@@ -17,9 +18,7 @@ export default function StarBtn({
 }) {
   return (
     <Image
-      style={{
-        cursor: `${disabled ? 'auto' : 'pointer'}`,
-      }}
+      className={disabled ? starAuto : starPointer}
       src={`/images/star_${value ? 'fill' : 'empty'}.png`}
       alt='star'
       width={size === 'big' ? 40 : 25}

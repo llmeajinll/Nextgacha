@@ -1,5 +1,6 @@
 import React from 'react';
+import { loadingText } from './loading.css';
 
 export default function loading() {
-  return <div style={{ fontFamily: 'silkscreen' }}>REVEIW LOADING...</div>;
+  return <div className={loadingText}>REVEIW LOADING...</div>;
 }

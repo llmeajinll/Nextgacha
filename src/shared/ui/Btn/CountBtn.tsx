@@ -9,13 +9,12 @@ type CountBtntype = {
 
 type Props = CountBtntype & {
   onClick: React.MouseEventHandler<HTMLButtonElement>;
-  style?: React.CSSProperties;
 };
 
 export default function CountBtn(props: Props) {
-  const { type, onClick, style } = props;
+  const { type, onClick } = props;
   return (
-    <button className={countBtn} onClick={onClick} style={{ ...style }}>
+    <button className={countBtn} onClick={onClick}>
       {type === 'minus' ? '-' : '+'}
     </button>
   );

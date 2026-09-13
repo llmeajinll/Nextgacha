@@ -1,10 +1,11 @@
 import Link from 'next/link';
 import React from 'react';
+import { firstItem } from './managerMenu.css';
 
 export default function ManagerMenu() {
   return (
     <div>
-      <div style={{ marginTop: '10px' }}>
+      <div className={firstItem}>
         <Link href='/manager/user'>1. 회원 관리</Link>
       </div>
       <div>

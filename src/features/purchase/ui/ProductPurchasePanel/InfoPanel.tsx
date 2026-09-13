@@ -18,7 +18,7 @@ import { LabelTitle } from '@/shared/ui';
 import { CardProps } from '@/entities/product/model/types';
 import { comma } from '@/shared/lib/comma';
 import { useTempCart } from '@/features/cart/model';
-import { panelTitle, copyText } from './productPurchasePanel.css';
+import { panelTitle, copyText, panelRoot } from './productPurchasePanel.css';
 import { postCart } from '@/features/cart/api/postCart';
 import postLike from '@/entities/product/api/updateLike';
 
@@ -77,14 +77,7 @@ export default function InfoPanel({ props }: { props: CardProps }) {
 
   return (
     <Suspense fallback={<div>InfoPanel loading...</div>}>
-      <Range
-        width='960'
-        gap='30'
-        style={{
-          position: 'relative',
-          marginBottom: '60px',
-        }}
-      >
+      <Range width='960' gap='30' className={panelRoot}>
         {showText && (
           <div className={copyText} ref={textDomRef}>
             COPY!

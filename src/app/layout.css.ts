@@ -7,3 +7,7 @@ export const layoutContainer = style({
   margin: '0 auto',
   padding: '0 0 50px 0',
 });
+
+export const relativeWrap = style({
+  position: 'relative',
+});

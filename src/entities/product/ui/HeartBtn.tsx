@@ -7,6 +7,7 @@ import updateLike from '@/entities/product/api/updateLike';
 import Cookies from 'js-cookie';
 import { modalAtom } from '@/shared/model/store';
 import { useModal } from '@/shared/hooks';
+import { pointer } from './heartbtn.css';
 
 export default function HeartBtn({
   size = 28,
@@ -64,7 +65,7 @@ export default function HeartBtn({
       height={size || 28}
       alt='like'
       onClick={onClickHeartBtn}
-      style={{ cursor: 'pointer' }}
+      className={pointer}
     ></Image>
   );
 }

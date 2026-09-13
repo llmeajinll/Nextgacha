@@ -7,6 +7,7 @@ import { CardProps } from '@/entities/product/model/types';
 import { Range } from '@/shared/ui';
 import ProductManageCard from '@/features/product-manage/ui/ProductManageCard';
 import { getStandardCategory } from '@/entities/product/lib/getStandardCategory';
+import { searchInput as searchInputStyle, grid } from './page.css';
 
 function page() {
   const router = useRouter();
@@ -39,13 +40,7 @@ function page() {
         placeholder='제품 검색'
         value={searchInput}
         onChange={(e) => setSearchInput(e.target.value)}
-        style={{
-          width: '500px',
-          border: '1px solid lightgray',
-          padding: '8px 5px 7px 5px',
-          fontSize: '18px',
-          color: '#4c4c4c',
-        }}
+        className={searchInputStyle}
         onKeyDown={(e) => {
           if (e.key === 'Enter') {
             console.log('searchInput : ', searchInput);
@@ -59,11 +54,7 @@ function page() {
       <Range
         preset='between'
         gap='15'
-        style={{
-          display: 'grid',
-          gridTemplateColumns: 'repeat(2, 640px)',
-          marginTop: '30px',
-        }}
+        className={grid}
       >
         {products &&
           products.map((product: CardProps) => (

@@ -1,6 +1,7 @@
 // import { useEffect, useState } from 'react';
 import SignIn from '@/app/(router)/signin/page';
 import { HomePage } from '@/views';
+import { relativeWrap } from './layout.css';
 
 export default function Home() {
   // const [test, setTest] = useState('');
@@ -18,7 +19,7 @@ export default function Home() {
   // }, []);
 
   return (
-    <div style={{ position: 'relative' }}>
+    <div className={relativeWrap}>
       <HomePage />
     </div>
   );

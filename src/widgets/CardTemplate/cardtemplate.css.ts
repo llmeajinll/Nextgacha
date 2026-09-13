@@ -13,6 +13,11 @@ export const cardTemplateContainer = style({
   // border: '1px solid red',
 });
 
+export const pageWrap = style({
+  width: '1272px',
+  margin: '0 auto',
+});
+
 export const noProductContainer = style({
   height: '300px',
   textAlign: 'center',

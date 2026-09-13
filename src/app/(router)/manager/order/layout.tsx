@@ -4,6 +4,7 @@ import React from 'react';
 import { useRouter } from 'next/navigation';
 import { Btn, Range } from '@/shared/ui';
 import { useSplitRoute as useSpliteRoute } from '@/shared/hooks';
+import { wrapper } from './layout.css';
 
 export default function ManagerOrderLayout({
   children,
@@ -15,7 +16,7 @@ export default function ManagerOrderLayout({
   const router = useRouter();
   const { route } = useSpliteRoute();
   return (
-    <div style={{ boxSizing: 'border-box', padding: '0px 20px' }}>
+    <div className={wrapper}>
       <h4 onClick={() => router.push('/manager')}>HOME</h4>
       <h1>주문 관리</h1>
       <Range>

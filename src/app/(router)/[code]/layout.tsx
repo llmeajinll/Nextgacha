@@ -4,6 +4,7 @@ import ProductPurchasePanel from '@/features/purchase/ui/ProductPurchasePanel/Pr
 import { DetailTab } from '@/widgets';
 import { EmptyCard } from '@/shared/ui';
 import { Metadata } from 'next';
+import { panelWrap, tabWrap } from './layout.css';
 
 export default async function DetailLayout({
   children,
@@ -20,16 +21,12 @@ export default async function DetailLayout({
     <>
       <Suspense fallback={<EmptyCard>LOADING ...</EmptyCard>}>
         <ScrollToTop />
-        <div style={{ width: 'fit-content', margin: '50px auto 0 auto' }}>
+        <div className={panelWrap}>
           <ProductPurchasePanel num={code} />
           <DetailTab />
         </div>
         {children}
-        <div
-          style={{ width: '958px', margin: '0 auto', padding: '20px 0 0 0' }}
-        >
-          {tab}
-        </div>
+        <div className={tabWrap}>{tab}</div>
       </Suspense>
     </>
   );

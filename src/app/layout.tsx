@@ -6,7 +6,7 @@ import { Noto_Sans_KR } from 'next/font/google';
 import './globals.css';
 import { SessionProvider } from 'next-auth/react';
 import { Header } from '@/widgets';
-import { layoutContainer } from './layout.css';
+import { layoutContainer, relativeWrap } from './layout.css';
 import { Provider } from 'jotai';
 import { MSWProvider } from '@/mocks/MSWComponent';
 import { Analytics } from '@vercel/analytics/next';
@@ -54,7 +54,7 @@ export default function RootLayout({
             <SessionProvider>
               <ReactQueryDevtools initialIsOpen={false} />
               {/* <DevTools isInitialOpen={false} /> */}
-              <div style={{ position: 'relative' }}>
+              <div className={relativeWrap}>
                 <AlertModal />
                 <div className={`${layoutContainer}`}>
                   <Header />

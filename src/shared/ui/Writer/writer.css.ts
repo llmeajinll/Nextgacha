@@ -7,3 +7,5 @@ export const writerStyle = style({
   color: 'gray',
   fontFamily: 'silkscreen',
 });
+
+export const writerRight = style([writerStyle, { marginLeft: 'auto' }]);
