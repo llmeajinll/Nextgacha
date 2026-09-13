@@ -1,5 +1,5 @@
 import React from 'react';
-import { NoticeDetailPage } from '@/components/pages';
+import { NoticeDetailPage } from '@/views';
 
 function page() {
   return <NoticeDetailPage />;

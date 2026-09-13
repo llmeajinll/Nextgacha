@@ -1,7 +1,7 @@
 import React from 'react';
 import { Range } from '@/shared/ui';
 import { Category, DetailCategory } from '@/entities/product/ui';
-import { SearchPage } from '@/components/pages';
+import { SearchPage } from '@/views';
 
 export default function page() {
   return (
