@@ -25,3 +25,35 @@ export const checkBox = style({
   cursor: 'pointer',
   marginTop: '25px',
 });
+
+export const orderBody = style({
+  width: '580px',
+});
+
+export const reasonRow = style({
+  fontWeight: 'bold',
+  marginBottom: '8px',
+});
+
+export const spacedText = style({
+  marginRight: '10px',
+});
+
+export const marginLeft20 = style({
+  marginLeft: '20px',
+});
+
+export const marginRight20 = style({
+  marginRight: '20px',
+});
+
+export const inputWide = style([inputStyle, { width: '250px' }]);
+
+export const marginTopSm = style({
+  marginTop: '10px',
+});
+
+export const refundBtn = style([
+  sendingBtn,
+  { backgroundColor: 'gray', marginLeft: '10px' },
+]);

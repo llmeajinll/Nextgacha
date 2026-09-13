@@ -12,6 +12,21 @@ import { transform } from 'next/dist/build/swc/generated-native';
 import { useDaumPostcodePopup } from 'react-daum-postcode';
 import { queryClientAtom } from 'jotai-tanstack-query';
 import useSplitRoute from '@/shared/hooks/useSplitRoute';
+import { assignInlineVars } from '@vanilla-extract/dynamic';
+import {
+  btnWidthVar,
+  wrapper,
+  dynamicWidthBtn,
+  tooltipWrap,
+  centerFit,
+  tooltipBox,
+  warningTitle,
+  noAddressText,
+  searchLink,
+  detailAddressWrap,
+  detailAddressInput,
+  updateBtn,
+} from './buyBtn.css';
 
 interface BuyBtnType {
   // email: string;
@@ -175,12 +190,13 @@ export default function BuyBtn({
   // );
 
   return (
-    <div style={{ position: 'relative' }}>
+    <div className={wrapper}>
       {/* {ready && <div id='payment-method' />} */}
       <Btn
         // size={props.size || 'medium'}
         onClick={onClickPayment}
-        style={{ width: `${width}px` }}
+        className={dynamicWidthBtn}
+        style={assignInlineVars({ [btnWidthVar]: `${width}px` })}
         onMouseEnter={() => {
           setIsHover(true);
         }}
@@ -193,40 +209,16 @@ export default function BuyBtn({
       </Btn>
       {isHover && firstRoute !== 'mypage' && (
         <div
-          style={{
-            position: 'absolute',
-            left: '50%',
-            paddingTop: '6px',
-            transform: 'translate(-50%, 0)',
-            zIndex: '10',
-          }}
+          className={tooltipWrap}
           onMouseEnter={() => setIsHover(true)}
           onMouseLeave={() => setIsHover(false)}
         >
-          <div
-            style={{
-              backgroundColor: 'white',
-
-              border: '1px solid lightgray',
-              padding: '10px',
-              width: 'fit-content',
-
-              textAlign: 'center',
-            }}
-          >
+          <div className={tooltipBox}>
             {data === undefined ? (
               <span>로그인 후 구매할 수 있습니다!</span>
             ) : (
-              <div style={{ width: 'fit-content', textAlign: 'center' }}>
-                <div
-                  style={{
-                    fontSize: '20px',
-                    marginBottom: '5px',
-                    fontWeight: 500,
-                  }}
-                >
-                  !! 배송지를 확인해주세요 !!
-                </div>
+              <div className={centerFit}>
+                <div className={warningTitle}>!! 배송지를 확인해주세요 !!</div>
                 <div>
                   {data.address !== '' ? (
                     // 주소가 있을 때: 주소 텍스트와 버튼을 함께 렌더링
@@ -234,33 +226,21 @@ export default function BuyBtn({
                   ) : (
                     // 주소가 없을 때
                     <>
-                      <span style={{ color: '#999999' }}>
+                      <span className={noAddressText}>
                         지정된 배송지가 없습니다.
                       </span>
                     </>
                   )}
-                  <span
-                    style={{
-                      marginLeft: '5px',
-                      color: '#75C3FE',
-                      cursor: 'pointer',
-                    }}
-                    onClick={handleClick}
-                  >
+                  <span className={searchLink} onClick={handleClick}>
                     [검색]
                   </span>
                 </div>
-                <div style={{ marginTop: '8px' }}>
+                <div className={detailAddressWrap}>
                   <input
                     value={detailAddress}
                     onChange={(e) => setDetailAddress(e.target.value)}
                     placeholder='상세 주소 입력 ( ex. 102호 / 상세 주소가 없을 시 . 입력)'
-                    style={{
-                      width: '400px',
-                      padding: ' 8px',
-                      border: '1px solid lightgray',
-                      fontSize: '14px',
-                    }}
+                    className={detailAddressInput}
                   />
                 </div>
                 <div
@@ -290,13 +270,7 @@ export default function BuyBtn({
                     queryClient.invalidateQueries({ queryKey: ['userInfo'] });
                     setDetailAddress('');
                   }}
-                  style={{
-                    backgroundColor: '#75C3FE',
-                    color: 'white',
-                    cursor: 'pointer',
-                    padding: '5px 0',
-                    marginTop: '8px',
-                  }}
+                  className={updateBtn}
                 >
                   수정
                 </div>

@@ -3,7 +3,19 @@
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { Range } from '@/shared/ui';
-import { inputStyle, sendingBtn, checkBox } from './order.css';
+import {
+  inputStyle,
+  sendingBtn,
+  checkBox,
+  orderBody,
+  reasonRow,
+  spacedText,
+  marginLeft20,
+  marginRight20,
+  inputWide,
+  marginTopSm,
+  refundBtn,
+} from './order.css';
 import useSplitRoute from '@/shared/hooks/useSplitRoute';
 import { useModal } from '@/shared/hooks';
 
@@ -132,36 +144,34 @@ export default function Order({
           />
         </div>
       )}
-      <div style={{ width: '580px' }}>
+      <div className={orderBody}>
         <Range preset='between'>
           <h3>{props.orderId}</h3>
           <h4>{props.status}</h4>
         </Range>
         {route[2] !== 'check' && (
-          <div style={{ fontWeight: 'bold', marginBottom: '8px' }}>
-            <span style={{ marginRight: '10px' }}>
+          <div className={reasonRow}>
+            <span className={spacedText}>
               {route[2] === 'refund' ? '환불 사유' : props.courier}
             </span>
             <span>
               {route[2] === 'refund' ? props.reason || '없음' : props.invoice}
             </span>
             {route[2] === 'arrive' && (
-              <span style={{ marginLeft: '20px' }}>
-                {props.arrivedDate} 도착
-              </span>
+              <span className={marginLeft20}>{props.arrivedDate} 도착</span>
             )}
           </div>
         )}
         <div>
-          주문일<span style={{ marginLeft: '20px' }}>{props.created_at}</span>
+          주문일<span className={marginLeft20}>{props.created_at}</span>
         </div>
         <div>{props.address}</div>
         <div>
           {props.customer}
-          <span style={{ marginLeft: '20px' }}>{props.email}</span>
+          <span className={marginLeft20}>{props.email}</span>
         </div>
         <Range>
-          <div style={{ marginRight: '20px' }}>{props.totalPrice} 원</div>
+          <div className={marginRight20}>{props.totalPrice} 원</div>
           <div>{props.addPoint} P</div>
         </Range>
 
@@ -169,7 +179,7 @@ export default function Order({
           {props.list.map((item: any, idx: number) => (
             <div key={item.num + item.title}>
               <div>
-                <span style={{ marginRight: '20px' }}>{item.num}번</span>
+                <span className={marginRight20}>{item.num}번</span>
                 {item.title || ''}
               </div>
               <Range key={props.orderId + idx} gap='15'>
@@ -183,7 +193,7 @@ export default function Order({
           ))}
         </div>
         {status === 'check' && (
-          <Range gap='10' style={{ marginTop: '10px' }}>
+          <Range gap='10' className={marginTopSm}>
             <input
               value={props.courier}
               onChange={(e) => {
@@ -200,25 +210,22 @@ export default function Order({
                 onUpdate?.(props.orderId, { invoice: e.target.value });
               }}
               placeholder='송장번호'
-              className={inputStyle}
-              style={{ width: '250px' }}
+              className={inputWide}
             />
           </Range>
         )}
-        <Range preset='between' style={{ marginTop: '10px' }}>
+        <Range preset='between' className={marginTopSm}>
           <OrderBtn />
           {status === 'check' && (
             <Range>
               <input
-                className={inputStyle}
-                style={{ width: '250px' }}
+                className={inputWide}
                 placeholder='배송 거절 사유 (10자 이상)'
                 value={reason}
                 onChange={(e) => setReason(e.target.value)}
               />
               <button
-                className={sendingBtn}
-                style={{ backgroundColor: 'gray', marginLeft: '10px' }}
+                className={refundBtn}
                 onClick={async () => {
                   if (reason.length < 10) {
                     alert('10자 이상으로 적어주세요.');

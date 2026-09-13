@@ -10,20 +10,17 @@ export async function GET(req: Request) {
   const image = session?.user?.image;
 
   if (!email || email.trim() === '') {
-    return NextResponse.json(
-      {
-        ok: false,
-        error: 'Email parameter is required',
-        result: {
-          email: '',
-          nickname: '',
-          point: 0,
-          address: '',
-          image: '',
-        },
+    return NextResponse.json({
+      ok: false,
+      error: 'Not signed in',
+      result: {
+        email: '',
+        nickname: '',
+        point: 0,
+        address: '',
+        image: '',
       },
-      { status: 400 }
-    );
+    });
   }
 
   const user = await userColl

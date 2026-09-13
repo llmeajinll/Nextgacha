@@ -14,7 +14,7 @@ export const btn = style({
 export const moreBtn = style({
   width: '100%',
   height: '60px',
-  color: vars.color.black3,
+  color: vars.color.black2,
   backgroundColor: 'white',
   fontSize: '20px',
   lineHeight: '60px',

@@ -58,7 +58,7 @@ export default function RootLayout({
                 <AlertModal />
                 <div className={`${layoutContainer}`}>
                   <Header />
-                  {children}
+                  <main>{children}</main>
                 </div>
               </div>
               {/* <div id='modal-root' /> */}

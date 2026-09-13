@@ -4,6 +4,19 @@ import Image from 'next/image';
 import React, { useState } from 'react';
 import { Range } from '@/shared/ui';
 import { CardProps } from '@/entities/product/model/types';
+import {
+  cardContainer,
+  itemGrid,
+  itemRow,
+  nameInput,
+  countInput,
+  priceInput,
+  totalCount,
+  summaryRow,
+  priceDisplay,
+  editBtn,
+  cancelBtn,
+} from './productManageCard.css';
 
 export default function ProductManageCard(props: CardProps) {
   const [productPrice, setProductPrice] = useState(props.price);
@@ -11,7 +24,7 @@ export default function ProductManageCard(props: CardProps) {
   const [isEditMode, setIsEditMode] = useState(false);
 
   return (
-    <div key={props._id} style={{ width: '640px' }}>
+    <div key={props._id} className={cardContainer}>
       <h3>
         {props.num}. {props.title} {props.reserve ? '[예약 상품]' : ''}
       </h3>
@@ -23,18 +36,10 @@ export default function ProductManageCard(props: CardProps) {
       />
       {isEditMode ? (
         // 수정 모드 카드
-        <Range
-          preset='between'
-          gap='10'
-          style={{
-            display: 'grid',
-            gridTemplateColumns: 'repeat(2, 300px)',
-            // border: '1px solid red',
-          }}
-        >
+        <Range preset='between' gap='10' className={itemGrid}>
           {productList.map((val, idx) => (
             <Range key={idx}>
-              <Range gap='4' style={{ width: '300px', alignItems: 'center' }}>
+              <Range gap='4' className={itemRow}>
                 <input
                   value={val.name}
                   onChange={(e) => {
@@ -45,24 +50,12 @@ export default function ProductManageCard(props: CardProps) {
                       ),
                     );
                   }}
-                  style={{
-                    width: '200px',
-                    border: '1px solid lightgray',
-                    padding: '5px 4px 4px 4px',
-                    fontSize: '18px',
-                    color: '#4c4c4c',
-                  }}
+                  className={nameInput}
                 />
                 :
                 <input
                   value={val.count}
-                  style={{
-                    width: '50px',
-                    border: '1px solid lightgray',
-                    padding: '5px 4px 4px 4px',
-                    fontSize: '18px',
-                    color: '#4c4c4c',
-                  }}
+                  className={countInput}
                   onChange={(e) =>
                     setProductList((prev) =>
                       prev.map((item, i) =>
@@ -80,15 +73,7 @@ export default function ProductManageCard(props: CardProps) {
         </Range>
       ) : (
         // 원래 보이는 카드
-        <Range
-          preset='between'
-          gap='4'
-          style={{
-            display: 'grid',
-            gridTemplateColumns: 'repeat(2, 300px)',
-            // border: '1px solid blue',
-          }}
-        >
+        <Range preset='between' gap='4' className={itemGrid}>
           {props.list.map((val, idx) => (
             <div key={idx}>
               <div>
@@ -99,28 +84,20 @@ export default function ProductManageCard(props: CardProps) {
         </Range>
       )}
 
-      <div style={{ marginTop: '20px', fontSize: '20px' }}>
-        총 {productList.length} 종
-      </div>
-      <Range preset='between' width='full' style={{ marginTop: '20px' }}>
+      <div className={totalCount}>총 {productList.length} 종</div>
+      <Range preset='between' width='full' className={summaryRow}>
         <div>
           {isEditMode ? (
             <div>
               <input
                 value={productPrice}
                 onChange={(e) => setProductPrice(Number(e.target.value))}
-                style={{
-                  width: '90px',
-                  border: '1px solid lightgray',
-                  padding: '5px 4px 4px 4px',
-                  fontSize: '18px',
-                  color: '#4c4c4c',
-                }}
+                className={priceInput}
               />
               <span> 원</span>
             </div>
           ) : (
-            <div style={{ fontSize: '20px' }}>
+            <div className={priceDisplay}>
               {productPrice}원{' '}
               {props.isDiscount ? `[${props.discount}% 할인 중]` : ''}
             </div>
@@ -156,15 +133,7 @@ export default function ProductManageCard(props: CardProps) {
                   });
               }
             }}
-            style={{
-              border: 'none',
-              backgroundColor: '#75C3FE',
-              color: 'white',
-              fontSize: '18px',
-              padding: '8px 16px',
-              lineHeight: '22px',
-              cursor: 'pointer',
-            }}
+            className={editBtn}
           >
             {isEditMode ? '완료' : '수정'}
           </button>
@@ -175,15 +144,7 @@ export default function ProductManageCard(props: CardProps) {
                 setProductList(props.list);
                 setProductPrice(props.price);
               }}
-              style={{
-                border: 'none',
-                backgroundColor: 'lightgray',
-                color: 'white',
-                fontSize: '18px',
-                padding: '8px 16px',
-                lineHeight: '22px',
-                cursor: 'pointer',
-              }}
+              className={cancelBtn}
             >
               취소
             </button>
