@@ -5,7 +5,7 @@ import Image from 'next/image';
 import { useAtom } from 'jotai';
 import updateLike from '@/api/updateLike';
 import Cookies from 'js-cookie';
-import { modalAtom } from '@/jotai/store';
+import { modalAtom } from '@/shared/model/store';
 import { useModal } from '@/shared/hooks';
 
 export default function HeartBtn({

@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { search, inputStyle } from './search.css';
-import { getStandardCategory } from '@/shared/getStandardCategory';
+import { getStandardCategory } from '@/entities/product/lib/getStandardCategory';
 import Image from 'next/image';
 
 export default function Search() {

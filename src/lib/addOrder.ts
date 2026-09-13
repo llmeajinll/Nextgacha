@@ -1,7 +1,7 @@
 import { orderColl } from '@/shared/api/mongodb';
 import dayjs from 'dayjs';
 import { ClientSession } from 'mongodb';
-import { findUserInfo } from './findUserInfo';
+import { findUserInfo } from '@/entities/user/lib/findUserInfo';
 import { NextResponse } from 'next/server';
 import { koreaTime } from '@/shared/lib/koreaTime';
 

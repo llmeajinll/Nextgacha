@@ -1,4 +1,4 @@
-import { ProductProps } from '@/shared/model/types';
+import { ProductProps } from '@/entities/product/model/types';
 import Cookies from 'js-cookie';
 import updateCart from '@/api/updateCart';
 import getCart from '@/api/getCart';

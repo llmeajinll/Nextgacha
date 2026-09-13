@@ -4,9 +4,9 @@ import React, { useState, useEffect, Suspense } from 'react';
 // import getLike from '@/api/getLike';
 import { cardTemplateContainer } from '@/components/templates/CardTemplate/cardtemplate.css';
 import { Range } from '@/shared/ui';
-import { Card } from '@/components/molecules';
+import { Card } from '@/entities/product/ui';
 import { EmptyCard } from '@/shared/ui';
-import { CardProps } from '@/shared/model/types';
+import { CardProps } from '@/entities/product/model/types';
 import Pagination from 'rc-pagination';
 import 'rc-pagination/assets/index.css';
 

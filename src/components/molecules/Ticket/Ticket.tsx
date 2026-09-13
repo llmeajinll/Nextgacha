@@ -12,7 +12,7 @@ import {
   priceStyle,
 } from './ticket.css';
 import { Range, CountBtn } from '@/shared/ui';
-import { ProductProps } from '@/shared/model/types';
+import { ProductProps } from '@/entities/product/model/types';
 import { comma } from '@/shared/lib/comma';
 import { useModal } from '@/shared/hooks';
 

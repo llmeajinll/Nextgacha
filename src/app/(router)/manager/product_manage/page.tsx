@@ -2,11 +2,11 @@
 
 import React, { useState, useEffect } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
-import getProducts from '@/api/getProducts';
-import { CardProps } from '@/shared/model/types';
+import getProducts from '@/entities/product/api/getProducts';
+import { CardProps } from '@/entities/product/model/types';
 import { Range } from '@/shared/ui';
 import { ProductManageCard } from '@/components/molecules';
-import { getStandardCategory } from '@/shared/getStandardCategory';
+import { getStandardCategory } from '@/entities/product/lib/getStandardCategory';
 
 function page() {
   const router = useRouter();

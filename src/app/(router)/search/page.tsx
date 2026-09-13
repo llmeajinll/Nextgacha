@@ -1,6 +1,6 @@
 import React from 'react';
 import { Range } from '@/shared/ui';
-import { Category, DetailCategory } from '@/components/molecules';
+import { Category, DetailCategory } from '@/entities/product/ui';
 import { SearchPage } from '@/components/pages';
 
 export default function page() {

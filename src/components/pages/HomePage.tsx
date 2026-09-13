@@ -4,10 +4,10 @@ import React, { useState, useEffect } from 'react';
 import { Banner } from '../organisms';
 import { CardTemplate } from '../templates';
 import { cardTemplateContainer } from '../templates/CardTemplate/cardtemplate.css';
-import getProducts from '@/api/getProducts';
+import getProducts from '@/entities/product/api/getProducts';
 import { Btn, Title, Range } from '@/shared/ui';
-import { CardProps } from '@/shared/model/types';
-import { Card } from '../molecules';
+import { CardProps } from '@/entities/product/model/types';
+import { Card } from '@/entities/product/ui';
 
 export default function HomePage() {
   const [hotProduct, setHotProduct] = useState([] as CardProps[]);

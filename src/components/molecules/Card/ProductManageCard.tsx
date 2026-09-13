@@ -3,7 +3,7 @@
 import Image from 'next/image';
 import React, { useState } from 'react';
 import { Range } from '@/shared/ui';
-import { CardProps } from '@/shared/model/types';
+import { CardProps } from '@/entities/product/model/types';
 
 export default function ProductManageCard(props: CardProps) {
   const [productPrice, setProductPrice] = useState(props.price);

@@ -1,8 +1,8 @@
 'use client';
 
 import React, { Fragment, useState } from 'react';
-import { Notice } from '../molecules';
-import { notice } from '@/shared/notice';
+import Notice from '@/entities/notice/ui/Notice';
+import { notice } from '@/entities/notice/model/notice';
 
 import { Range } from '@/shared/ui';
 import Pagination from 'rc-pagination';

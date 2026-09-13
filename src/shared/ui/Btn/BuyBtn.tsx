@@ -6,7 +6,7 @@ import { useCallback } from 'react';
 import { loadTossPayments } from '@tosspayments/tosspayments-sdk';
 import { v4 as uuidv4 } from 'uuid';
 import { useAtom, useAtomValue } from 'jotai';
-import { userInfoAtom } from '@/jotai/store';
+import { userInfoAtom } from '@/entities/user/model/store';
 import { useModal } from '@/shared/hooks';
 import { transform } from 'next/dist/build/swc/generated-native';
 import { useDaumPostcodePopup } from 'react-daum-postcode';

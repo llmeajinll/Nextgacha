@@ -3,16 +3,16 @@
 import { useRouter, useSearchParams, usePathname } from 'next/navigation';
 // import { useRouter } from 'next/router';
 import React, { Suspense, useEffect, useState } from 'react';
-import { CardProps } from '@/shared/model/types';
+import { CardProps } from '@/entities/product/model/types';
 import { CardTemplate } from '../templates';
 import { Title, Range, ScrollToTop } from '@/shared/ui';
-import { getStandardCategory } from '@/shared/getStandardCategory';
-import { tagCategory } from '@/shared/category';
+import { getStandardCategory } from '@/entities/product/lib/getStandardCategory';
+import { tagCategory } from '@/entities/product/lib/category';
 import Pagination from 'rc-pagination';
 import 'rc-pagination/assets/index.css';
 import { useAtom } from 'jotai';
-import { searchProductsAtom } from '@/jotai/store';
-import getProducts from '@/api/getProducts';
+import { searchProductsAtom } from '@/entities/product/model/store';
+import getProducts from '@/entities/product/api/getProducts';
 
 export default function SearchPage() {
   const router = useRouter();

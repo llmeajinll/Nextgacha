@@ -5,10 +5,10 @@ import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 import { Range } from '@/shared/ui';
 import { Search } from '@/components/molecules';
-import { category, categoryMatch } from '@/shared/category';
+import { category, categoryMatch } from '@/entities/product/lib/category';
 import Pagination from 'rc-pagination';
 import 'rc-pagination/assets/index.css';
-import { CardProps } from '@/shared/model/types';
+import { CardProps } from '@/entities/product/model/types';
 
 export default function page() {
   const router = useRouter();

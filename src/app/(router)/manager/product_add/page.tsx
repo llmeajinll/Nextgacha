@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { category, categoryMatch } from '@/shared/category';
+import { category, categoryMatch } from '@/entities/product/lib/category';
 import dayjs from 'dayjs';
 import { Range } from '@/shared/ui';
 import { useRouter } from 'next/navigation';

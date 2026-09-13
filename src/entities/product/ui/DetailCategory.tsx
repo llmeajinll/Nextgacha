@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, useMemo } from 'react';
-import { detailFilter } from '@/shared/category';
+import { detailFilter } from '@/entities/product/lib/category';
 import { useSearchParams, useRouter, usePathname } from 'next/navigation';
 import { Range } from '@/shared/ui';
 import {

@@ -5,7 +5,8 @@ import { useQueryClient } from '@tanstack/react-query';
 import Image from 'next/image';
 import { useAtom, useAtomValue } from 'jotai';
 import { Range } from '@/shared/ui';
-import { Cart, AddressTruck } from '@/components/molecules';
+import { Cart } from '@/components/molecules';
+import { AddressTruck } from '@/entities/order/ui';
 import { EmptyCard } from '@/shared/ui';
 import { queryClientAtom } from 'jotai-tanstack-query';
 import {
@@ -18,7 +19,7 @@ import {
 } from './carttemplate.css';
 import { comma } from '@/shared/lib/comma';
 import { BuyBtn } from '@/shared/ui';
-import { userInfoAtom } from '@/jotai/store';
+import { userInfoAtom } from '@/entities/user/model/store';
 import { AddressModal } from '@/components/organisms';
 import { useCart } from '@/app/hooks';
 

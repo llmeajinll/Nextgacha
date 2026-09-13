@@ -4,7 +4,8 @@ import React, { useEffect, useState, useRef } from 'react';
 import { useRouter } from 'next/navigation';
 
 // import { signIn, signOut } from '@/auth';
-import { Search, Category } from '@/components/molecules';
+import { Search } from '@/components/molecules';
+import { Category } from '@/entities/product/ui';
 import {
   headerContainer,
   logo,
@@ -26,7 +27,7 @@ import { Session } from 'next-auth';
 import { useSearchParams, usePathname } from 'next/navigation';
 import { useSplitRoute as useSpliteRoute } from '@/shared/hooks';
 import { useAtom } from 'jotai';
-import { userInfoAtom } from '@/jotai/store';
+import { userInfoAtom } from '@/entities/user/model/store';
 import { Range, ImgBtn, Btn } from '@/shared/ui';
 import { textareaStyle } from '@/components/organisms/Modal/reviewModal.css';
 

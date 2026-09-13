@@ -1,5 +1,4 @@
-import { notice } from '@/shared/notice';
-import { modalAtom } from '@/jotai/store';
+import { modalAtom } from '@/shared/model/store';
 import { useAtom } from 'jotai';
 
 type OpenModalOptions = {

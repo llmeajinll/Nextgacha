@@ -20,7 +20,7 @@ import {
 } from '@/shared/ui';
 import { DropDown } from '@/components/molecules';
 import { LabelTitle } from '@/shared/ui';
-import { CardProps } from '@/shared/model/types';
+import { CardProps } from '@/entities/product/model/types';
 import { comma } from '@/shared/lib/comma';
 import { useTempCart } from '@/app/hooks';
 import { panelTitle, copyText } from './productPurchasePanel.css';

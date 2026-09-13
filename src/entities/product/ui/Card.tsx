@@ -4,7 +4,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import React, { useState, useEffect } from 'react';
 import { HeartBtn, Tag } from '@/shared/ui';
-import { TagContainer } from '@/components/molecules';
+import { TagContainer } from '@/entities/product/ui';
 import {
   cardContainer,
   cardImage,
@@ -13,7 +13,7 @@ import {
   cardTitle,
   bottomContainer,
 } from './card.css';
-import { CardProps } from '@/shared/model/types';
+import { CardProps } from '@/entities/product/model/types';
 import { comma } from '@/shared/lib/comma';
 import Cookies from 'js-cookie';
 

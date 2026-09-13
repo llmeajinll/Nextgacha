@@ -4,7 +4,8 @@ import React, { useState, useEffect, Suspense } from 'react';
 import { CartTemplate } from '@/components/templates';
 import getCart from '@/api/getCart';
 import { baseUrl } from '@/shared/api/baseUrl';
-import { Cart, AddressTruck } from '@/components/molecules';
+import { Cart } from '@/components/molecules';
+import { AddressTruck } from '@/entities/order/ui';
 import { EmptyCard } from '@/shared/ui';
 
 export default function page() {

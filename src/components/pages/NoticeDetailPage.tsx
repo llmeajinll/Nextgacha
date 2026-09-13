@@ -1,7 +1,7 @@
 'use client';
 import React from 'react';
 import { useSplitRoute as useSpliteRoute } from '@/shared/hooks';
-import { useGetNotice } from '@/app/hooks';
+import useGetNotice from '@/entities/notice/model/useGetNotice';
 import { Range } from '@/shared/ui';
 import Link from 'next/link';
 import Image from 'next/image';

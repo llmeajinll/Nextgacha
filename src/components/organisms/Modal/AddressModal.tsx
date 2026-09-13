@@ -8,7 +8,7 @@ import {
   addressContainer,
   writeBtn,
 } from './addressModal.css';
-import { userInfoAtom } from '@/jotai/store';
+import { userInfoAtom } from '@/entities/user/model/store';
 import { useAtom, useAtomValue } from 'jotai';
 import { useModal } from '@/shared/hooks';
 import { Range } from '@/shared/ui';

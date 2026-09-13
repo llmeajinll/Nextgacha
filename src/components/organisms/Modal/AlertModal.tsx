@@ -4,7 +4,7 @@ import React, { useState, useEffect } from 'react';
 import { usePathname } from 'next/navigation';
 import { Range, ImgBtn } from '@/shared/ui';
 import * as styles from './alertModal.css';
-import { modalAtom } from '@/jotai/store';
+import { modalAtom } from '@/shared/model/store';
 import { useAtom } from 'jotai';
 import { useModal } from '@/shared/hooks';
 

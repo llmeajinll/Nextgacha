@@ -11,7 +11,7 @@ import {
   select,
 } from './category.css';
 import { categoryVariant } from '@/styles/variants.css';
-import { category } from '@/shared/category';
+import { category } from '@/entities/product/lib/category';
 import Link from 'next/link';
 import { useSearchParams } from 'next/navigation';
 
@@ -21,7 +21,7 @@ type Props = {
 };
 
 export default function Category({ status = 'header', setShow }: Props) {
-  //   const category = await require('@/shared/category');
+  //   const category = await require('@/entities/product/lib/category');
   const searchParams = useSearchParams();
 
   const type = searchParams.get('type');

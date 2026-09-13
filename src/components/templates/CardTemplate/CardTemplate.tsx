@@ -1,13 +1,13 @@
 'use client';
 
 import React, { useState } from 'react';
-import { Card } from '@/components/molecules';
+import { Card } from '@/entities/product/ui';
 import { cardTemplateContainer, noProductContainer } from './cardtemplate.css';
 import { Title, Range, ScrollToTop } from '@/shared/ui';
 import { useAtom } from 'jotai';
-import { searchProductsAtom } from '@/jotai/store';
+import { searchProductsAtom } from '@/entities/product/model/store';
 
-import { CardProps } from '@/shared/model/types';
+import { CardProps } from '@/entities/product/model/types';
 
 export default function CardTemplate({
   tag,

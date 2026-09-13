@@ -2,10 +2,10 @@
 
 import useSplitRoute from '@/shared/hooks/useSplitRoute';
 import React, { useState, useEffect } from 'react';
-import { ReviewProps } from '@/shared/model/types';
+import { ReviewProps } from '@/entities/review/model/types';
 import { Range } from '@/shared/ui';
-import getReview from '@/api/getReview';
-import { Review } from '@/components/molecules';
+import getReview from '@/entities/review/api/getReview';
+import { Review } from '@/entities/review/ui';
 
 export default function ReviewTab() {
   const [review, setReview] = useState<any[]>([]);

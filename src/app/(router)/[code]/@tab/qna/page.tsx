@@ -1,6 +1,6 @@
 'use client';
 
-import getQna from '@/api/getQna';
+import getQna from '@/entities/qna/api/getQna';
 import useSplitRoute from '@/shared/hooks/useSplitRoute';
 import dayjs from 'dayjs';
 import React, { useEffect, useState } from 'react';

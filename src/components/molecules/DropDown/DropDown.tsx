@@ -13,7 +13,7 @@ import { ImgBtn } from '@/shared/ui';
 import { useSetAtom } from 'jotai';
 import { useDropDown } from '@/shared/hooks/useDropDown';
 
-import { CardProps } from '@/shared/model/types';
+import { CardProps } from '@/entities/product/model/types';
 import useSplitRoute from '@/shared/hooks/useSplitRoute';
 import { useTempCart } from '@/app/hooks';
 

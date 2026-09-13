@@ -1,4 +1,5 @@
-import { Profile, DetailTab } from '@/components/molecules';
+import { DetailTab } from '@/components/molecules';
+import { Profile } from '@/entities/user/ui';
 import React from 'react';
 import { Provider } from 'jotai';
 

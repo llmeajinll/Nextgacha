@@ -9,7 +9,7 @@ import Image from 'next/image';
 import { Range } from '@/shared/ui';
 import { profileImage, email, point, name } from './profile.css';
 import { comma } from '@/shared/lib/comma';
-import { userInfoAtom } from '@/jotai/store';
+import { userInfoAtom } from '@/entities/user/model/store';
 import { useAtom } from 'jotai';
 import { useModal } from '@/shared/hooks';
 

@@ -1,6 +1,6 @@
 'use client';
 
-import { QnaProps } from '@/shared/model/types';
+import { QnaProps } from '@/entities/qna/model/types';
 import React, { useState } from 'react';
 import { Writer, Range, Btn } from '@/shared/ui';
 import { useModal } from '@/shared/hooks';

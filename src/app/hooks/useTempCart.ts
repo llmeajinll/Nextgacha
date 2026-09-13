@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
 import useSWR from 'swr';
 import { useAtom } from 'jotai';
-import { tempCartAtom, userInfoAtom } from '@/jotai/store';
-import { ProductProps } from '@/shared/model/types';
+import { tempCartAtom } from '@/jotai/store';
+import { userInfoAtom } from '@/entities/user/model/store';
+import { ProductProps } from '@/entities/product/model/types';
 import { useCart } from '@/app/hooks';
 import { useModal } from '@/shared/hooks';
 import {
