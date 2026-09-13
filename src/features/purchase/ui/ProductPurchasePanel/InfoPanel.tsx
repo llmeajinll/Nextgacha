@@ -10,14 +10,9 @@ import { useAtom } from 'jotai';
 import { tempCartAtom } from '@/features/cart/model/store';
 import { useModal } from '@/shared/hooks';
 
-import {
-  Btn,
-  BuyBtn,
-  HeartBtn,
-  ImgBtn,
-  ReactSlick,
-  Range,
-} from '@/shared/ui';
+import { Btn, ImgBtn, ReactSlick, Range } from '@/shared/ui';
+import BuyBtn from '@/features/purchase/ui/BuyBtn';
+import { HeartBtn } from '@/entities/product/ui';
 import { DropDown } from '@/features/cart/ui';
 import { LabelTitle } from '@/shared/ui';
 import { CardProps } from '@/entities/product/model/types';
@@ -25,7 +20,7 @@ import { comma } from '@/shared/lib/comma';
 import { useTempCart } from '@/features/cart/model';
 import { panelTitle, copyText } from './productPurchasePanel.css';
 import { postCart } from '@/features/cart/api/postCart';
-import postLike from '@/features/like/api/updateLike';
+import postLike from '@/entities/product/api/updateLike';
 
 export default function InfoPanel({ props }: { props: CardProps }) {
   // console.log('infopanel', props);

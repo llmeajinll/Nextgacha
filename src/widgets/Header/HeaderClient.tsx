@@ -22,7 +22,7 @@ import Link from 'next/link';
 import { useSession } from 'next-auth/react';
 import { signIn, signOut } from 'next-auth/react';
 
-// import { kakaoSignIn, kakaoSignOut } from '@/shared/authActions';
+// import { kakaoSignIn, kakaoSignOut } from '@/features/auth/api/authActions';
 import { Session } from 'next-auth';
 import { useSearchParams, usePathname } from 'next/navigation';
 import { useSplitRoute as useSpliteRoute } from '@/shared/hooks';

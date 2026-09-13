@@ -18,7 +18,7 @@ import {
   line,
 } from './carttemplate.css';
 import { comma } from '@/shared/lib/comma';
-import { BuyBtn } from '@/shared/ui';
+import BuyBtn from '@/features/purchase/ui/BuyBtn';
 import { userInfoAtom } from '@/entities/user/model/store';
 import AddressModal from '@/features/address/ui/AddressModal';
 import { useCart } from '@/features/cart/model';

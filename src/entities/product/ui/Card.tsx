@@ -3,7 +3,8 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import React, { useState, useEffect } from 'react';
-import { HeartBtn, Tag } from '@/shared/ui';
+import { Tag } from '@/shared/ui';
+import HeartBtn from './HeartBtn';
 import { TagContainer } from '@/entities/product/ui';
 import {
   cardContainer,

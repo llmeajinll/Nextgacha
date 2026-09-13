@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
-import Btn from './Btn';
+import { Btn } from '@/shared/ui';
 import { useCallback } from 'react';
 import { loadTossPayments } from '@tosspayments/tosspayments-sdk';
 import { v4 as uuidv4 } from 'uuid';
