@@ -16,6 +16,19 @@ import {
   bigText,
   smallText,
   line,
+  priceValue,
+  deliveryValue,
+  pointValue,
+  totalValue,
+  deliverySection,
+  unitLabel,
+  deliveryNote,
+  minusSign,
+  totalRow,
+  totalLabel,
+  totalColor,
+  rewardLabel,
+  pointIcon,
 } from './carttemplate.css';
 import { comma } from '@/shared/lib/comma';
 import BuyBtn from '@/features/purchase/ui/BuyBtn';
@@ -114,7 +127,7 @@ export default function CartTemplate() {
     <>
       <Range preset='columnCenter' gap='10' className={CartContainer}>
         {!data || data.length === 0 ? (
-          <EmptyCard style={{ marginTop: 0 }}>CART IS EMPTY</EmptyCard>
+          <EmptyCard noSpacing>CART IS EMPTY</EmptyCard>
         ) : (
           data?.map((item: any, index: number) => {
             return (
@@ -127,36 +140,16 @@ export default function CartTemplate() {
           <>
             <div className={bigText}>
               PRICE :
-              <span
-                style={{
-                  display: 'inline-block',
-                  width: '320px',
-                  textAlign: 'right',
-                }}
-              >
-                {comma(Price)} WON
-              </span>
+              <span className={priceValue}>{comma(Price)} WON</span>
             </div>
 
-            <div style={{ margin: '5px 0px 0px 0px' }}>
+            <div className={deliverySection}>
               <span className={smallText}>
                 <span>Delivery Fee :</span>
-                <span
-                  style={{
-                    display: 'inline-block',
-                    width: '248px',
-                    textAlign: 'right',
-                  }}
-                >
-                  + 3,000<span style={{ marginLeft: '15px' }}>WON</span>
+                <span className={deliveryValue}>
+                  + 3,000<span className={unitLabel}>WON</span>
                 </span>
-                <span
-                  style={{
-                    marginLeft: '10px',
-                    fontSize: '16px',
-                    color: 'gray',
-                  }}
-                >
+                <span className={deliveryNote}>
                   [50,000원 이상 구매 시 무료배송]
                 </span>
               </span>
@@ -168,14 +161,8 @@ export default function CartTemplate() {
           <div>
             <span className={smallText}>
               <span>USE POINTS :</span>
-              <span
-                style={{
-                  display: 'inline-block',
-                  width: '238px',
-                  textAlign: 'right',
-                }}
-              >
-                <span style={{ marginRight: '8px' }}>-</span>
+              <span className={pointValue}>
+                <span className={minusSign}>-</span>
                 {/* <Image
                   src='/images/point.png'
                   alt='point'
@@ -214,38 +201,28 @@ export default function CartTemplate() {
                     }
                   }}
                 />
-                <span style={{ marginLeft: '15px' }}>P</span>
+                <span className={unitLabel}>P</span>
               </span>
             </span>
           </div>
         )}
 
         <div className={line} />
-        <Range style={{ marginBottom: '30px' }}>
-          <div className={bigText} style={{ marginRight: '30px' }}>
+        <Range className={totalRow}>
+          <div className={totalLabel}>
             <span>
-              <span style={{ color: '#75C3FE' }}>TOTAL :</span>
-              <span
-                style={{
-                  display: 'inline-block',
-                  width: '315px',
-                  textAlign: 'right',
-                }}
-              >
-                {comma(ToTalPrice)} WON
-              </span>
+              <span className={totalColor}>TOTAL :</span>
+              <span className={totalValue}>{comma(ToTalPrice)} WON</span>
             </span>
           </div>
           <Range preset='center' className={smallText}>
-            <span style={{ marginRight: '20px', color: '#75C3FE' }}>
-              REWARD :
-            </span>
+            <span className={rewardLabel}>REWARD :</span>
             <Image
               src='/images/point.png'
               alt='point'
               width={24}
               height={24}
-              style={{ marginRight: '5px' }}
+              className={pointIcon}
             ></Image>
             {Math.floor(Price * 0.01)}p
           </Range>

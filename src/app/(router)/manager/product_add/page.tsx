@@ -7,6 +7,21 @@ import { Range } from '@/shared/ui';
 import { useRouter } from 'next/navigation';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
+import {
+  pageContainer,
+  fieldLabel,
+  plainLabel,
+  imageInput,
+  titleInput,
+  priceInput,
+  listCountInput,
+  selectField,
+  deleteBtn,
+  deleteBtnSmall,
+  addListBtn,
+  submitBtn,
+  groupTag,
+} from './page.css';
 
 export default function ManageProductPage() {
   const formData = new FormData();
@@ -29,19 +44,11 @@ export default function ManageProductPage() {
   const [checkBox, setCheckBox] = useState(false);
 
   return (
-    <div
-      style={{
-        boxSizing: 'border-box',
-        padding: '0px 30px 50px 30px',
-        display: 'flex',
-        flexDirection: 'column',
-        gap: '8px',
-      }}
-    >
+    <div className={pageContainer}>
       <h4 onClick={() => router.push('/manager')}>HOME</h4>
       <h1>상품 추가</h1>
-      <Range gap='8' style={{ alignItems: 'center' }}>
-        <div style={{ width: '110px', fontSize: '18px' }}>이미지</div>
+      <Range gap='8' preset='alignCenter'>
+        <div className={fieldLabel}>이미지</div>
         <input
           placeholder=''
           type='file'
@@ -52,54 +59,34 @@ export default function ManageProductPage() {
               setImage(file);
             }
           }}
-          style={{
-            width: '200px',
-            height: '200px',
-            border: '1px solid lightgray',
-          }}
+          className={imageInput}
         />
       </Range>
 
-      <Range gap='8' style={{ alignItems: 'center' }}>
-        <div style={{ width: '110px', fontSize: '18px' }}>제목</div>
+      <Range gap='8' preset='alignCenter'>
+        <div className={fieldLabel}>제목</div>
         <input
           placeholder='title'
           value={title}
           onChange={(e) => setTitle(e.target.value)}
           maxLength={100}
-          style={{
-            width: '400px',
-            height: '30px',
-            border: '1px solid lightgray',
-            padding: '4px 8px',
-            fontSize: '18px',
-          }}
+          className={titleInput}
           required
         />
       </Range>
 
-      <Range gap='8' style={{ alignItems: 'center' }}>
-        <div style={{ width: '110px', fontSize: '18px' }}>가격</div>
+      <Range gap='8' preset='alignCenter'>
+        <div className={fieldLabel}>가격</div>
         <input
           placeholder='price'
           onChange={(e) => setPrice(Number(e.target.value))}
-          style={{
-            width: '200px',
-            height: '30px',
-            border: '1px solid lightgray',
-            padding: '4px 8px',
-            fontSize: '18px',
-          }}
+          className={priceInput}
           required
         />
         원
       </Range>
-      <Range gap='8' style={{ alignItems: 'center' }}>
-        <label
-          style={{ display: 'inline-block', width: '110px', fontSize: '18px' }}
-        >
-          출시일 선택
-        </label>
+      <Range gap='8' preset='alignCenter'>
+        <label className={fieldLabel}>출시일 선택</label>
         <DatePicker
           selected={create}
           onChange={(newDate) => setCreate(newDate)}
@@ -108,12 +95,8 @@ export default function ManageProductPage() {
           disabled={checkBox}
         />
       </Range>
-      <Range gap='8' style={{ alignItems: 'center' }}>
-        <label
-          style={{ display: 'inline-block', width: '110px', fontSize: '18px' }}
-        >
-          예약판매 선택
-        </label>
+      <Range gap='8' preset='alignCenter'>
+        <label className={fieldLabel}>예약판매 선택</label>
         <DatePicker
           selected={reserve}
           onChange={(newDate) => setReserve(newDate)}
@@ -128,7 +111,7 @@ export default function ManageProductPage() {
         />
         예약 판매
       </Range>
-      <label style={{ fontSize: '18px' }}>가챠 리스트</label>
+      <label className={plainLabel}>가챠 리스트</label>
       <Range preset='column' gap='8'>
         {list.map((val, idx) => (
           <Range gap='8' key={idx}>
@@ -140,15 +123,9 @@ export default function ManageProductPage() {
                 newList[idx].name = e.target.value;
                 setList(newList);
               }}
-              style={{
-                width: '200px',
-                height: '30px',
-                border: '1px solid lightgray',
-                padding: '4px 8px',
-                fontSize: '18px',
-              }}
+              className={priceInput}
             />
-            <Range gap='4' style={{ fontSize: '18px', alignItems: 'center' }}>
+            <Range gap='4' preset='alignCenter' className={plainLabel}>
               <input
                 placeholder='갯수'
                 value={val.count}
@@ -159,28 +136,14 @@ export default function ManageProductPage() {
                   setList(newList);
                 }}
                 disabled={checkBox}
-                style={{
-                  width: '100px',
-                  height: '30px',
-                  border: '1px solid lightgray',
-                  padding: '4px 8px',
-                  fontSize: '18px',
-                }}
+                className={listCountInput}
               />
               개
               <button
                 onClick={() => {
                   setList((prev) => prev.filter((_, i) => i !== idx));
                 }}
-                style={{
-                  backgroundColor: 'white',
-                  border: 'none',
-                  height: '26px',
-                  fontSize: '30px',
-                  lineHeight: '10px',
-                  color: 'red',
-                  cursor: 'pointer',
-                }}
+                className={deleteBtn}
               >
                 ✕
               </button>
@@ -189,37 +152,19 @@ export default function ManageProductPage() {
         ))}
         <button
           onClick={() => setList((list) => [...list, { name: '', count: 0 }])}
-          style={{
-            width: '344px',
-            height: '40px',
-            border: '1px solid lightgray',
-            fontSize: '40px',
-            lineHeight: '39px',
-            color: 'gray',
-            cursor: 'pointer',
-          }}
+          className={addListBtn}
         >
           +
         </button>
       </Range>
-      <Range gap='8' style={{ alignItems: 'center' }}>
-        <label
-          style={{ display: 'inline-block', width: '110px', fontSize: '18px' }}
-        >
-          회사 선택
-        </label>
+      <Range gap='8' preset='alignCenter'>
+        <label className={fieldLabel}>회사 선택</label>
         <select
           onChange={(e) => {
             setCompany(e.target.value);
             // console.log(e.target.value);
           }}
-          style={{
-            width: '200px',
-            height: '40px',
-            border: '1px solid lightgray',
-            padding: '4px 8px',
-            fontSize: '18px',
-          }}
+          className={selectField}
         >
           <option value='' onClick={() => undefined}>
             회사를 선택하세요
@@ -230,27 +175,17 @@ export default function ManageProductPage() {
             </option>
           ))}
         </select>
-        <div style={{ fontSize: '18px' }}>선택한 회사 : {company}</div>
+        <div className={plainLabel}>선택한 회사 : {company}</div>
       </Range>
 
-      <Range gap='8' style={{ alignItems: 'center' }}>
-        <label
-          style={{ display: 'inline-block', width: '110px', fontSize: '18px' }}
-        >
-          그룹 선택
-        </label>
+      <Range gap='8' preset='alignCenter'>
+        <label className={fieldLabel}>그룹 선택</label>
         <select
           onChange={(e) => {
             setGroup((group) => [...group, e.target.value]);
             // console.log(group);
           }}
-          style={{
-            width: '200px',
-            height: '40px',
-            border: '1px solid lightgray',
-            padding: '4px 8px',
-            fontSize: '18px',
-          }}
+          className={selectField}
         >
           <option value='' onClick={() => undefined}>
             그룹을 선택하세요
@@ -314,12 +249,12 @@ export default function ManageProductPage() {
             });
           })}
         </select>
-        <div style={{ fontSize: '18px' }}>선택한 그룹 : </div>
+        <div className={plainLabel}>선택한 그룹 : </div>
 
         <Range gap='10'>
           {group.map((val) => {
             return (
-              <span key={val} style={{ fontSize: '18px', marginRight: '4px' }}>
+              <span key={val} className={groupTag}>
                 {val}
                 <button
                   onClick={() => {
@@ -327,15 +262,7 @@ export default function ManageProductPage() {
                     // group.filter((v) => val !== v);
                     setGroup((prev) => prev.filter((v) => val !== v));
                   }}
-                  style={{
-                    backgroundColor: 'white',
-                    border: 'none',
-                    height: '26px',
-                    fontSize: '18px',
-                    lineHeight: '30px',
-                    color: 'red',
-                    cursor: 'pointer',
-                  }}
+                  className={deleteBtnSmall}
                 >
                   ✕
                 </button>
@@ -397,16 +324,7 @@ export default function ManageProductPage() {
               window.location.reload();
             });
         }}
-        style={{
-          height: '60px',
-          border: '1px solid gray',
-          marginTop: '50px',
-          backgroundColor: 'gray',
-          color: 'white',
-          fontSize: '20px',
-          lineHeight: '20px',
-          cursor: 'pointer',
-        }}
+        className={submitBtn}
       >
         상품 등록
       </button>

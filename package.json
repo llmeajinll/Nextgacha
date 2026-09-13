@@ -26,7 +26,6 @@
     "@vercel/analytics": "^1.6.1",
     "@vercel/blob": "^2.0.0",
     "@vitejs/plugin-react": "^5.1.0",
-    "blob": "^0.1.0",
     "dayjs": "^1.11.19",
     "jest": "^30.3.0",
     "jotai": "^2.15.0",
@@ -45,8 +44,7 @@
     "react-slick": "^0.31.0",
     "slick-carousel": "^1.8.1",
     "swr": "^2.3.6",
-    "uuid": "^13.0.0",
-    "vercel": "^48.8.2"
+    "uuid": "^13.0.0"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",

@@ -5,6 +5,23 @@ import useGetNotice from '@/entities/notice/model/useGetNotice';
 import { Range } from '@/shared/ui';
 import Link from 'next/link';
 import Image from 'next/image';
+import {
+  container,
+  backLink,
+  backArrow,
+  titleRow,
+  num,
+  title,
+  createdAt,
+  divider,
+  content,
+  contentList,
+  navRow,
+  navLink,
+  navLinkNext,
+  navIconLeft,
+  navIconRight,
+} from './noticeDetailPage.css';
 
 export default function NoticeDetailPage() {
   const { secondRoute } = useSpliteRoute();
@@ -46,73 +63,23 @@ export default function NoticeDetailPage() {
 
   // console.log('res', res);
   return (
-    <Range
-      preset='columnBetween'
-      width='full'
-      style={{
-        boxSizing: 'border-box',
-        borderBottom: '1px solid lightgray',
-        borderRight: '1px solid lightgray',
-        borderLeft: '1px solid lightgray',
-        padding: '20px 50px',
-      }}
-    >
-      <Link
-        href='/notice'
-        style={{
-          fontFamily: 'silkscreen',
-          fontSize: '14px',
-          lineHeight: '24px',
-        }}
-      >
-        <span style={{ color: '#75c3fe' }}>{'<< '}</span>NOTICE
+    <Range preset='columnBetween' width='full' className={container}>
+      <Link href='/notice' className={backLink}>
+        <span className={backArrow}>{'<< '}</span>NOTICE
       </Link>
 
-      <Range
-        preset='between'
-        width='full'
-        style={{ boxSizing: 'border-box', padding: '20px 20px 10px 20px' }}
-      >
+      <Range preset='between' width='full' className={titleRow}>
         <div>
-          <span
-            style={{
-              fontFamily: 'silkscreen',
-              marginRight: '5px',
-              fontSize: '18px',
-            }}
-          >
-            {res?.num}.
-          </span>
-          <span style={{ lineHeight: '14px', fontFamily: 'silkscreen' }}>
-            {res?.title}
-          </span>
+          <span className={num}>{res?.num}.</span>
+          <span className={title}>{res?.title}</span>
         </div>
-        <div
-          style={{
-            fontFamily: 'silkscreen',
-            fontSize: '14px',
-            lineHeight: '24px',
-          }}
-        >
-          {res?.created_at}
-        </div>
+        <div className={createdAt}>{res?.created_at}</div>
       </Range>
-      <div
-        style={{ width: '100%', height: '1px', backgroundColor: 'lightgray' }}
-      ></div>
-      <Range
-        preset='column'
-        width='full'
-        style={{
-          boxSizing: 'border-box',
-          padding: '20px',
-          whiteSpace: 'pre-wrap',
-          minHeight: '300px',
-        }}
-      >
+      <div className={divider}></div>
+      <Range preset='column' width='full' className={content}>
         <div>{res?.content}</div>
         {Array.isArray((res as any).list) && (
-          <div style={{ marginTop: '40px' }}>
+          <div className={contentList}>
             {(res as any).list.map((val: string, idx: number) => (
               <div key={idx}>{val}</div>
             ))}
@@ -120,50 +87,29 @@ export default function NoticeDetailPage() {
         )}
       </Range>
 
-      <div
-        style={{ width: '100%', height: '1px', backgroundColor: 'lightgray' }}
-      ></div>
-      <Range
-        preset='between'
-        width='full'
-        style={{
-          padding: '10px 20px',
-          boxSizing: 'border-box',
-          fontFamily: 'silkscreen',
-        }}
-      >
+      <div className={divider}></div>
+      <Range preset='between' width='full' className={navRow}>
         {!(secondRoute === '%EA%B3%B5%EC%A7%80') && (
-          <Link
-            href={prevNavigation()}
-            style={{ color: 'gray', display: 'flex', alignItems: 'center' }}
-          >
+          <Link href={prevNavigation()} className={navLink}>
             <Image
               src='/images/Group 248.png'
               alt='left_arrow'
               width={16}
               height={16}
-              style={{ marginRight: '5px' }}
+              className={navIconLeft}
             ></Image>
             PREV
           </Link>
         )}
         {!(secondRoute === count.toString()) && (
-          <Link
-            href={nextNavigation()}
-            style={{
-              marginLeft: 'auto',
-              color: 'gray',
-              display: 'flex',
-              alignItems: 'center',
-            }}
-          >
+          <Link href={nextNavigation()} className={navLinkNext}>
             NEXT
             <Image
               src='/images/Group 248.png'
               alt='left_arrow'
               width={16}
               height={16}
-              style={{ marginLeft: '5px', rotate: '180deg' }}
+              className={navIconRight}
             ></Image>
           </Link>
         )}

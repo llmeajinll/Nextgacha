@@ -9,6 +9,29 @@ import { category, categoryMatch } from '@/entities/product/lib/category';
 import Pagination from 'rc-pagination';
 import 'rc-pagination/assets/index.css';
 import { CardProps } from '@/entities/product/model/types';
+import {
+  pagePadding,
+  searchLabel,
+  groupSelect,
+  searchInput,
+  discountPanel,
+  discountLabel,
+  discountPercentLabel,
+  discountInput,
+  checkboxSmall,
+  checkboxLabel,
+  applyBtn,
+  productGrid,
+  productRow,
+  productImage,
+  productInfoBlock,
+  titleReset,
+  titleText,
+  reserveTag,
+  alreadyDiscountTag,
+  strikePrice,
+  paginationWrap,
+} from './page.css';
 
 export default function page() {
   const router = useRouter();
@@ -50,27 +73,17 @@ export default function page() {
       if (props.isDiscount === true && props.alreadyDiscount) {
         return (
           <div>
-            <span
-              style={{ color: '#8e75fe', fontSize: '14px', marginRight: '8px' }}
-            >
+            <span className={alreadyDiscountTag}>
               이미 {props.alreadyDiscount}% 할인중
             </span>
-            <span
-              style={{ color: 'lightgray', textDecoration: 'line-through' }}
-            >
-              {props.price}
-            </span>
+            <span className={strikePrice}>{props.price}</span>
             <span> → {props.price * (1 - props.alreadyDiscount / 100)}</span> 원
           </div>
         );
       } else if (discount !== 0 && props.checked === true) {
         return (
           <div>
-            <span
-              style={{ color: 'lightgray', textDecoration: 'line-through' }}
-            >
-              {props.price}
-            </span>
+            <span className={strikePrice}>{props.price}</span>
             <span> → {props.price * (1 - discount / 100)}</span> 원
           </div>
         );
@@ -82,12 +95,12 @@ export default function page() {
   );
 
   return (
-    <div style={{ padding: '30px' }}>
+    <div className={pagePadding}>
       <h4 onClick={() => router.push('/manager')}>HOME</h4>
 
       <h1>이벤트 추가</h1>
 
-      <div style={{ marginBottom: '20px' }}>검색어 : {search}</div>
+      <div className={searchLabel}>검색어 : {search}</div>
       <Range preset='between'>
         <Range preset='column'>
           <select
@@ -99,13 +112,7 @@ export default function page() {
               setCheckAll(false);
               setExceptReserve(false);
             }}
-            style={{
-              width: '500px',
-              height: '40px',
-              border: '1px solid lightgray',
-              padding: '4px 8px',
-              fontSize: '18px',
-            }}
+            className={groupSelect}
           >
             <option value='' onClick={() => undefined}>
               그룹을 선택하세요
@@ -164,14 +171,7 @@ export default function page() {
 
           <input
             placeholder='제품 검색'
-            style={{
-              width: '482px',
-              height: '30px',
-              border: '1px solid lightgray',
-              padding: '4px 8px',
-              fontSize: '18px',
-              marginTop: '10px',
-            }}
+            className={searchInput}
             onChange={(e) => {
               setSearch(e.target.value);
               setCheckList([]);
@@ -188,18 +188,10 @@ export default function page() {
             }}
           />
         </Range>
-        <Range preset='column' gap='10' style={{ width: '700px' }}>
-          <Range gap='30' style={{ alignItems: 'center' }}>
+        <Range preset='column' gap='10' className={discountPanel}>
+          <Range gap='30' preset='alignCenter'>
             <Range>
-              <span
-                style={{
-                  lineHeight: '35px',
-                  fontSize: '18px',
-                  marginRight: '10px',
-                }}
-              >
-                할인
-              </span>
+              <span className={discountLabel}>할인</span>
               <input
                 value={discount}
                 placeholder='할인 %'
@@ -207,29 +199,15 @@ export default function page() {
                 onChange={(e) => {
                   setDiscount(Number(e.target.value));
                 }}
-                style={{
-                  width: '100px',
-                  height: '30px',
-                  border: '1px solid lightgray',
-                  padding: '4px 8px',
-                  fontSize: '18px',
-                }}
+                className={discountInput}
               />
-              <span
-                style={{
-                  lineHeight: '35px',
-                  fontSize: '18px',
-                  marginLeft: '5px',
-                }}
-              >
-                %
-              </span>
+              <span className={discountPercentLabel}>%</span>
             </Range>
             <Range>
               <input
                 type='checkbox'
                 checked={checkAll}
-                style={{ width: '20px', height: '20px' }}
+                className={checkboxSmall}
                 onChange={(e) => {
                   console.log('checkAll checked: ', checkAll);
                   if (checkAll === true) {
@@ -252,15 +230,13 @@ export default function page() {
                   }
                 }}
               />
-              <label style={{ lineHeight: '25px', fontSize: '18px' }}>
-                전체 선택
-              </label>
+              <label className={checkboxLabel}>전체 선택</label>
             </Range>
             <Range>
               <input
                 type='checkbox'
                 checked={exceptReserve}
-                style={{ width: '20px', height: '20px' }}
+                className={checkboxSmall}
                 onChange={(e) => {
                   console.log('exceptReserve checked: ', exceptReserve);
                   if (exceptReserve === true) {
@@ -277,23 +253,12 @@ export default function page() {
                   }
                 }}
               />
-              <label style={{ lineHeight: '25px', fontSize: '18px' }}>
-                예약 상품 제외
-              </label>
+              <label className={checkboxLabel}>예약 상품 제외</label>
             </Range>
           </Range>
           <Range>
             <button
-              style={{
-                backgroundColor: '#75C3FE',
-                width: '475px',
-                height: '40px',
-                color: 'white',
-                border: 'none',
-                fontSize: '20px',
-                cursor: 'pointer',
-                lineHeight: '38px',
-              }}
+              className={applyBtn}
               onClick={async () => {
                 if (checkList.length === 0) {
                   alert('제품을 선택해주세요.');
@@ -332,25 +297,13 @@ export default function page() {
           </Range>
         </Range>
       </Range>
-      <Range
-        preset='columnBetween'
-        width='full'
-        gap='10'
-        style={{
-          display: 'grid',
-          gridTemplateColumns: 'repeat(2, 600px)',
-          marginTop: '30px',
-        }}
-      >
+      <Range preset='columnBetween' width='full' gap='10' className={productGrid}>
         {product.map((val, idx) => (
-          <Range preset='left' key={val.num} gap='5' style={{ width: '600px' }}>
+          <Range preset='left' key={val.num} gap='5' className={productRow}>
             <input
               checked={checkList.includes(val.num)}
               type='checkbox'
-              style={{
-                width: '20px',
-                height: '20px',
-              }}
+              className={checkboxSmall}
               onChange={(e) => {
                 if (checkList.includes(val.num)) {
                   setCheckList((prev) => prev.filter((v) => v !== val.num));
@@ -364,23 +317,18 @@ export default function page() {
               width={120}
               height={120}
               alt='img'
-              style={{ border: '1px solid lightgray' }}
+              className={productImage}
             />
-            <Range
-              preset='columnBetween'
-              style={{ marginLeft: '8px', height: '120px' }}
-            >
+            <Range preset='columnBetween' className={productInfoBlock}>
               <Range preset='column'>
-                <h4 style={{ margin: '0' }}>{'NO. ' + val.num} </h4>
-                <div key={idx} style={{ fontSize: '18px', height: '52px' }}>
+                <h4 className={titleReset}>{'NO. ' + val.num} </h4>
+                <div key={idx} className={titleText}>
                   {val?.title || ''}
                 </div>
               </Range>
               <Range preset='column'>
                 {val.reserve !== '' && (
-                  <div style={{ color: '#75C3FE', fontSize: '14px' }}>
-                    예약 상품
-                  </div>
+                  <div className={reserveTag}>예약 상품</div>
                 )}
                 <ShowPrice
                   isDiscount={val.isDiscount}
@@ -395,7 +343,7 @@ export default function page() {
       </Range>
 
       {product.length !== 0 && (
-        <Range style={{ margin: '80px auto 30px auto' }}>
+        <Range className={paginationWrap}>
           <Pagination
             current={currentPage}
             total={total}

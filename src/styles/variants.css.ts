@@ -85,6 +85,9 @@ export const gapVariant = styleVariants({
 });
 
 export const rangePresetVariant = styleVariants({
+  alignCenter: {
+    alignItems: 'center',
+  },
   center: {
     justifyContent: 'center',
     // alignItems: 'center',

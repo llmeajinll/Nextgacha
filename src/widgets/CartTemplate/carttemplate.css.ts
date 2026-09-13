@@ -44,3 +44,50 @@ export const line = style({
   backgroundColor: 'lightgray',
   margin: '5px 0px',
 });
+
+const rightAligned = style({
+  display: 'inline-block',
+  textAlign: 'right',
+});
+
+export const priceValue = style([rightAligned, { width: '320px' }]);
+export const deliveryValue = style([rightAligned, { width: '248px' }]);
+export const pointValue = style([rightAligned, { width: '238px' }]);
+export const totalValue = style([rightAligned, { width: '315px' }]);
+
+export const deliverySection = style({
+  margin: '5px 0px 0px 0px',
+});
+
+export const unitLabel = style({
+  marginLeft: '15px',
+});
+
+export const deliveryNote = style({
+  marginLeft: '10px',
+  fontSize: '16px',
+  color: 'gray',
+});
+
+export const minusSign = style({
+  marginRight: '8px',
+});
+
+export const totalRow = style({
+  marginBottom: '30px',
+});
+
+export const totalLabel = style([bigText, { marginRight: '30px' }]);
+
+export const totalColor = style({
+  color: vars.color.blue1,
+});
+
+export const rewardLabel = style({
+  marginRight: '20px',
+  color: vars.color.blue1,
+});
+
+export const pointIcon = style({
+  marginRight: '5px',
+});
