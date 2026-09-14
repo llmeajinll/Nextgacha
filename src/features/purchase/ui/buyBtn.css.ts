@@ -1,13 +1,14 @@
-import { createVar, style } from '@vanilla-extract/css';
+import { createVar, fallbackVar, style } from '@vanilla-extract/css';
 
 export const btnWidthVar = createVar();
 
 export const wrapper = style({
   position: 'relative',
+  width: '100%',
 });
 
 export const dynamicWidthBtn = style({
-  width: btnWidthVar,
+  width: fallbackVar(btnWidthVar, '100%'),
 });
 
 export const tooltipWrap = style({

@@ -196,7 +196,11 @@ export default function BuyBtn({
         // size={props.size || 'medium'}
         onClick={onClickPayment}
         className={dynamicWidthBtn}
-        style={assignInlineVars({ [btnWidthVar]: `${width}px` })}
+        style={
+          width !== undefined
+            ? assignInlineVars({ [btnWidthVar]: `${width}px` })
+            : undefined
+        }
         onMouseEnter={() => {
           setIsHover(true);
         }}

@@ -65,7 +65,7 @@ export default function InfoPanel({ props }: { props: CardProps }) {
             onClickCheck: () => router.push('/mypage/cart'),
             onClickCancel: () => window.location.reload(),
             onClickClose: () => window.location.reload(),
-          }
+          },
         );
       } else {
         openModal('로그인 후 장바구니에 담을 수 있습니다.');
@@ -143,7 +143,7 @@ export default function InfoPanel({ props }: { props: CardProps }) {
 
             <DropDown props={props} status={props.reserve !== ''} />
 
-            <Range width='full' preset='between'>
+            <Range width='full' preset='between' gap='10'>
               <BuyBtn
                 props={{
                   price: totalPrice,
@@ -182,6 +182,7 @@ usedPoint
                 color='reversePrimary'
                 // size='extra'
                 onClick={onClickCart}
+                style={{ width: '100%' }}
               >
                 CART
               </Btn>

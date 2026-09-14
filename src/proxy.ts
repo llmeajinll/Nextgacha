@@ -15,7 +15,6 @@ const ADMIN_API_PATHS = [
   '/api/postCheckToSending',
   '/api/postSendingToFinish',
   '/api/getOrderSort',
-  '/api/getStatistics',
   '/api/getError',
 ];
 
@@ -59,8 +58,10 @@ export default auth((req) => {
     return NextResponse.next();
   }
 
-  // 관리자 전용 페이지: 로그인 + ADMIN_EMAILS 등록된 이메일만 통과
-  if (pathname.startsWith('/manager')) {
+  // 관리자 전용 페이지: /manager 메인 메뉴와 /manager/statistics는 공개, 나머지는 ADMIN_EMAILS만
+  const isPublicManagerPage =
+    pathname === '/manager' || pathname.startsWith('/manager/statistics');
+  if (pathname.startsWith('/manager') && !isPublicManagerPage) {
     if (!isAdminEmail(email)) {
       return NextResponse.redirect(new URL('/', req.nextUrl));
     }
@@ -104,7 +105,6 @@ export const config = {
     '/api/postCheckToSending',
     '/api/postSendingToFinish',
     '/api/getOrderSort',
-    '/api/getStatistics',
     '/api/getError',
     '/mypage/:path*',
     '/manager/:path*',
