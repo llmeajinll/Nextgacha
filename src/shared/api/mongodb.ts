@@ -1,24 +1,15 @@
 import { MongoClient } from 'mongodb';
 // import mongoose from 'mongoose';
 
-interface CounterType {
-  _id: string;
-  num: number;
-}
-
 const url: string = process.env.MONGODB_URI!;
 
 if (!url) {
   throw new Error('환경변수 x');
 }
 
-const options: any = {};
-const mongodbClient = new MongoClient(url, options);
+const mongodbClient = new MongoClient(url);
 
-let connectDB: Promise<MongoClient>;
-connectDB = mongodbClient.connect();
-
-const client = await connectDB;
+const client = await mongodbClient.connect();
 const gachaDB = client.db('gacha');
 
 const pageViewsColl = gachaDB.collection('page_views');

@@ -1,12 +1,14 @@
 import { atom } from 'jotai';
 
-export const modalAtom = atom<{
+export type ModalState = {
   isOpen: boolean;
   message: string;
   onClickCheck?: () => void;
   onClickCancel?: () => void;
   onClickClose?: () => void;
-}>({
+};
+
+export const modalAtom = atom<ModalState>({
   isOpen: false,
   message: 'test',
   onClickCheck: () => {},

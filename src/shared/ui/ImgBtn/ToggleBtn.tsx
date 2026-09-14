@@ -12,7 +12,7 @@ export default function ToggleBtn({
   rotate = 'none',
 }: {
   value: boolean;
-  setValue: React.SetStateAction<any>;
+  setValue: React.Dispatch<React.SetStateAction<boolean>>;
   rotate?: 'none' | 'vertical';
 }) {
   return (

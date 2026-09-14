@@ -15,7 +15,7 @@ export default function layout({ menu }: { menu: React.ReactNode }) {
       <h1>통계 조회</h1>
       <Range>
         <Btn
-          color={`${route[2] === 'search' ? 'primary' : 'reversePrimary'}`}
+          color={route[2] === 'search' ? 'primary' : 'reversePrimary'}
           onClick={() => {
             router.push('/manager/statistics/search');
           }}
@@ -23,7 +23,7 @@ export default function layout({ menu }: { menu: React.ReactNode }) {
           검색 결과
         </Btn>
         <Btn
-          color={`${route[2] === 'num' ? 'primary' : 'reversePrimary'}`}
+          color={route[2] === 'num' ? 'primary' : 'reversePrimary'}
           onClick={() => {
             router.push('/manager/statistics/num');
           }}

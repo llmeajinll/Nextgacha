@@ -17,17 +17,8 @@ type MoreBtnType = {
   query?: { type?: string; detail?: string; tag?: string };
 };
 
-type BtnType = MajorBtnType | MoreBtnType;
-
-type Props = BtnType & {
-  children?: React.ReactNode | string;
-  className?: string | undefined;
-  style?: React.CSSProperties | undefined;
-  disabled?: boolean | undefined;
-  onClick?: React.MouseEventHandler<HTMLButtonElement> | undefined;
-  onMouseEnter?: React.MouseEventHandler<HTMLButtonElement>;
-  onMouseLeave?: React.MouseEventHandler<HTMLButtonElement>;
-};
+type Props = (MajorBtnType | MoreBtnType) &
+  Omit<React.ButtonHTMLAttributes<HTMLButtonElement>, 'type'>;
 
 export default function Btn(props: Props) {
   if ('type' in props && props.type === 'more') {
@@ -42,21 +33,20 @@ export default function Btn(props: Props) {
       </Link>
     );
   }
+
+  const { type, size, color, className, children, ...rest } = props;
+
   return (
     <button
-      onClick={props.onClick}
-      style={props.style}
-      onMouseEnter={props.onMouseEnter}
-      onMouseLeave={props.onMouseLeave}
-      disabled={props.disabled}
+      {...rest}
       className={`
-        ${styles.btnSizeVariants[props.size ?? 'medium']} 
-        ${styles.colorVariants[props.color ?? 'primary']} 
+        ${styles.btnSizeVariants[size ?? 'medium']}
+        ${styles.colorVariants[color ?? 'primary']}
         ${btn}
-        ${props.className}
+        ${className}
         `}
     >
-      {props.children}
+      {children}
     </button>
   );
 }

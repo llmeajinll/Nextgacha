@@ -1,11 +1,10 @@
-import { modalAtom } from '@/shared/model/store';
+import { modalAtom, ModalState } from '@/shared/model/store';
 import { useAtom } from 'jotai';
 
-type OpenModalOptions = {
-  onClickCheck?: () => void;
-  onClickCancel?: () => void;
-  onClickClose?: () => void;
-};
+type OpenModalOptions = Pick<
+  ModalState,
+  'onClickCheck' | 'onClickCancel' | 'onClickClose'
+>;
 
 export default function useModal() {
   const [modalState, setModalState] = useAtom(modalAtom);

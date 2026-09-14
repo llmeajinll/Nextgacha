@@ -13,25 +13,15 @@ const image = {
 } as const;
 type ImageKey = keyof typeof image; // "share" | "close" | "dropdown" | "post" | "report"
 
-type Props =
-  | {
-      img?: ImageKey;
-      size: number;
-      width?: never;
-      height?: never;
-      title?: string;
-      className?: string;
-      onClick?: () => void;
-    }
-  | {
-      img?: ImageKey;
-      size?: never;
-      width?: number;
-      height?: number;
-      title?: string;
-      className?: string;
-      onClick?: () => void;
-    };
+type Props = {
+  img?: ImageKey;
+  title?: string;
+  className?: string;
+  onClick?: () => void;
+} & (
+  | { size: number; width?: never; height?: never }
+  | { size?: never; width?: number; height?: number }
+);
 
 export default function ImgBtn({
   img = 'share',

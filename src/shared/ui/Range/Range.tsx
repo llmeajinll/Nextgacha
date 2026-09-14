@@ -12,33 +12,14 @@ import {
   rangePresetVariant,
 } from '@/styles/variants.css';
 
-// type Props = {
-//   width?: 'fit' | 'full' | '960' | number;
-//   height?: 'fit' | 'full' | number;
-//   gap?: '10' | '15' | '30' | number;
-//   direction?: 'row' | 'column';
-//   justify?: 'spacebetween' | 'center' | 'start';
-//   align?: 'center' | 'stretch';
-//   addStyle?: any;
-//   children?: React.ReactNode;
-// };
-
-// type Preset = 'center' | 'between' | 'columnCenter' | null;
-
-// const presetVariant = {
-//   center: 'justify-center items-center',
-//   between: 'justify-between items-center',
-//   columnCenter: 'flex-col justify-center items-center',
-// };
-
 type Props = {
   width?: keyof typeof widthVariant;
   height?: keyof typeof heightVariant;
   gap?: keyof typeof gapVariant;
   preset?: keyof typeof rangePresetVariant;
-  style?: any;
+  style?: React.CSSProperties;
   children?: React.ReactNode;
-  className?: string | undefined;
+  className?: string;
   ref?: React.RefObject<HTMLDivElement | null>;
 };
 
@@ -116,12 +97,8 @@ export default function Range({
         ${range} 
         ${widthVariant[width ?? 'fit']} 
         ${heightVariant[height ?? 'fit']} 
-        ${gapVariant[gap ?? 'none']} 
-        ${
-          rangePresetVariant[
-            (preset ?? 'center') as keyof typeof rangePresetVariant
-          ]
-        }
+        ${gapVariant[gap ?? 'none']}
+        ${rangePresetVariant[preset ?? 'center']}
         ${className}
         `}
       ref={ref}

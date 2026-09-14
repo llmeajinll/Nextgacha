@@ -21,7 +21,7 @@ export default function ManagerOrderLayout({
       <h1>주문 관리</h1>
       <Range>
         <Btn
-          color={`${route[2] === 'check' ? 'primary' : 'reversePrimary'}`}
+          color={route[2] === 'check' ? 'primary' : 'reversePrimary'}
           onClick={() => {
             router.push('/manager/order/check');
           }}
@@ -29,7 +29,7 @@ export default function ManagerOrderLayout({
           상품 확인중
         </Btn>
         <Btn
-          color={`${route[2] === 'sending' ? 'primary' : 'reversePrimary'}`}
+          color={route[2] === 'sending' ? 'primary' : 'reversePrimary'}
           onClick={() => {
             router.push('/manager/order/sending');
           }}
@@ -37,7 +37,7 @@ export default function ManagerOrderLayout({
           배송중
         </Btn>
         <Btn
-          color={`${route[2] === 'arrive' ? 'primary' : 'reversePrimary'}`}
+          color={route[2] === 'arrive' ? 'primary' : 'reversePrimary'}
           onClick={() => {
             router.push('/manager/order/arrive');
           }}
@@ -45,7 +45,7 @@ export default function ManagerOrderLayout({
           배송 완료
         </Btn>
         <Btn
-          color={`${route[2] === 'refund' ? 'primary' : 'reversePrimary'}`}
+          color={route[2] === 'refund' ? 'primary' : 'reversePrimary'}
           onClick={() => {
             router.push('/manager/order/refund');
           }}

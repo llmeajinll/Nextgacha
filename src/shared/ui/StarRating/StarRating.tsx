@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import { Range, StarBtn } from '@/shared/ui';
 
-type MyComponentProps = (
+type Props = (
   | {
       disabled: true;
       value: number;
@@ -24,7 +24,7 @@ export default function StarRating({
   value,
   setValue,
   size = 'medium',
-}: MyComponentProps) {
+}: Props) {
   let list = [1, 2, 3, 4, 5];
   const [score, setScore] = useState<number>(value);
 
