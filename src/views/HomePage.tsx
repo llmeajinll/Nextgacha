@@ -1,81 +1,39 @@
-'use client';
-
-import React, { useState, useEffect } from 'react';
+import { auth } from '@/auth';
 import { Banner } from '@/widgets';
-import { CardTemplate } from '@/widgets';
 import { cardTemplateContainer } from '@/widgets/CardTemplate/cardtemplate.css';
-import getProducts from '@/entities/product/api/getProducts';
+import { findProducts } from '@/entities/product/lib/findProducts';
 import { Btn, Title, Range } from '@/shared/ui';
-import { CardProps } from '@/entities/product/model/types';
 import { Card } from '@/entities/product/ui';
 import { section, sectionTitle } from './homePage.css';
 
-export default function HomePage() {
-  const [hotProduct, setHotProduct] = useState([] as CardProps[]);
-  const [newProduct, setNewProduct] = useState([] as CardProps[]);
-  const [reserveProduct, setReserveProduct] = useState([] as CardProps[]);
+const sections = [
+  { tag: 'hot', title: '인기 상품' },
+  { tag: 'new', title: '신규 상품' },
+  { tag: 'reserve', title: '예약 판매' },
+];
 
-  const fetchProducts = async () => {
-    const hotResult = await getProducts({ tag: 'hot', count: 8 });
-    // console.log('hotResult : ', hotResult);
-    setHotProduct(hotResult.data);
-    const newResult = await getProducts({ tag: 'new', count: 8 });
-    // console.log('newResult : ', newResult);
-    setNewProduct(newResult.data);
-    const reserveResult = await getProducts({ tag: 'reserve', count: 8 });
-    // console.log('reserveResult : ', reserveResult);
-    setReserveProduct(reserveResult.data);
-  };
-
-  useEffect(() => {
-    fetchProducts();
-  }, []);
+// 서버에서 상품을 바로 렌더 → 클라이언트 fetch 3회 직렬 대기(LCP 지연·CLS) 제거
+export default async function HomePage() {
+  const email = (await auth())?.user?.email;
+  const results = await Promise.all(
+    sections.map(({ tag }) => findProducts({ tag, count: 8, email })),
+  );
 
   return (
     <>
       <Banner />
 
-      <div className={section}>
-        <Title text='인기 상품' className={sectionTitle} />
-        <Range className={cardTemplateContainer}>
-          {hotProduct.map((val, idx) => (
-            <Card props={val} key={idx} />
-          ))}
-        </Range>
-        <Btn
-          type='more'
-          href='search'
-          query={{ type: 'main', tag: '인기 상품' }}
-        />
-      </div>
-
-      <div className={section}>
-        <Title text='신규 상품' className={sectionTitle} />
-        <Range className={cardTemplateContainer}>
-          {newProduct.map((val, idx) => (
-            <Card props={val} key={idx} />
-          ))}
-        </Range>
-        <Btn
-          type='more'
-          href='search'
-          query={{ type: 'main', tag: '신규 상품' }}
-        />
-      </div>
-
-      <div className={section}>
-        <Title text='예약 판매' className={sectionTitle} />
-        <Range className={cardTemplateContainer}>
-          {reserveProduct.map((val, idx) => (
-            <Card props={val} key={idx} />
-          ))}
-        </Range>
-        <Btn
-          type='more'
-          href='search'
-          query={{ type: 'main', tag: '예약 판매' }}
-        />
-      </div>
+      {sections.map(({ tag, title }, i) => (
+        <div className={section} key={tag}>
+          <Title text={title} className={sectionTitle} />
+          <Range className={cardTemplateContainer}>
+            {results[i].data.map((val) => (
+              <Card props={val} key={val._id} />
+            ))}
+          </Range>
+          <Btn type='more' href='search' query={{ type: 'main', tag: title }} />
+        </div>
+      ))}
     </>
   );
 }

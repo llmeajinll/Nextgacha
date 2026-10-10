@@ -12,7 +12,7 @@ import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 
 const notoSans = Noto_Sans_KR({
   subsets: ['latin'],
-  weight: ['400', '500', '700'],
+  // weight 생략 = variable font 1벌. 400/500/700 고정 3벌이면 한글 unicode-range 서브셋 @font-face가 3배(376개)
   display: 'swap',
 });
 

@@ -93,6 +93,8 @@ export default function ReactSlick({ image, preset }: PropsType) {
                 height={sizeSettings.height}
                 src={String(url)}
                 alt='main'
+                // 메인 배너 첫 장은 LCP 후보 → lazy 대신 preload
+                priority={preset === 'banner' && idx === 0}
               />
             </div>
           );
