@@ -12,6 +12,15 @@ export async function POST(req: Request) {
   const data = await req.json();
 
   const { textareaValue, pathname } = data;
+  // 비로그인도 제보 가능한 공개 API라 형식/길이만 제한
+  if (
+    typeof textareaValue !== 'string' ||
+    typeof pathname !== 'string' ||
+    textareaValue.length > 2000 ||
+    pathname.length > 300
+  ) {
+    return NextResponse.json({ ok: false }, { status: 400 });
+  }
 
   // const koreaTime = dayjs().tz('Asia/Seoul');
 
@@ -19,7 +28,7 @@ export async function POST(req: Request) {
     const discountResult = await errorColl.insertOne({
       textareaValue,
       pathname,
-      created_at: koreaTime,
+      created_at: koreaTime(),
     });
 
     console.log('discountResult : ', discountResult);

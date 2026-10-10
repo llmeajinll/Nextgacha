@@ -34,7 +34,7 @@ export default function AlertModal() {
 
   if (!isMounted || !modalState.isOpen) return null;
 
-  const ModalBtn = () => {
+  const renderModalBtn = () => {
     return (
       <Range>
         <button
@@ -90,7 +90,7 @@ export default function AlertModal() {
             </Range>
             <div className={styles.contentContainer}>
               <div className={styles.messageText}>{modalState.message}</div>
-              <ModalBtn />
+              {renderModalBtn()}
             </div>
           </div>
         </div>

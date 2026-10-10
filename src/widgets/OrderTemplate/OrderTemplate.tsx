@@ -61,7 +61,7 @@ export default function OrderTemplate({
     setCheck(!check);
   };
 
-  const SendBtn = () => {
+  const renderSendBtn = () => {
     if (status === '상품 확인중') {
       // Handle send button click for 'check' status
       return (
@@ -165,7 +165,7 @@ export default function OrderTemplate({
 
   return (
     <>
-      <SendBtn />
+      {renderSendBtn()}
       {items.length === 0 ? (
         <h2>주문건이 없습니다.</h2>
       ) : (

@@ -8,34 +8,27 @@ import { Ticket, TicketContainer } from '@/features/cart/ui';
 import { useTempCart } from '@/features/cart/model';
 import useSplitRoute from '@/shared/hooks/useSplitRoute';
 
-export default function TicketPanel({}: // tempCart,
-// increase,
-{
-  // tempCart: any;
-  // increase: (name: string) => void;
-}) {
+export default function TicketPanel() {
   const { firstRoute } = useSplitRoute();
-  console.log('firstRoute : ', firstRoute);
-  // const [tempCart] = useAtom(tempCartAtom);
-  // const tempCarQuery = useTempCart(firstRoute);
   const isValid = firstRoute && !isNaN(Number(firstRoute));
 
   const { increase, decrease, erase } = useTempCart(firstRoute);
   const [tempCart, setTempCart] = useAtom(tempCartAtom);
   const { title, price, num, discount } = tempCart;
-  console.log(`title, price, num, discount`, title, price, num, discount);
 
-  if (!isValid) return null;
+  // 상세 페이지를 떠날 때 임시 장바구니 초기화
   useEffect(() => {
     return () =>
       setTempCart({
         title: '',
         price: 0,
         num: null,
-        discount,
+        discount: 0,
         product: [],
       });
   }, []);
+
+  if (!isValid) return null;
   // const data = tempCartQuery?.data;
   // const increase = tempCartQuery?.increase;
 

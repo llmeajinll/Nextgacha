@@ -8,7 +8,6 @@ import { v4 as uuidv4 } from 'uuid';
 import { useAtom, useAtomValue } from 'jotai';
 import { userInfoAtom } from '@/entities/user/model/store';
 import { useModal } from '@/shared/hooks';
-import { transform } from 'next/dist/build/swc/generated-native';
 import { useDaumPostcodePopup } from 'react-daum-postcode';
 import { queryClientAtom } from 'jotai-tanstack-query';
 import useSplitRoute from '@/shared/hooks/useSplitRoute';
@@ -34,7 +33,6 @@ interface BuyBtnType {
   size?: 'big' | 'medium';
   list: { num: number | null; product: { name: string; count: number }[] }[];
   usedPoint: number;
-  addPoint: number;
 }
 
 export default function BuyBtn({
@@ -49,6 +47,8 @@ export default function BuyBtn({
 
   const [isHover, setIsHover] = useState(false);
   const [detailAddress, setDetailAddress] = useState('');
+  // [검색]으로 찾은 기본 주소. 저장된 주소엔 이미 상세 주소가 붙어 있어 거기에 덧붙이면 안 됨
+  const [searchedAddress, setSearchedAddress] = useState('');
 
   const [{ data, isPending, isError }] = useAtom(userInfoAtom);
   const { firstRoute } = useSplitRoute();
@@ -78,7 +78,7 @@ export default function BuyBtn({
       fullAddress += extraAddress !== '' ? ` (${extraAddress})` : '';
     }
 
-    console.log(fullAddress); // 주소 결과 처리
+    setSearchedAddress(fullAddress);
     await fetch('/api/updateAddress', {
       method: 'POST',
       headers: {
@@ -120,12 +120,10 @@ export default function BuyBtn({
       return;
     }
 
-    props.list.map((val) => {
-      if (val.num === null) {
-        alert('빈값이 들어있습니다.');
-      }
+    if (props.list.some((val) => val.num === null)) {
+      alert('빈값이 들어있습니다.');
       return;
-    });
+    }
 
     if (data?.address === '') {
       alert('배송지를 입력해주세요.');
@@ -146,14 +144,14 @@ export default function BuyBtn({
         console.log(err);
       });
 
-    if (result.ok !== true) {
-      window.alert(result.message);
+    if (result?.ok !== true) {
+      window.alert(result?.message ?? '재고 확인에 실패했습니다.');
+      return;
     } else {
       // console.log('통과');
       localStorage.setItem('pending_order_items', JSON.stringify(props.list));
       localStorage.setItem('address', JSON.stringify(data?.address));
       localStorage.setItem('used_point', JSON.stringify(props.usedPoint));
-      localStorage.setItem('add_point', JSON.stringify(props.addPoint));
     }
 
     const tossPayments = await loadTossPayments(
@@ -249,8 +247,8 @@ export default function BuyBtn({
                 </div>
                 <div
                   onClick={async () => {
-                    if (data.address === '') {
-                      alert('주소를 입력해주세요');
+                    if (searchedAddress === '') {
+                      alert('[검색]으로 주소를 먼저 찾아주세요.');
                       return;
                     }
 
@@ -258,7 +256,7 @@ export default function BuyBtn({
                       alert('상세 주소를 입력해주세요');
                       return;
                     }
-                    const address = data.address + ' ' + detailAddress;
+                    const address = searchedAddress + ' ' + detailAddress;
 
                     await fetch('/api/updateAddress', {
                       method: 'POST',
@@ -273,6 +271,7 @@ export default function BuyBtn({
 
                     queryClient.invalidateQueries({ queryKey: ['userInfo'] });
                     setDetailAddress('');
+                    setSearchedAddress('');
                   }}
                   className={updateBtn}
                 >

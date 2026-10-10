@@ -1,9 +1,7 @@
 import { NextResponse } from 'next/server';
-import { mongodbClient, qnaColl } from '@/shared/api/mongodb';
+import { qnaColl } from '@/shared/api/mongodb';
 import { koreaTime } from '@/shared/lib/koreaTime';
 import { auth } from '@/auth';
-
-import dayjs from 'dayjs';
 
 export async function POST(req: Request) {
   const authSession = await auth();
@@ -12,51 +10,34 @@ export async function POST(req: Request) {
     return NextResponse.json({ ok: false, message: 'unauthorized' }, { status: 401 });
   }
 
-  const data = await req.json();
-
-  console.log(data);
-  const { requestInput, num, qna_num } = data;
-  console.log(requestInput, num, qna_num);
-
-  const session = mongodbClient.startSession();
-
-  try {
-    // const nowDate = dayjs(new Date()).format('YYYY-MM-DD hh:mm:ss');
-    const result = await session.withTransaction(async () => {
-      await qnaColl
-        .updateOne(
-          { num: Number(num), qna: { $elemMatch: { qna_num, email } } },
-          {
-            $push: {
-              'qna.$.request': {
-                writer: 'user',
-                content: requestInput,
-                created_at: koreaTime,
-              },
-            } as any,
-          },
-          {
-            session,
-          },
-        )
-        .then((res) => {
-          console.log(res);
-          if (res.modifiedCount === 1) {
-            return { ok: true, message: 'success' };
-          } else {
-            return { ok: false, message: 'fail update' };
-          }
-        })
-        .catch((err) => {
-          console.log(err);
-          return { ok: false, message: 'error' };
-        });
-    });
-    return NextResponse.json({ result });
-  } catch (error) {
-    console.error('트랜잭션 실행 중 에러 발생 (롤백됨):', error);
-    return NextResponse.json({ ok: false }, { status: 500 });
-  } finally {
-    await session.endSession(); // 세션 종료
+  const { requestInput, num, qna_num } = await req.json();
+  if (
+    typeof requestInput !== 'string' ||
+    requestInput.trim().length === 0 ||
+    requestInput.length > 1000
+  ) {
+    return NextResponse.json({ ok: false, message: 'invalid request' }, { status: 400 });
   }
+
+  // 본인 질문에만 추가 질문 가능 (email 일치 조건)
+  const res = await qnaColl.updateOne(
+    { num: Number(num), qna: { $elemMatch: { qna_num, email } } },
+    {
+      $push: {
+        'qna.$.request': {
+          writer: 'user',
+          content: requestInput,
+          created_at: koreaTime(),
+        },
+      } as any,
+    },
+  );
+
+  if (res.modifiedCount !== 1) {
+    return NextResponse.json(
+      { ok: false, message: '본인이 작성한 질문에만 추가할 수 있습니다.' },
+      { status: 403 },
+    );
+  }
+  return NextResponse.json({ ok: true });
 }

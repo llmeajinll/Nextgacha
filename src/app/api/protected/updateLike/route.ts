@@ -1,62 +1,28 @@
 import { NextResponse } from 'next/server';
-import { userColl, productColl } from '@/shared/api/mongodb';
+import { userColl } from '@/shared/api/mongodb';
 import { auth } from '@/auth';
-import { cookies } from 'next/headers';
 
 export async function POST(req: Request) {
-  const data = await req.json();
   const session = await auth();
-
-  let like = null;
-  // console.log('server post like data:', data);
-  // console.log('session : ', session?.user?.email);
-
-  // if (!session?.user?.email) {
-  //   return NextResponse.json(
-  //     { error: 'User not login', ok: false },
-  //     { status: 401 }
-  //   );
-  // }
-
-  const result = await userColl
-    .findOne({ email: session?.user?.email })
-    .then((res) => {
-      // console.log('mongodb getUser res:', res);
-      return res;
-    })
-    .catch((err) => {
-      console.log('mongodb getUser error:', err);
-      return null;
-    });
-
-  // if (!result) {
-  //   return NextResponse.json(
-  //     { ok: false, error: 'User not found' },
-  //     { status: 404 }
-  //   );
-  // }
-
-  let updatedLike = result?.like || [];
-  // console.log(updatedLike);
-  const isIncludes = updatedLike.includes(data);
-  // console.log(isIncludes);
-
-  if (isIncludes === true) {
-    updatedLike = updatedLike.filter((item: number) => item !== data);
-    like = false;
-  } else if (isIncludes === false) {
-    updatedLike.push(data);
-    like = true;
+  const email = session?.user?.email;
+  if (!email) {
+    return NextResponse.json({ ok: false, error: 'User not login' }, { status: 401 });
   }
 
-  // console.log('Updated Like Array:', updatedLike);
+  const num = await req.json();
+  if (!Number.isInteger(num)) {
+    return NextResponse.json({ ok: false, error: 'invalid num' }, { status: 400 });
+  }
 
-  const updateResult = await userColl.updateOne(
-    { email: session?.user?.email },
-    { $set: { like: updatedLike } }
+  // 원자적 토글: 이미 있으면 $pull, 없으면 $addToSet (읽고-쓰기 경쟁 조건 없음)
+  const removed = await userColl.updateOne(
+    { email, like: num },
+    { $pull: { like: num } as any },
   );
+  if (removed.modifiedCount === 1) {
+    return NextResponse.json({ ok: true, like: false });
+  }
 
-  // console.log('Update Result:', updateResult);
-
-  return NextResponse.json({ ok: true, like });
+  await userColl.updateOne({ email }, { $addToSet: { like: num } as any });
+  return NextResponse.json({ ok: true, like: true });
 }

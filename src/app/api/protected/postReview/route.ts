@@ -1,40 +1,49 @@
 import { NextResponse } from 'next/server';
 import { reviewColl, orderColl, mongodbClient } from '@/shared/api/mongodb';
 import { auth } from '@/auth';
-import dayjs from 'dayjs';
 import { koreaTime } from '@/shared/lib/koreaTime';
 
 export async function POST(req: Request) {
   const authSession = await auth();
   const email = authSession?.user?.email;
-  console.log('email :', email);
+  if (!email) {
+    return NextResponse.json({ ok: false, message: 'unauthorized' }, { status: 401 });
+  }
 
   const info = await req.json();
+  const { rate, orderId, text } = info.data ?? {};
 
-  const { rate, orderId, text, purchaseDate, list } = info.data;
-  console.log(rate, orderId, text, purchaseDate, list);
+  if (
+    !Number.isInteger(rate) ||
+    rate < 1 ||
+    rate > 5 ||
+    typeof orderId !== 'string' ||
+    typeof text !== 'string' ||
+    text.length > 1000
+  ) {
+    return NextResponse.json({ ok: false, message: 'invalid request' }, { status: 400 });
+  }
 
-  // const nowDate = dayjs(new Date()).format('YYYY-MM-DD HH:mm:ss');
   const session = mongodbClient.startSession();
 
   try {
     await session.withTransaction(async () => {
-      // 1. 주문 상태 업데이트
-      const orderResult = await orderColl.updateOne(
-        { orderId },
+      // 1. 본인 주문 + 배송 완료 + 아직 리뷰 안 쓴 주문만 (중복 리뷰 방지)
+      const order = await orderColl.findOneAndUpdate(
+        { orderId, email, status: '배송 완료', review: false },
         { $set: { review: true } },
-        { session }, // 세션 전달
+        { session },
       );
 
-      if (orderResult.matchedCount === 0) {
-        throw new Error('주문 내역을 찾을 수 없습니다.');
+      if (!order) {
+        throw new Error('리뷰를 작성할 수 있는 주문이 아닙니다.');
       }
 
-      // 2. 리뷰 일괄 등록 작업 생성
-      const operations = list.map((val: any) => {
+      // 2. 리뷰 일괄 등록 (상품 목록/구매일은 클라이언트 값이 아닌 주문 문서 기준)
+      const operations = order.list.map((val: any) => {
         const reviewInfo = {
-          created_at: koreaTime,
-          purchaseDate,
+          created_at: koreaTime(),
+          purchaseDate: order.created_at,
           list: val.product,
           user: email,
           content: text,
@@ -62,11 +71,8 @@ export async function POST(req: Request) {
     return NextResponse.json({ ok: true });
   } catch (error) {
     console.error('트랜잭션 실행 중 에러 발생 (롤백됨):', error);
-    return NextResponse.json({ ok: false }, { status: 500 });
+    return NextResponse.json({ ok: false }, { status: 400 });
   } finally {
-    await session.endSession(); // 세션 종료
+    await session.endSession();
   }
-
-  // const result = await reviewColl.find({ num }).sort({ create: -1 }).toArray();
-  // console.log('review collection:', result);
 }

@@ -5,4 +5,5 @@ import dayjs from 'dayjs';
 dayjs.extend(utc);
 dayjs.extend(timezone);
 
-export const koreaTime = dayjs().tz('Asia/Seoul').format('YYYY-MM-DD HH:mm:ss');
+export const koreaTime = () =>
+  dayjs().tz('Asia/Seoul').format('YYYY-MM-DD HH:mm:ss');

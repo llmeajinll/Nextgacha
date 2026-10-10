@@ -73,3 +73,7 @@ export const copyText = style({
   zIndex: 10,
   animation: `${fadeOutKeyframes} 1.2s ease-out forwards`,
 });
+
+export const fullWidth = style({
+  width: '100%',
+});

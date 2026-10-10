@@ -26,7 +26,7 @@ const Box = dynamic(
   },
 );
 
-export default function page() {
+export default function Page() {
   //   const [searchStatic, setSearchStatic] = useState([] as any[]);
   //   const [productStatic, setProductStatic] = useState([]);
   //   const [detail, setDetail] = useState<[]>([]);

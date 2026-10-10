@@ -19,7 +19,6 @@ import {
   productImage,
 } from './cart.css';
 import Link from 'next/link';
-import { baseUrl } from '@/shared/api/baseUrl';
 import { useCart } from '@/features/cart/model';
 import { useModal } from '@/shared/hooks';
 
@@ -65,6 +64,7 @@ export default function Cart({
           <div className={toggleWrap}>
             {cart.check === true ? (
               <img
+                alt='선택됨'
                 src={'/images/toggleOn.png'}
                 width={26}
                 height={48}
@@ -75,6 +75,7 @@ export default function Cart({
               />
             ) : (
               <img
+                alt='선택 안 됨'
                 src={'/images/toggleOff.png'}
                 width={26}
                 height={48}

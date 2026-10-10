@@ -1,26 +1,11 @@
 import OrderTemplate from '@/widgets/OrderTemplate/OrderTemplate';
-import { baseUrl } from '@/shared/api/baseUrl';
-import React from 'react';
+import { findOrdersByStatus } from '@/features/order-manage/lib/findOrdersByStatus';
+
+// 서버 컴포넌트에서 자기 API를 fetch하면 쿠키가 없어 관리자 API가 403 → DB 직접 조회
+export const dynamic = 'force-dynamic';
 
 export default async function RefundPage() {
-  console.log('sending');
-  let lastId = '';
-
-  const data = await fetch(`${baseUrl}/api/getOrderSort?status=환불`, {
-    method: 'GET',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    cache: 'no-store',
-  }).then(async (res) => {
-    const data = await res.json();
-    console.log(data);
-    return data;
-  });
-
-  // if (list.length > 0) lastId = list[list.length - 1]._id;
-
-  const { result, nextCursor } = data;
+  const { result, nextCursor } = await findOrdersByStatus('환불');
 
   return (
     <div>

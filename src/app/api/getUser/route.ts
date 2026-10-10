@@ -2,7 +2,6 @@ import { NextResponse } from 'next/server';
 import { cookies } from 'next/headers';
 import { userColl } from '@/shared/api/mongodb';
 import { auth } from '@/auth';
-import { revalidateTag } from 'next/cache';
 
 export async function GET(req: Request) {
   const session = await auth();
@@ -36,11 +35,6 @@ export async function GET(req: Request) {
         },
       }
     )
-    .then((res) => {
-      // console.log('mongodb getUser res:', res);
-      revalidateTag('userInfo', 'default');
-      return res;
-    })
     .catch((err) => {
       console.log('mongodb getUser error:', err);
       return null;

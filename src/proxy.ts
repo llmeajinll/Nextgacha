@@ -1,9 +1,6 @@
-// export { auth as middleware } from '@/auth';
-// import { auth } from '@/auth';
-import { NextRequest, NextResponse } from 'next/server';
+import { NextFetchEvent, NextResponse } from 'next/server';
 import NextAuth from 'next-auth';
 import { authConfig } from './auth.config';
-import { baseUrl } from './shared/api/baseUrl';
 import { isAdminEmail } from './shared/lib/isAdmin';
 
 const { auth } = NextAuth(authConfig);
@@ -18,7 +15,7 @@ const ADMIN_API_PATHS = [
   '/api/getError',
 ];
 
-export default auth((req) => {
+export default auth((req, event) => {
   const isLoggedIn = !!req.auth;
   const email = req.auth?.user?.email;
 
@@ -70,25 +67,37 @@ export default auth((req) => {
   // 로그인한 사용자만 접근 가능한 페이지
   if (pathname.startsWith('/mypage')) {
     if (!isLoggedIn) {
-      return NextResponse.redirect(new URL('/signin', req.nextUrl));
+      // 로그인 후 원래 페이지로 돌아오도록 callbackUrl 전달
+      const signinUrl = new URL('/signin', req.nextUrl);
+      signinUrl.searchParams.set('callbackUrl', pathname + req.nextUrl.search);
+      return NextResponse.redirect(signinUrl);
     }
   }
 
-  // 디버깅 로그: 터미널에 이 로그가 찍히는지 확인하세요.
-  // console.log('--- Middleware Path:', pathname, '| LoggedIn:', isLoggedIn);
+  // 페이지뷰 기록. <Link> 프리페치는 실제 방문이 아니므로 제외
+  const isPrefetch =
+    req.headers.has('next-router-prefetch') ||
+    req.headers.get('sec-purpose')?.includes('prefetch') ||
+    req.headers.get('purpose') === 'prefetch';
 
-  if (!isStaticFile && !isApiTrack && !pathname.startsWith('/api')) {
-    // 비동기로 호출 (응답 속도 저하 방지)
+  if (!isStaticFile && !isApiTrack && !isPrefetch) {
+    const search = new URLSearchParams(req.nextUrl.search);
+    search.delete('_rsc'); // 클라이언트 내비게이션용 내부 파라미터
+    const query = search.toString();
 
-    fetch(`${baseUrl}/api/track`, {
-      method: 'POST',
-      body: JSON.stringify({
-        page: pathname,
-        param: decodeURIComponent(`${req.nextUrl.search}`),
-        referrer: req.headers.get('referer') || 'direct',
-        userAgent: req.headers.get('user-agent'),
-      }),
-    }).catch((err) => console.error('Tracking Error:', err));
+    // 같은 배포(프리뷰/프로덕션)로 보내고, 응답 후에도 요청이 끝까지 가도록 waitUntil
+    // next-auth가 미들웨어 2번째 인자(NextFetchEvent)를 그대로 넘기지만 타입은 route용으로 잡혀 있음
+    (event as unknown as NextFetchEvent).waitUntil(
+      fetch(`${req.nextUrl.origin}/api/track`, {
+        method: 'POST',
+        body: JSON.stringify({
+          page: pathname,
+          param: query ? decodeURIComponent(`?${query}`) : '',
+          referrer: req.headers.get('referer') || 'direct',
+          userAgent: req.headers.get('user-agent'),
+        }),
+      }).catch((err) => console.error('Tracking Error:', err)),
+    );
   }
 
   // 로그인이 되었거나 보호된 경로가 아니면 다음 단계로 통과

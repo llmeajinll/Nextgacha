@@ -1,6 +1,5 @@
 import { NextResponse } from 'next/server';
-import { mongodbClient, qnaColl, counterColl } from '@/shared/api/mongodb';
-import dayjs from 'dayjs';
+import { qnaColl, counterColl, productColl } from '@/shared/api/mongodb';
 import { koreaTime } from '@/shared/lib/koreaTime';
 import { auth } from '@/auth';
 
@@ -11,75 +10,47 @@ export async function POST(req: Request) {
     return NextResponse.json({ ok: false, message: 'unauthorized' }, { status: 401 });
   }
 
-  const data = await req.json();
-
-  console.log(data);
-  const { question, secret, num } = data;
-  console.log(email, question, secret, num);
-
-  // const nowDate = dayjs(new Date()).format('YYYY-MM-DD HH:mm:ss');
-  const session = mongodbClient.startSession();
-
-  try {
-    const result = await session.withTransaction(async () => {
-      const counterResult = await counterColl.findOneAndUpdate(
-        { qna_id: 'qna_num' },
-        { $inc: { qna_num: 1 } },
-        {
-          session,
-          upsert: true,
-          returnDocument: 'after',
-        },
-      );
-
-      const nextQnaNum = counterResult?.qna_num;
-
-      await qnaColl
-        .updateOne(
-          { num: Number(num) },
-          {
-            $setOnInsert: {
-              num: Number(num),
-            },
-
-            $push: {
-              qna: {
-                email,
-                updated_at: koreaTime,
-                created_at: koreaTime,
-                secret,
-                question,
-                qna_num: nextQnaNum,
-                request: [],
-              },
-            } as any,
-          },
-          {
-            session,
-            upsert: true,
-          },
-        )
-        .then((res) => {
-          console.log(res);
-          if (res.modifiedCount === 1) {
-            return { ok: true };
-          } else {
-            return { ok: false, message: 'fail update' };
-          }
-        })
-        .catch((err) => {
-          console.log(err);
-          return { ok: false, message: 'error' };
-        });
-    });
-    return NextResponse.json({ result });
-  } catch (error) {
-    console.error('트랜잭션 실행 중 에러 발생 (롤백됨):', error);
-    return NextResponse.json({ ok: false }, { status: 500 });
-  } finally {
-    await session.endSession(); // 세션 종료
+  const { question, secret, num: rawNum } = await req.json();
+  const num = Number(rawNum);
+  if (
+    !Number.isInteger(num) ||
+    typeof question !== 'string' ||
+    question.trim().length === 0 ||
+    question.length > 1000
+  ) {
+    return NextResponse.json({ ok: false, message: 'invalid request' }, { status: 400 });
   }
 
-  // const result = await reviewColl.find({ num }).sort({ create: -1 }).toArray();
-  // console.log('review collection:', result);
+  if (!(await productColl.findOne({ num }, { projection: { _id: 1 } }))) {
+    return NextResponse.json({ ok: false, message: '상품을 찾을 수 없습니다.' }, { status: 404 });
+  }
+
+  // 번호만 증가시키는 카운터라 qna 저장이 실패해 번호가 비어도 무해 → 트랜잭션 불필요
+  const counter = await counterColl.findOneAndUpdate(
+    { qna_id: 'qna_num' },
+    { $inc: { qna_num: 1 } },
+    { upsert: true, returnDocument: 'after' },
+  );
+
+  const now = koreaTime();
+  await qnaColl.updateOne(
+    { num },
+    {
+      $setOnInsert: { num },
+      $push: {
+        qna: {
+          email,
+          updated_at: now,
+          created_at: now,
+          secret: secret === true,
+          question,
+          qna_num: counter?.qna_num,
+          request: [],
+        },
+      } as any,
+    },
+    { upsert: true },
+  );
+
+  return NextResponse.json({ ok: true });
 }

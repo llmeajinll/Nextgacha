@@ -13,7 +13,7 @@ import {
   footerLinkMypage,
 } from '../checkout/[orderId]/page.css';
 
-export default function page() {
+export default function Page() {
   const searchParams = useSearchParams();
   const message = searchParams.get('message');
 

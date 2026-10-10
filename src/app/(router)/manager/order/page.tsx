@@ -2,6 +2,6 @@
 
 import React, { useState, useEffect } from 'react';
 
-export default function page() {
+export default function Page() {
   return <div></div>;
 }

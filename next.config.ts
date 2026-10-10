@@ -3,28 +3,15 @@ import { NextConfig } from 'next';
 
 const withVanillaExtract = createVanillaExtractPlugin();
 
-// const withImages = require('next-images');
-// module.exports = withImages();
-
-// const withMDX = require('@next/mdx')({
-//   extension: /\.mdx$/,
-// });
-
 const nextConfig: NextConfig = {
-  // const nextConfig = {
-  /* config options here */
   reactStrictMode: false,
   compiler: {
-    styledComponents: true,
-  },
-  experimental: {
-    serverActions: {
-      bodySizeLimit: '2mb',
-    },
+    // 프로덕션 빌드에서 console.log 제거 (개인정보/결제정보 로그 노출 방지). error/warn은 유지
+    removeConsole:
+      process.env.NODE_ENV === 'production' ? { exclude: ['error', 'warn'] } : false,
   },
 
   images: {
-    // cast to any to satisfy (URL | RemotePattern)[] typing for remotePatterns
     remotePatterns: [
       {
         protocol: 'https',
@@ -39,6 +26,5 @@ const nextConfig: NextConfig = {
     ],
   },
 };
-// module.exports = withVanillaExtract(nextConfig);
 
 export default withVanillaExtract(nextConfig);

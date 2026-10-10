@@ -1,12 +1,15 @@
 import { cartColl } from '@/shared/api/mongodb';
 import { NextResponse } from 'next/server';
 import { auth } from '@/auth';
-import { revalidateTag } from 'next/cache';
+import { checkCartLimit } from '@/features/purchase/lib/checkCartLimit';
 
 export async function POST(req: Request) {
   const data = await req.json();
   const session = await auth();
   const email = session?.user?.email;
+  if (!email) {
+    return NextResponse.json({ ok: false, message: 'unauthorized' }, { status: 401 });
+  }
   // console.log('data : ', data.code, 'email : ', session?.user?.email);
 
   const { name, num, preset } = data;
@@ -14,6 +17,11 @@ export async function POST(req: Request) {
 
   // 갯수 증가할 때
   if (preset === 'increase') {
+    const limitError = await checkCartLimit(email, num, [{ name, count: 1 }]);
+    if (limitError) {
+      return NextResponse.json({ ok: false, message: limitError }, { status: 400 });
+    }
+
     const result = await cartColl.updateOne(
       { user: email, 'cart.num': num },
       { $inc: { 'cart.$[outer].product.$[inner].count': 1 } },
@@ -37,7 +45,7 @@ export async function POST(req: Request) {
       {
         arrayFilters: [
           { 'outer.num': num }, // 외부 cart 배열 필터
-          { 'inner.name': name }, // 내부 product 배열 필터
+          { 'inner.name': name, 'inner.count': { $gt: 1 } }, // 내부 product 배열 필터 (1 미만으로 내려가지 않음)
         ],
       },
     );

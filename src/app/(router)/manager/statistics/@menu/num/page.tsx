@@ -15,7 +15,7 @@ const Box = dynamic(
   },
 );
 
-export default function page() {
+export default function Page() {
   const [productStatic, setProductStatic] = useState([]);
 
   const [qnaData, setQnaData] = useState<number[]>([]);

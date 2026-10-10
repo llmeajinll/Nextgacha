@@ -1,18 +1,12 @@
 import { NextResponse } from 'next/server';
-import { productColl, counterColl, mongodbClient } from '@/shared/api/mongodb';
+import { productColl, counterColl } from '@/shared/api/mongodb';
 import { put } from '@vercel/blob';
 import { koreaTime } from '@/shared/lib/koreaTime';
 
+// 트랜잭션을 쓰지 않는다: Blob 업로드는 외부 호출이라 롤백이 안 되고,
+// 카운터는 번호만 증가시키므로 상품 저장이 실패해 번호가 비어도 무해하다.
 export async function POST(req: Request) {
-  // const { data } = await req.json();
-  // console.log(data);
-
   const formData = await req.formData();
-
-  // console.log('Received Form Data Entries:');
-  // for (const pair of formData.entries()) {
-  //   console.log(`${pair[0]}: ${pair[1]}`);
-  // }
 
   const title = formData.get('title') as string;
   const price = Number(formData.get('price'));
@@ -25,128 +19,46 @@ export async function POST(req: Request) {
   const reserve = formData.get('reserve')
     ? new Date(formData.get('reserve') as string)
     : '';
-  const img = formData.get('image') as File;
-  let image: string = '';
-
-  const mongodbSession = mongodbClient.startSession();
+  const img = formData.get('image');
 
   try {
-    const result = await mongodbSession.withTransaction(async () => {
-      // product counter 증가
-      async function getNextSequence() {
-        const num = counterColl
-          .findOneAndUpdate(
-            { id: 'num' },
-            { $inc: { num: 1 } },
-            { returnDocument: 'after', upsert: true, session: mongodbSession },
-          )
-          .then((result) => {
-            // console.log('result:', result);
-            return result?.num;
-          })
-          .catch((error) => {
-            console.error('Error getting next sequence:', error);
-            return null;
-          });
-        return num;
-      }
+    // product counter 증가
+    const counterDoc = await counterColl.findOneAndUpdate(
+      { id: 'num' },
+      { $inc: { num: 1 } },
+      { returnDocument: 'after', upsert: true },
+    );
+    const counter = counterDoc?.num;
+    if (typeof counter !== 'number') throw new Error('상품 번호 생성 실패');
 
-      const counter = await getNextSequence();
-      // console.log('counter:', counter);
+    // 이미지가 있으면 blob storage에 추가 (경로 규칙: images/{num}.png — UI가 이 규칙으로 직접 참조)
+    if (img instanceof File && img.size > 0) {
+      await put(`images/${counter}.png`, img, { access: 'public' });
+    }
 
-      if (counter === null) {
-        return NextResponse.json(
-          { message: 'Failed to get next sequence number' },
-          { status: 500 },
-        );
-      }
-
-      // 이미지가 있으면 storage image에 추가
-      if (img) {
-        const { url } = await put(`images/${counter}.png`, img, {
-          access: 'public',
-        })
-          .then((res) => {
-            // console.log('Blob upload result:', res);
-            return res;
-          })
-          .catch((err) => {
-            console.error('Error uploading image to blob storage:', err);
-            return NextResponse.json(
-              { message: 'Failed to save image' },
-              { status: 500 },
-            );
-          });
-        image = url;
-      }
-
-      // const nowDate = new Date();
-
-      const insertData = {
-        title,
-        image: [
-          counter !== null
-            ? `${process.env.NEXT_PUBLIC_VERCEL_IMAGE_URL}${counter}.png`
-            : undefined,
-        ],
-        price,
-        create,
-        reserve,
-        list,
-        company,
-        group,
-        created_at: koreaTime,
-        updated_at: koreaTime,
-        num: counter,
-        discount: 0,
-        isDiscounted: false,
-      };
-
-      // productCollection에 값 추가
-      const result = await productColl
-        .insertOne(insertData, { session: mongodbSession })
-        .then((res) => {
-          // console.log('Insert Result:', res);
-          return res.acknowledged;
-        })
-        .catch((err) => {
-          console.error('Error inserting product:', err);
-          return NextResponse.json(
-            { message: 'Failed to insert product' },
-            { status: 500 },
-          );
-        });
-
-      if (result === true) {
-        return NextResponse.json(
-          { message: 'Product inserted successfully', url: image },
-
-          { status: 201 },
-        );
-      } else {
-        return NextResponse.json(
-          { message: 'Failed to insert product' },
-          { status: 500 },
-        );
-      }
+    const now = koreaTime();
+    await productColl.insertOne({
+      title,
+      image: [`${process.env.NEXT_PUBLIC_VERCEL_IMAGE_URL}${counter}.png`],
+      price,
+      create,
+      reserve,
+      list,
+      company,
+      group,
+      created_at: now,
+      updated_at: now,
+      num: counter,
+      discount: 0,
+      isDiscount: false,
     });
 
-    console.log('postProduct result : ', result);
-    if (result.status === 201) {
-      return NextResponse.json({ ok: true });
-    } else {
-      return NextResponse.json({ ok: false });
-    }
+    return NextResponse.json({ ok: true }, { status: 201 });
   } catch (err) {
-    console.error('트랜잭션 실패! 모든 작업이 취소되었습니다:', err);
+    console.error('상품 등록 실패:', err);
     return NextResponse.json(
-      {
-        message: `오류가 발생하였습니다.`,
-        ok: false,
-      },
-      { status: 400 },
+      { message: '오류가 발생하였습니다.', ok: false },
+      { status: 500 },
     );
-  } finally {
-    await mongodbSession.endSession(); // 3. 세션 종료 (필수)
   }
 }

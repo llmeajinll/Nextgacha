@@ -6,7 +6,7 @@ import { Cart } from '@/features/cart/ui';
 import { AddressTruck } from '@/entities/order/ui';
 import { EmptyCard } from '@/shared/ui';
 
-export default function page() {
+export default function Page() {
   return (
     <>
       <Suspense fallback={<EmptyCard>CART LOADING...</EmptyCard>}>

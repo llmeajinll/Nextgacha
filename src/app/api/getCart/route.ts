@@ -5,6 +5,9 @@ import { userColl, cartColl } from '@/shared/api/mongodb';
 export async function GET(req: Request) {
   const session = await auth();
   const email = session?.user?.email;
+  if (!email) {
+    return NextResponse.json({ ok: false, message: 'unauthorized' }, { status: 401 });
+  }
 
   console.log('auth email : ', email);
 

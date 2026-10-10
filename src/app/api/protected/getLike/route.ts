@@ -48,15 +48,16 @@ export async function GET(req: Request) {
       {
         $project: {
           _id: 0,
-          likeCount: { $size: '$like' },
+          likeCount: { $size: { $ifNull: ['$like', []] } },
         },
       },
     ])
     .toArray();
 
+  // 유저 문서가 없거나 like 필드가 없어도 빈 목록으로
   const result = {
-    likeResult: likeResult[0].products,
-    total: totalResult[0].likeCount,
+    likeResult: likeResult[0]?.products ?? [],
+    total: totalResult[0]?.likeCount ?? 0,
   };
 
   console.log('result : ', result);

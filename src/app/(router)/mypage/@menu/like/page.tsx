@@ -10,7 +10,7 @@ import Pagination from 'rc-pagination';
 import 'rc-pagination/assets/index.css';
 import { paginationWrap } from './page.css';
 
-export default function page() {
+export default function Page() {
   const [like, setLike] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [total, setTotal] = useState(0);

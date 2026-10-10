@@ -23,7 +23,7 @@ export async function POST(req: Request) {
         num,
       },
       {
-        $set: { price, list, updated_at: koreaTime },
+        $set: { price, list, updated_at: koreaTime() },
       },
     );
 

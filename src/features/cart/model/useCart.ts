@@ -11,7 +11,6 @@ import {
   useQueryClient,
   QueryKey,
 } from '@tanstack/react-query';
-import { baseUrl } from '@/shared/api/baseUrl';
 
 export default function useCart() {
   const queryClient = useQueryClient();
@@ -19,7 +18,7 @@ export default function useCart() {
   const { data } = useSuspenseQuery({
     queryKey: ['cartData'],
     queryFn: async () =>
-      await fetch(`${baseUrl}/api/getCart`, {
+      await fetch(`/api/getCart`, {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
@@ -47,7 +46,7 @@ export default function useCart() {
       preset: 'increase' | 'decrease' | 'erase';
       // newData?: any;
     }) => {
-      const response = await fetch(`${baseUrl}/api/updateCart`, {
+      const response = await fetch(`/api/updateCart`, {
         method: 'POST', // 또는 POST
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ preset, name, num }),

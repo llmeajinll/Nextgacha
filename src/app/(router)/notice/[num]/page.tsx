@@ -1,8 +1,8 @@
 import React from 'react';
 import { NoticeDetailPage } from '@/views';
 
-function page() {
+function Page() {
   return <NoticeDetailPage />;
 }
 
-export default page;
+export default Page;

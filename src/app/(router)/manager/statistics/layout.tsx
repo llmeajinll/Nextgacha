@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation';
 import { Btn, Range } from '@/shared/ui';
 import { useSplitRoute as useSpliteRoute } from '@/shared/hooks';
 
-export default function layout({ menu }: { menu: React.ReactNode }) {
+export default function Layout({ menu }: { menu: React.ReactNode }) {
   const router = useRouter();
   const { route } = useSpliteRoute();
 

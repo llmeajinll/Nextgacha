@@ -2,6 +2,9 @@ import { NextResponse } from 'next/server';
 import { pageViewsColl } from '@/shared/api/mongodb';
 import { koreaTime } from '@/shared/lib/koreaTime';
 
+// 사용자 입력이 MongoDB 필드 경로가 되므로 . 과 $ 제거
+const safeKey = (key: unknown) => String(key).replace(/[.$]/g, '_');
+
 export async function POST(req: Request) {
   try {
     const { page, param, referrer, userAgent } = await req.json();
@@ -56,13 +59,13 @@ export async function POST(req: Request) {
           'params.detail': params.detail,
         }, // 동일한 검색 조건이 있는지 확인
         {
-          $inc: { [`params.filter.${params.filter}`]: 1 }, // 있으면 1 증가
+          $inc: { [`params.filter.${safeKey(params.filter)}`]: 1 }, // 있으면 1 증가
           $set: {
-            lastVisit: koreaTime,
+            lastVisit: koreaTime(),
             'params.detail': params.detail,
           },
           $setOnInsert: {
-            created_at: koreaTime,
+            created_at: koreaTime(),
           },
         },
         { upsert: true },
@@ -78,13 +81,13 @@ export async function POST(req: Request) {
           'params.tag': params.tag,
         }, // 동일한 검색 조건이 있는지 확인
         {
-          $inc: { [`params.page.${params.page}`]: 1 }, // 있으면 1 증가
+          $inc: { [`params.page.${safeKey(params.page)}`]: 1 }, // 있으면 1 증가
           $set: {
-            lastVisit: koreaTime,
+            lastVisit: koreaTime(),
             'params.tag': params.tag,
           },
           $setOnInsert: {
-            created_at: koreaTime,
+            created_at: koreaTime(),
           },
         },
         { upsert: true },
@@ -101,9 +104,9 @@ export async function POST(req: Request) {
       const result = await pageViewsColl.updateOne(
         { page: code },
         {
-          $inc: { [`tab.${tabName}`]: 1 }, // tab 객체 내부의 해당 탭 숫자만 1 증가
-          $set: { lastVisit: koreaTime },
-          $setOnInsert: { created_at: koreaTime },
+          $inc: { [`tab.${safeKey(tabName)}`]: 1 }, // tab 객체 내부의 해당 탭 숫자만 1 증가
+          $set: { lastVisit: koreaTime() },
+          $setOnInsert: { created_at: koreaTime() },
         },
         { upsert: true },
       );

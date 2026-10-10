@@ -1,33 +1,21 @@
 import NextAuth from 'next-auth';
-import KakaoProvider from 'next-auth/providers/kakao';
-// import Kakao from 'next-auth/providers/kakao';
 import { authConfig } from './auth.config';
 import { userColl } from './shared/api/mongodb';
 import { koreaTime } from './shared/lib/koreaTime';
 
 export const { handlers, signIn, signOut, auth } = NextAuth({
-  // providers: [
-  //   KakaoProvider({
-  //     clientId: process.env.KAKAO_CLIENT_ID!,
-  //     clientSecret: process.env.KAKAO_CLIENT_SECRET!,
-  //   }),
-  //   // Kakao,
-  // ],
-  // trustHost: true,
-  // secret: process.env.NEXTAUTH_SECRET,
   ...authConfig,
 
+  // redirect 콜백은 두지 않는다: NextAuth 기본값이 같은 출처의 callbackUrl로 돌려보낸다
   callbacks: {
     ...authConfig.callbacks,
-    async redirect({ url, baseUrl }) {
-      return '/';
-      // return baseUrl;
-    },
-    async signIn({ user, account, profile }) {
-      console.log('signIn callback called', user, account, profile);
+    async signIn({ user, account }) {
       if (account?.provider === 'kakao') {
+        // 모든 유저 데이터가 email을 키로 쓰므로, 카카오 이메일 동의를 거부하면
+        // email: null 유저 하나로 합쳐진다 → 로그인 거부
+        if (!user.email) return '/signin?error=email_required';
+
         try {
-          // DB 연결 및 유저 확인 로직
           const existingUser = await userColl.findOne({ email: user.email });
 
           if (!existingUser) {
@@ -39,8 +27,9 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
               qna: [],
               review: [],
               like: [],
+              keep: [],
               point: 0,
-              created_at: koreaTime,
+              created_at: koreaTime(),
             });
           }
           return true; // 로그인 승인

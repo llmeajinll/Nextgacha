@@ -67,7 +67,7 @@ figma : https://www.figma.com/design/86ZlSugwRP6z3dXpoA90HP/Army-team-library?no
 | 전역 상태       | Jotai                        |
 | 스타일링        | Vanilla Extract              |
 | 이미지 저장     | Vercel Blob                  |
-| 테스트          | Jest + Testing Library + MSW |
+| 테스트          | Node test runner (`node:test`) |
 | 배포 & 모니터링 | Vercel                       |
 
 ## 주요 기능
@@ -161,7 +161,6 @@ src/
 ├── lib/                  # 서버 유틸리티 (결제, 재고, 주문)
 ├── jotai/                # 전역 상태 정의
 ├── api/                  # 서버 데이터 페칭 함수
-├── mocks/                # MSW 목업 핸들러
 ├── shared/               # 공유 타입 및 유틸
 └── styles/               # 전역 테마
 ```

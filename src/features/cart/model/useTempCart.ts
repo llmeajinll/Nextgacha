@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import useSWR from 'swr';
 import { useAtom } from 'jotai';
 import { tempCartAtom } from '@/features/cart/model/store';
 import { userInfoAtom } from '@/entities/user/model/store';
@@ -11,7 +10,6 @@ import {
   useQueryClient,
   useSuspenseQuery,
 } from '@tanstack/react-query';
-import { baseUrl } from '@/shared/api/baseUrl';
 
 // const fetcher = (url: string) =>
 //   fetch(url, { credentials: 'include' }).then(async (res) => {
@@ -51,7 +49,7 @@ export default function useTempCart(num: number | string) {
     queryFn: async () => {
       if (!isValidNum) return {};
       const res = await fetch(
-        `${baseUrl}/api/protected/getSimpleCart?num=${num}`,
+        `/api/protected/getSimpleCart?num=${num}`,
         {
           method: 'GET',
           headers: {
@@ -197,7 +195,7 @@ export default function useTempCart(num: number | string) {
       preset: 'increase' | 'decrease' | 'erase';
       // newData?: any;
     }) => {
-      const response = await fetch(`${baseUrl}/api/updateCart`, {
+      const response = await fetch(`/api/updateCart`, {
         method: 'POST', // 또는 POST
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ preset, name, num }),

@@ -1,132 +1,134 @@
 import { NextResponse } from 'next/server';
 import { auth } from '@/auth';
-import { mongodbClient } from '@/shared/api/mongodb';
+import { errorColl, mongodbClient } from '@/shared/api/mongodb';
+import { koreaTime } from '@/shared/lib/koreaTime';
 import { validateStock } from '@/features/purchase/lib/validateStock';
+import { verifyOrder } from '@/features/purchase/lib/verifyOrder';
 import { reduceStock } from '@/features/purchase/lib/reduceStock';
 import { reducePoint } from '@/features/purchase/lib/reducePoint';
 import { addOrder } from '@/features/purchase/lib/addOrder';
 import { resetCart } from '@/features/purchase/lib/resetCart';
+import {
+  cancelTossPayment,
+  confirmTossPayment,
+} from '@/features/purchase/lib/toss';
+
 
 export async function POST(req: Request) {
-  const { paymentKey, orderId, amount, list, address, usedPoint, addPoint } =
-    await req.json();
   const session = await auth();
   const email = session?.user?.email;
   const name = session?.user?.name;
-  const mongodbSession = mongodbClient.startSession();
 
   if (!email) {
     return NextResponse.json(
       { message: '로그인이 되어있지 않습니다.', ok: false },
+      { status: 401 },
+    );
+  }
+
+  const { paymentKey, orderId, amount, list, address, usedPoint } =
+    await req.json();
+
+  // 1. [최종 재고 확인] 부족한 상품은 장바구니에서도 정리
+  const stock = await validateStock(list);
+  if (stock.isAvailable === false) {
+    return NextResponse.json(
+      { message: stock.message, ok: false },
       { status: 400 },
     );
   }
 
-  console.log(
-    'paymentKey, orderId, amount, list, address : ',
+  // 2. [금액/포인트/보유 한도 검증] 클라이언트 값을 믿지 않고 DB 기준으로 재계산
+  const verified = await verifyOrder({
+    email,
+    list,
+    amount: Number(amount),
+    usedPoint: Number(usedPoint ?? 0),
+  });
+  if (!verified.ok) {
+    return NextResponse.json(
+      { message: verified.message, ok: false },
+      { status: 400 },
+    );
+  }
+
+  // 3. [Toss 승인 API 호출] 여기서 실제로 돈이 정산됩니다.
+  const data = await confirmTossPayment({
     paymentKey,
     orderId,
-    amount,
-    list,
-    address,
-  );
+    amount: Number(amount),
+  });
 
-  // 1. [최종 재고 확인] DB에서 수량을 다시 확인
-  const isStillAvailable = await validateStock(list);
-  console.log('isStillAvailable.isAvailable : ', isStillAvailable.isAvailable);
-  if (isStillAvailable.isAvailable === false) {
+  if (data.status !== 'DONE') {
+    console.error('Toss 승인 실패:', data);
     return NextResponse.json(
-      { message: isStillAvailable.message, ok: false },
+      { message: data.message ?? '결제 승인에 실패했습니다.', ok: false },
       { status: 400 },
     );
   }
 
-  // 2. [Toss 승인 API 호출] 여기서 실제로 돈이 정산됩니다.
-  const secretKey = process.env.NEXT_PUBLIC_TOSSPAYMENTS_SECRET_KEY;
-  const basicToken = Buffer.from(`${secretKey}:`).toString('base64');
-
-  //   console.log('basicToken : ', basicToken);
-
-  const confirmRes = await fetch(
-    'https://api.tosspayments.com/v1/payments/confirm',
-    {
-      method: 'POST',
-      headers: {
-        Authorization: `Basic ${basicToken}`,
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ paymentKey, orderId, amount }),
-    },
-  );
-
-  const data = await confirmRes.json();
-
-  console.log('confirmRes : ', data.status, data);
-  // return NextResponse.json({ status: confirmRes.status, ok: true });
-
-  if (data.status === 'DONE') {
-    // 3. [최종 처리] DB에서 재고를 깎고 결제 완료 처리
-    try {
-      await mongodbSession.withTransaction(async () => {
-        const reducePointRes = await reducePoint({
-          usedPoint,
-          email: email as string,
-          mongodbSession,
-          list,
-        });
-        const reduceStockRes = await reduceStock({
-          list,
-          email: email as string,
-          mongodbSession,
-        });
-        const addOrderRes = await addOrder({
-          orderId,
-          list,
-          amount,
-          email: email as string,
-          name: name ?? '',
-          mongodbSession,
-          address,
-          addPoint,
-        });
-        const resetCartRes = await resetCart({
-          email: email as string,
-          list,
-          mongodbSession,
-        });
-        console.log(
-          'addOrderRes?.result.ok, reduceStockRes?.ok, resetCartRes?.ok, reducePointRes?.ok, result : ',
-          addOrderRes?.result.ok,
-          reduceStockRes?.ok,
-          resetCartRes?.ok,
-          reducePointRes?.ok,
-          addOrderRes?.result.ok &&
-            reduceStockRes?.ok &&
-            resetCartRes?.ok &&
-            reducePointRes?.ok,
-        );
+  // 4. [최종 처리] 하나라도 실패하면 throw → 전체 롤백
+  const mongodbSession = mongodbClient.startSession();
+  try {
+    await mongodbSession.withTransaction(async () => {
+      await reducePoint({
+        usedPoint: Number(usedPoint ?? 0),
+        email,
+        list: verified.orderList,
+        mongodbSession,
       });
-      return NextResponse.json(
-        { ok: true, data: { orderId, list, amount, address } },
-        { status: 201 },
-      );
-    } catch (err) {
-      console.error('트랜잭션 실패! 모든 작업이 취소되었습니다:', err);
-      await mongodbSession.endSession();
-      return NextResponse.json(
-        {
-          message: `오류가 발생하였습니다.`,
-          ok: false,
-        },
-        { status: 400 },
-      );
-    } finally {
-      await mongodbSession.endSession(); // 3. 세션 종료 (필수)
-    }
-  } else {
+      await reduceStock({ list: verified.orderList, mongodbSession });
+      await addOrder({
+        orderId,
+        list: verified.orderList,
+        amount: Number(amount),
+        email,
+        name: name ?? '',
+        mongodbSession,
+        address,
+        addPoint: verified.addPoint,
+        usedPoint: Number(usedPoint ?? 0),
+      });
+      await resetCart({ email, list: verified.orderList, mongodbSession });
+    });
+  } catch (err) {
+    console.error('트랜잭션 실패! 모든 작업이 취소되었습니다:', err);
+    // 돈은 이미 빠져나갔으므로 결제 취소
+    await cancelPayment(paymentKey, orderId, err);
     return NextResponse.json(
-      { message: '결제 과정에서 오류가 발생하였습니다.', ok: false },
-      { status: 500 },
+      {
+        message:
+          err instanceof Error
+            ? `${err.message} 결제가 취소되었습니다.`
+            : '주문 처리 중 오류가 발생하여 결제가 취소되었습니다.',
+        ok: false,
+      },
+      { status: 400 },
     );
+  } finally {
+    await mongodbSession.endSession();
+  }
+
+  return NextResponse.json(
+    { ok: true, data: { orderId, list: verified.orderList, amount, address } },
+    { status: 201 },
+  );
+}
+
+async function cancelPayment(paymentKey: string, orderId: string, cause: unknown) {
+  try {
+    await cancelTossPayment(paymentKey, '주문 처리 실패');
+  } catch (cancelErr) {
+    // 결제는 됐는데 주문도 취소도 안 된 상태 → 관리자 수동 처리용으로 기록
+    console.error('결제 취소 실패:', cancelErr);
+    await errorColl
+      .insertOne({
+        textareaValue: `[결제 취소 실패] orderId=${orderId} paymentKey=${paymentKey} cause=${String(
+          cause,
+        )} cancelError=${String(cancelErr)}`,
+        pathname: '/api/postPaymentsConfirm',
+        created_at: koreaTime(),
+      })
+      .catch((e) => console.error('에러 기록 실패:', e));
   }
 }

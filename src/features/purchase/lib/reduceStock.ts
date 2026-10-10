@@ -1,43 +1,32 @@
-import { productColl, cartColl } from '@/shared/api/mongodb';
+import { productColl } from '@/shared/api/mongodb';
 import { ClientSession } from 'mongodb';
+import { OrderLine } from './orderPolicy';
 
+// 재고가 충분한 경우에만 차감. 하나라도 부족하면 throw → 전체 롤백
 export async function reduceStock({
   list,
-  email,
   mongodbSession,
 }: {
-  list: any[];
-  email: string;
+  list: OrderLine[];
   mongodbSession: ClientSession;
 }) {
-  // console.log('reduceStock list, email : ', list, email);
-  console.log('========== reduceStock ==========');
-
   const bulkOps = list.flatMap((item) =>
-    item.product.map((p: any) => ({
+    item.product.map((p) => ({
       updateOne: {
         filter: {
-          num: item.num, // 상위 문서 찾기
-          'list.name': p.name, // list 배열 내 특정 상품 찾기
+          num: item.num,
+          list: { $elemMatch: { name: p.name, count: { $gte: p.count } } },
         },
-        update: {
-          $inc: { 'list.$.count': -p.count }, // 해당 상품의 count를 요청 수량만큼 차감
-        },
+        update: { $inc: { 'list.$.count': -p.count } },
       },
-    }))
+    })),
   );
 
-  if (bulkOps.length === 0) return;
+  const result = await productColl.bulkWrite(bulkOps, {
+    session: mongodbSession,
+  });
 
-  // 2. 한 번의 네트워크 요청으로 모든 업데이트 실행
-  try {
-    const result = await productColl.bulkWrite(bulkOps, {
-      session: mongodbSession,
-    });
-    console.log('result : ', result);
-    return { ok: true };
-  } catch (err) {
-    console.log(err);
-    return { ok: false };
+  if (result.matchedCount !== bulkOps.length) {
+    throw new Error('재고가 부족한 상품이 있습니다.');
   }
 }

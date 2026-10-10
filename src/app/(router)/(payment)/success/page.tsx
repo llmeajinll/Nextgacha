@@ -6,7 +6,7 @@ import Link from 'next/link';
 import { Range } from '@/shared/ui';
 import { useModal } from '@/shared/hooks';
 
-export default function page() {
+export default function Page() {
   const router = useRouter();
   const searchParams = useSearchParams();
 
@@ -24,13 +24,13 @@ export default function page() {
       const savedItems = localStorage.getItem('pending_order_items');
       const savedAddress = localStorage.getItem('address');
       const savedUsedPoint = localStorage.getItem('used_point');
-      const addedPoint = localStorage.getItem('add_point');
-      const list = JSON.parse(savedItems || '');
-      const address = JSON.parse(savedAddress || '');
+      if (!savedItems) {
+        router.push('/fail?message=' + encodeURIComponent('주문 정보를 찾을 수 없습니다.'));
+        return;
+      }
+      const list = JSON.parse(savedItems);
+      const address = JSON.parse(savedAddress || '""');
       const usedPoint = JSON.parse(savedUsedPoint || '0');
-      const addPoint = JSON.parse(addedPoint || '0');
-
-      if (!savedItems) return;
 
       // const list = JSON.parse(savedItems);
       setsendList(list);
@@ -47,7 +47,6 @@ export default function page() {
             list,
             address,
             usedPoint,
-            addPoint,
           }),
         });
         console.log('response : ', response);
@@ -55,6 +54,9 @@ export default function page() {
         console.log(result.data);
         if (result.ok) {
           // 3. 결제 최종 완료!
+          ['pending_order_items', 'address', 'used_point'].forEach((key) =>
+            localStorage.removeItem(key),
+          );
           setResult(result.data);
           setIsProcessing(false);
         } else {
@@ -62,7 +64,7 @@ export default function page() {
           // alert(`${result.message}`);
           openModal(`${result.message}`);
 
-          router.push(`/fail?message=${result.message}`);
+          router.push(`/fail?message=${encodeURIComponent(result.message)}`);
         }
       } catch (err) {
         console.error('승인 중 오류 발생:', err);

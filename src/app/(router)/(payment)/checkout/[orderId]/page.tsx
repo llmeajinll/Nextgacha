@@ -15,7 +15,7 @@ import {
   footerLinkMypage,
 } from './page.css';
 
-export default function page({
+export default function Page({
   params,
 }: {
   params: Promise<{ orderId: string }>;

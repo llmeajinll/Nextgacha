@@ -35,7 +35,7 @@ export default function Order({
 
   console.log(props);
 
-  const OrderBtn = () => {
+  const renderOrderBtn = () => {
     if (status === 'check') {
       return (
         <button
@@ -61,10 +61,9 @@ export default function Order({
                 'Content-Type': 'application/json',
               },
             })
-              .then((res) => {
-                console.log('res : ', res);
-
-                alert('반영되었습니다');
+              .then(async (res) => {
+                const result = await res.json();
+                alert(result.ok ? '반영되었습니다' : result.message ?? '반영되지 못했습니다.');
                 window.location.reload();
               })
               .catch((err) => {
@@ -94,18 +93,14 @@ export default function Order({
               body: JSON.stringify({
                 send: 'one',
                 orderId: props.orderId,
-                addPoint: props.addPoint,
-                email: props.email,
-                order: props.list,
               }),
               headers: {
                 'Content-Type': 'application/json',
               },
             })
-              .then((res) => {
-                console.log('res : ', res);
-
-                alert('반영되었습니다');
+              .then(async (res) => {
+                const result = await res.json();
+                alert(result.ok ? '반영되었습니다' : result.message ?? '반영되지 못했습니다.');
                 window.location.reload();
               })
               .catch((err) => {
@@ -215,7 +210,7 @@ export default function Order({
           </Range>
         )}
         <Range preset='between' className={marginTopSm}>
-          <OrderBtn />
+          {renderOrderBtn()}
           {status === 'check' && (
             <Range>
               <input
@@ -232,19 +227,19 @@ export default function Order({
                     return;
                   }
                   try {
-                    await fetch('/api/postCheckToSending', {
+                    const res = await fetch('/api/postCheckToSending', {
                       method: 'POST',
                       body: JSON.stringify({
                         send: 'refund',
                         orderId: props.orderId,
                         reason,
-                        orders: props.item,
                       }),
                       headers: {
                         'Content-Type': 'application/json',
                       },
                     });
-                    alert('환불 되었습니다.');
+                    const result = await res.json();
+                    alert(result.ok ? '환불 되었습니다.' : result.message);
                     window.location.reload();
                   } catch (err) {
                     console.log(err);

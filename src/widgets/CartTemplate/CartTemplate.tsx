@@ -49,9 +49,14 @@ export default function CartTemplate() {
 
   // console.log(data);
 
-  const Price = useMemo(() => {
+  // 장바구니 데이터가 바뀌면 사용 포인트 초기화 (렌더 중 이전 값 비교 — React 권장 패턴)
+  const [prevData, setPrevData] = useState(data);
+  if (data !== prevData) {
+    setPrevData(data);
     setPoint(0);
+  }
 
+  const Price = useMemo(() => {
     return data.reduce((accumulator: number, currentValue: any) => {
       const price =
         currentValue.stock.price * (1 - currentValue.stock.discount / 100);
@@ -109,7 +114,6 @@ export default function CartTemplate() {
   //   }
 
   const checkedProduct = useMemo(() => {
-    setPoint(0);
     console.log('checkedProduct data  : ', data);
     return data
       .filter((item: any) => item.cart?.check === true)
@@ -238,7 +242,6 @@ export default function CartTemplate() {
           props={{
             price: ToTalPrice,
             usedPoint: point,
-            addPoint: Number(Math.floor(Price * 0.01)),
             list: checkedProduct,
           }}
           width={

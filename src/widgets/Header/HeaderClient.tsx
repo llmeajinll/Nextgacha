@@ -3,7 +3,6 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { useRouter } from 'next/navigation';
 
-// import { signIn, signOut } from '@/auth';
 import Search from '@/features/search/ui/Search';
 import { Category } from '@/entities/product/ui';
 import {
@@ -27,7 +26,6 @@ import Link from 'next/link';
 import { useSession } from 'next-auth/react';
 import { signIn, signOut } from 'next-auth/react';
 
-// import { kakaoSignIn, kakaoSignOut } from '@/features/auth/api/authActions';
 import { Session } from 'next-auth';
 import { useSearchParams, usePathname } from 'next/navigation';
 import { useSplitRoute as useSpliteRoute } from '@/shared/hooks';
@@ -107,17 +105,10 @@ export default function Header({ session }: { session: Session | null }) {
             <div className={wrap}>
               <Search />
               {session?.user ? (
-                // <form action={kakaoSignOut}>
-                //   <button className={menu}>LOGOUT</button>
-                // </form>
-
                 <button className={menu} onClick={() => signOut()}>
                   LOGOUT
                 </button>
               ) : (
-                // <form action={kakaoSignIn}>
-                //   <button className={menu}>LOGIN</button>
-                // </form>
                 <button className={menu} onClick={() => signIn('kakao')}>
                   LOGIN
                 </button>

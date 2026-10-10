@@ -1,7 +1,6 @@
 import { NextResponse } from 'next/server';
-import { mongodbClient, qnaColl } from '@/shared/api/mongodb';
+import { qnaColl } from '@/shared/api/mongodb';
 import { koreaTime } from '@/shared/lib/koreaTime';
-import dayjs from 'dayjs';
 import { auth } from '@/auth';
 
 export async function POST(req: Request) {
@@ -11,49 +10,28 @@ export async function POST(req: Request) {
     return NextResponse.json({ ok: false, message: 'unauthorized' }, { status: 401 });
   }
 
-  const data = await req.json();
-
-  console.log(data);
-  const { edit, qna_num, num } = data;
-  console.log(edit, qna_num, num);
-
-  const session = mongodbClient.startSession();
-
-  try {
-    // const nowDate = dayjs(new Date()).format('YYYY-MM-DD hh:mm:ss');
-    const result = await session.withTransaction(async () => {
-      await qnaColl
-        .updateOne(
-          { num: Number(num), qna: { $elemMatch: { qna_num, email } } },
-          {
-            $set: {
-              // $는 위에서 매칭된 qna 배열의 인덱스를 가리킵니다.
-              'qna.$.question': edit,
-              'qna.$.updated_at': koreaTime,
-            },
-          },
-          {
-            session,
-          },
-        )
-        .then((res) => {
-          console.log(res);
-          if (res.modifiedCount === 1) {
-            return { ok: true, message: 'success' };
-          } else {
-            return { ok: false, message: 'fail update' };
-          }
-        })
-        .catch((err) => {
-          console.log(err);
-          return { ok: false, message: 'error' };
-        });
-    });
-    return NextResponse.json({ result });
-  } catch (error) {
-    console.error('트랜잭션 실행 중 에러 발생 (롤백됨):', error);
-    return NextResponse.json({ ok: false }, { status: 500 });
-  } finally {
-    await session.endSession(); // 세션 종료
+  const { edit, qna_num, num } = await req.json();
+  if (typeof edit !== 'string' || edit.trim().length === 0 || edit.length > 1000) {
+    return NextResponse.json({ ok: false, message: 'invalid request' }, { status: 400 });
   }
+
+  // 본인 질문만 수정 (email 일치 조건). $는 매칭된 qna 배열 요소를 가리킴
+  const res = await qnaColl.updateOne(
+    { num: Number(num), qna: { $elemMatch: { qna_num, email } } },
+    {
+      $set: {
+        'qna.$.question': edit,
+        'qna.$.updated_at': koreaTime(),
+      },
+    },
+  );
+
+  // 같은 내용으로 수정하면 modifiedCount가 0이므로 matchedCount로 판단
+  if (res.matchedCount !== 1) {
+    return NextResponse.json(
+      { ok: false, message: '본인이 작성한 질문만 수정할 수 있습니다.' },
+      { status: 403 },
+    );
+  }
+  return NextResponse.json({ ok: true });
 }

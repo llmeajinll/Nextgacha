@@ -1,6 +1,10 @@
-import { userColl, cartColl } from '@/shared/api/mongodb';
-import { ClientSession, AnyBulkWriteOperation } from 'mongodb';
+import { userColl } from '@/shared/api/mongodb';
+import { ClientSession } from 'mongodb';
+import { mergeKeep, overCapItem, OrderLine } from './orderPolicy';
 
+// 포인트 차감 + 배송중(keep)에 주문 수량 추가.
+// 트랜잭션 안에서 user 문서를 읽고 쓰므로, 동시 결제는 write conflict로 직렬화된다.
+// 실패 시 throw → withTransaction 전체 롤백
 export async function reducePoint({
   usedPoint,
   email,
@@ -9,82 +13,23 @@ export async function reducePoint({
 }: {
   usedPoint: number;
   email: string;
-  list: any[];
+  list: OrderLine[];
   mongodbSession: ClientSession;
 }) {
-  // console.log('reducePoint usedPoint, email : ', usedPoint, email, list);
+  const user = await userColl.findOne(
+    { email },
+    { session: mongodbSession, projection: { point: 1, keep: 1 } },
+  );
+  if (!user) throw new Error('유저를 찾을 수 없습니다.');
+  if ((user.point ?? 0) < usedPoint) throw new Error('포인트가 부족합니다.');
 
-  console.log('========== reducePoint ==========');
+  const keep = mergeKeep(user.keep ?? [], list);
+  const overItem = overCapItem(keep);
+  if (overItem) throw new Error(`${overItem}의 보유 한도를 초과했습니다.`);
 
-  try {
-    const bulkOps = [];
-
-    for (const item of list) {
-      const { num, product } = item;
-
-      console.log('num, product : ', num, product);
-      for (const prod of product) {
-        // (A) num과 name이 모두 존재하는 경우: count 증가
-        bulkOps.push({
-          updateOne: {
-            filter: { email, 'keep.num': num, 'keep.product.name': prod.name },
-            update: {
-              $inc: { 'keep.$[outer].product.$[inner].count': prod.count },
-            },
-            arrayFilters: [{ 'outer.num': num }, { 'inner.name': prod.name }],
-          },
-        });
-
-        // (B) num은 있는데 name이 없는 경우: product 배열에 새 객체 추가
-        // (A)가 실행되지 않았을 때만 실행되도록 filter 조건에 name: { $ne: prod.name } 추가
-        bulkOps.push({
-          updateOne: {
-            filter: {
-              email,
-              'keep.num': num,
-              'keep.product.name': { $ne: prod.name },
-            },
-            update: {
-              $push: {
-                'keep.$.product': { name: prod.name, count: prod.count },
-              },
-            },
-          },
-        });
-
-        // (C) num 자체가 없는 경우: keep 배열에 전체 객체 추가
-        bulkOps.push({
-          updateOne: {
-            filter: { email, 'keep.num': { $ne: num } },
-            update: {
-              $addToSet: {
-                keep: {
-                  num: num,
-                  product: [{ name: prod.name, count: prod.count }],
-                },
-              },
-            },
-          },
-        });
-      }
-    }
-
-    const pointUpdate = await userColl.updateOne(
-      { email },
-      { $inc: { point: -usedPoint } },
-      { session: mongodbSession }
-    );
-
-    const bulkResult = await userColl.bulkWrite(
-      bulkOps as AnyBulkWriteOperation<any>[],
-      { session: mongodbSession, ordered: false }
-    );
-
-    const result = await Promise.all([pointUpdate, bulkResult]);
-    console.log(result);
-    return { ok: true };
-  } catch (err) {
-    console.log(err);
-    return { ok: false };
-  }
+  await userColl.updateOne(
+    { email },
+    { $inc: { point: -usedPoint }, $set: { keep } },
+    { session: mongodbSession },
+  );
 }

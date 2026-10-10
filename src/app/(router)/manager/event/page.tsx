@@ -33,7 +33,7 @@ import {
   paginationWrap,
 } from './page.css';
 
-export default function page() {
+export default function Page() {
   const router = useRouter();
 
   const [search, setSearch] = useState('');

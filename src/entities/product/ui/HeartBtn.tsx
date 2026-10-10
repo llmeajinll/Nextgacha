@@ -3,7 +3,6 @@
 import React, { useState, useEffect } from 'react';
 import Image from 'next/image';
 import { useAtom } from 'jotai';
-import updateLike from '@/entities/product/api/updateLike';
 import Cookies from 'js-cookie';
 import { modalAtom } from '@/shared/model/store';
 import { useModal } from '@/shared/hooks';

@@ -3,79 +3,49 @@ import { productColl, userColl } from '@/shared/api/mongodb';
 import { auth } from '@/auth';
 
 export async function GET(req: Request) {
-  // const { data } = await req.json();
-  // console.log(data);
-  // const cookieStore = cookies();
   const { searchParams } = new URL(req.url);
   const session = await auth();
   const email = session?.user?.email;
   const isLogin = email ? true : false;
 
-  const search = searchParams.get('search');
+  const search = searchParams.get('search')?.trim() ?? '';
   const tag = searchParams.get('tag');
-  const count = Number(searchParams.get('count') || 20);
-  const page = Number(searchParams.get('page')) || 1;
+  // 한 번에 가져올 수 있는 개수 상한 (count=999999로 전체 덤프 방지)
+  const count = Math.min(Math.max(Number(searchParams.get('count')) || 20, 1), 100);
+  const page = Math.max(Number(searchParams.get('page')) || 1, 1);
   const filter = searchParams.get('filter');
-
-  // 여러 filter를 사용하게 된다면 사용
-
-  //   const filterParam = searchParams.get('filter');
-  // if (filterParam) {
-  //   const filters = filterParam.split(',');
-  //   query = {
-  //     ...query,
-  //     'list.name': { $in: filters }
-  //   };
-  // }
-
-  console.log('mongodb params', tag, search, page, count, filter);
 
   const twoMonthsAgo = new Date();
   twoMonthsAgo.setMonth(twoMonthsAgo.getMonth() - 2);
 
-  let query = {};
+  let query: Record<string, any> = {};
 
-  function buildSearchQuery(search: string) {
-    const keyword = search.trim();
+  // 사용자 입력을 정규식 리터럴로 (특수문자로 인한 500 / ReDoS 방지)
+  const escapeRegex = (text: string) =>
+    text.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 
-    return {
-      $or: [
-        { title: { $regex: keyword, $options: 'i' } },
-        { company: { $regex: keyword, $options: 'i' } },
-        { group: { $regex: keyword, $options: 'i' } },
-        { 'list.name': { $regex: keyword, $options: 'i' } },
-      ],
-    };
-  }
-  if (tag === 'all') {
-    query = {};
-  } else if (tag === 'new') {
-    // console.log(fourMonthsAgo);
+  if (tag === 'new') {
     query = { create: { $gte: twoMonthsAgo } };
-  } else if (tag === 'hot') {
-    query = {};
   } else if (tag === 'reserve') {
     query = { reserve: { $exists: true, $ne: '' } };
-  } else if (!isNaN(Number(search))) {
-    query = { num: Number(search) };
   }
+  // all / hot은 전체 조회 (hot 정렬 기준은 아직 없음)
 
-  if (search && search.trim().length > 0) {
-    console.log('search 실행 search : ', search);
-    console.log('keyword : ', search);
-    query = {
-      ...query,
-      ...buildSearchQuery(search.trim()),
-    };
+  if (search) {
+    const keyword = { $regex: escapeRegex(search), $options: 'i' };
+    query.$or = [
+      { title: keyword },
+      { company: keyword },
+      { group: keyword },
+      { 'list.name': keyword },
+      // 숫자로 검색하면 상품 번호도 매칭
+      ...(/^\d+$/.test(search) ? [{ num: Number(search) }] : []),
+    ];
   }
 
   if (filter) {
-    query = {
-      ...query,
-      'list.name': { $regex: filter, $options: 'i' },
-    };
+    query['list.name'] = { $regex: escapeRegex(filter), $options: 'i' };
   }
-  // console.log('query : ', query);
 
   let func = productColl
     .find(query)

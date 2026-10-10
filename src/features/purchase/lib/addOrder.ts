@@ -1,8 +1,5 @@
 import { orderColl } from '@/shared/api/mongodb';
-import dayjs from 'dayjs';
 import { ClientSession } from 'mongodb';
-import { findUserInfo } from '@/entities/user/lib/findUserInfo';
-import { NextResponse } from 'next/server';
 import { koreaTime } from '@/shared/lib/koreaTime';
 
 export async function addOrder({
@@ -14,6 +11,7 @@ export async function addOrder({
   mongodbSession,
   address,
   addPoint,
+  usedPoint,
 }: {
   orderId: string;
   list: any[];
@@ -23,57 +21,25 @@ export async function addOrder({
   mongodbSession: ClientSession;
   address: string;
   addPoint: number;
+  usedPoint: number;
 }) {
-  // const address = await findUserInfo({ email, mongodbSession })
-  //   .then((res) => {
-  //     console.log('userInfo in addOrder : ', res.address);
-  //     if (res.ok) return res.address;
-  //   })
-  //   .catch((error) => {
-  //     console.error('Error finding user info in addOrder:', error);
-  //     return NextResponse.json({ error: (error as Error).message });
-  //   });
-
-  // console.log('list in addOrder : ', list);
-
-  const result = await orderColl
-    .insertOne(
-      {
-        customer: name,
-        email: email,
-        orderId: orderId,
-        list: list,
-        address: address,
-        status: '상품 확인중',
-        courier: '',
-        invoice: '',
-        totalPrice: amount,
-        addPoint: addPoint,
-        created_at: koreaTime,
-        arrivedDate: '',
-        review: false,
-      },
-      { session: mongodbSession },
-    )
-    .then((res) => {
-      // console.log('Insert Result:', res);
-      return {
-        ok: res.acknowledged,
-        data: {
-          orderId: orderId,
-          list: list,
-          address: address,
-          totalPrice: amount,
-          addPoint: addPoint,
-          arrivedDate: '',
-          review: false,
-        },
-      };
-    })
-    .catch((err) => {
-      console.error('Error inserting product:', err);
-      return { ok: false, data: {} };
-    });
-
-  return { result };
+  await orderColl.insertOne(
+    {
+      customer: name,
+      email: email,
+      orderId: orderId,
+      list: list,
+      address: address,
+      status: '상품 확인중',
+      courier: '',
+      invoice: '',
+      totalPrice: amount,
+      addPoint: addPoint,
+      usedPoint: usedPoint,
+      created_at: koreaTime(),
+      arrivedDate: '',
+      review: false,
+    },
+    { session: mongodbSession },
+  );
 }

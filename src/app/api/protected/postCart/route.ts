@@ -1,16 +1,21 @@
 import { NextResponse } from 'next/server';
-import { userColl, cartColl } from '@/shared/api/mongodb';
+import { cartColl } from '@/shared/api/mongodb';
 import { auth } from '@/auth';
+import { checkCartLimit } from '@/features/purchase/lib/checkCartLimit';
 
 export async function POST(req: Request) {
-  const data = await req.json();
-  // console.log('data : ', data);
-  const { num, updatedArray } = data;
-
   const session = await auth();
   const email = session?.user?.email;
+  if (!email) {
+    return NextResponse.json({ ok: false, message: 'unauthorized' }, { status: 401 });
+  }
 
-  console.log('email, num, updatedArray : ', email, num, updatedArray);
+  const { num, updatedArray } = await req.json();
+
+  const limitError = await checkCartLimit(email, num, updatedArray);
+  if (limitError) {
+    return NextResponse.json({ ok: false, message: limitError }, { status: 400 });
+  }
 
   try {
     await cartColl.updateOne(
@@ -19,49 +24,44 @@ export async function POST(req: Request) {
       { upsert: true }
     );
 
-    for (const newItem of updatedArray) {
-      // 1. 해당 num과 code가 모두 존재하는지 확인하여 count만 올림
-      // console.log('newItem : ', newItem);
+    for (const { name, count } of updatedArray) {
+      // 1. 해당 num과 name이 모두 존재하면 count만 올림
       const res1 = await cartColl.updateOne(
         {
           user: email,
           'cart.num': num,
-          'cart.product.name': newItem.name,
+          'cart.product.name': name,
         },
         {
-          $inc: { 'cart.$[outer].product.$[inner].count': newItem.count },
+          $inc: { 'cart.$[outer].product.$[inner].count': count },
         },
         {
-          arrayFilters: [{ 'outer.num': num }, { 'inner.name': newItem.name }],
+          arrayFilters: [{ 'outer.num': num }, { 'inner.name': name }],
         }
       );
-      // console.log('res1 : ', res1);
 
-      // 2. 만약 업데이트된 문서가 없다면 (num이 없거나, code가 없는 경우)
+      // 2. 만약 업데이트된 문서가 없다면 (num이 없거나, name이 없는 경우)
       if (res1.matchedCount === 0) {
-        // console.log('num은 있는데 code만 없는 경우');
-        // 2-1. num은 있는데 code만 없는 경우를 체크하여 product 배열에 추가
+        // 2-1. num은 있는데 name만 없는 경우 product 배열에 추가
         const res2 = await cartColl.updateOne(
           {
             user: email,
             'cart.num': num,
           },
           {
-            $push: { 'cart.$.product': newItem },
+            $push: { 'cart.$.product': { name, count } } as any,
           }
         );
-        // console.log('res2 : ', res2);
 
         // 2-2. num 자체가 없는 경우 (완전 새로운 num 항목을 cart 배열에 추가)
         if (res2.matchedCount === 0) {
-          // console.log('완전 새로운 num 항목을 cart 배열에 추가');
           await cartColl.updateOne(
             { user: email },
             {
               $push: {
                 cart: {
                   num: num,
-                  product: [newItem],
+                  product: [{ name, count }],
                 },
               } as any,
             }
@@ -69,19 +69,9 @@ export async function POST(req: Request) {
         }
       }
     }
-    // console.log('모든 아이템이 성공적으로 반영되었습니다.');
     return NextResponse.json({ ok: true });
   } catch (error) {
     console.error('데이터베이스 업데이트 중 오류 발생:', error);
     return NextResponse.json({ ok: false });
   }
 }
-
-//   const result = await userColl.updateOne(
-//     { email: data.email, 'cart.num': data.num },
-//     { $set: { 'cart.$.product': data.updatedArray } }
-//   );
-
-// console.log('product : ', product);
-
-//   return NextResponse.json({ ok: true });

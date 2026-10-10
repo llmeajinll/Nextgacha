@@ -1,5 +1,4 @@
 import { NextResponse } from 'next/server';
-import { revalidateTag } from 'next/cache';
 import { orderColl } from '@/shared/api/mongodb';
 import { auth } from '@/auth';
 
@@ -22,8 +21,6 @@ export async function GET(req: Request) {
 
   console.log('historyResult : ', historyResult, 'total', total);
   const result = { historyResult, total };
-
-  revalidateTag('history', 'default');
 
   return NextResponse.json({ result, status: 200, ok: true });
 }

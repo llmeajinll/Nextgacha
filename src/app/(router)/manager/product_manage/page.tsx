@@ -9,7 +9,7 @@ import ProductManageCard from '@/features/product-manage/ui/ProductManageCard';
 import { getStandardCategory } from '@/entities/product/lib/getStandardCategory';
 import { searchInput as searchInputStyle, grid } from './page.css';
 
-function page() {
+function Page() {
   const router = useRouter();
   const [products, setProducts] = useState([] as CardProps[]);
   const [searchInput, setSearchInput] = useState('');
@@ -65,4 +65,4 @@ function page() {
   );
 }
 
-export default page;
+export default Page;

@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { mongodbClient, qnaColl } from '@/shared/api/mongodb';
+import { qnaColl } from '@/shared/api/mongodb';
 import { auth } from '@/auth';
 
 export async function POST(req: Request) {
@@ -9,44 +9,19 @@ export async function POST(req: Request) {
     return NextResponse.json({ ok: false, message: 'unauthorized' }, { status: 401 });
   }
 
-  const data = await req.json();
+  const { qna_num, num } = await req.json();
 
-  console.log(data);
-  const { qna_num, num } = data;
-  console.log(qna_num, num);
+  // 본인 질문만 삭제 (email 일치 조건)
+  const res = await qnaColl.updateOne(
+    { num: Number(num), qna: { $elemMatch: { qna_num, email } } },
+    { $pull: { qna: { qna_num } } as any },
+  );
 
-  const session = mongodbClient.startSession();
-
-  try {
-    const result = await session.withTransaction(async () => {
-      await qnaColl
-        .updateOne(
-          { num: num, qna: { $elemMatch: { qna_num, email } } },
-          {
-            $pull: {
-              qna: { qna_num: qna_num },
-            } as any,
-          },
-          { session }
-        )
-        .then((res) => {
-          console.log(res);
-          if (res.modifiedCount === 1) {
-            return { ok: true, message: 'success' };
-          } else {
-            return { ok: false, message: '본인이 작성한 질문만 삭제할 수 있습니다.' };
-          }
-        })
-        .catch((err) => {
-          console.log(err);
-          return { ok: false, message: 'error' };
-        });
-    });
-    return NextResponse.json({ result });
-  } catch (error) {
-    console.error('트랜잭션 실행 중 에러 발생 (롤백됨):', error);
-    return NextResponse.json({ ok: false }, { status: 500 });
-  } finally {
-    await session.endSession(); // 세션 종료
+  if (res.modifiedCount !== 1) {
+    return NextResponse.json(
+      { ok: false, message: '본인이 작성한 질문만 삭제할 수 있습니다.' },
+      { status: 403 },
+    );
   }
+  return NextResponse.json({ ok: true });
 }

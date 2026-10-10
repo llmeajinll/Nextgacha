@@ -3,7 +3,7 @@ import { Range } from '@/shared/ui';
 import { Category, DetailCategory } from '@/entities/product/ui';
 import { SearchPage } from '@/views';
 
-export default function page() {
+export default function Page() {
   return (
     <Range preset='column' gap='15'>
       <Category status='menu' />

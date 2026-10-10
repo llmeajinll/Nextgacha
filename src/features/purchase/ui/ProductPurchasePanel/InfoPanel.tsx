@@ -17,10 +17,18 @@ import { DropDown } from '@/features/cart/ui';
 import { LabelTitle } from '@/shared/ui';
 import { CardProps } from '@/entities/product/model/types';
 import { comma } from '@/shared/lib/comma';
+import {
+  FREE_SHIPPING_MIN,
+  SHIPPING_FEE,
+} from '@/features/purchase/lib/orderPolicy';
 import { useTempCart } from '@/features/cart/model';
-import { panelTitle, copyText, panelRoot } from './productPurchasePanel.css';
+import {
+  panelTitle,
+  copyText,
+  panelRoot,
+  fullWidth,
+} from './productPurchasePanel.css';
 import { postCart } from '@/features/cart/api/postCart';
-import postLike from '@/entities/product/api/updateLike';
 
 export default function InfoPanel({ props }: { props: CardProps }) {
   // console.log('infopanel', props);
@@ -42,11 +50,13 @@ export default function InfoPanel({ props }: { props: CardProps }) {
     }, 0);
   }, [tempCart]);
 
-  const discountPrice = useMemo(() => {
-    const price = props.price * (1 - props.discount / 100);
-    props.price = price;
-    return price;
-  }, [props]);
+  // 서버(orderPolicy)와 같은 규칙: 50,000원 미만이면 배송비 추가
+  const payPrice =
+    totalPrice > 0
+      ? totalPrice + (totalPrice >= FREE_SHIPPING_MIN ? 0 : SHIPPING_FEE)
+      : 0;
+
+  const discountPrice = props.price * (1 - props.discount / 100);
 
   const onClickCart = async () => {
     if (tempCart.product.length === 0) {
@@ -68,7 +78,7 @@ export default function InfoPanel({ props }: { props: CardProps }) {
           },
         );
       } else {
-        openModal('로그인 후 장바구니에 담을 수 있습니다.');
+        openModal(res.message ?? '로그인 후 장바구니에 담을 수 있습니다.');
       }
     });
   };
@@ -128,7 +138,7 @@ export default function InfoPanel({ props }: { props: CardProps }) {
             />
             <LabelTitle
               label='적립금'
-              content={`${Math.floor(props?.price * 0.01) || 0}p`}
+              content={`${Math.floor(discountPrice * 0.01) || 0}p`}
             />
           </Range>
 
@@ -136,7 +146,7 @@ export default function InfoPanel({ props }: { props: CardProps }) {
             <Range width='full' preset='right'>
               <LabelTitle
                 label='TOTAL'
-                content={`${comma(totalPrice || 0)} WON`}
+                content={`${comma(payPrice)} WON`}
                 status='large'
               />
             </Range>
@@ -146,11 +156,10 @@ export default function InfoPanel({ props }: { props: CardProps }) {
             <Range width='full' preset='between' gap='10'>
               <BuyBtn
                 props={{
-                  price: totalPrice,
+                  price: payPrice,
                   size: 'medium',
                   list: [{ product: tempCart.product, num: tempCart.num }],
                   usedPoint: 0,
-                  addPoint: Number(totalPrice * 0.01),
                 }}
               />
 
@@ -182,7 +191,7 @@ usedPoint
                 color='reversePrimary'
                 // size='extra'
                 onClick={onClickCart}
-                style={{ width: '100%' }}
+                className={fullWidth}
               >
                 CART
               </Btn>

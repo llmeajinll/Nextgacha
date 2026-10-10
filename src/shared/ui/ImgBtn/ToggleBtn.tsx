@@ -18,6 +18,7 @@ export default function ToggleBtn({
   return (
     <div className={rotate === 'none' ? wrapperNone : wrapperVertical}>
       <img
+        alt={value ? '켜짐' : '꺼짐'}
         src={value ? '/images/toggleOn.png' : '/images/toggleOff.png'}
         onClick={() => {
           setValue(!value);

@@ -3,9 +3,6 @@ import { productColl, userColl } from '@/shared/api/mongodb';
 import { auth } from '@/auth';
 
 export async function GET(req: Request) {
-  // const { data } = await req.json();
-  // console.log(data);
-  // const cookieStore = cookies();
   const { searchParams } = new URL(req.url);
   const session = await auth();
   const email = session?.user?.email;
@@ -13,12 +10,9 @@ export async function GET(req: Request) {
   const num = Number(searchParams.get('num'));
 
   let func = await productColl.findOne({ num });
-
-  console.log(func);
-  // if (!session?.user?.email) {
-  // return NextResponse.json({ error: 'User not login' }, { status: 401 });
-  // console.log(session?.user?.email);
-  // }
+  if (!func) {
+    return NextResponse.json({ ok: false, result: null }, { status: 404 });
+  }
 
   const isLogin = email ? true : false;
 

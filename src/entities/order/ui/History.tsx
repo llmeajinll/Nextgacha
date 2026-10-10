@@ -27,6 +27,44 @@ import {
 import { assignInlineVars } from '@vanilla-extract/dynamic';
 import Link from 'next/link';
 
+const STATUS_TEXT: Record<string, string> = {
+  '상품 확인중': 'checking product',
+  배송중: 'sending',
+  '배송 완료': 'finish',
+  환불: 'refund',
+};
+
+function ReceiptLabel({
+  title,
+  content,
+  size = 'medium',
+}: {
+  title: string;
+  content: string;
+  size?: 'medium' | 'big';
+}) {
+  return (
+    <Range preset='between'>
+      <Range className={size === 'big' ? bigLabelTitle : labelTitle}>
+        {title}
+      </Range>
+      <Range
+        className={
+          title === 'address'
+            ? labelContentKor
+            : size === 'big'
+              ? bigLabelContent
+              : labelContent
+        }
+      >
+        {title === 'status'
+          ? STATUS_TEXT[content.trim()]
+          : content || 'processing'}
+      </Range>
+    </Range>
+  );
+}
+
 export default function History({ props }: { props: any }) {
   console.log('props:', props);
 
@@ -63,54 +101,18 @@ export default function History({ props }: { props: any }) {
     }
   }, [props.list, props.address, props.status]);
 
-  const ReceiptLabel = ({
-    title,
-    content,
-    size = 'medium',
-  }: {
-    title: string;
-    content: string;
-    size?: 'medium' | 'big';
-  }) => {
-    const STATUS_TEXT: Record<string, string> = {
-      '상품 확인중': 'checking product',
-      배송중: 'sending',
-      '배송 완료': 'finish',
-      환불: 'refund',
-    };
-    return (
-      <Range preset='between'>
-        <Range className={size === 'big' ? bigLabelTitle : labelTitle}>
-          {title}
-        </Range>
-        <Range
-          className={
-            title === 'address'
-              ? labelContentKor
-              : size === 'big'
-                ? bigLabelContent
-                : labelContent
-          }
-        >
-          {title === 'status'
-            ? STATUS_TEXT[content.trim()]
-            : content || 'processing'}
-        </Range>
-      </Range>
-    );
-  };
-
   return (
     <Range className={receiptWrap} preset='column'>
       {props.review === true && (
         <img
+          alt=''
           src='/images/stamp.png'
           width={290}
           height={290}
           className={stampImg}
         />
       )}
-      <img src='/images/receipt_top.png' width={310} height={61} />
+      <img alt='' src='/images/receipt_top.png' width={310} height={61} />
       <div
         className={sectionOuter}
         style={assignInlineVars({ [sectionHeightVar]: `${topHeight}px` })}
@@ -126,9 +128,9 @@ export default function History({ props }: { props: any }) {
           <ReceiptLabel title='address' content={props.address} />
         </div>
 
-        <img src='/images/receipt_middle.png' width={310} height={topHeight} />
+        <img alt='' src='/images/receipt_middle.png' width={310} height={topHeight} />
       </div>
-      <img src='/images/receipt_line.png' width={310} height={12} />
+      <img alt='' src='/images/receipt_line.png' width={310} height={12} />
       <div
         className={sectionOuter}
         style={assignInlineVars({ [sectionHeightVar]: `${middleHeight}px` })}
@@ -163,12 +165,13 @@ export default function History({ props }: { props: any }) {
         </div>
 
         <img
+          alt=''
           src='/images/receipt_middle.png'
           width={310}
           height={middleHeight}
         />
       </div>
-      <img src='/images/receipt_line.png' width={310} height={12} />
+      <img alt='' src='/images/receipt_line.png' width={310} height={12} />
       <div
         className={sectionOuter}
         style={assignInlineVars({ [sectionHeightVar]: `${bottomHeight}px` })}
@@ -189,12 +192,13 @@ export default function History({ props }: { props: any }) {
         </div>
 
         <img
+          alt=''
           src='/images/receipt_middle.png'
           width={310}
           height={bottomHeight}
         />
       </div>
-      <img src='/images/receipt_bottom.png' width={310} height={14} />
+      <img alt='' src='/images/receipt_bottom.png' width={310} height={14} />
     </Range>
   );
 }

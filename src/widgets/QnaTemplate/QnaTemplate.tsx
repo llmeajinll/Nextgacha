@@ -56,7 +56,7 @@ export default function QnaTemplate() {
       if (res.ok) {
         setSecret(false);
         setQuestion('');
-        openModal('리뷰가 등록되었습니다.', {
+        openModal('질문이 등록되었습니다.', {
           onClickCheck: () => {
             fetchQna();
           },
@@ -67,7 +67,7 @@ export default function QnaTemplate() {
       } else {
         setSecret(false);
         setQuestion('');
-        openModal('오류로 인해 리뷰가 등록되지 못했습니다.', {
+        openModal('오류로 인해 질문이 등록되지 못했습니다.', {
           onClickCheck: () => {
             window.location.reload();
           },
@@ -163,8 +163,7 @@ export default function QnaTemplate() {
           {qna &&
             qna.map((val: any, idx: number) => {
               // 1. 공개글이거나(false) 2. 내가 작성자인 경우 true
-              const canView =
-                val.secret === false || val.email === userInfo?.email;
+              const canView = val.secret === false || val.isMine;
 
               return (
                 <div key={val.qna_num}>
@@ -172,7 +171,7 @@ export default function QnaTemplate() {
                     <Qna
                       key={val.qna_num}
                       props={val}
-                      isWriter={val.email === userInfo?.email}
+                      isWriter={val.isMine}
                       num={Number(firstRoute)}
                       stacked={idx !== 0}
                     />

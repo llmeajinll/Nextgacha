@@ -22,27 +22,27 @@ import { CardProps } from '@/entities/product/model/types';
 import { comma } from '@/shared/lib/comma';
 import Cookies from 'js-cookie';
 
-export default function Card({ props }: { props: CardProps }) {
-  const ShowPrice = (props: {
-    price: number;
-    isDiscount: boolean;
-    discount: number;
-  }) => {
-    const { price, isDiscount, discount } = props;
-    if (isDiscount === true && discount !== 0) {
-      return (
-        <>
-          <span className={discountBadge}>{discount}%</span>
-          <span className={originalPrice}>{comma(price)}</span>
-          <span className={arrow}>→ </span>
-          <span>{comma(price * (1 - discount / 100))}</span>
-        </>
-      );
-    } else {
-      return <span>{comma(price)}</span>;
-    }
-  };
+function ShowPrice(props: {
+  price: number;
+  isDiscount: boolean;
+  discount: number;
+}) {
+  const { price, isDiscount, discount } = props;
+  if (isDiscount === true && discount !== 0) {
+    return (
+      <>
+        <span className={discountBadge}>{discount}%</span>
+        <span className={originalPrice}>{comma(price)}</span>
+        <span className={arrow}>→ </span>
+        <span>{comma(price * (1 - discount / 100))}</span>
+      </>
+    );
+  } else {
+    return <span>{comma(price)}</span>;
+  }
+}
 
+export default function Card({ props }: { props: CardProps }) {
   return (
     <div className={cardContainer}>
       <Link href={`/${props.num || 0}/info`}>
