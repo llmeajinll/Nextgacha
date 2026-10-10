@@ -1,7 +1,7 @@
 import React from 'react';
 import { Tag } from '@/shared/ui';
 import { containter } from './tagContainer.css';
-import dayjs from 'dayjs';
+import { toKoreaTime } from '@/shared/lib/koreaTime';
 
 export default function TagContainer({
   create,
@@ -21,7 +21,7 @@ export default function TagContainer({
       )}
       {reserve && (
         <Tag
-          word={`${dayjs(reserve).format('YYYY년 MM월')} 예약`}
+          word={`${toKoreaTime(reserve).format('YYYY년 MM월')} 예약`}
           color='#BCE2FF'
         />
       )}
