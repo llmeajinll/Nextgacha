@@ -13,6 +13,7 @@ const ADMIN_API_PATHS = [
   '/api/postSendingToFinish',
   '/api/getOrderSort',
   '/api/getError',
+  '/api/postCategory',
 ];
 
 export default auth((req, event) => {
@@ -118,6 +119,7 @@ export const config = {
     '/api/postSendingToFinish',
     '/api/getOrderSort',
     '/api/getError',
+    '/api/postCategory',
     '/mypage/:path*',
     '/manager/:path*',
     '/search',

@@ -1,7 +1,8 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { category, categoryMatch } from '@/entities/product/lib/category';
+import { useQuery } from '@tanstack/react-query';
+import getCategoryMenu from '@/entities/product/api/getCategoryMenu';
 import dayjs from 'dayjs';
 import { Range } from '@/shared/ui';
 import { useRouter } from 'next/navigation';
@@ -26,6 +27,7 @@ import {
 export default function ManageProductPage() {
   const formData = new FormData();
   const router = useRouter();
+  const { data: menu } = useQuery({ queryKey: ['categoryMenu'], queryFn: getCategoryMenu });
   const [title, setTitle] = useState('');
   const [image, setImage] = useState<File | null>(null);
   const [price, setPrice] = useState(0);
@@ -169,9 +171,9 @@ export default function ManageProductPage() {
           <option value='' onClick={() => undefined}>
             회사를 선택하세요
           </option>
-          {Object.keys(category.series).map((val) => (
-            <option key={val} value={val}>
-              {val}
+          {menu?.series.map((m) => (
+            <option key={m.company} value={m.company}>
+              {m.name}
             </option>
           ))}
         </select>
@@ -191,7 +193,7 @@ export default function ManageProductPage() {
             그룹을 선택하세요
           </option>
           <option disabled>===== 캐릭터 =====</option>
-          {category.character.map((val) => (
+          {menu?.character.map((val) => (
             <option
               onClick={() => {
                 if (group.includes(val)) {
@@ -199,20 +201,16 @@ export default function ManageProductPage() {
                 }
               }}
               key={val}
-              value={
-                categoryMatch.character[
-                  val as keyof typeof categoryMatch.character
-                ]
-              }
+              value={val}
             >
               {val}
             </option>
           ))}
           <option disabled>===== 애니 =====</option>
-          {category.ani.map((val) => (
+          {menu?.ani.map((val) => (
             <option
               key={val}
-              value={categoryMatch.ani[val as keyof typeof categoryMatch.ani]}
+              value={val}
               onClick={() => {
                 if (group.includes(val)) {
                   setGroup((prev) => prev.filter((v) => val !== v));
@@ -224,30 +222,39 @@ export default function ManageProductPage() {
           ))}
 
           <option disabled>===== 시리즈 =====</option>
-          {Object.entries(category.series).map(([seriesName, seriesList]) => {
-            // console.log('seriesName, seriesList:', seriesName, seriesList);
-            const seriesMap =
-              categoryMatch.series[
-                seriesName as keyof typeof categoryMatch.series
-              ];
-            return seriesList.map((val) => {
-              const seriesValue =
-                seriesMap[val as keyof typeof seriesMap] || val;
-              return (
-                <option
-                  key={val}
-                  value={seriesValue}
-                  onClick={() => {
-                    if (group.includes(val)) {
-                      setGroup((prev) => prev.filter((v) => val !== v));
-                    }
-                  }}
-                >
-                  {val}
-                </option>
-              );
-            });
-          })}
+          {menu?.series.map((m) =>
+            m.items.map((val) => (
+              <option
+                key={val}
+                value={val}
+                onClick={() => {
+                  if (group.includes(val)) {
+                    setGroup((prev) => prev.filter((v) => val !== v));
+                  }
+                }}
+              >
+                {val}
+              </option>
+            )),
+          )}
+          {menu?.groups.map((m) => [
+            <option key={`h-${m.name}`} disabled>
+              ===== {m.name} =====
+            </option>,
+            ...m.items.map((val) => (
+              <option
+                key={val}
+                value={val}
+                onClick={() => {
+                  if (group.includes(val)) {
+                    setGroup((prev) => prev.filter((v) => val !== v));
+                  }
+                }}
+              >
+                {val}
+              </option>
+            )),
+          ])}
         </select>
         <div className={plainLabel}>선택한 그룹 : </div>
 

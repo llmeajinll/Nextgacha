@@ -24,6 +24,8 @@ const orderColl = gachaDB.collection('order');
 const counterColl = gachaDB.collection('counter');
 const userColl = gachaDB.collection('user');
 const errorColl = gachaDB.collection('error');
+// 문서 하나(_id 'menu')에 헤더 카테고리 메뉴 전체를 저장
+const categoryColl = gachaDB.collection<{ _id: string; [key: string]: any }>('category');
 
 // console.log(productDB);
 
@@ -39,4 +41,5 @@ export {
   counterColl,
   userColl,
   errorColl,
+  categoryColl,
 };

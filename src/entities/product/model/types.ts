@@ -29,3 +29,12 @@ export type CardProps = {
   }[];
   isLogin?: boolean;
 };
+
+// 쇼핑몰 헤더 카테고리 메뉴 (category 컬렉션 _id 'menu'). series.company는 상품 문서의 company 값
+export type CategoryMenu = {
+  character: string[];
+  ani: string[];
+  series: { company: string; name: string; items: string[] }[];
+  // 관리자가 추가한 대분류 (캐릭터·애니처럼 항목 목록만 있음)
+  groups: { name: string; items: string[] }[];
+};
