@@ -61,7 +61,12 @@ export const countNumber = style({
 });
 
 export const deleteBtn = style({
+  display: 'inline-flex',
+  padding: 0,
+  border: 'none',
+  background: 'none',
   cursor: 'pointer',
+  color: vars.color.blue1,
 });
 
 export const priceStyle = style({

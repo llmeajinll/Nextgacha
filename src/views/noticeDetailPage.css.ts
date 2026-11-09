@@ -78,5 +78,4 @@ export const navIconLeft = style({
 
 export const navIconRight = style({
   marginLeft: '5px',
-  rotate: '180deg',
 });

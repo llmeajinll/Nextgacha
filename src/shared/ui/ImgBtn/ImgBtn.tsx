@@ -1,21 +1,25 @@
 'use client';
 
 import React from 'react';
-import Image from 'next/image';
-import { imgBtnBase } from './imgBtn.css';
+import { ChevronDown, Close, Heart, Mail, Share, Siren, Star } from 'pixelarticons/react';
+import { imgBtnBase, iconOn, iconOff } from './imgBtn.css';
 
-const image = {
-  share: '/images/share.png',
-  dropdown: '/images/dropdown.png',
-  close: '/images/closeBtn.png',
-  post: '/images/post.png',
-  report: '/images/report.png',
+const icon = {
+  share: Share,
+  dropdown: ChevronDown,
+  close: Close,
+  post: Mail,
+  report: Siren,
+  heart: Heart,
+  star: Star,
 } as const;
-type ImageKey = keyof typeof image; // "share" | "close" | "dropdown" | "post" | "report"
+type IconKey = keyof typeof icon;
 
 type Props = {
-  img?: ImageKey;
+  img?: IconKey;
   title?: string;
+  // 켜짐/꺼짐이 있는 버튼(좋아요, 별점). 지정하면 색으로 상태를 표시
+  active?: boolean;
   className?: string;
   onClick?: () => void;
 } & (
@@ -29,18 +33,21 @@ export default function ImgBtn({
   width,
   height,
   title,
+  active,
   className,
   onClick,
 }: Props) {
+  const Icon = icon[img];
   return (
-    <img
-      src={image[img]}
-      width={size || width}
-      height={size || height}
+    <button
+      type='button'
       title={title}
-      alt='like'
+      aria-label={title ?? img}
+      aria-pressed={active}
       onClick={onClick}
-      className={`${imgBtnBase} ${className ?? ''}`}
-    />
+      className={`${imgBtnBase} ${active === undefined ? '' : active ? iconOn : iconOff} ${className ?? ''}`}
+    >
+      <Icon width={size || width} height={size || height} aria-hidden />
+    </button>
   );
 }

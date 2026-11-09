@@ -4,7 +4,7 @@ import { useSplitRoute as useSpliteRoute } from '@/shared/hooks';
 import useGetNotice from '@/entities/notice/model/useGetNotice';
 import { Range } from '@/shared/ui';
 import Link from 'next/link';
-import Image from 'next/image';
+import { ChevronLeft, ChevronRight } from 'pixelarticons/react';
 import {
   container,
   backLink,
@@ -91,26 +91,14 @@ export default function NoticeDetailPage() {
       <Range preset='between' width='full' className={navRow}>
         {!(secondRoute === '%EA%B3%B5%EC%A7%80') && (
           <Link href={prevNavigation()} className={navLink}>
-            <Image
-              src='/images/Group 248.png'
-              alt='left_arrow'
-              width={16}
-              height={16}
-              className={navIconLeft}
-            ></Image>
+            <ChevronLeft width={16} height={16} className={navIconLeft} aria-hidden />
             PREV
           </Link>
         )}
         {!(secondRoute === count.toString()) && (
           <Link href={nextNavigation()} className={navLinkNext}>
             NEXT
-            <Image
-              src='/images/Group 248.png'
-              alt='left_arrow'
-              width={16}
-              height={16}
-              className={navIconRight}
-            ></Image>
+            <ChevronRight width={16} height={16} className={navIconRight} aria-hidden />
           </Link>
         )}
       </Range>

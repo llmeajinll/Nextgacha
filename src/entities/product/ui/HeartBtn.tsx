@@ -1,12 +1,11 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import Image from 'next/image';
 import { useAtom } from 'jotai';
 import Cookies from 'js-cookie';
 import { modalAtom } from '@/shared/model/store';
 import { useModal } from '@/shared/hooks';
-import { pointer } from './heartbtn.css';
+import { ImgBtn } from '@/shared/ui';
 
 export default function HeartBtn({
   size = 28,
@@ -16,7 +15,6 @@ export default function HeartBtn({
   size?: number;
   status?: boolean;
   num: number;
-  onClick?: React.MouseEventHandler<HTMLImageElement>;
 }) {
   // console.log(num, status);
   const [like, setLike] = useState(status);
@@ -26,8 +24,6 @@ export default function HeartBtn({
   useEffect(() => {
     setLike(status);
   }, [num, status]);
-
-  const imgurl = ['/images/heart1.png', '/images/heart2.png'];
 
   const onClickHeartBtn = async () => {
     await fetch('/api/protected/updateLike', {
@@ -58,13 +54,12 @@ export default function HeartBtn({
   };
 
   return (
-    <Image
-      src={like ? imgurl[1] : imgurl[0]}
-      width={size * 1.07 || 30}
-      height={size || 28}
-      alt='like'
+    <ImgBtn
+      img='heart'
+      size={size}
+      title='좋아요'
+      active={!!like}
       onClick={onClickHeartBtn}
-      className={pointer}
-    ></Image>
+    />
   );
 }

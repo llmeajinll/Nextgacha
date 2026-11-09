@@ -6,8 +6,9 @@ import { useRouter } from 'next/navigation';
 import { auth } from '@/auth';
 import { cookies } from 'next/headers';
 import Image from 'next/image';
+import { Parking } from 'pixelarticons/react';
 import { Range } from '@/shared/ui';
-import { profileImage, email, point, name, wrapper, pointRow } from './profile.css';
+import { profileImage, email, point, name, wrapper, pointRow, pointIcon } from './profile.css';
 import { comma } from '@/shared/lib/comma';
 import { userInfoAtom } from '@/entities/user/model/store';
 import { useAtom } from 'jotai';
@@ -34,7 +35,7 @@ export default function Profile() {
         <div className={name}>{data?.nickname}</div>
         <div className={email}>{data?.email}</div>
         <Range gap='4' className={pointRow}>
-          <Image src='/images/point.png' width={22} height={22} alt='point' />
+          <Parking width={22} height={22} className={pointIcon} aria-label='포인트' />
           <div className={point}>{comma(data?.point || 0)}P</div>
         </Range>
       </Range>

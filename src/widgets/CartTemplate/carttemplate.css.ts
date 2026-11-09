@@ -90,4 +90,5 @@ export const rewardLabel = style({
 
 export const pointIcon = style({
   marginRight: '5px',
+  color: vars.color.blue1,
 });

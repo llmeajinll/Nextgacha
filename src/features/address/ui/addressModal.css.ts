@@ -47,11 +47,13 @@ export const wrapper = style({
 });
 
 export const closeBtn = style({
-  backgroundImage: "url('/images/closeBtn.png')",
+  display: 'inline-flex',
   width: '25px',
   height: '25px',
-  backgroundSize: '100%',
+  padding: 0,
   border: 'none',
+  background: 'none',
+  color: vars.color.blue1,
   marginLeft: 'auto',
   cursor: 'pointer',
 });

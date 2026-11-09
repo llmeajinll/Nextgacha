@@ -21,3 +21,8 @@ export const inputStyle = style({
   fontFamily: 'silkscreen',
   lineHeight: '21px',
 });
+
+export const searchIcon = style({
+  flexShrink: 0,
+  color: vars.color.black1,
+});

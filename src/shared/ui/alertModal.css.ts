@@ -28,11 +28,14 @@ export const alertText = style({
   margin: '7px 0px 0px 8px',
 });
 export const closeBtn = style({
-  backgroundImage: `url('/images/closeBtn.png')`,
-  backgroundSize: '100%',
+  display: 'inline-flex',
+  alignItems: 'center',
+  justifyContent: 'center',
   backgroundColor: 'transparent',
+  color: 'white',
   width: '35px',
   height: '35px',
+  padding: 0,
   border: 'none',
   cursor: 'pointer',
   margin: '4px 4px 0px 0px',

@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { usePathname } from 'next/navigation';
+import { Close } from 'pixelarticons/react';
 import { Range, ImgBtn } from '@/shared/ui';
 import * as styles from './alertModal.css';
 import { modalAtom } from '@/shared/model/store';
@@ -82,11 +83,14 @@ export default function AlertModal() {
               <div className={styles.alertText}>ALERT</div>
               <button
                 className={styles.closeBtn}
+                aria-label='닫기'
                 onClick={() => {
                   if (modalState.onClickClose) modalState.onClickClose();
                   setModalState({ ...modalState, isOpen: false, message: '' });
                 }}
-              ></button>
+              >
+                <Close width={28} height={28} aria-hidden />
+              </button>
             </Range>
             <div className={styles.contentContainer}>
               <div className={styles.messageText}>{modalState.message}</div>

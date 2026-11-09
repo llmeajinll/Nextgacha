@@ -13,3 +13,8 @@ export const lockText = style({
 export const stacked = style({
   marginTop: '-1px',
 });
+
+export const lockIcon = style({
+  flexShrink: 0,
+  color: vars.color.blue1,
+});

@@ -1,7 +1,9 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { Range, StarBtn } from '@/shared/ui';
+import { Star } from 'pixelarticons/react';
+import { Range, ImgBtn } from '@/shared/ui';
+import { iconOn, iconOff } from '../ImgBtn/imgBtn.css';
 
 type Props = (
   | {
@@ -42,17 +44,30 @@ export default function StarRating({
     }
   }, [score, setValue]);
 
+  const px = size === 'big' ? 40 : 25;
+
   return (
     <Range gap='4'>
-      {list.map((val: number) => (
-        <StarBtn
-          key={val}
-          value={score >= val}
-          onClick={() => onClickBtn(val)}
-          disabled={disabled}
-          size={size}
-        />
-      ))}
+      {list.map((val: number) =>
+        disabled ? (
+          <Star
+            key={val}
+            width={px}
+            height={px}
+            className={score >= val ? iconOn : iconOff}
+            aria-hidden
+          />
+        ) : (
+          <ImgBtn
+            key={val}
+            img='star'
+            size={px}
+            title={`${val}점`}
+            active={score >= val}
+            onClick={() => onClickBtn(val)}
+          />
+        ),
+      )}
     </Range>
   );
 }

@@ -2,7 +2,7 @@
 
 import { useState, useMemo } from 'react';
 import { useQueryClient } from '@tanstack/react-query';
-import Image from 'next/image';
+import { Parking } from 'pixelarticons/react';
 import { useAtom, useAtomValue } from 'jotai';
 import { Range } from '@/shared/ui';
 import { Cart } from '@/features/cart/ui';
@@ -167,13 +167,6 @@ export default function CartTemplate() {
               <span>USE POINTS :</span>
               <span className={pointValue}>
                 <span className={minusSign}>-</span>
-                {/* <Image
-                  src='/images/point.png'
-                  alt='point'
-                  width={20}
-                  height={20}
-                  style={{ marginRight: '5px' }}
-                ></Image> */}
                 <input
                   value={point}
                   className={
@@ -221,13 +214,7 @@ export default function CartTemplate() {
           </div>
           <Range preset='center' className={smallText}>
             <span className={rewardLabel}>REWARD :</span>
-            <Image
-              src='/images/point.png'
-              alt='point'
-              width={24}
-              height={24}
-              className={pointIcon}
-            ></Image>
+            <Parking width={24} height={24} className={pointIcon} aria-label='포인트' />
             {Math.floor(Price * 0.01)}p
           </Range>
         </Range>

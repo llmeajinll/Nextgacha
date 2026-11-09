@@ -140,7 +140,7 @@ export default function QnaTemplate() {
               <ToggleBtn
                 value={secret}
                 setValue={setSecret}
-                rotate='vertical'
+                label='비밀 문의'
               />
               <Range className={styles.secretLabel}>Private</Range>
             </Range>

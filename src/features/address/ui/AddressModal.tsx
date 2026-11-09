@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { useDaumPostcodePopup } from 'react-daum-postcode';
+import { Close } from 'pixelarticons/react';
 import {
   addressInput,
   addressBtn,
@@ -67,7 +68,9 @@ export default function AddressModal() {
         <Range preset='columnCenter' gap='8' className={addressContainer}>
           <Range preset='between'>
             <div>주소 수정</div>
-            <button onClick={() => setShow(false)} className={closeBtn}></button>
+            <button onClick={() => setShow(false)} className={closeBtn} aria-label='닫기'>
+              <Close width={25} height={25} aria-hidden />
+            </button>
           </Range>
           <div>
             <input
