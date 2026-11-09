@@ -13,23 +13,24 @@ import {
   contentItem,
 } from './category.css';
 import { categoryVariant } from '@/styles/variants.css';
-import { category } from '@/entities/product/lib/category';
+import type { CategoryMenu } from '@/entities/product/model/types';
 import Link from 'next/link';
 import { useSearchParams } from 'next/navigation';
 
 type Props = {
   status?: 'header' | 'menu';
   setShow?: React.Dispatch<React.SetStateAction<boolean>> | undefined;
+  menu: CategoryMenu;
 };
 
-export default function Category({ status = 'header', setShow }: Props) {
-  //   const category = await require('@/entities/product/lib/category');
+export default function Category({ status = 'header', setShow, menu }: Props) {
   const searchParams = useSearchParams();
 
   const type = searchParams.get('type');
   const detail = searchParams.get('detail');
   const company = searchParams.get('company');
   const tag = searchParams.get('tag');
+  const group = searchParams.get('group');
 
   return (
     <div
@@ -81,7 +82,7 @@ export default function Category({ status = 'header', setShow }: Props) {
           캐릭터
         </div>
         <Range gap='15'>
-          {category.character.map((val, idx) => (
+          {menu.character.map((val, idx) => (
             <Link
               href={`/search?type=character&detail=${val}&page=1&filter=전체`}
               key={val}
@@ -109,7 +110,7 @@ export default function Category({ status = 'header', setShow }: Props) {
           애니메이션
         </div>
         <Range preset='left' gap='15' className={wrapRow}>
-          {category.ani.map((val, idx) => (
+          {menu.ani.map((val, idx) => (
             <Link
               href={`/search?type=ani&detail=${val}&page=1&filter=전체`}
               key={val}
@@ -139,115 +140,69 @@ export default function Category({ status = 'header', setShow }: Props) {
         </div>
 
         <Range preset='column' gap='15'>
-          <div>
-            <div
-              className={`${sublabel} ${
-                company === 'bandai' && status === 'menu' ? select : null
-              }`}
-            >
-              반다이
-            </div>
-            <Range gap='15' className={wrapRow}>
-              {category.series.BANDAI.map((val, idx) => (
-                <Link
-                  href={`/search?type=series&company=bandai&detail=${val}&page=1&filter=전체`}
-                  key={val}
+          {menu.series.map((m) => {
+            const co = m.company.toLowerCase();
+            return (
+              <div key={m.company}>
+                <div
+                  className={`${sublabel} ${
+                    company === co && status === 'menu' ? select : null
+                  }`}
                 >
-                  <div
-                    className={`${content} ${contentItem} ${
-                      detail === val && status === 'menu' ? select : null
-                    }`}
-                    key={val}
-                  >
-                    {val}
-                  </div>
-                </Link>
-              ))}
-            </Range>
-          </div>
-
-          <div>
-            <div
-              className={`${sublabel} ${
-                company === 'tomy' && status === 'menu' ? select : null
-              }`}
-            >
-              토미
-            </div>
-            <Range gap='15' className={wrapRow}>
-              {category.series.TOMY.map((val, idx) => (
-                <Link
-                  href={`/search?type=series&company=tomy&detail=${val}&page=1&filter=전체`}
-                  key={val}
-                >
-                  <div
-                    className={`${content} ${contentItem} ${
-                      detail === val && status === 'menu' ? select : null
-                    }`}
-                    key={val}
-                  >
-                    {val}
-                  </div>
-                </Link>
-              ))}
-            </Range>
-          </div>
-
-          <div>
-            <div
-              className={`${sublabel} ${
-                company === 'standstones' && status === 'menu' ? select : null
-              }`}
-            >
-              STANDSTONES
-            </div>
-            <Range gap='15' className={wrapRow}>
-              {category.series.STANDSTONES.map((val, idx) => (
-                <Link
-                  href={`/search?type=series&company=standstones&detail=${val}&page=1&filter=전체`}
-                  key={val}
-                >
-                  <div
-                    className={`${content} ${contentItem} ${
-                      detail === val && status === 'menu' ? select : null
-                    }`}
-                    key={val}
-                  >
-                    {val}
-                  </div>
-                </Link>
-              ))}
-            </Range>
-          </div>
-
-          <div>
-            <div
-              className={`${sublabel} ${
-                company === 'etc' && status === 'menu' ? select : null
-              }`}
-            >
-              기타
-            </div>
-            <Range gap='15' className={wrapRow}>
-              {category.series.ETC.map((val, idx) => (
-                <Link
-                  href={`/search?type=series&company=etc&detail=${val}&page=1&filter=전체`}
-                  key={val}
-                >
-                  <div
-                    className={`${content} ${contentItem} ${
-                      detail === val && status === 'menu' ? select : null
-                    }`}
-                    key={val}
-                  >
-                    {val}
-                  </div>
-                </Link>
-              ))}
-            </Range>
-          </div>
+                  {m.name}
+                </div>
+                <Range gap='15' className={wrapRow}>
+                  {m.items.map((val) => (
+                    <Link
+                      href={`/search?type=series&company=${encodeURIComponent(co)}&detail=${encodeURIComponent(val)}&page=1&filter=전체`}
+                      key={val}
+                    >
+                      <div
+                        className={`${content} ${contentItem} ${
+                          detail === val && status === 'menu' ? select : null
+                        }`}
+                      >
+                        {val}
+                      </div>
+                    </Link>
+                  ))}
+                </Range>
+              </div>
+            );
+          })}
         </Range>
       </Range>
+
+      {menu.groups.map((g) => (
+        <React.Fragment key={g.name}>
+          <div className={line} />
+          <Range>
+            <div
+              className={`${label} ${
+                type === 'custom' && group === g.name && status === 'menu' ? select : null
+              }`}
+            >
+              {g.name}
+            </div>
+            <Range preset='left' gap='15' className={wrapRow}>
+              {g.items.map((val) => (
+                <Link
+                  href={`/search?type=custom&group=${encodeURIComponent(g.name)}&detail=${encodeURIComponent(val)}&page=1&filter=전체`}
+                  key={val}
+                >
+                  <div
+                    className={`${content} ${contentItem} ${
+                      detail === val && status === 'menu' ? select : null
+                    }`}
+                  >
+                    {val}
+                  </div>
+                </Link>
+              ))}
+            </Range>
+          </Range>
+        </React.Fragment>
+      ))}
     </div>
   );
 }

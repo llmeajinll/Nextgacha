@@ -5,7 +5,8 @@ import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 import { Range } from '@/shared/ui';
 import Search from '@/features/search/ui/Search';
-import { category, categoryMatch } from '@/entities/product/lib/category';
+import { useQuery } from '@tanstack/react-query';
+import getCategoryMenu from '@/entities/product/api/getCategoryMenu';
 import Pagination from 'rc-pagination';
 import 'rc-pagination/assets/index.css';
 import { CardProps } from '@/entities/product/model/types';
@@ -35,6 +36,7 @@ import {
 
 export default function Page() {
   const router = useRouter();
+  const { data: menu } = useQuery({ queryKey: ['categoryMenu'], queryFn: getCategoryMenu });
 
   const [search, setSearch] = useState('');
   const [product, setProduct] = useState([] as CardProps[]);
@@ -118,7 +120,7 @@ export default function Page() {
               그룹을 선택하세요
             </option>
             <option disabled>===== 캐릭터 =====</option>
-            {category.character.map((val) => (
+            {menu?.character.map((val) => (
               <option
                 onClick={() => {
                   setSearch(val);
@@ -130,7 +132,7 @@ export default function Page() {
               </option>
             ))}
             <option disabled>===== 애니 =====</option>
-            {category.ani.map((val) => (
+            {menu?.ani.map((val) => (
               <option
                 key={val}
                 value={val}
@@ -144,29 +146,37 @@ export default function Page() {
             ))}
 
             <option disabled>===== 시리즈 =====</option>
-            {Object.entries(category.series).map(([seriesName, seriesList]) => {
-              // console.log('seriesName, seriesList:', seriesName, seriesList);
-              const seriesMap =
-                categoryMatch.series[
-                  seriesName as keyof typeof categoryMatch.series
-                ];
-              return seriesList.map((val) => {
-                const seriesValue =
-                  seriesMap[val as keyof typeof seriesMap] || val;
-                return (
-                  <option
-                    key={val}
-                    value={seriesValue}
-                    onClick={() => {
-                      setSearch(val);
-                      searchProduct(val);
-                    }}
-                  >
-                    {val}
-                  </option>
-                );
-              });
-            })}
+            {menu?.series.map((m) =>
+              m.items.map((val) => (
+                <option
+                  key={val}
+                  value={val}
+                  onClick={() => {
+                    setSearch(val);
+                    searchProduct(val);
+                  }}
+                >
+                  {val}
+                </option>
+              )),
+            )}
+            {menu?.groups.map((m) => [
+              <option key={`h-${m.name}`} disabled>
+                ===== {m.name} =====
+              </option>,
+              ...m.items.map((val) => (
+                <option
+                  key={val}
+                  value={val}
+                  onClick={() => {
+                    setSearch(val);
+                    searchProduct(val);
+                  }}
+                >
+                  {val}
+                </option>
+              )),
+            ])}
           </select>
 
           <input

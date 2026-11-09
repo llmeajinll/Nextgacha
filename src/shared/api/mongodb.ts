@@ -10,7 +10,9 @@ if (!url) {
 const mongodbClient = new MongoClient(url);
 
 const client = await mongodbClient.connect();
-const gachaDB = client.db('gacha');
+// 운영은 gacha, 로컬·Preview는 MONGODB_DB=gacha_dev (같은 클러스터, DB만 분리)
+// ponytail: 같은 계정이라 개발 환경에서도 운영 DB 접근 가능, 완전 분리는 별도 클러스터/계정
+const gachaDB = client.db(process.env.MONGODB_DB ?? 'gacha');
 
 const pageViewsColl = gachaDB.collection('page_views');
 
@@ -22,6 +24,8 @@ const orderColl = gachaDB.collection('order');
 const counterColl = gachaDB.collection('counter');
 const userColl = gachaDB.collection('user');
 const errorColl = gachaDB.collection('error');
+// 문서 하나(_id 'menu')에 헤더 카테고리 메뉴 전체를 저장
+const categoryColl = gachaDB.collection<{ _id: string; [key: string]: any }>('category');
 
 // console.log(productDB);
 
@@ -37,4 +41,5 @@ export {
   counterColl,
   userColl,
   errorColl,
+  categoryColl,
 };

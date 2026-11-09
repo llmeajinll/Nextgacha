@@ -13,6 +13,7 @@ const ADMIN_API_PATHS = [
   '/api/postSendingToFinish',
   '/api/getOrderSort',
   '/api/getError',
+  '/api/postCategory',
 ];
 
 export default auth((req, event) => {
@@ -58,7 +59,10 @@ export default auth((req, event) => {
   // 관리자 전용 페이지: /manager 메인 메뉴와 /manager/statistics는 공개, 나머지는 ADMIN_EMAILS만
   const isPublicManagerPage =
     pathname === '/manager' || pathname.startsWith('/manager/statistics');
-  if (pathname.startsWith('/manager') && !isPublicManagerPage) {
+  // ponytail: 관리자 화면 작업 중이라 로컬 dev(next dev)에서만 페이지 가드를 끔. 작업 끝나면 이 줄 제거.
+  // 운영·Preview(NODE_ENV=production)에서는 그대로 막는다 — 주문 페이지가 DB를 직접 읽어 개인정보가 보이기 때문.
+  const skipManagerGuard = process.env.NODE_ENV === 'development';
+  if (pathname.startsWith('/manager') && !isPublicManagerPage && !skipManagerGuard) {
     if (!isAdminEmail(email)) {
       return NextResponse.redirect(new URL('/', req.nextUrl));
     }
@@ -115,6 +119,7 @@ export const config = {
     '/api/postSendingToFinish',
     '/api/getOrderSort',
     '/api/getError',
+    '/api/postCategory',
     '/mypage/:path*',
     '/manager/:path*',
     '/search',

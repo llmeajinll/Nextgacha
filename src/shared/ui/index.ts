@@ -7,7 +7,6 @@ export { default as ToggleBtn } from './ImgBtn/ToggleBtn';
 export { default as ScrollToTop } from './ScrollToTop';
 export { default as Range } from './Range/Range';
 export { default as CountBtn } from './Btn/CountBtn';
-export { default as StarBtn } from './ImgBtn/StarBtn';
 export { default as Writer } from './Writer/Writer';
 export { default as ModalPortal } from './ModalPortal';
 export { default as LabelTitle } from './LabelTitle/LabelTitle';

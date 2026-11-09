@@ -8,7 +8,7 @@ import {
 } from '@tanstack/react-query';
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
-import { Range } from '@/shared/ui';
+import { Range, ToggleBtn } from '@/shared/ui';
 import { Ticket } from '@/features/cart/ui';
 import { EmptyCard } from '@/shared/ui';
 import {
@@ -62,28 +62,11 @@ export default function Cart({
       ) : (
         <Range gap='10' className={cartRow}>
           <div className={toggleWrap}>
-            {cart.check === true ? (
-              <img
-                alt='선택됨'
-                src={'/images/toggleOn.png'}
-                width={26}
-                height={48}
-                onClick={() => {
-                  console.log('check click');
-                  onClickCheck(cart.num, { check: !cart.check });
-                }}
-              />
-            ) : (
-              <img
-                alt='선택 안 됨'
-                src={'/images/toggleOff.png'}
-                width={26}
-                height={48}
-                onClick={() => {
-                  onClickCheck(cart.num, { check: !cart.check });
-                }}
-              />
-            )}
+            <ToggleBtn
+              value={cart.check === true}
+              setValue={() => onClickCheck(cart.num, { check: !cart.check })}
+              label='주문할 상품 선택'
+            />
           </div>
 
           <Range className={cartContainer}>

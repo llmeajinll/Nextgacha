@@ -27,6 +27,7 @@ import { useSession } from 'next-auth/react';
 import { signIn, signOut } from 'next-auth/react';
 
 import { Session } from 'next-auth';
+import type { CategoryMenu } from '@/entities/product/model/types';
 import { useSearchParams, usePathname } from 'next/navigation';
 import { useSplitRoute as useSpliteRoute } from '@/shared/hooks';
 import { useAtom } from 'jotai';
@@ -34,7 +35,13 @@ import { userInfoAtom } from '@/entities/user/model/store';
 import { Range, ImgBtn, Btn } from '@/shared/ui';
 import { textareaStyle } from '@/features/review-write/ui/reviewModal.css';
 
-export default function Header({ session }: { session: Session | null }) {
+export default function Header({
+  session,
+  categoryMenu,
+}: {
+  session: Session | null;
+  categoryMenu: CategoryMenu;
+}) {
   const [showCategory, setShowCategory] = useState(false);
   const [showReport, setShowReport] = useState(false);
   const [textareaValue, setTextAreaValue] = useState('');
@@ -63,7 +70,7 @@ export default function Header({ session }: { session: Session | null }) {
     <>
       {firstRoute !== 'manager' && (
         <div className={headerContainer}>
-          {showCategory && <Category setShow={setShowCategory} />}
+          {showCategory && <Category setShow={setShowCategory} menu={categoryMenu} />}
           <div className={menuContainer}>
             <div className={wrap}>
               <Link href='/'>

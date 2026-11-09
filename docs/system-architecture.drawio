@@ -1,0 +1,120 @@
+<mxfile host="app.diagrams.net" agent="Claude Code" version="24.0.0">
+  <diagram id="nextgacha-system" name="시스템 구성도">
+    <mxGraphModel dx="1600" dy="1000" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1640" pageHeight="1080" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+
+        <mxCell id="title" value="&lt;b&gt;NEXT GACHA 시스템 구성도&lt;/b&gt;&lt;br&gt;&lt;font style=&quot;font-size:12px&quot; color=&quot;#535B66&quot;&gt;Next.js 16 (App Router) · 같은 상품 1인당 최대 5개 제한 쇼핑몰&lt;/font&gt;" style="text;html=1;align=left;verticalAlign=middle;whiteSpace=wrap;fontSize=20;fontColor=#14181F;" vertex="1" parent="1">
+          <mxGeometry x="20" y="4" width="800" height="62" as="geometry" />
+        </mxCell>
+
+        <!-- Zones -->
+        <mxCell id="zoneClient" value="브라우저" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#F7F8F8;strokeColor=#9AA1A9;dashed=1;verticalAlign=top;align=left;spacingLeft=12;spacingTop=6;fontStyle=1;fontSize=14;fontColor=#14181F;arcSize=2;" vertex="1" parent="1">
+          <mxGeometry x="20" y="70" width="300" height="930" as="geometry" />
+        </mxCell>
+        <mxCell id="zoneVercel" value="Vercel · Next.js 서버" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#F7F8F8;strokeColor=#9AA1A9;dashed=1;verticalAlign=top;align=left;spacingLeft=12;spacingTop=6;fontStyle=1;fontSize=14;fontColor=#14181F;arcSize=2;" vertex="1" parent="1">
+          <mxGeometry x="380" y="70" width="760" height="930" as="geometry" />
+        </mxCell>
+        <mxCell id="zoneExt" value="외부 서비스 · 데이터" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#F7F8F8;strokeColor=#9AA1A9;dashed=1;verticalAlign=top;align=left;spacingLeft=12;spacingTop=6;fontStyle=1;fontSize=14;fontColor=#14181F;arcSize=2;" vertex="1" parent="1">
+          <mxGeometry x="1200" y="70" width="400" height="930" as="geometry" />
+        </mxCell>
+
+        <!-- Client -->
+        <mxCell id="userCustomer" value="&lt;b&gt;고객&lt;/b&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#14181F;fontSize=13;" vertex="1" parent="1">
+          <mxGeometry x="40" y="120" width="120" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="userAdmin" value="&lt;b&gt;관리자&lt;/b&gt;&lt;br&gt;&lt;font style=&quot;font-size:11px&quot;&gt;ADMIN_EMAILS&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#14181F;fontSize=13;" vertex="1" parent="1">
+          <mxGeometry x="180" y="120" width="120" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="clientApp" value="&lt;b&gt;Next.js 클라이언트&lt;/b&gt;&lt;br&gt;FSD: views → widgets → features → entities → shared&lt;br&gt;&lt;br&gt;• TanStack Query: 서버 상태·캐시&lt;br&gt;• Jotai: 상세 페이지의 선택 수량(메모리)&lt;br&gt;• Vanilla Extract: 컴파일 타임 스타일&lt;br&gt;• API는 /api/... 상대 경로로 호출" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#14181F;align=left;verticalAlign=top;spacing=10;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="40" y="230" width="260" height="210" as="geometry" />
+        </mxCell>
+        <mxCell id="payFlow" value="&lt;b&gt;결제 흐름&lt;/b&gt;&lt;br&gt;&lt;br&gt;1. /checkout/[orderId]&lt;br&gt;2. 토스 SDK 결제창 (브라우저 ↔ Toss)&lt;br&gt;3. 성공 시 /success (paymentKey)&lt;br&gt;4. POST /api/postPaymentsConfirm&lt;br&gt;5. 서버 승인·DB 반영 (아래 서버 공용 로직)&lt;br&gt;6. 실패·이탈 시 /fail&lt;br&gt;&lt;br&gt;&lt;font color=&quot;#535B66&quot;&gt;금액·포인트는 클라이언트 값을 믿지 않고 서버가 DB로 다시 계산&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#14181F;align=left;verticalAlign=top;spacing=10;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="40" y="500" width="260" height="260" as="geometry" />
+        </mxCell>
+        <mxCell id="capRule" value="&lt;b&gt;5개 제한은 세 번 검사&lt;/b&gt;&lt;br&gt;① 클라이언트 훅(즉시 안내)&lt;br&gt;② 장바구니 API (checkCartLimit)&lt;br&gt;③ 결제 승인 (verifyOrder → reducePoint)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFF6BF;strokeColor=#14181F;align=left;verticalAlign=top;spacing=10;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="40" y="800" width="260" height="110" as="geometry" />
+        </mxCell>
+
+        <!-- Vercel -->
+        <mxCell id="proxy" value="&lt;b&gt;proxy.ts (Next.js middleware)&lt;/b&gt;&lt;br&gt;• /api/protected/* → 로그인 아니면 401&lt;br&gt;• 관리자 API 7종 → ADMIN_EMAILS가 아니면 403&lt;br&gt;• /manager/* → 비관리자는 / 로 이동 (/manager, /manager/statistics는 공개) · /mypage/* → /signin&lt;br&gt;• 페이지 조회마다 POST /api/track (event.waitUntil, prefetch 제외)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFE14D;strokeColor=#14181F;align=left;verticalAlign=top;spacing=10;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="400" y="120" width="720" height="135" as="geometry" />
+        </mxCell>
+        <mxCell id="pages" value="&lt;b&gt;페이지 (Server Components)&lt;/b&gt;&lt;br&gt;• /main · /search · /notice&lt;br&gt;• /[code] (info · review · qna 탭)&lt;br&gt;• /mypage (like · cart · history)&lt;br&gt;• /(payment) checkout · success · fail&lt;br&gt;• /manager (product_add · product_manage · order · user · event · error · statistics)&lt;br&gt;&lt;br&gt;&lt;font color=&quot;#535B66&quot;&gt;자기 /api를 fetch하지 않음 (세션 쿠키가 실리지 않아 401/403). 공용 서버 함수로 DB를 직접 조회&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#14181F;align=left;verticalAlign=top;spacing=10;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="400" y="290" width="330" height="270" as="geometry" />
+        </mxCell>
+        <mxCell id="api" value="&lt;b&gt;API Routes (BFF) · 20여 개&lt;/b&gt;&lt;br&gt;• /api/protected/* (로그인 필요): getHistory · getLike · updateLike · postCart · postReview · postQna · deleteQuestion …&lt;br&gt;• 관리자 7종: postProduct · postEditProduct · postEvent · postCheckToSending · postSendingToFinish · getOrderSort · getError&lt;br&gt;• 결제: postPaymentsConfirm&lt;br&gt;• 그 외: getProduct · getOneProduct · getReview · getQna · getCart · updateCart · getUser · updateAddress · getStatistics · postCheckStock · postError · track" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#14181F;align=left;verticalAlign=top;spacing=10;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="760" y="290" width="360" height="250" as="geometry" />
+        </mxCell>
+        <mxCell id="nextauth" value="&lt;b&gt;NextAuth v5 (Kakao만)&lt;/b&gt;&lt;br&gt;첫 로그인 시 user 문서 생성 (포인트 0)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#14181F;align=left;verticalAlign=top;spacing=8;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="900" y="580" width="220" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="shared" value="&lt;b&gt;서버 공용 로직 · shared/api/mongodb.ts&lt;/b&gt;&lt;br&gt;• 단일 MongoClient (모듈 로드 시 연결) · 컬렉션 핸들을 하나씩 export&lt;br&gt;• features/purchase/lib: validateStock → verifyOrder → (Toss 승인) → withTransaction( reducePoint → reduceStock → addOrder → resetCart ) · 가격·배송·포인트 규칙은 orderPolicy.ts&lt;br&gt;• features/order-manage/lib: findOrdersByStatus (페이지와 API가 함께 사용) · 상태 변경은 status 필터로 중복 클릭을 무효화" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#14181F;align=left;verticalAlign=top;spacing=10;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="400" y="720" width="720" height="150" as="geometry" />
+        </mxCell>
+        <mxCell id="txFail" value="트랜잭션 실패 시 Toss 결제를 취소하고, 취소마저 실패하면 errorColl에 기록" style="text;html=1;align=left;verticalAlign=middle;whiteSpace=wrap;fontSize=11;fontColor=#535B66;" vertex="1" parent="1">
+          <mxGeometry x="400" y="880" width="720" height="24" as="geometry" />
+        </mxCell>
+
+        <!-- External -->
+        <mxCell id="toss" value="&lt;b&gt;TossPayments&lt;/b&gt;&lt;br&gt;• 결제창 (브라우저 SDK)&lt;br&gt;• 서버: 승인 confirm · 취소 cancel&lt;br&gt;• 결제 실패·환불 시 취소" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#E9ECEE;strokeColor=#14181F;align=left;verticalAlign=top;spacing=10;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="1220" y="290" width="360" height="110" as="geometry" />
+        </mxCell>
+        <mxCell id="blob" value="&lt;b&gt;Vercel Blob&lt;/b&gt;&lt;br&gt;상품 이미지 images/{번호}.png (postProduct의 put)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#E9ECEE;strokeColor=#14181F;align=left;verticalAlign=top;spacing=10;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="1220" y="440" width="360" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="kakao" value="&lt;b&gt;Kakao OAuth&lt;/b&gt;&lt;br&gt;이메일을 주지 않으면 로그인 거부" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#E9ECEE;strokeColor=#14181F;align=left;verticalAlign=top;spacing=10;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="1220" y="580" width="360" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="atlas" value="&lt;b&gt;MongoDB Atlas (gachaDB)&lt;/b&gt;&lt;br&gt;user · product · cart · order&lt;br&gt;review · qna · error · counter · pageViews" style="shape=cylinder3;whiteSpace=wrap;html=1;boundedLbl=1;backgroundOutline=1;size=15;fillColor=#E9ECEE;strokeColor=#14181F;align=center;verticalAlign=middle;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="1220" y="710" width="360" height="150" as="geometry" />
+        </mxCell>
+        <mxCell id="trigger" value="&lt;b&gt;Atlas Trigger&lt;/b&gt;&lt;br&gt;매월 이벤트 상태 초기화" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#E9ECEE;strokeColor=#14181F;align=left;verticalAlign=top;spacing=10;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="1220" y="910" width="360" height="70" as="geometry" />
+        </mxCell>
+
+        <!-- Edges -->
+        <mxCell id="eCust" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#14181F;endArrow=block;endFill=1;exitX=0.5;exitY=1;entryX=0.25;entryY=0;" edge="1" parent="1" source="userCustomer" target="clientApp">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="eAdmin" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#14181F;endArrow=block;endFill=1;exitX=0.5;exitY=1;entryX=0.75;entryY=0;" edge="1" parent="1" source="userAdmin" target="clientApp">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="eClientProxy" value="모든 요청" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#14181F;endArrow=block;endFill=1;fontSize=11;exitX=1;exitY=0.25;entryX=0;entryY=0.5;" edge="1" parent="1" source="clientApp" target="proxy">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="eProxyPages" value="통과" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#14181F;endArrow=block;endFill=1;fontSize=11;exitX=0.25;exitY=1;entryX=0.5;entryY=0;" edge="1" parent="1" source="proxy" target="pages">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="eProxyApi" value="통과" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#14181F;endArrow=block;endFill=1;fontSize=11;exitX=0.75;exitY=1;entryX=0.5;entryY=0;" edge="1" parent="1" source="proxy" target="api">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="ePagesShared" value="직접 호출" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#14181F;endArrow=block;endFill=1;fontSize=11;exitX=0.5;exitY=1;entryX=0.2;entryY=0;" edge="1" parent="1" source="pages" target="shared">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="eApiShared" value="호출" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#14181F;endArrow=block;endFill=1;fontSize=11;exitX=0.15;exitY=1;entryX=0.55;entryY=0;" edge="1" parent="1" source="api" target="shared">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="eAuthShared" value="user 생성" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#14181F;endArrow=block;endFill=1;fontSize=11;exitX=0.5;exitY=1;entryX=0.9;entryY=0;" edge="1" parent="1" source="nextauth" target="shared">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="eSharedAtlas" value="MongoDB 드라이버" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#14181F;endArrow=block;endFill=1;fontSize=11;exitX=1;exitY=0.4;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="shared" target="atlas">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="eApiToss" value="승인 · 취소" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#14181F;endArrow=block;endFill=1;fontSize=11;exitX=1;exitY=0.2;entryX=0;entryY=0.5;" edge="1" parent="1" source="api" target="toss">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="eApiBlob" value="put" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#14181F;endArrow=block;endFill=1;fontSize=11;exitX=1;exitY=0.8;entryX=0;entryY=0.5;" edge="1" parent="1" source="api" target="blob">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="eAuthKakao" value="OAuth" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#14181F;endArrow=block;endFill=1;startArrow=block;startFill=1;fontSize=11;exitX=1;exitY=0.5;entryX=0;entryY=0.5;" edge="1" parent="1" source="nextauth" target="kakao">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="eTrigger" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#14181F;endArrow=block;endFill=1;exitX=0.5;exitY=0;entryX=0.5;entryY=1;entryDx=0;entryDy=0;" edge="1" parent="1" source="trigger" target="atlas">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

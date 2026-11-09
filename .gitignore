@@ -40,3 +40,10 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 .env*.local
+
+# storybook
+storybook-static
+*storybook.log
+
+# Claude Code 개인 권한 설정
+.claude/settings.local.json

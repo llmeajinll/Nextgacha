@@ -1,6 +1,7 @@
 'use client';
 import React, { useState, useEffect } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
+import { Close } from 'pixelarticons/react';
 import { useModal } from '@/shared/hooks';
 import { Range } from '@/shared/ui';
 import { StarRating } from '@/shared/ui';
@@ -58,8 +59,11 @@ export default function ReviewModal() {
             <div className={styles.alertText}>REVIEW</div>
             <button
               className={styles.closeBtn}
+              aria-label='닫기'
               onClick={() => router.back()}
-            ></button>
+            >
+              <Close width={28} height={28} aria-hidden />
+            </button>
           </Range>
           <div className={styles.contentContainer}>
             <h2>상품에 만족스러우셨나요?</h2>

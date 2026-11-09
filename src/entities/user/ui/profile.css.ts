@@ -37,3 +37,7 @@ export const wrapper = style({
 export const pointRow = style({
   marginTop: '10px',
 });
+
+export const pointIcon = style({
+  color: vars.color.blue1,
+});

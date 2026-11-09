@@ -11,6 +11,15 @@ export const imgBtn = style({
   marginTop: '15px',
 });
 
+// 픽셀 아이콘 버튼 (아이콘은 currentColor로 그려짐)
 export const imgBtnBase = style({
+  display: 'inline-flex',
+  padding: 0,
+  border: 'none',
+  background: 'none',
   cursor: 'pointer',
+  color: vars.color.blue1,
 });
+
+export const iconOn = style({ color: vars.color.blue1 });
+export const iconOff = style({ color: vars.slate[300] });

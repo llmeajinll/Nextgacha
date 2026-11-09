@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
-import Image from 'next/image';
+import { Trash } from 'pixelarticons/react';
 import {
   ticketContainer,
   contentContainer,
@@ -46,14 +46,14 @@ export default function Ticket({
             )}
             {comma(props.price * (1 - props.discount / 100) * props.count)} won
           </div>
-          <Image
+          <button
+            type='button'
             className={deleteBtn}
-            src='/images/trash.png'
-            alt={'trash'}
-            width={20}
-            height={20}
+            aria-label='장바구니에서 삭제'
             onClick={() => erase(props)}
-          />
+          >
+            <Trash width={20} height={20} aria-hidden />
+          </button>
         </Range>
       </div>
       <Range preset='columnCenter' className={countRow}>

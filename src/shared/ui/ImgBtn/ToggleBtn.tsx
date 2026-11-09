@@ -1,30 +1,29 @@
 import React from 'react';
-import {
-  wrapperNone,
-  wrapperVertical,
-  imgBase,
-  imgVertical,
-} from './toggleBtn.css';
+import { Checkbox, CheckboxOn } from 'pixelarticons/react';
+import { imgBtnBase } from './imgBtn.css';
 
 export default function ToggleBtn({
   value,
   setValue,
-  rotate = 'none',
+  label,
+  size = 26,
 }: {
   value: boolean;
-  setValue: React.Dispatch<React.SetStateAction<boolean>>;
-  rotate?: 'none' | 'vertical';
+  setValue: (next: boolean) => void;
+  label?: string;
+  size?: number;
 }) {
+  const Icon = value ? CheckboxOn : Checkbox;
   return (
-    <div className={rotate === 'none' ? wrapperNone : wrapperVertical}>
-      <img
-        alt={value ? '켜짐' : '꺼짐'}
-        src={value ? '/images/toggleOn.png' : '/images/toggleOff.png'}
-        onClick={() => {
-          setValue(!value);
-        }}
-        className={rotate === 'none' ? imgBase : imgVertical}
-      />
-    </div>
+    <button
+      type='button'
+      role='checkbox'
+      aria-checked={value}
+      aria-label={label}
+      onClick={() => setValue(!value)}
+      className={imgBtnBase}
+    >
+      <Icon width={size} height={size} aria-hidden />
+    </button>
   );
 }
