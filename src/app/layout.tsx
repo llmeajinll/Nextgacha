@@ -4,7 +4,8 @@ import { Noto_Sans_KR } from 'next/font/google';
 import './globals.css';
 import { SessionProvider } from 'next-auth/react';
 import { Header } from '@/widgets';
-import { layoutContainer, relativeWrap } from './layout.css';
+import { relativeWrap } from './layout.css';
+import SiteFrame from './SiteFrame';
 import { Analytics } from '@vercel/analytics/next';
 import AlertModal from '@/shared/ui/AlertModal';
 import QueryProvider from '@/shared/api/QueryProviders';
@@ -36,15 +37,16 @@ export default function RootLayout({
             <ReactQueryDevtools initialIsOpen={false} />
             <div className={relativeWrap}>
               <AlertModal />
-              <div className={`${layoutContainer}`}>
-                {/* useSearchParams를 쓰는 클라이언트 컴포넌트(Header의 검색, 결제/검색 페이지 등)는 Suspense 경계가 필요 */}
-                <Suspense>
-                  <Header />
-                </Suspense>
-                <main>
-                  <Suspense>{children}</Suspense>
-                </main>
-              </div>
+              {/* useSearchParams를 쓰는 클라이언트 컴포넌트(Header의 검색, 결제/검색 페이지 등)는 Suspense 경계가 필요 */}
+              <SiteFrame
+                header={
+                  <Suspense>
+                    <Header />
+                  </Suspense>
+                }
+              >
+                <Suspense>{children}</Suspense>
+              </SiteFrame>
             </div>
           </SessionProvider>
         </QueryProvider>
