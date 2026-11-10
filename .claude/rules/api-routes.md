@@ -24,7 +24,7 @@ paths:
 - `req.json()`·`searchParams`에서 꺼낸 값은 Mongo 필터, `$in`, `$pull`, `arrayFilters`에 넣기 전에 원시 타입인지 확인하고,
   아니면 DB에 접근하기 전에 400을 준다. 객체가 들어오면 `{ "$ne": "" }` 같은 연산자로 해석돼 엉뚱한 문서가 매칭된다.
   지금은 라우트마다 `typeof x === 'string'` / `Number.isInteger(x)`로 직접 검사한다
-  (잘 된 예 `protected/postReview/route.ts`, 공용 방식은 `docs/policies/api.md` "입력 검증 방식"에서 미정).
+  (잘 된 예 `protected/postReview/route.ts`. 같은 검사가 세 라우트 이상 반복되면 `shared/lib`로 — `docs/policies/api.md` "입력 검증 방식").
 - 사용자 데이터를 읽고 쓰는 쿼리에는 세션(`auth()`)의 email을 조건으로 넣는다. 요청에서 받은 `orderId`·`_id`만으로
   문서를 찾으면 남의 주문·장바구니에 닿는다 (관리자 route는 예외).
 

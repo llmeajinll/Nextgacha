@@ -18,6 +18,18 @@ paths:
 - 같은 slice 안에서는 상대 경로(`./`, `../`), slice 밖은 `@/` 별칭.
 - `src/app/`은 라우팅 전용: 페이지는 views/widgets를 조합만 하고, 서버 데이터 조회는 slice의 `lib/` 서버 함수를 호출한다.
 
+## 컴포넌트 재사용
+
+- UI를 새로 만들기 전에 `src/shared/ui/index.ts`와 해당 도메인의 `entities/*/ui`를 먼저 찾는다. 있으면 그걸 쓴다
+  (`Btn`, `ImgBtn`, `DropDown`, `Pagination`, `Range`, `EmptyCard`, `StarRating`, `Title` ...).
+- 조금 안 맞으면 복사해서 새로 만들지 말고 기존 컴포넌트에 prop을 추가해 넓힌다.
+- 같은 UI가 두 곳 이상에서 필요해지면 그 자리에서 복사하지 말고 공용으로 올린다: 도메인을 모르면 `shared/ui`,
+  도메인을 알면 `entities/<도메인>/ui`.
+- 외부 UI 라이브러리(`rc-pagination`, `react-slick` 등)는 페이지·위젯에서 직접 import하지 않고 `shared/ui` 래퍼로 쓴다.
+  모양과 접근성을 래퍼 한 곳에서 맞추기 위해서다.
+- `shared/ui`에 추가하면 `shared/ui/index.ts`에 등록하고 `stories/shared/ui/`에 스토리를 만든다
+  ([design.md Storybook](../../docs/policies/design.md#storybook)).
+
 ## 기존 예외 (알고 있는 부채)
 
 - `features/purchase` → `features/cart` import (TicketPanel, InfoPanel, ProductPurchasePanel).
