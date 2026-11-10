@@ -1,195 +1,198 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
-import Order from '@/features/order-manage/ui/Order';
-import { Range } from '@/shared/ui';
+import React, { useState } from 'react';
+import Link from 'next/link';
+import { useRouter } from 'next/navigation';
+import { Pagination } from '@/shared/ui';
+import { ChevronRight } from 'pixelarticons/react';
+import Order, { type Ship } from '@/features/order-manage/ui/Order';
+import { toArrive, toSending } from '@/features/order-manage/api/orderActions';
 import {
-  orderTemplateContainer,
-  toSendingBtn,
-  selectAllBtn,
-  toFinishBtn,
-  loadMoreBtn,
-} from './orderTemplate.css';
-import { useModal } from '@/shared/hooks';
+  ORDER_PAGE_SIZE,
+  ORDER_STATUSES,
+  type AdminOrder,
+  type OrderStatus,
+} from '@/features/order-manage/model/status';
+import * as s from './orderTemplate.css';
 
 export default function OrderTemplate({
   status,
-  props,
-  getLastId,
+  orders,
+  total,
+  page,
+  counts,
 }: {
-  status: string;
-  props: any[];
-  getLastId: string | null;
+  status: OrderStatus;
+  orders: AdminOrder[];
+  total: number;
+  page: number;
+  counts: Record<OrderStatus, number>;
 }) {
-  // console.log('ordertemplate : ', props, getLastId);
+  const router = useRouter();
+  const slug = ORDER_STATUSES.find((x) => x.status === status)!.slug;
+  // 일괄 처리는 상품 확인중 → 배송중, 배송중 → 배송 완료만
+  const next: OrderStatus | null = status === '상품 확인중' ? '배송중' : status === '배송중' ? '배송 완료' : null;
+  const toNext = next === '배송중' ? '배송중으로' : '배송 완료로';
 
-  const [items, setItems] = useState(props);
-  const [lastId, setLastId] = useState(getLastId);
-  const [loading, setLoading] = useState(false);
-  const [check, setCheck] = useState(true);
+  const [ships, setShips] = useState<Record<string, Ship>>({});
+  const [checked, setChecked] = useState<Set<string>>(new Set());
+  const [confirming, setConfirming] = useState(false);
+  const [bulkError, setBulkError] = useState('');
+  const [sending, setSending] = useState(false);
+  const [toast, setToast] = useState('');
 
-  const { openModal } = useModal();
+  const shipOf = (o: AdminOrder) => ships[o.orderId] ?? { courier: o.courier, invoice: o.invoice };
+  // 새로고침으로 목록이 바뀌어도 화면에 있는 주문만 선택으로 침
+  const selected = orders.filter((o) => checked.has(o.orderId));
+  const allChecked = orders.length > 0 && selected.length === orders.length;
 
-  const loadMore = async () => {
-    if (!lastId || loading) return;
-
-    setLoading(true);
-
-    const res = await fetch(
-      `/api/getOrderSort?status=${status}&lastId=${lastId}`
-    );
-    const data = await res.json();
-
-    const { result, nextCursor } = data;
-    console.log('load more data : ', result, nextCursor);
-
-    setItems((prev) => [...prev, ...result]);
-    setLastId(nextCursor);
-    setLoading(false);
+  const done = (message: string) => {
+    setToast(message);
+    setChecked(new Set());
+    setConfirming(false);
+    setBulkError('');
+    router.refresh();
   };
 
-  const handleUpdateItem = (orderId: string, newData: any) => {
-    setItems((prev) =>
-      prev.map((item) =>
-        item.orderId === orderId ? { ...item, ...newData } : item
-      )
-    );
-  };
-
-  const handleSelectAll = () => {
-    setItems((prev) => prev.map((item) => ({ ...item, check: check })));
-    setCheck(!check);
-  };
-
-  const renderSendBtn = () => {
-    if (status === '상품 확인중') {
-      // Handle send button click for 'check' status
-      return (
-        <button
-          onClick={() => {
-            openModal('선택된 주문을 모두 배송중으로 전환하시겠습니까?', {
-              onClickCheck: async () => {
-                const isValidate = items
-                  .filter((item) => item.check)
-                  .every((item) => item.courier && item.invoice);
-                if (!isValidate) {
-                  alert('택배사나 송장번호가 적혀있지 않은 주문이 있습니다.');
-                  return;
-                }
-
-                const orders = items.filter((val) => val.check === true);
-                console.log(orders);
-
-                try {
-                  const res = await fetch('/api/postCheckToSending', {
-                    method: 'POST',
-                    body: JSON.stringify({
-                      send: 'many',
-                      orders,
-                    }),
-                    headers: {
-                      'Content-Type': 'application/json',
-                    },
-                  });
-
-                  const result = await res.json();
-                  console.log(result);
-                  if (result.ok === true) {
-                    alert('전체 반영되엇습니다.');
-                    window.location.reload();
-                  } else {
-                    alert('전체 반영되지 못했습니다.');
-                    window.location.reload();
-                  }
-                } catch (err) {
-                  alert('오류가 발생했습니다.');
-                  window.location.reload();
-                }
-              },
-            });
-          }}
-          className={toSendingBtn}
-        >
-          선택 모두 배송중으로 변경
-        </button>
-      );
-    } else if (status === '배송중') {
-      // Handle send button click for 'sending' status
-      return (
-        <Range gap='5'>
-          <button
-            onClick={handleSelectAll}
-            className={selectAllBtn}
-          >
-            전체 선택
-          </button>
-          <button
-            onClick={async () => {
-              const orders = items.filter((val) => val.check === true);
-              try {
-                const res = await fetch('/api/postSendingToFinish', {
-                  method: 'POST',
-                  body: JSON.stringify({
-                    send: 'many',
-                    orders,
-                  }),
-                  headers: {
-                    'Content-Type': 'application/json',
-                  },
-                });
-
-                const result = await res.json();
-                console.log(result);
-                if (result.ok === true) {
-                  alert('전체 반영되었습니다.');
-                  window.location.reload();
-                } else {
-                  alert('전체 반영되지 못했습니다.');
-                  window.location.reload();
-                }
-              } catch (err) {
-                alert('오류가 발생했습니다.');
-                window.location.reload();
-              }
-            }}
-            className={toFinishBtn}
-          >
-            선택된 주문 배송 완료로 변경
-          </button>
-        </Range>
-      );
-    } else {
-      return;
+  const runBulk = async () => {
+    setSending(true);
+    try {
+      if (status === '상품 확인중') {
+        await toSending(selected.map((o) => ({ orderId: o.orderId, ...shipOf(o), invoice: shipOf(o).invoice.trim() })));
+      } else {
+        await toArrive(selected.map((o) => o.orderId));
+      }
+      done(`${selected.length}건을 ${toNext} 바꿨어요.`);
+    } catch (e) {
+      setBulkError(e instanceof Error ? e.message : '반영하지 못했어요.');
+      setConfirming(false);
+    } finally {
+      setSending(false);
     }
   };
 
   return (
-    <>
-      {renderSendBtn()}
-      {items.length === 0 ? (
-        <h2>주문건이 없습니다.</h2>
-      ) : (
-        <div className={orderTemplateContainer}>
-          {items.map((item) => (
-            <Order
-              key={item.orderId}
-              props={item}
-              onUpdate={handleUpdateItem}
-            />
-          ))}
+    <div className={s.container}>
+      <nav aria-label='주문 상태' className={s.tabs}>
+        {ORDER_STATUSES.map((t, i) => (
+          <React.Fragment key={t.slug}>
+            {t.status === '환불' && <span aria-hidden className={s.tabGap} />}
+            <Link
+              href={`/manager/order/${t.slug}`}
+              aria-current={t.status === status ? 'page' : undefined}
+              className={t.status === status ? `${s.tab} ${s.tabOn}` : s.tab}
+            >
+              {t.status}
+              <span className={s.tabCount}>{counts[t.status]}</span>
+            </Link>
+            {i < 2 && <ChevronRight aria-hidden className={s.tabArrow} />}
+          </React.Fragment>
+        ))}
+      </nav>
+
+      {toast && (
+        <div role='status' className={s.toast}>
+          {toast}
         </div>
       )}
-      <div>
-        {lastId && (
-          <button
-            onClick={loadMore}
-            disabled={loading}
-            className={loadMoreBtn}
-          >
-            더 보기
-          </button>
+
+      {next && orders.length > 0 && (
+        <div className={s.bulk}>
+          <div className={s.bulkRow}>
+            <label className={s.selectAll}>
+              <input
+                type='checkbox'
+                checked={allChecked}
+                onChange={() => {
+                  setChecked(new Set(allChecked ? [] : orders.map((o) => o.orderId)));
+                  setConfirming(false);
+                  setBulkError('');
+                }}
+                className={s.checkInput}
+              />
+              전체 선택
+              {selected.length > 0 && <span className={s.muted}>{selected.length}건 선택됨</span>}
+            </label>
+            <button
+              type='button'
+              disabled={selected.length === 0}
+              className={s.bulkBtn}
+              onClick={() => {
+                const missing =
+                  status === '상품 확인중' ? selected.filter((o) => !shipOf(o).courier || !shipOf(o).invoice.trim()).length : 0;
+                if (missing) {
+                  setBulkError(
+                    `송장을 입력하지 않은 주문이 ${missing}건 있어요. 택배사와 송장번호를 입력하거나 선택을 빼 주세요.`,
+                  );
+                  return;
+                }
+                setBulkError('');
+                setConfirming(true);
+              }}
+            >
+              선택 {selected.length}건 {toNext}
+            </button>
+          </div>
+          {bulkError && (
+            <p role='status' className={s.bulkError}>
+              {bulkError}
+            </p>
+          )}
+          {confirming && (
+            <div className={s.confirm}>
+              <span>
+                선택한 {selected.length}건을 {toNext} 바꿀까요?
+              </span>
+              <div className={s.confirmBtns}>
+                <button type='button' className={s.ghostBtn} onClick={() => setConfirming(false)}>
+                  취소
+                </button>
+                <button type='button' className={s.primaryBtn} disabled={sending} onClick={runBulk}>
+                  {sending ? '바꾸는 중…' : '바꾸기'}
+                </button>
+              </div>
+            </div>
+          )}
+        </div>
+      )}
+
+      <section aria-label={`${status} 주문`} className={s.list}>
+        {orders.map((o) => (
+          <Order
+            key={o.orderId}
+            order={o}
+            checked={next ? checked.has(o.orderId) : undefined}
+            onCheck={
+              next
+                ? () => {
+                    const n = new Set(checked);
+                    if (n.has(o.orderId)) n.delete(o.orderId);
+                    else n.add(o.orderId);
+                    setChecked(n);
+                    setConfirming(false);
+                    setBulkError('');
+                  }
+                : undefined
+            }
+            ship={shipOf(o)}
+            onShip={(ship) => setShips({ ...ships, [o.orderId]: ship })}
+            onDone={done}
+          />
+        ))}
+        {orders.length === 0 && (
+          <div className={s.empty}>
+            <span className={s.emptyTitle}>{status} 주문이 없어요.</span>
+            <span className={s.muted}>새 주문이 들어오면 여기에 보여요.</span>
+          </div>
         )}
-      </div>
-    </>
+      </section>
+
+      <Pagination
+        current={page}
+        total={total}
+        pageSize={ORDER_PAGE_SIZE}
+        onChange={(p) => router.push(`/manager/order/${slug}?page=${p}`)}
+      />
+    </div>
   );
 }

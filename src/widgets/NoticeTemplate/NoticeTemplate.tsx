@@ -4,9 +4,7 @@ import React, { Fragment, useState } from 'react';
 import Notice from '@/entities/notice/ui/Notice';
 import { notice } from '@/entities/notice/model/notice';
 
-import { Range } from '@/shared/ui';
-import Pagination from 'rc-pagination';
-import 'rc-pagination/assets/index.css';
+import { Pagination } from '@/shared/ui';
 import {
   pageWrap,
   listWrap,
@@ -41,17 +39,16 @@ export default function NoticeTemplate() {
           </Fragment>
         ))}
       </div>
-      <Range className={paginationWrap}>
-        <Pagination
-          current={currentPage}
-          total={total}
-          pageSize={pageSize}
-          onChange={(page) => {
-            setCurrentPage(page);
-            setPage(notice.slice((page - 1) * pageSize, page * pageSize));
-          }}
-        />
-      </Range>
+      <Pagination
+        className={paginationWrap}
+        current={currentPage}
+        total={total}
+        pageSize={pageSize}
+        onChange={(page) => {
+          setCurrentPage(page);
+          setPage(notice.slice((page - 1) * pageSize, page * pageSize));
+        }}
+      />
     </div>
   );
 }

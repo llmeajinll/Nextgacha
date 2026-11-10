@@ -6,6 +6,7 @@ import { SessionProvider } from 'next-auth/react';
 import { Header } from '@/widgets';
 import { relativeWrap } from './layout.css';
 import SiteFrame from './SiteFrame';
+import GoogleAnalytics from './GoogleAnalytics';
 import { Analytics } from '@vercel/analytics/next';
 import AlertModal from '@/shared/ui/AlertModal';
 import QueryProvider from '@/shared/api/QueryProviders';
@@ -31,6 +32,7 @@ export default function RootLayout({
     <html lang='ko'>
       <body className={`${notoSans.className}`}>
         <Analytics />
+        <GoogleAnalytics />
 
         <QueryProvider>
           <SessionProvider>

@@ -1,13 +1,8 @@
 import { NextResponse } from 'next/server';
 import { orderColl, errorColl } from '@/shared/api/mongodb';
-import { auth } from '@/auth';
 
+// 관리자 전용: proxy ADMIN_API_PATHS가 막는다 (로컬 dev에서는 가드 꺼짐)
 export async function GET(req: Request) {
-  const session = await auth();
-  if (!session?.user?.email) {
-    return NextResponse.json({ ok: false, message: 'unauthorized' }, { status: 401 });
-  }
-
   const { searchParams } = new URL(req.url);
   const orderId = searchParams.get('orderId') || '';
 

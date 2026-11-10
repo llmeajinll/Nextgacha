@@ -19,6 +19,7 @@ export const imgBtnBase = style({
   background: 'none',
   cursor: 'pointer',
   color: vars.color.blue1,
+  selectors: { '&:disabled': { cursor: 'default', color: vars.slate[300] } },
 });
 
 export const iconOn = style({ color: vars.color.blue1 });

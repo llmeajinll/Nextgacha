@@ -3,11 +3,10 @@
 import React, { Suspense, useEffect, useState } from 'react';
 import { useSearchParams, useRouter, usePathname } from 'next/navigation';
 import getHistory from '@/entities/order/api/getHistory';
-import { Range, ScrollToTop } from '@/shared/ui';
+import { ScrollToTop } from '@/shared/ui';
 import { History } from '@/entities/order/ui';
 import { EmptyCard } from '@/shared/ui';
-import Pagination from 'rc-pagination';
-import 'rc-pagination/assets/index.css';
+import { Pagination } from '@/shared/ui';
 import { grid, paginationWrap } from './page.css';
 
 export default function HistoryPage() {
@@ -77,24 +76,23 @@ export default function HistoryPage() {
               return <History props={val} key={val.orderId} />;
             })}
           </div>
-          <Range className={paginationWrap}>
-            <Pagination
-              current={currentPage}
-              total={total}
-              pageSize={8}
-              onChange={(page) => {
-                console.log('onChange page : ', page);
-                setCurrentPage(page);
-                fetchHistoryData(page);
+          <Pagination
+            className={paginationWrap}
+            current={currentPage}
+            total={total}
+            pageSize={8}
+            onChange={(page) => {
+              console.log('onChange page : ', page);
+              setCurrentPage(page);
+              fetchHistoryData(page);
 
-                const params = new URLSearchParams(searchParams.toString());
-                params.set('page', String(page));
+              const params = new URLSearchParams(searchParams.toString());
+              params.set('page', String(page));
 
-                router.push(`${pathname}?${params.toString()}`);
-                window.scrollTo({ top: 0, left: 0, behavior: 'smooth' });
-              }}
-            />
-          </Range>
+              router.push(`${pathname}?${params.toString()}`);
+              window.scrollTo({ top: 0, left: 0, behavior: 'smooth' });
+            }}
+          />
         </>
       )}
     </>

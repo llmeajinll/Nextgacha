@@ -67,17 +67,19 @@ jotai atom/store), `ui/`(컴포넌트 + 옆에 둔 `*.css.ts`), 필요하면 `li
   - 고정된 `ADMIN_API_PATHS` 목록(postEditProduct, postEvent, postProduct,
     postCheckToSending, postSendingToFinish, getOrderSort, getError) → `isAdminEmail(email)`이
     아니면 403 (`ADMIN_EMAILS` 환경변수와 비교, `src/shared/lib/isAdmin.ts` 참고).
-  - `/manager/*` 페이지 → 관리자가 아니면 `/`로 리다이렉트. 단 `/manager`와
-    `/manager/statistics`는 공개.
+  - `/manager/*` 페이지 → 관리자가 아니면 `/`로 리다이렉트. 단 `/manager`는 공개.
+    로컬 `next dev`에서는 관리자 화면 작업용으로 페이지·API 관리자 가드를 끈다(`skipAdminGuard`).
   - `/mypage/*` → 미로그인 시 `/signin`으로 리다이렉트.
-  - 정적 파일·API가 아닌 라우트는 `/api/track`에 페이지 뷰를 POST한다(요청과 같은 origin,
-    `event.waitUntil`로 유지). `<Link>` prefetch는 건너뛰고 `_rsc`는 제거한다.
+  - 페이지가 아닌 정적 파일·API를 빼고, 페이지 응답에 기기 ID 쿠키(`did`)를 붙인다.
+- 방문 통계는 GA4가 모은다(`src/app/GoogleAnalytics.tsx`가 Google 태그 컨테이너 `NEXT_PUBLIC_GTM_ID`를 불러옴, 운영 환경에만 설정). 페이지 조회와 사이트 검색어
+  (`?search=`)는 GA '향상된 측정'이 자동 수집하고, `/manager/*`는 집계에서 뺀다. 예전 자체 수집
+  (`/api/track` → `page_views` 컬렉션)과 `/manager/statistics` 페이지는 지웠다(DB의 옛 데이터는 남아 있음).
 
 ### 데이터 레이어
 
 - `src/shared/api/mongodb.ts`는 모듈 로드 시점(top-level `await`)에 `MongoClient` 하나를 열고
   컬렉션마다 handle을 export한다(`productColl`, `cartColl`, `orderColl`, `userColl`,
-  `reviewColl`, `qnaColl`, `errorColl`, `counterColl`, `pageViewsColl`). `gachaDB`에 직접
+  `reviewColl`, `qnaColl`, `errorColl`, `counterColl`). `gachaDB`에 직접
   접근하지 말고 필요한 컬렉션을 import한다.
 - 결제 승인(`src/app/api/postPaymentsConfirm/route.ts`)이 가장 중요한 트랜잭션 경로다:
   재고 재검증(`validateStock`, 구매 불가가 된 상품을 장바구니에서 정리도 함) → `verifyOrder`

@@ -12,6 +12,8 @@ export async function addOrder({
   address,
   addPoint,
   usedPoint,
+  deviceId,
+  ip,
 }: {
   orderId: string;
   list: any[];
@@ -22,6 +24,8 @@ export async function addOrder({
   address: string;
   addPoint: number;
   usedPoint: number;
+  deviceId: string | null;
+  ip: string | null;
 }) {
   await orderColl.insertOne(
     {
@@ -39,6 +43,8 @@ export async function addOrder({
       created_at: koreaTime(),
       arrivedDate: '',
       review: false,
+      deviceId,
+      ip,
     },
     { session: mongodbSession },
   );
