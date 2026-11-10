@@ -5,11 +5,10 @@ import { useRouter, useSearchParams, usePathname } from 'next/navigation';
 import React, { Suspense, useEffect, useState } from 'react';
 import { CardProps } from '@/entities/product/model/types';
 import { CardTemplate } from '@/widgets';
-import { Title, Range, ScrollToTop } from '@/shared/ui';
+import { Title, ScrollToTop } from '@/shared/ui';
 import { getStandardCategory } from '@/entities/product/lib/getStandardCategory';
 import { tagCategory } from '@/entities/product/lib/category';
-import Pagination from 'rc-pagination';
-import 'rc-pagination/assets/index.css';
+import { Pagination } from '@/shared/ui';
 import { useAtom } from 'jotai';
 import { searchProductsAtom } from '@/entities/product/model/store';
 import getProducts from '@/entities/product/api/getProducts';
@@ -84,20 +83,19 @@ export default function SearchPage() {
         <CardTemplate />
 
         {searchProducts.length !== 0 && (
-          <Range className={paginationWrap}>
-            <Pagination
-              current={currentPage}
-              total={total}
-              pageSize={20}
-              onChange={(page) => {
-                setCurrentPage(page);
-                const params = new URLSearchParams(searchParams.toString());
-                params.set('page', String(page));
+          <Pagination
+            className={paginationWrap}
+            current={currentPage}
+            total={total}
+            pageSize={20}
+            onChange={(page) => {
+              setCurrentPage(page);
+              const params = new URLSearchParams(searchParams.toString());
+              params.set('page', String(page));
 
-                router.push(`${pathname}?${params.toString()}`);
-              }}
-            />
-          </Range>
+              router.push(`${pathname}?${params.toString()}`);
+            }}
+          />
         )}
       </Suspense>
     </>

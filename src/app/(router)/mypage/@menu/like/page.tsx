@@ -2,12 +2,10 @@
 
 import React, { useState, useEffect, Suspense } from 'react';
 import { cardTemplateContainer } from '@/widgets/CardTemplate/cardtemplate.css';
-import { Range } from '@/shared/ui';
 import { Card } from '@/entities/product/ui';
 import { EmptyCard } from '@/shared/ui';
 import { CardProps } from '@/entities/product/model/types';
-import Pagination from 'rc-pagination';
-import 'rc-pagination/assets/index.css';
+import { Pagination } from '@/shared/ui';
 import { paginationWrap } from './page.css';
 
 export default function Page() {
@@ -60,18 +58,17 @@ export default function Page() {
               <Card props={item} key={item._id} />
             ))}
           </div>
-          <Range className={paginationWrap}>
-            <Pagination
-              current={currentPage}
-              total={total}
-              pageSize={20}
-              onChange={(page) => {
-                console.log('onChange page : ', page);
-                setCurrentPage(page);
-                fetchLikeData(page);
-              }}
-            />
-          </Range>
+          <Pagination
+            className={paginationWrap}
+            current={currentPage}
+            total={total}
+            pageSize={20}
+            onChange={(page) => {
+              console.log('onChange page : ', page);
+              setCurrentPage(page);
+              fetchLikeData(page);
+            }}
+          />
         </>
       )}
     </>

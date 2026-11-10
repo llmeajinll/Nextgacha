@@ -217,7 +217,6 @@ export const empty = style({
 export const addRow = style({
   display: 'flex',
   gap: 8,
-  maxWidth: 420,
 });
 
 export const input = style({
@@ -245,8 +244,8 @@ export const addBtn = style({
   height: 44,
   padding: '0 16px',
   border: `1px solid ${vars.color.blue1}`,
-  backgroundColor: 'white',
-  color: vars.color.blue1,
+  backgroundColor: vars.color.blue1,
+  color: 'white',
   fontFamily: pixel,
   fontSize: 16,
   letterSpacing: -0.8,

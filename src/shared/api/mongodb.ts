@@ -14,7 +14,6 @@ const client = await mongodbClient.connect();
 // ponytail: 같은 계정이라 개발 환경에서도 운영 DB 접근 가능, 완전 분리는 별도 클러스터/계정
 const gachaDB = client.db(process.env.MONGODB_DB ?? 'gacha');
 
-const pageViewsColl = gachaDB.collection('page_views');
 
 const cartColl = gachaDB.collection('cart');
 const productColl = gachaDB.collection('product');
@@ -32,7 +31,6 @@ const categoryColl = gachaDB.collection<{ _id: string; [key: string]: any }>('ca
 export {
   mongodbClient,
   gachaDB,
-  pageViewsColl,
   cartColl,
   productColl,
   qnaColl,

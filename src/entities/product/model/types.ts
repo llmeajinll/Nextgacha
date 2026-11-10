@@ -28,7 +28,14 @@ export type CardProps = {
     count: number;
   }[];
   isLogin?: boolean;
+  // 사전예약 기간 (reserve는 발송 예정일). 예약 상품이 아니면 ''
+  reserveStart?: string;
+  reserveEnd?: string;
+  // 상세 설명 (없으면 상세 탭은 예전 {num}_info.png를 보여줌)
+  detail?: DetailBlock[];
 };
+
+export type DetailBlock = { type: 'text'; text: string } | { type: 'image'; url: string };
 
 // 쇼핑몰 헤더 카테고리 메뉴 (category 컬렉션 _id 'menu'). series.company는 상품 문서의 company 값
 export type CategoryMenu = {

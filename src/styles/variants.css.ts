@@ -1,4 +1,4 @@
-import { styleVariants } from '@vanilla-extract/css';
+import { style, styleVariants } from '@vanilla-extract/css';
 import { vars } from '@/styles/theme.css';
 // import {
 //   rangeWidth,
@@ -248,5 +248,33 @@ export const ticketContainerVariant = styleVariants({
   none: {
     width: '1140px',
     maxWidth: '1070px',
+  },
+});
+
+// 체크박스: 각진 칸 + 픽셀 체크(pixelarticons check), 켜지면 blue1 배경
+const pixelCheck = `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='white' shape-rendering='crispEdges'%3E%3Cpath d='M10 18H8v-2h2v2Zm-2-2H6v-2h2v2Zm4-2v2h-2v-2h2Zm-6 0H4v-2h2v2Zm8 0h-2v-2h2v2Zm2-2h-2v-2h2v2Zm2-2h-2V8h2v2Zm2-2h-2V6h2v2Z'/%3E%3C/svg%3E")`;
+
+export const checkbox = style({
+  appearance: 'none',
+  width: 20,
+  height: 20,
+  flex: '0 0 20px',
+  margin: 0,
+  boxSizing: 'border-box',
+  // 흰 배경에서 칸 테두리가 보이도록 slate500 (3:1 이상)
+  border: `1px solid ${vars.slate[500]}`,
+  borderRadius: 0,
+  backgroundColor: 'white',
+  backgroundRepeat: 'no-repeat',
+  backgroundPosition: 'center',
+  // 24 그리드 아이콘을 24px로 그려 픽셀 한 칸이 정확히 2px (체크 모양은 4~20 안에 있어 칸을 넘지 않음)
+  backgroundSize: '24px 24px',
+  cursor: 'pointer',
+  transition: 'background-color .15s ease, border-color .15s ease',
+  selectors: {
+    '&:hover': { borderColor: vars.color.blue1 },
+    '&:checked': { borderColor: vars.color.blue1, backgroundColor: vars.color.blue1, backgroundImage: pixelCheck },
+    '&:focus-visible': { outline: `2px solid ${vars.ink[400]}`, outlineOffset: 2 },
+    '&:disabled': { borderColor: vars.slate[200], backgroundColor: vars.slate[50], cursor: 'default' },
   },
 });

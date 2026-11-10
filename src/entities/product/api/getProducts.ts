@@ -3,12 +3,14 @@ export default async function getProducts(props: {
   tag?: string;
   search?: string;
   count?: number;
+  page?: number;
 }) {
-  const { tag, search, count } = props;
+  const { tag, search, count, page } = props;
   const params = new URLSearchParams();
   if (tag) params.set('tag', tag);
   if (search) params.set('search', search);
   if (count) params.set('count', String(count));
+  if (page) params.set('page', String(page));
   const data = await fetch(`/api/getProduct?${params.toString()}`, {
     method: 'GET',
     headers: {

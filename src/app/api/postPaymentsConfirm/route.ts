@@ -1,4 +1,5 @@
 import { NextResponse } from 'next/server';
+import { cookies } from 'next/headers';
 import { auth } from '@/auth';
 import { errorColl, mongodbClient } from '@/shared/api/mongodb';
 import { koreaTime } from '@/shared/lib/koreaTime';
@@ -28,6 +29,11 @@ export async function POST(req: Request) {
 
   const { paymentKey, orderId, amount, list, address, usedPoint } =
     await req.json();
+
+  // 다른 계정 중복 구매 표시용 신호. 쿠키는 사용자가 바꿀 수 있으므로 UUID 형식만 받는다
+  const did = (await cookies()).get('did')?.value;
+  const deviceId = did && /^[0-9a-f-]{36}$/.test(did) ? did : null;
+  const ip = req.headers.get('x-forwarded-for')?.split(',')[0].trim().slice(0, 45) || null;
 
   // 1. [최종 재고 확인] 부족한 상품은 장바구니에서도 정리
   const stock = await validateStock(list);
@@ -88,6 +94,8 @@ export async function POST(req: Request) {
         address,
         addPoint: verified.addPoint,
         usedPoint: Number(usedPoint ?? 0),
+        deviceId,
+        ip,
       });
       await resetCart({ email, list: verified.orderList, mongodbSession });
     });

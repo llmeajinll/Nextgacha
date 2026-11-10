@@ -116,6 +116,12 @@ export default function InfoPanel({ props }: { props: CardProps }) {
                 content={`${dayjs(props?.reserve).format('YYYY년 MM월 DD일')}`}
               />
             )}
+            {props.reserveStart && props.reserveEnd && (
+              <LabelTitle
+                label='예약 기간'
+                content={`${dayjs(props.reserveStart).format('YYYY.MM.DD')} ~ ${dayjs(props.reserveEnd).format('YYYY.MM.DD')}`}
+              />
+            )}
             <LabelTitle
               label='가격'
               content={`${

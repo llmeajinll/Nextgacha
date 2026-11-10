@@ -12,6 +12,17 @@ import { cancelTossPaymentByOrderId } from '@/features/purchase/lib/toss';
 
 const CHECKING = '상품 확인중';
 
+// Mongo 필터·$set에 넣기 전에 문자열인지, 길이가 맞는지 확인 (객체면 연산자로 해석됨)
+const str = (v: unknown, max: number) =>
+  typeof v === 'string' && v.trim().length > 0 && v.trim().length <= max ? v.trim() : null;
+
+const parseShip = (o: any) => {
+  const orderId = str(o?.orderId, 100);
+  const courier = str(o?.courier, 30);
+  const invoice = str(o?.invoice, 30);
+  return orderId && courier && invoice ? { orderId, courier, invoice } : null;
+};
+
 // 상품 확인중 주문 거절 → Toss 결제 취소 + 재고 복구 + 배송중(keep) 차감 + 사용 포인트 반환
 async function refundOrder(orderId: string, reason: string) {
   const order = await orderColl.findOne({ orderId, status: CHECKING });
@@ -82,12 +93,15 @@ async function refundOrder(orderId: string, reason: string) {
 }
 
 export async function POST(req: Request) {
-  const data = await req.json();
+  const data = await req.json().catch(() => ({}));
   const { send } = data;
+  const invalid = () => NextResponse.json({ ok: false, message: 'invalid request' }, { status: 400 });
 
   // 한개
   if (send === 'one') {
-    const { orderId, courier, invoice } = data;
+    const ship = parseShip(data);
+    if (!ship) return invalid();
+    const { orderId, courier, invoice } = ship;
     const result = await orderColl.updateOne(
       { orderId, status: CHECKING },
       { $set: { courier, invoice, status: '배송중' } },
@@ -99,7 +113,8 @@ export async function POST(req: Request) {
   }
   // 여러개
   else if (send === 'many') {
-    const { orders } = data;
+    const orders = Array.isArray(data.orders) && data.orders.length <= 100 ? data.orders.map(parseShip) : [];
+    if (orders.length === 0 || orders.some((o: unknown) => !o)) return invalid();
     try {
       const result = await orderColl.bulkWrite(
         orders.map((order: any) => ({
@@ -115,7 +130,7 @@ export async function POST(req: Request) {
           },
         })),
       );
-      return NextResponse.json({ ok: true, result }, { status: 200 });
+      return NextResponse.json({ ok: true, modifiedCount: result.modifiedCount }, { status: 200 });
     } catch (error) {
       console.error('주문 업데이트 중 에러 발생:', error);
       return NextResponse.json({ ok: false, result: {} }, { status: 400 });
@@ -123,10 +138,10 @@ export async function POST(req: Request) {
   }
   // 환불
   else if (send === 'refund') {
-    const { orderId, reason } = data;
-    if (typeof orderId !== 'string' || typeof reason !== 'string') {
-      return NextResponse.json({ ok: false, message: 'invalid request' }, { status: 400 });
-    }
+    const orderId = str(data.orderId, 100);
+    // 고객에게 보이는 환불 사유 (화면에서도 10자 이상 받음)
+    const reason = str(data.reason, 200);
+    if (!orderId || !reason || reason.length < 10) return invalid();
     const result = await refundOrder(orderId, reason);
     return NextResponse.json(result, { status: result.ok ? 200 : 400 });
   }

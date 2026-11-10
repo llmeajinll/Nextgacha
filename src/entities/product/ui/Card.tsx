@@ -3,7 +3,7 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import React, { useState, useEffect } from 'react';
-import { Tag } from '@/shared/ui';
+import { ImgBtn, Tag } from '@/shared/ui';
 import HeartBtn from './HeartBtn';
 import { TagContainer } from '@/entities/product/ui';
 import {
@@ -42,22 +42,25 @@ function ShowPrice(props: {
   }
 }
 
-export default function Card({ props }: { props: CardProps }) {
+// preview: 관리자 상품 추가 화면의 미리보기. 링크를 끄고 좋아요 버튼은 모양만 보임
+export default function Card({ props, preview }: { props: CardProps; preview?: boolean }) {
+  const image = (
+    <Image
+      src={
+        props?.image.length === 0
+          ? '/images/defaultImg.png'
+          : String(props.image[0])
+      }
+      height={300}
+      width={300}
+      alt='img'
+      className={cardImage}
+    />
+  );
+
   return (
     <div className={cardContainer}>
-      <Link href={`/${props.num || 0}/info`}>
-        <Image
-          src={
-            props?.image.length === 0
-              ? '/images/defaultImg.png'
-              : String(props.image[0])
-          }
-          height={300}
-          width={300}
-          alt='img'
-          className={cardImage}
-        />
-      </Link>
+      {preview ? image : <Link href={`/${props.num || 0}/info`}>{image}</Link>}
       <div className={infoContainer}>
         <TagContainer
           create={props?.create || ''}
@@ -75,7 +78,11 @@ export default function Card({ props }: { props: CardProps }) {
               />
               <span className={unit}> 원</span>
             </div>
-            <HeartBtn status={props.like} num={props.num} />
+            {preview ? (
+              <ImgBtn img='heart' size={28} title='좋아요' active={false} disabled />
+            ) : (
+              <HeartBtn status={props.like} num={props.num} />
+            )}
           </div>
         </div>
       </div>

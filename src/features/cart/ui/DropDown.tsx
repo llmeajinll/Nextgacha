@@ -1,24 +1,10 @@
 'use client';
 
-import React from 'react';
-import {
-  dropdownContainer,
-  dropdownTitle,
-  listContainer,
-  listStyle,
-  dropdownWrapper,
-  arrowClosed,
-  arrowOpen,
-} from './dropdown.css';
-// import Image from 'next/image';
-import { ImgBtn } from '@/shared/ui';
-
-import { useSetAtom } from 'jotai';
-import { useDropDown } from '@/shared/hooks/useDropDown';
-
+import React, { useState } from 'react';
+import { DropDown as BaseDropDown } from '@/shared/ui';
 import { CardProps } from '@/entities/product/model/types';
-import useSplitRoute from '@/shared/hooks/useSplitRoute';
 import { useTempCart } from '@/features/cart/model';
+import { dropdown } from './dropdown.css';
 
 type DropDownType = Pick<CardProps, 'list' | 'num'>;
 
@@ -29,56 +15,32 @@ export default function DropDown({
   props: DropDownType;
   status?: boolean;
 }) {
-  console.log(props);
   const { increase } = useTempCart(props.num);
+  const [selected, setSelected] = useState('');
 
-  const { isOpen, selected, toggle, setSelected, dropdownRef } =
-    useDropDown('');
+  const options = (props?.list ?? []).map((val, idx) => ({
+    value: String(idx),
+    label: `${idx + 1}. ${val.name} ${
+      val.count !== 0 ? `[${val.count}개]` : status ? '[예약]' : '[품절]'
+    }`,
+  }));
 
-  // console.log('status: ', isOpen);
-  const { secondRoute } = useSplitRoute();
-  // const status = true;
-  //   const [select, setSelect] = useState('');
   return (
-    <div className={dropdownWrapper} ref={dropdownRef}>
-      <div className={dropdownContainer} onClick={toggle}>
-        <ImgBtn
-          img='dropdown'
-          size={45}
-          className={isOpen ? arrowOpen : arrowClosed}
-        />
-        <div className={dropdownTitle}>
-          {selected || '[필수] 제품을 선택해 주세요.'}
-        </div>
-      </div>
-
-      {isOpen && (
-        <div className={listContainer}>
-          {props?.list?.map((val, idx) => (
-            <div
-              className={listStyle}
-              id={val.name + props.num}
-              key={idx}
-              onClick={() => {
-                if (val.count !== 0 || status) {
-                  setSelected(`${idx + 1}. ${val.name}`);
-                  increase({ name: val.name });
-                } else {
-                  setSelected('');
-                }
-                toggle();
-              }}
-            >
-              {idx + 1}. {val.name}{' '}
-              {val.count !== 0
-                ? `[${val.count}개]`
-                : status
-                ? '[예약]'
-                : '[품절]'}
-            </div>
-          ))}
-        </div>
-      )}
-    </div>
+    <BaseDropDown
+      className={dropdown}
+      label={selected}
+      placeholder='[필수] 제품을 선택해 주세요.'
+      options={options}
+      onSelect={(v) => {
+        const idx = Number(v);
+        const val = props.list[idx];
+        if (val.count !== 0 || status) {
+          setSelected(`${idx + 1}. ${val.name}`);
+          increase({ name: val.name });
+        } else {
+          setSelected('');
+        }
+      }}
+    />
   );
 }

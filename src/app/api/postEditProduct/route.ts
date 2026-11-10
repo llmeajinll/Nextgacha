@@ -1,37 +1,28 @@
 import { NextResponse } from 'next/server';
-import { errorColl, productColl } from '@/shared/api/mongodb';
-import dayjs from 'dayjs';
-import utc from 'dayjs/plugin/utc';
-import timezone from 'dayjs/plugin/timezone';
+import { productColl } from '@/shared/api/mongodb';
 import { koreaTime } from '@/shared/lib/koreaTime';
+import { parseProductEdit } from '@/entities/product/lib/parseProductForm';
 
-dayjs.extend(utc);
-dayjs.extend(timezone);
-
+// 관리자 상품 수정: 가격·할인율·옵션 재고
+// ponytail: 옵션 목록을 통째로 덮어써서, 편집하는 동안 결제로 줄어든 재고는 저장 때 되돌아감. 동시 주문이 많아지면 옵션별 $set으로
 export async function POST(req: Request) {
-  const data = await req.json();
-
-  const { num, price, list } = data;
-
-  console.log(num, price, list);
-
-  // const koreaTime = dayjs().tz('Asia/Seoul');
-
-  try {
-    const updateResult = await productColl.updateOne(
-      {
-        num,
-      },
-      {
-        $set: { price, list, updated_at: koreaTime() },
-      },
-    );
-
-    console.log('updateResult : ', updateResult);
-
-    return NextResponse.json({ ok: true }, { status: 200 });
-  } catch (error) {
-    console.log(`${error} 오류다이`);
+  const edit = parseProductEdit(await req.json().catch(() => null));
+  if (!edit) {
+    return NextResponse.json({ ok: false, message: 'invalid input' }, { status: 400 });
   }
-  return NextResponse.json({ ok: false }, { status: 200 });
+
+  const { num, price, discount, list } = edit;
+  try {
+    const result = await productColl.updateOne(
+      { num },
+      { $set: { price, discount, isDiscount: discount > 0, list, updated_at: koreaTime() } },
+    );
+    if (result.matchedCount === 0) {
+      return NextResponse.json({ ok: false, message: 'not found' }, { status: 404 });
+    }
+    return NextResponse.json({ ok: true, product: { num, price, discount, isDiscount: discount > 0, list } });
+  } catch (err) {
+    console.error('상품 수정 실패:', err instanceof Error ? err.message : err);
+    return NextResponse.json({ ok: false, message: '오류가 발생하였습니다.' }, { status: 500 });
+  }
 }
