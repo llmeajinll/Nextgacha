@@ -135,6 +135,8 @@ async function cancelPayment(paymentKey: string, orderId: string, cause: unknown
           cause,
         )} cancelError=${String(cancelErr)}`,
         pathname: '/api/postPaymentsConfirm',
+        type: 'system',
+        status: '접수',
         created_at: koreaTime(),
       })
       .catch((e) => console.error('에러 기록 실패:', e));

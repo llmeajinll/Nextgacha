@@ -15,6 +15,7 @@ const ADMIN_API_PATHS = [
   '/api/postSendingToFinish',
   '/api/getOrderSort',
   '/api/getError',
+  '/api/postErrorStatus',
   '/api/postCategory',
 ];
 
@@ -103,6 +104,7 @@ export const config = {
     '/api/postSendingToFinish',
     '/api/getOrderSort',
     '/api/getError',
+    '/api/postErrorStatus',
     '/api/postCategory',
     '/mypage/:path*',
     '/manager/:path*',

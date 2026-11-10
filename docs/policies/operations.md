@@ -35,7 +35,7 @@
 - 상태: 확정
 - 정책: `/manager/error`를 주 1회 이상 확인한다. 결제 관련 기록(`[결제 취소 실패]`, `[환불 DB 처리 실패]`)은 [장애 대응](./incident.md#결제-불일치-처리)으로 바로 처리한다. 제보에 처리 상태(`접수` / `처리 완료` / `무시`)를 둔다.
 - 이유: 지금은 상태가 없어 처리한 건과 안 한 건이 구분되지 않는다.
-- 코드: 미구현 (처리 상태). `src/app/api/postError/route.ts`, `src/app/api/getError/route.ts`
+- 코드: `src/app/(router)/manager/error/page.tsx`, `src/features/error-manage/`, 상태 변경 `src/app/api/postErrorStatus/route.ts`. 옛 문서(`status` 없음)는 `접수`로 읽는다 (`normalizeError.ts`)
 - 변경 이력: 2026-11-10 신설, 2026-11-11 확정 (주 1회, 처리 상태 추가)
 
 ## 관리자 권한 등급

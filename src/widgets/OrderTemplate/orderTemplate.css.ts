@@ -1,50 +1,12 @@
 import { globalStyle, style } from '@vanilla-extract/css';
 import { vars } from '@/styles/theme.css';
 
-const pixel = 'silkscreen';
 const danger = '#A3262A';
 
 export const container = style({ display: 'flex', flexDirection: 'column', gap: 20, color: vars.slate[800] });
 
 // ── 상태 탭 (상품 확인중 → 배송중 → 배송 완료 | 환불) ──
 export const tabs = style({ display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: 6 });
-
-export const tab = style({
-  height: 44,
-  boxSizing: 'border-box',
-  padding: '0 14px',
-  display: 'inline-flex',
-  alignItems: 'center',
-  gap: 8,
-  border: `1px solid ${vars.slate[200]}`,
-  backgroundColor: 'white',
-  fontSize: 14,
-  color: vars.slate[800],
-  selectors: { '&:hover': { borderColor: vars.color.blue1 } },
-});
-
-export const tabOn = style({
-  borderColor: vars.color.blue1,
-  backgroundColor: vars.color.blue1,
-  color: 'white',
-  fontWeight: 600,
-});
-
-export const tabCount = style({
-  minWidth: 22,
-  height: 22,
-  boxSizing: 'border-box',
-  padding: '0 6px',
-  display: 'inline-flex',
-  alignItems: 'center',
-  justifyContent: 'center',
-  fontFamily: pixel,
-  fontSize: 12,
-  backgroundColor: vars.slate[100],
-  color: vars.slate[600],
-});
-
-globalStyle(`${tabOn} ${tabCount}`, { backgroundColor: 'white', color: vars.ink[500] });
 
 export const tabArrow = style({ width: 16, height: 16, fill: vars.slate[400] });
 

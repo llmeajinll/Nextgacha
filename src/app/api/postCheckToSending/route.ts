@@ -80,6 +80,8 @@ async function refundOrder(orderId: string, reason: string) {
       .insertOne({
         textareaValue: `[환불 DB 처리 실패 - 결제는 취소됨] orderId=${orderId} error=${String(err)}`,
         pathname: '/api/postCheckToSending',
+        type: 'system',
+        status: '접수',
         created_at: koreaTime(),
       })
       .catch((e) => console.error('에러 기록 실패:', e));

@@ -10,3 +10,4 @@ export { default as QnaTemplate } from './QnaTemplate/QnaTemplate';
 export { default as NoticeTemplate } from './NoticeTemplate/NoticeTemplate';
 export { default as ManagerHeader } from './ManagerHeader/ManagerHeader';
 export { default as ManagerSideMenu } from './ManagerSideMenu/ManagerSideMenu';
+export { default as ErrorTemplate } from './ErrorTemplate/ErrorTemplate';

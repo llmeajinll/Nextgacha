@@ -28,6 +28,8 @@ export async function POST(req: Request) {
     const discountResult = await errorColl.insertOne({
       textareaValue,
       pathname,
+      type: 'report',
+      status: '접수',
       created_at: koreaTime(),
     });
 

@@ -1,9 +1,8 @@
 'use client';
 
 import React, { useState } from 'react';
-import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { Pagination } from '@/shared/ui';
+import { CountTab, Pagination } from '@/shared/ui';
 import { ChevronRight } from 'pixelarticons/react';
 import Order, { type Ship } from '@/features/order-manage/ui/Order';
 import { toArrive, toSending } from '@/features/order-manage/api/orderActions';
@@ -77,14 +76,12 @@ export default function OrderTemplate({
         {ORDER_STATUSES.map((t, i) => (
           <React.Fragment key={t.slug}>
             {t.status === '환불' && <span aria-hidden className={s.tabGap} />}
-            <Link
+            <CountTab
               href={`/manager/order/${t.slug}`}
-              aria-current={t.status === status ? 'page' : undefined}
-              className={t.status === status ? `${s.tab} ${s.tabOn}` : s.tab}
-            >
-              {t.status}
-              <span className={s.tabCount}>{counts[t.status]}</span>
-            </Link>
+              label={t.status}
+              count={counts[t.status]}
+              active={t.status === status}
+            />
             {i < 2 && <ChevronRight aria-hidden className={s.tabArrow} />}
           </React.Fragment>
         ))}

@@ -17,7 +17,7 @@
   - `errorColl`은 `type` 필드로 사용자 제보(`report`)와 시스템 에러(`system`)를 나눈다.
 - 구현 메모: 카카오톡 알림은 카카오 "나에게 보내기" API를 쓴다. 관리자 계정의 `talk_message` 동의와 refresh token 보관(약 2개월마다 갱신)이 필요하다. Sentry는 카카오톡 연동이 없어서, 카톡 알림은 위 실패 지점에서 서버가 직접 보낸다.
 - 이유: 운영에서는 `console.log`가 제거되고 `console.error`만 남는다. 심각한 실패는 `errorColl`에 쌓이기만 하고 아무도 알림을 받지 못한다. `errorColl`에는 사용자 제보(`postError`)와 시스템 에러가 섞여 있다.
-- 코드: 미구현. `next.config.ts:10`, `src/app/api/postPaymentsConfirm/route.ts` `cancelPayment`, `src/app/api/postCheckToSending/route.ts` `refundOrder`
+- 코드: `type` 필드는 구현 (`postError`는 `report`, 결제 취소·환불 실패 기록은 `system`, 옛 문서는 pathname으로 판정 — `src/features/error-manage/lib/normalizeError.ts`). Sentry·카카오톡 알림은 미구현. `next.config.ts:10`, `src/app/api/postPaymentsConfirm/route.ts` `cancelPayment`, `src/app/api/postCheckToSending/route.ts` `refundOrder`
 - 변경 이력: 2026-11-09 신설, 2026-11-11 확정 (Sentry + 관리자 카카오톡, `type` 필드)
 
 ## 로그 개인정보
