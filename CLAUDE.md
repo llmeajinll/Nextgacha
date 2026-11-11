@@ -65,7 +65,8 @@ jotai atom/store), `ui/`(컴포넌트 + 옆에 둔 `*.css.ts`), 필요하면 `li
   다음을 더한다:
   - `/api/protected/*` → 미로그인 시 401.
   - 고정된 `ADMIN_API_PATHS` 목록(postEditProduct, postEvent, postProduct,
-    postCheckToSending, postSendingToFinish, getOrderSort, getError) → `isAdminEmail(email)`이
+    postCheckToSending, postSendingToFinish, getOrderSort, getError, postErrorStatus, postCategory,
+    postQnaAnswer, getUserDetail, postBanner, postBannerDelete, postBannerOrder) → `isAdminEmail(email)`이
     아니면 403 (`ADMIN_EMAILS` 환경변수와 비교, `src/shared/lib/isAdmin.ts` 참고).
   - `/manager/*` 페이지 → 관리자가 아니면 `/`로 리다이렉트. 단 `/manager`는 공개.
     로컬 `next dev`에서는 관리자 화면 작업용으로 페이지·API 관리자 가드를 끈다(`skipAdminGuard`).
@@ -79,7 +80,7 @@ jotai atom/store), `ui/`(컴포넌트 + 옆에 둔 `*.css.ts`), 필요하면 `li
 
 - `src/shared/api/mongodb.ts`는 모듈 로드 시점(top-level `await`)에 `MongoClient` 하나를 열고
   컬렉션마다 handle을 export한다(`productColl`, `cartColl`, `orderColl`, `userColl`,
-  `reviewColl`, `qnaColl`, `errorColl`, `counterColl`). `gachaDB`에 직접
+  `reviewColl`, `qnaColl`, `errorColl`, `bannerColl`, `counterColl`). `gachaDB`에 직접
   접근하지 말고 필요한 컬렉션을 import한다.
 - 결제 승인(`src/app/api/postPaymentsConfirm/route.ts`)이 가장 중요한 트랜잭션 경로다:
   재고 재검증(`validateStock`, 구매 불가가 된 상품을 장바구니에서 정리도 함) → `verifyOrder`

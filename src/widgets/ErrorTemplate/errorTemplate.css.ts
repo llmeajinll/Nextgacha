@@ -1,7 +1,7 @@
 import { globalStyle, style } from '@vanilla-extract/css';
 import { vars } from '@/styles/theme.css';
 
-const danger = '#A3262A';
+const danger = vars.tone.danger[1];
 
 export const container = style({ display: 'flex', flexDirection: 'column', gap: 20, color: vars.slate[800] });
 
@@ -12,8 +12,8 @@ export const alert = style({
   alignItems: 'center',
   gap: '10px 14px',
   padding: '14px 16px',
-  border: '1px solid #F1C4C6',
-  backgroundColor: '#FFF5F5',
+  border: `1px solid ${vars.tone.danger[2]}`,
+  backgroundColor: vars.tone.danger.bg,
   color: danger,
 });
 
@@ -42,27 +42,10 @@ export const toolbar = style({
 
 export const tabs = style({ display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: 6 });
 
-export const filter = style({ display: 'flex', border: `1px solid ${vars.slate[200]}`, backgroundColor: 'white' });
+// 종류 필터는 밑줄 탭
+export { utabs as filter, utab as filterItem, utabOn as filterOn } from '@/styles/ui.css';
 
-export const filterItem = style({
-  height: 42,
-  padding: '0 14px',
-  display: 'flex',
-  alignItems: 'center',
-  fontSize: 14,
-  color: vars.slate[700],
-  selectors: { '&:hover': { backgroundColor: vars.slate[50] } },
-});
-
-export const filterOn = style({
-  backgroundColor: '#DDF0FD',
-  color: vars.ink[700],
-  fontWeight: 600,
-  boxShadow: `inset 0 -2px 0 ${vars.color.blue1}`,
-  selectors: { '&:hover': { backgroundColor: '#DDF0FD' } },
-});
-
-export const toast = style({ padding: '10px 14px', backgroundColor: '#DDF0FD', color: vars.ink[700], fontSize: 14 });
+export const toast = style({ padding: '10px 14px', backgroundColor: vars.color.blueBg, color: vars.ink[700], fontSize: 14 });
 
 // ── 목록 ──
 export const list = style({ display: 'flex', flexDirection: 'column', gap: 16 });

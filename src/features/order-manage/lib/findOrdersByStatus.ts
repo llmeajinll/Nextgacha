@@ -3,12 +3,14 @@ import { ORDER_PAGE_SIZE, ORDER_STATUSES, type AdminOrder, type OrderStatus } fr
 import { findSuspects, type OrderSignals } from './findSuspects';
 
 // 관리자 주문 목록 (번호 페이지, 20개씩). 상품 확인중은 먼저 들어온 주문부터 보내도록 오래된 순, 나머지는 최근 순
-export async function findOrdersByStatus(status: OrderStatus, page = 1) {
-  const query = { status };
+// q가 있으면 상태와 상관없이 주문번호(order_<timestamp>)에 q가 들어간 주문을 최근 순으로
+export async function findOrdersByStatus(status: OrderStatus, page = 1, q = '') {
+  const escaped = q.slice(0, 40).replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+  const query = escaped ? { orderId: { $regex: escaped, $options: 'i' } } : { status };
   const [data, total] = await Promise.all([
     orderColl
       .find(query)
-      .sort({ _id: status === '상품 확인중' ? 1 : -1 })
+      .sort({ _id: !escaped && status === '상품 확인중' ? 1 : -1 })
       .skip((Math.max(page, 1) - 1) * ORDER_PAGE_SIZE)
       .limit(ORDER_PAGE_SIZE)
       .toArray(),
@@ -17,14 +19,14 @@ export async function findOrdersByStatus(status: OrderStatus, page = 1) {
 
   // 상품 확인중(보내기 전)에만 다른 계정 중복 구매를 표시. 한도와 같은 기준으로 아직 보유 중인 주문(확인중·배송중)과 비교
   // ponytail: 진행 중 주문 전체를 읽어서 메모리에서 비교, 진행 중 주문이 수천 건이 되면 deviceId/ip/address 인덱스 + $or 쿼리로
-  if (status === '상품 확인중') {
+  if (data.some((o) => o.status === '상품 확인중')) {
     const active = (await orderColl
       .find(
         { status: { $in: ['상품 확인중', '배송중'] } },
         { projection: { _id: 0, orderId: 1, email: 1, deviceId: 1, ip: 1, address: 1, 'list.num': 1 } },
       )
       .toArray()) as unknown as OrderSignals[];
-    for (const order of data) order.suspects = findSuspects(order as unknown as OrderSignals, active);
+    for (const order of data) if (order.status === '상품 확인중') order.suspects = findSuspects(order as unknown as OrderSignals, active);
   }
 
   // 클라이언트 컴포넌트/JSON으로 넘기므로 ObjectId → string

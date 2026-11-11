@@ -1,5 +1,6 @@
 import { globalStyle, style } from '@vanilla-extract/css';
 import { vars } from '@/styles/theme.css';
+import { btn, btnIcon, btnKind, btnPx, btnSize, chip, chipOn, tag, tagS, tagTone } from '@/styles/ui.css';
 
 // 제목·탭·검색·목록 틀은 상품 관리와 같다
 export {
@@ -21,8 +22,7 @@ export {
 } from '../product_manage/page.css';
 
 const pixel = 'silkscreen';
-const danger = '#A3262A';
-const tint = '#DDF0FD';
+const danger = vars.tone.danger[1];
 
 export const titleSection = style({
   paddingBottom: 20,
@@ -109,7 +109,7 @@ export const row = style([
   },
 ]);
 
-export const rowOn = style({ backgroundColor: '#F2F9FF' });
+export const rowOn = style({ backgroundColor: vars.color.blueTint });
 
 export const right = style({ textAlign: 'right' });
 
@@ -140,6 +140,9 @@ export const productTitle = style({
 });
 
 export const tags = style({ display: 'flex', flexWrap: 'wrap', gap: 4 });
+
+export const reserveTag = style([tag, tagS, tagTone.info]);
+export const discountTag = style([tag, tagS, { fontWeight: 600, backgroundColor: vars.color.blueBg, color: vars.ink[600] }]);
 
 export const now = style({ fontSize: 14, color: vars.ink[600] });
 
@@ -202,7 +205,7 @@ export const rateInput = style({
   color: vars.slate[800],
   backgroundColor: 'white',
   selectors: {
-    '&:focus': { outline: 'none', borderColor: vars.color.blue1, boxShadow: '3px 3px 0 0 #BFE3FF' },
+    '&:focus': { outline: 'none', borderColor: vars.color.blue1, boxShadow: `3px 3px 0 0 ${vars.color.blueLight}` },
   },
 });
 
@@ -223,34 +226,17 @@ export const unit = style({
 
 export const presets = style({ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 6 });
 
-export const preset = style({
-  height: 40,
-  border: `1px solid ${vars.slate[200]}`,
-  backgroundColor: 'white',
-  fontFamily: pixel,
-  fontSize: 14,
-  color: vars.slate[700],
-  cursor: 'pointer',
-  selectors: { '&:hover': { borderColor: vars.color.blue1 } },
-});
+// 자주 쓰는 할인율은 선택 칩
+export const preset = style([chip, { height: 40 }]);
 
-export const presetOn = style({ borderColor: vars.color.blue1, backgroundColor: tint, color: vars.ink[600] });
+export const presetOn = chipOn;
 
 export const errorText = style({ fontSize: 13, color: danger });
 
 export const selHead = style({ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 8 });
 
-export const linkBtn = style({
-  minHeight: 32,
-  padding: '0 8px',
-  border: 0,
-  backgroundColor: 'transparent',
-  font: 'inherit',
-  fontSize: 13,
-  color: vars.slate[600],
-  textDecoration: 'underline',
-  cursor: 'pointer',
-});
+// 모두 빼기
+export const linkBtn = style([btn, btnSize.s, btnKind.text]);
 
 export const selList = style({
   margin: 0,
@@ -280,22 +266,7 @@ export const selTitle = style({
 
 export const selPrice = style({ fontSize: 13, color: vars.ink[600], whiteSpace: 'nowrap' });
 
-export const removeBtn = style({
-  width: 36,
-  height: 36,
-  flex: '0 0 36px',
-  padding: 0,
-  border: 0,
-  backgroundColor: 'transparent',
-  color: vars.slate[500],
-  display: 'flex',
-  alignItems: 'center',
-  justifyContent: 'center',
-  cursor: 'pointer',
-  selectors: { '&:hover': { backgroundColor: vars.slate[100] } },
-});
-
-globalStyle(`${removeBtn} svg`, { width: 16, height: 16, fill: 'currentColor' });
+export const removeBtn = style([btn, btnSize.s, btnIcon, btnKind.ghost, { flex: '0 0 36px' }]);
 
 export const selEmpty = style({
   padding: '20px 12px',
@@ -308,15 +279,15 @@ export const selEmpty = style({
 
 export const overwrite = style({
   padding: '8px 10px',
-  backgroundColor: '#FFF1D6',
-  color: '#7A4B00',
+  backgroundColor: vars.tone.warning.bg,
+  color: vars.tone.warning[1],
   fontSize: 13,
   lineHeight: '150%',
 });
 
 export const confirm = style({
   padding: 12,
-  border: '1px solid #BFE3FF',
+  border: `1px solid ${vars.color.blueLight}`,
   backgroundColor: vars.slate[50],
   display: 'flex',
   flexDirection: 'column',
@@ -325,33 +296,15 @@ export const confirm = style({
   lineHeight: '150%',
 });
 
-export const confirmDanger = style({ borderColor: '#F1C4C6' });
+export const confirmDanger = style({ borderColor: vars.tone.danger[2] });
 
 export const confirmBtns = style({ display: 'flex', gap: 8 });
 
-const btn = style({
-  flex: '1 1 0',
-  height: 44,
-  font: 'inherit',
-  fontSize: 14,
-  fontWeight: 600,
-  cursor: 'pointer',
-  selectors: { '&:disabled': { opacity: 0.6, cursor: 'default' } },
-});
+export const ghostBtn = style([btn, btnKind.neutral, { flex: '1 1 0' }]);
 
-export const ghostBtn = style([
-  btn,
-  {
-    border: `1px solid ${vars.slate[200]}`,
-    backgroundColor: 'white',
-    color: vars.slate[800],
-    selectors: { '&:hover': { backgroundColor: vars.slate[100] } },
-  },
-]);
+export const runBtn = style([btn, btnKind.primary, { flex: '1 1 0' }]);
 
-export const runBtn = style([btn, { border: `1px solid ${vars.color.blue1}`, backgroundColor: vars.color.blue1, color: 'white' }]);
-
-export const runDanger = style({ borderColor: danger, backgroundColor: danger });
+export const runDanger = btnKind.danger;
 
 export const actions = style({
   display: 'flex',
@@ -361,41 +314,14 @@ export const actions = style({
   borderTop: `1px solid ${vars.slate[100]}`,
 });
 
-export const applyBtn = style({
-  height: 50,
-  border: `1px solid ${vars.color.blue1}`,
-  backgroundColor: vars.color.blue1,
-  color: 'white',
-  fontFamily: pixel,
-  fontSize: 18,
-  letterSpacing: -0.9,
-  cursor: 'pointer',
-  transition: 'transform .15s ease, box-shadow .15s ease',
-  selectors: {
-    '&:hover:not(:disabled)': { transform: 'translate(-2px, -2px)', boxShadow: '4px 4px 0 0 #5BB8FE' },
-    '&:disabled': { borderColor: vars.slate[200], backgroundColor: vars.slate[100], color: vars.slate[500], cursor: 'default' },
-  },
-});
+export const applyBtn = style([btn, btnSize.l, btnPx, btnKind.primary]);
 
-export const clearBtn = style({
-  height: 44,
-  border: `1px solid ${vars.slate[200]}`,
-  backgroundColor: 'white',
-  font: 'inherit',
-  fontSize: 14,
-  fontWeight: 600,
-  color: danger,
-  cursor: 'pointer',
-  selectors: {
-    '&:hover:not(:disabled)': { backgroundColor: vars.slate[100] },
-    '&:disabled': { color: vars.slate[300], cursor: 'default' },
-  },
-});
+export const clearBtn = style([btn, btnKind.dangerLine]);
 
 export const sideError = style({
   margin: 0,
   padding: '10px 12px',
-  backgroundColor: '#FFF5F5',
+  backgroundColor: vars.tone.danger.bg,
   fontSize: 14,
   color: danger,
 });

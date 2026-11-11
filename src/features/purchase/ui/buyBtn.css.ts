@@ -1,4 +1,5 @@
 import { createVar, fallbackVar, style } from '@vanilla-extract/css';
+import { vars } from '@/styles/theme.css';
 
 export const btnWidthVar = createVar();
 
@@ -40,12 +41,12 @@ export const warningTitle = style({
 });
 
 export const noAddressText = style({
-  color: '#999999',
+  color: vars.color.black3,
 });
 
 export const searchLink = style({
   marginLeft: '5px',
-  color: '#75C3FE',
+  color: vars.color.blue1,
   cursor: 'pointer',
 });
 
@@ -61,7 +62,7 @@ export const detailAddressInput = style({
 });
 
 export const updateBtn = style({
-  backgroundColor: '#75C3FE',
+  backgroundColor: vars.color.blue1,
   color: 'white',
   cursor: 'pointer',
   padding: '5px 0',

@@ -1,11 +1,12 @@
 import { globalStyle, style, styleVariants } from '@vanilla-extract/css';
 import { vars } from '@/styles/theme.css';
+import { btn, btnKind, btnSize, tag, tagTone } from '@/styles/ui.css';
 
-const danger = '#A3262A';
+const danger = vars.tone.danger[1];
 
 export const card = style({ border: `1px solid ${vars.slate[200]}`, backgroundColor: 'white' });
 
-export const cardPayment = style({ borderColor: '#F1C4C6' });
+export const cardPayment = style({ borderColor: vars.tone.danger[2] });
 
 export const head = style({
   minHeight: 52,
@@ -18,18 +19,18 @@ export const head = style({
   gap: '8px 14px',
 });
 
-const tag = style({ fontSize: 12, fontWeight: 600, padding: '4px 8px' });
-
 export const typeTag = styleVariants({
   payment: [tag, { backgroundColor: danger, color: 'white' }],
-  system: [tag, { backgroundColor: '#DDF0FD', color: vars.ink[600] }],
-  report: [tag, { backgroundColor: '#FFF1D6', color: '#7A4B00' }],
+  system: [tag, tagTone.info],
+  report: [tag, tagTone.warning],
 });
 
+const right = { marginLeft: 'auto' };
+
 export const statusTag = styleVariants({
-  접수: [tag, { marginLeft: 'auto', backgroundColor: '#FFF1D6', color: '#7A4B00' }],
-  '처리 완료': [tag, { marginLeft: 'auto', backgroundColor: vars.slate[100], color: vars.slate[700] }],
-  무시: [tag, { marginLeft: 'auto', backgroundColor: vars.slate[100], color: vars.slate[600] }],
+  접수: [tag, tagTone.warning, right],
+  '처리 완료': [tag, tagTone.neutral, right],
+  무시: [tag, tagTone.muted, right, { backgroundColor: vars.slate[100] }],
 });
 
 export const date = style({ fontSize: 13, color: vars.slate[600] });
@@ -66,18 +67,8 @@ export const clamp = style({
   overflow: 'hidden',
 });
 
-export const toggle = style({
-  alignSelf: 'flex-start',
-  minHeight: 44,
-  padding: 0,
-  border: 0,
-  background: 'none',
-  font: 'inherit',
-  fontSize: 13,
-  fontWeight: 600,
-  color: vars.ink[600],
-  cursor: 'pointer',
-});
+// 전체 보기 · 접기
+export const toggle = style([btn, btnSize.s, btnKind.text, { alignSelf: 'flex-start', minHeight: 44, padding: 0 }]);
 
 export const foot = style({
   padding: '12px 20px',
@@ -94,43 +85,15 @@ export const footClosed = style({ justifyContent: 'space-between' });
 
 export const muted = style({ fontSize: 14, color: vars.slate[600] });
 
-const btn = style({
-  height: 44,
-  padding: '0 16px',
-  font: 'inherit',
-  fontSize: 14,
-  fontWeight: 600,
-  cursor: 'pointer',
-  selectors: { '&:disabled': { opacity: 0.6, cursor: 'default' } },
-});
+export const primaryBtn = style([btn, btnKind.primary]);
 
-export const primaryBtn = style([
-  btn,
-  {
-    padding: '0 18px',
-    border: `1px solid ${vars.color.blue1}`,
-    backgroundColor: vars.color.blue1,
-    color: 'white',
-    transition: 'transform .15s ease, box-shadow .15s ease',
-    selectors: { '&:hover:not(:disabled)': { transform: 'translate(-2px, -2px)', boxShadow: '4px 4px 0 0 #5BB8FE' } },
-  },
-]);
-
-export const ghostBtn = style([
-  btn,
-  {
-    border: `1px solid ${vars.slate[200]}`,
-    backgroundColor: 'white',
-    color: vars.slate[800],
-    selectors: { '&:hover:not(:disabled)': { backgroundColor: vars.slate[100] } },
-  },
-]);
+export const ghostBtn = style([btn, btnKind.neutral]);
 
 export const cardError = style({
   margin: 0,
   padding: '10px 20px',
   borderTop: `1px solid ${vars.slate[100]}`,
-  backgroundColor: '#FFF5F5',
+  backgroundColor: vars.tone.danger.bg,
   fontSize: 14,
   color: danger,
 });

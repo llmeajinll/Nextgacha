@@ -34,6 +34,7 @@ import { useAtom } from 'jotai';
 import { userInfoAtom } from '@/entities/user/model/store';
 import { Range, ImgBtn, Btn } from '@/shared/ui';
 import { textareaStyle } from '@/features/review-write/ui/reviewModal.css';
+import { textareaBox, textareaCount } from '@/styles/ui.css';
 
 export default function Header({
   session,
@@ -136,15 +137,18 @@ export default function Header({
                   <div className={reportContainer}>
                     <div className={wrapTextarea}>
                       <div className={reportTitle}>🚨 오류 신고 🚨</div>
-                      <textarea
-                        placeholder='오류를 입력해주세요 (최소 4자, 최대 200자)'
-                        className={`${textareaStyle} ${reportTextarea}`}
-                        maxLength={200}
-                        value={textareaValue}
-                        onChange={(e) => {
-                          setTextAreaValue(e.target.value);
-                        }}
-                      />
+                      <div className={textareaBox}>
+                        <textarea
+                          placeholder='오류를 입력해주세요 (최소 4자, 최대 200자)'
+                          className={`${textareaStyle} ${reportTextarea}`}
+                          maxLength={200}
+                          value={textareaValue}
+                          onChange={(e) => {
+                            setTextAreaValue(e.target.value);
+                          }}
+                        />
+                        <span className={textareaCount}>{textareaValue.length}/200</span>
+                      </div>
                       <Btn
                         className={reportSendBtn}
                         onClick={async () => {

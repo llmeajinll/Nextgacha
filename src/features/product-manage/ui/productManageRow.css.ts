@@ -1,9 +1,10 @@
-import { globalStyle, style } from '@vanilla-extract/css';
+import { globalStyle, style, styleVariants } from '@vanilla-extract/css';
 import { vars } from '@/styles/theme.css';
+import { btn, btnIcon, btnKind, tag, tagL, tagS, tagTone } from '@/styles/ui.css';
 
 const pixel = 'silkscreen';
-const danger = '#A3262A';
-const tint = '#DDF0FD';
+const danger = vars.tone.danger[1];
+const tint = vars.color.blueBg;
 
 // 헤더와 행이 같은 칸 너비를 쓴다
 export const rowGrid = style({
@@ -62,6 +63,16 @@ export const title = style({
 
 export const tags = style({ display: 'flex', flexWrap: 'wrap', gap: 4 });
 
+export const companyTag = style([tag, tagS, tagTone.neutral]);
+export const groupTag = style([tag, tagS, tagTone.muted]);
+export const reserveTag = style([tag, tagS, tagTone.info]);
+
+export const statusTag = styleVariants({
+  sale: [tag, tagL, tagTone.success],
+  reserve: [tag, tagL, tagTone.info],
+  soldout: [tag, tagL, tagTone.soldout],
+});
+
 export const disc = style({ fontSize: 14, color: vars.ink[500] });
 
 export const muted = style({ fontSize: 14, color: vars.slate[400] });
@@ -72,25 +83,15 @@ export const stock = style({ display: 'flex', flexDirection: 'column', alignItem
 
 export const zero = style({ fontSize: 12, color: danger });
 
-export const editBtn = style({
-  height: 44,
-  padding: '0 12px',
-  border: `1px solid ${vars.slate[200]}`,
-  backgroundColor: 'white',
-  font: 'inherit',
-  fontSize: 14,
-  fontWeight: 600,
-  color: vars.slate[800],
-  cursor: 'pointer',
-  selectors: { '&:hover': { backgroundColor: vars.slate[100] } },
-});
+// 닫혀 있으면 neutral, 펼치면 secondary
+export const editBtn = style([btn, btnKind.neutral, { padding: '0 12px' }]);
 
-export const editBtnOn = style({ borderColor: vars.ink[400], color: vars.ink[400] });
+export const editBtnOn = style([btn, btnKind.secondary, { padding: '0 12px' }]);
 
 // ── 편집 영역 ──
 export const editor = style({
   margin: '0 20px 20px',
-  border: '1px solid #BFE3FF',
+  border: `1px solid ${vars.color.blueLight}`,
   backgroundColor: 'white',
 });
 
@@ -139,7 +140,7 @@ export const input = style({
   backgroundColor: 'white',
   transition: 'border-color .2s ease, box-shadow .2s ease',
   selectors: {
-    '&:focus': { outline: 'none', borderColor: vars.color.blue1, boxShadow: '3px 3px 0 0 #BFE3FF' },
+    '&:focus': { outline: 'none', borderColor: vars.color.blue1, boxShadow: `3px 3px 0 0 ${vars.color.blueLight}` },
     '&::placeholder': { color: vars.slate[500] },
   },
 });
@@ -209,18 +210,14 @@ export const optionError = style({ paddingLeft: 46 });
 
 export const errorText = style({ fontSize: 13, color: danger });
 
-// ImgBtn 크기·테두리만
-export const iconBtn = style({
-  width: 44,
-  height: 44,
-  flex: '0 0 44px',
-  alignItems: 'center',
-  justifyContent: 'center',
-  border: `1px solid ${vars.slate[200]}`,
-  backgroundColor: 'white',
-  color: vars.slate[600],
-  selectors: { '&:hover:not(:disabled)': { backgroundColor: vars.slate[100] } },
-});
+// ImgBtn에 아이콘 버튼(neutral) 모양을 입힘
+// ImgBtn 자체의 border:none·background:none보다 확실히 이기게 테두리·배경을 다시 적음
+export const iconBtn = style([
+  btn,
+  btnIcon,
+  btnKind.neutral,
+  { flex: '0 0 44px', border: `1px solid ${vars.slate[200]}`, backgroundColor: 'white', color: vars.slate[700] },
+]);
 
 export const slotBtn = style({
   minHeight: 44,
@@ -228,7 +225,7 @@ export const slotBtn = style({
   alignItems: 'center',
   justifyContent: 'center',
   gap: 8,
-  border: '2px dashed #BFE3FF',
+  border: `2px dashed ${vars.color.blueLight}`,
   backgroundColor: vars.slate[50],
   color: vars.ink[400],
   font: 'inherit',
@@ -255,7 +252,7 @@ export const formError = style({
   padding: '10px 12px',
   fontSize: 14,
   color: danger,
-  backgroundColor: '#FFE3E3',
+  backgroundColor: vars.tone.danger.bg,
 });
 
 // theme의 globalStyle('div', { color })가 상속을 끊으므로 행 안 div는 부모 색을 따르게

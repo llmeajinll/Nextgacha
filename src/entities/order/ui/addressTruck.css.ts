@@ -1,4 +1,5 @@
 import { createVar, style } from '@vanilla-extract/css';
+import { vars } from '@/styles/theme.css';
 
 export const truckWidthVar = createVar();
 
@@ -27,5 +28,5 @@ export const addressText = style({
 });
 
 export const placeholder = style({
-  color: '#3aaaff',
+  color: vars.color.blue2,
 });

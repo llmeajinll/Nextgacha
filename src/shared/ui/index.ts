@@ -15,3 +15,4 @@ export { default as StarRating } from './StarRating/StarRating';
 export { default as EmptyCard } from './EmptyCard';
 export { default as Pagination } from './Pagination/Pagination';
 export { default as CountTab } from './CountTab/CountTab';
+export { default as Drawer } from './Drawer/Drawer';

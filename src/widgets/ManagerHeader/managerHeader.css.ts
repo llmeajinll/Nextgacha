@@ -29,7 +29,7 @@ export const badge = style({
   letterSpacing: -0.4,
   lineHeight: 1,
   padding: '5px 8px',
-  backgroundColor: '#DDF0FD',
+  backgroundColor: vars.color.blueBg,
   color: vars.color.blue1,
 });
 

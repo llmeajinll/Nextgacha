@@ -60,7 +60,7 @@ export const bottomContainer = style({
 });
 
 export const discountBadge = style({
-  color: '#75C3FE',
+  color: vars.color.blue1,
   fontSize: '20px',
   marginRight: '5px',
   fontWeight: '500',

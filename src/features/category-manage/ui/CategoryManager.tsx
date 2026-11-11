@@ -149,7 +149,7 @@ export default function CategoryManager({ initial }: { initial: CategoryMenu }) 
                 placeholder='새 대분류'
                 className={s.input}
               />
-              <button type='submit' className={s.addBtn} disabled={saving}>
+              <button type='submit' className={s.addBtnLine} disabled={saving}>
                 ADD
               </button>
             </div>
@@ -278,7 +278,7 @@ export default function CategoryManager({ initial }: { initial: CategoryMenu }) 
                   placeholder='예: [제조사명]'
                   className={s.input}
                 />
-                <button type='submit' className={s.addBtn} disabled={saving}>
+                <button type='submit' className={s.addBtnLine} disabled={saving}>
                   ADD MAKER
                 </button>
               </div>

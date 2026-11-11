@@ -17,6 +17,11 @@ const ADMIN_API_PATHS = [
   '/api/getError',
   '/api/postErrorStatus',
   '/api/postCategory',
+  '/api/postQnaAnswer',
+  '/api/getUserDetail',
+  '/api/postBanner',
+  '/api/postBannerDelete',
+  '/api/postBannerOrder',
 ];
 
 export default auth((req) => {
@@ -106,6 +111,11 @@ export const config = {
     '/api/getError',
     '/api/postErrorStatus',
     '/api/postCategory',
+    '/api/postQnaAnswer',
+    '/api/getUserDetail',
+    '/api/postBanner',
+    '/api/postBannerDelete',
+    '/api/postBannerOrder',
     '/mypage/:path*',
     '/manager/:path*',
     '/search',

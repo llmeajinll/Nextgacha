@@ -4,14 +4,13 @@ import React, { useState } from 'react';
 import Image from 'next/image';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { Close, Search } from 'pixelarticons/react';
-import { DropDown, Pagination, Tag } from '@/shared/ui';
+import { DropDown, Pagination } from '@/shared/ui';
 import getAllProducts from '@/entities/product/api/getAllProducts';
 import getCategoryMenu from '@/entities/product/api/getCategoryMenu';
 import type { CardProps } from '@/entities/product/model/types';
 import postEvent from '@/features/product-manage/api/postEvent';
 import { comma } from '@/shared/lib/comma';
 import { toKoreaTime } from '@/shared/lib/koreaTime';
-import { vars } from '@/styles/theme.css';
 import * as s from './page.css';
 
 const PAGE_SIZE = 20;
@@ -129,6 +128,7 @@ export default function EventPage() {
       <div className={s.toolbar}>
         <DropDown
           label={group}
+          value={group}
           placeholder='전체 카테고리'
           options={groupOptions}
           onSelect={(v) => {
@@ -247,12 +247,9 @@ export default function EventPage() {
                           {(p.reserve || cur > 0) && (
                             <div className={s.tags}>
                               {p.reserve && (
-                                <Tag
-                                  word={`${toKoreaTime(p.reserve).format('YYYY년 MM월')} 예약`}
-                                  color={vars.status.reserve}
-                                />
+                                <span className={s.reserveTag}>{`${toKoreaTime(p.reserve).format('YYYY년 MM월')} 예약`}</span>
                               )}
-                              {cur > 0 && <Tag word={`${cur}% 할인 중`} color='#DDF0FD' />}
+                              {cur > 0 && <span className={s.discountTag}>{`${cur}% 할인 중`}</span>}
                             </div>
                           )}
                         </div>

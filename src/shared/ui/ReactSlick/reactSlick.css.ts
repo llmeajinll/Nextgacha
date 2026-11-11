@@ -24,14 +24,14 @@ export const lever = style({
   left: '50%',
   borderRadius: '50%',
   border: `1px solid ${vars.color.gray1}`,
-  backgroundColor: '#fdfdfd',
+  backgroundColor: vars.slate[50],
 });
 
 export const handle = style({
   position: 'absolute',
   width: 40,
   height: 136,
-  backgroundColor: '#EFEFEF',
+  backgroundColor: vars.slate[100],
   borderRadius: 20,
   translate: '-50% -50%',
   left: '50%',

@@ -1,8 +1,9 @@
 import { globalStyle, style } from '@vanilla-extract/css';
 import { vars } from '@/styles/theme.css';
+import { btn, btnIcon, btnKind, btnPx, btnSize } from '@/styles/ui.css';
 
 const pixel = 'silkscreen';
-const danger = '#A3262A';
+const danger = vars.tone.danger[1];
 
 export const container = style({
   display: 'flex',
@@ -94,28 +95,8 @@ export const groupList = style({
   gap: 4,
 });
 
-export const groupBtn = style({
-  width: '100%',
-  minHeight: 44,
-  display: 'flex',
-  alignItems: 'center',
-  gap: 8,
-  padding: '0 12px',
-  border: 0,
-  font: 'inherit',
-  fontSize: 15,
-  cursor: 'pointer',
-  backgroundColor: 'transparent',
-  color: vars.slate[700],
-  selectors: { '&:hover': { backgroundColor: vars.slate[50] } },
-});
-
-export const groupBtnActive = style({
-  fontWeight: 600,
-  color: vars.color.blue1,
-  backgroundColor: '#DDF0FD',
-  selectors: { '&:hover': { backgroundColor: '#DDF0FD' } },
-});
+// 대분류 목록은 목록 탭
+export { ltab as groupBtn, ltabOn as groupBtnActive } from '@/styles/ui.css';
 
 export const groupName = style({ flex: '1 1 auto', textAlign: 'left' });
 
@@ -154,7 +135,7 @@ export const makerBadge = style({
   fontFamily: pixel,
   fontSize: 11,
   padding: '3px 6px',
-  backgroundColor: '#DDF0FD',
+  backgroundColor: vars.color.blueBg,
   color: vars.color.blue1,
 });
 
@@ -184,27 +165,10 @@ export const chip = style({
   selectors: { '&:hover': { borderColor: vars.color.blue1 } },
 });
 
-export const xBtn = style({
-  width: 32,
-  height: 32,
-  padding: 0,
-  border: 0,
-  backgroundColor: 'transparent',
-  color: vars.slate[500],
-  display: 'flex',
-  alignItems: 'center',
-  justifyContent: 'center',
-  cursor: 'pointer',
-  selectors: {
-    '&:hover:not(:disabled)': { backgroundColor: '#FFE3E3', color: danger },
-    '&:disabled': { cursor: 'default', opacity: 0.5 },
-  },
-});
+// 항목·제조사·대분류 삭제는 ghost 아이콘 S
+export const xBtn = style([btn, btnSize.s, btnIcon, btnKind.ghost]);
 
-export const trashBtn = style({ width: 36, height: 36 });
-
-globalStyle(`${xBtn} svg`, { width: 16, height: 16, fill: 'currentColor' });
-globalStyle(`${trashBtn} svg`, { width: 24, height: 24 });
+export const trashBtn = style({});
 
 export const empty = style({
   height: 40,
@@ -233,26 +197,17 @@ export const input = style({
   backgroundColor: 'white',
   transition: 'border-color .2s ease, box-shadow .2s ease',
   selectors: {
-    '&:focus': { outline: 'none', borderColor: vars.color.blue1, boxShadow: '3px 3px 0 0 #BFE3FF' },
+    '&:focus': { outline: 'none', borderColor: vars.color.blue1, boxShadow: `3px 3px 0 0 ${vars.color.blueLight}` },
     '&::placeholder': { color: vars.slate[500] },
   },
 });
 
 export const inputDup = style({ borderColor: danger });
 
-export const addBtn = style({
-  height: 44,
-  padding: '0 16px',
-  border: `1px solid ${vars.color.blue1}`,
-  backgroundColor: vars.color.blue1,
-  color: 'white',
-  fontFamily: pixel,
-  fontSize: 16,
-  letterSpacing: -0.8,
-  cursor: 'pointer',
-  whiteSpace: 'nowrap',
-  selectors: { '&:disabled': { cursor: 'default', opacity: 0.5 } },
-});
+// 항목 ADD는 primary, 대분류 ADD · ADD MAKER는 secondary (모두 픽셀 라벨)
+export const addBtn = style([btn, btnPx, btnKind.primary]);
+
+export const addBtnLine = style([btn, btnPx, btnKind.secondary]);
 
 // 대분류·항목 패널 공용: 선 → 입력칸 + ADD 순서
 export const panelFoot = style({

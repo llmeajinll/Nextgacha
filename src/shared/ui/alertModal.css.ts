@@ -18,7 +18,7 @@ export const modalContainer = style({
   backgroundColor: 'white',
   transform: 'translate(50%, 0%)',
   border: `3px solid ${vars.color.blue1}`,
-  boxShadow: '5px 5px 0px 0px #3AAAFF',
+  boxShadow: `5px 5px 0px 0px ${vars.color.blue2}`,
 });
 export const alertText = style({
   color: 'white',
@@ -58,11 +58,11 @@ export const modalBtn = style({
   color: 'white',
   fontSize: '20px',
   fontWeight: '700',
-  backgroundColor: '#99D3FF',
+  backgroundColor: vars.color.blue0,
   padding: '2px 5px 4px 5px',
   cursor: 'pointer',
-  borderLeft: '4px solid #BFE3FF',
-  borderTop: '4px solid #BFE3FF',
+  borderLeft: `4px solid ${vars.color.blueLight}`,
+  borderTop: `4px solid ${vars.color.blueLight}`,
   boxShadow: `4px 4px 0px 0px ${vars.color.blue1}`,
 });
 

@@ -1,27 +1,21 @@
 'use client';
 
-import React, { useEffect, useState } from 'react';
+import React from 'react';
+import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 import { bannerContainer, eventConatiner } from './banner.css';
 
 import { ReactSlick } from '@/shared/ui';
 
-export default function Banner() {
-  // const [angle, setAngle] = useState(0);
-  let imgUrl = [
-    {
-      url: '/images/event/event1.png',
-      // onClick: () =>
-      //   (document.location.href = `${process.env.NEXT_PUBLIC_URL}/search?type=series&company=bandai`),
-    },
-    {
-      url: '/images/event/event2.png',
-      // onClick: () =>
-      //   (document.location.href = `${process.env.NEXT_PUBLIC_URL}/search?type=character&detail=치이카와`),
-    },
-    { url: '/images/event/event3.png' },
-    { url: '/images/event/event4.png' },
-  ];
+// 관리자 배너가 하나도 없을 때 보이는 기본 배너
+const FALLBACK = ['/images/event/event1.png', '/images/event/event2.png', '/images/event/event3.png', '/images/event/event4.png'];
+
+// banners: 관리자 배너 관리에서 게시 중인 배너 (노출 순서대로)
+export default function Banner({ banners }: { banners: { image: string; link: string }[] }) {
+  const router = useRouter();
+  const imgUrl = banners.length
+    ? banners.map((b) => ({ url: b.image, onClick: b.link ? () => router.push(b.link) : undefined }))
+    : FALLBACK.map((url) => ({ url }));
 
   // let imgCount = imgUrl.length;
   // let show = 0;

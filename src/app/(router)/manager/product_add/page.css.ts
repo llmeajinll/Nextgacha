@@ -1,9 +1,10 @@
 import { globalStyle, style } from '@vanilla-extract/css';
 import { vars } from '@/styles/theme.css';
+import { btn, btnIcon, btnKind, btnSize } from '@/styles/ui.css';
 
 const pixel = 'silkscreen';
-const danger = '#A3262A';
-const tint = '#DDF0FD';
+const danger = vars.tone.danger[1];
+const tint = vars.color.blueBg;
 
 export const container = style({
   display: 'flex',
@@ -166,7 +167,7 @@ export const input = style({
   backgroundColor: 'white',
   transition: 'border-color .2s ease, box-shadow .2s ease',
   selectors: {
-    '&:focus': { outline: 'none', borderColor: vars.color.blue1, boxShadow: '3px 3px 0 0 #BFE3FF' },
+    '&:focus': { outline: 'none', borderColor: vars.color.blue1, boxShadow: `3px 3px 0 0 ${vars.color.blueLight}` },
     '&::placeholder': { color: vars.slate[500] },
   },
 });
@@ -228,23 +229,16 @@ export const chip = style({
   whiteSpace: 'nowrap',
 });
 
-// ── 아이콘 버튼 (ImgBtn 크기·hover만) ──
-export const iconBtn = style({
-  width: 36,
-  height: 36,
-  flex: '0 0 36px',
-  alignItems: 'center',
-  justifyContent: 'center',
-  selectors: { '&:hover:not(:disabled)': { backgroundColor: vars.slate[100] } },
-});
+// ── 아이콘 버튼 (ImgBtn에 입힘) ──
+// 순서 바꾸기·블록 삭제·칩 빼기: ghost S 36. ImgBtn의 기본 색(blue1)을 덮으려고 색을 다시 적음
+export const iconBtn = style([btn, btnSize.s, btnIcon, btnKind.ghost, { flex: '0 0 36px', color: vars.slate[500] }]);
 
-export const iconBtnBox = style({
-  width: 44,
-  height: 44,
-  flex: '0 0 44px',
-  border: `1px solid ${vars.slate[200]}`,
-  backgroundColor: 'white',
-});
+// 옵션 삭제처럼 칸 옆에 붙는 건 neutral M 44
+export const iconBtnBox = style([
+  btnSize.m,
+  btnKind.neutral,
+  { width: 44, height: 44, flex: '0 0 44px', border: `1px solid ${vars.slate[200]}`, backgroundColor: 'white', color: vars.slate[700] },
+]);
 
 // ── 상품 옵션 ──
 export const optionHead = style({
@@ -292,7 +286,7 @@ export const slotBtn = style({
   alignItems: 'center',
   justifyContent: 'center',
   gap: 8,
-  border: '2px dashed #BFE3FF',
+  border: `2px dashed ${vars.color.blueLight}`,
   backgroundColor: vars.slate[50],
   color: vars.ink[400],
   fontFamily: pixel,
@@ -350,7 +344,7 @@ export const dropzone = style({
   minHeight: 150,
   boxSizing: 'border-box',
   padding: 20,
-  border: '2px dashed #BFE3FF',
+  border: `2px dashed ${vars.color.blueLight}`,
   backgroundColor: vars.slate[50],
   display: 'flex',
   flexDirection: 'column',
@@ -477,7 +471,7 @@ export const formError = style({
   padding: '10px 12px',
   fontSize: 14,
   color: danger,
-  backgroundColor: '#FFE3E3',
+  backgroundColor: vars.tone.danger.bg,
 });
 
 // ── 미리보기 ──
