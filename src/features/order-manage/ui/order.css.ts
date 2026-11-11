@@ -1,8 +1,9 @@
 import { globalStyle, style, styleVariants } from '@vanilla-extract/css';
 import { vars } from '@/styles/theme.css';
+import { btn, btnKind, numTag, optionChip, tag, tagTone } from '@/styles/ui.css';
 
 const pixel = 'silkscreen';
-const danger = '#A3262A';
+const danger = vars.tone.danger[1];
 
 export const card = style({
   border: `1px solid ${vars.slate[200]}`,
@@ -15,7 +16,7 @@ export const cardChecked = style({ borderColor: vars.color.blue1 });
 export const head = style({
   minHeight: 56,
   boxSizing: 'border-box',
-  padding: '6px 20px 6px 12px',
+  padding: '6px 20px',
   borderBottom: `1px solid ${vars.slate[100]}`,
   display: 'flex',
   flexWrap: 'wrap',
@@ -29,24 +30,24 @@ export const checkBox = style({
   display: 'flex',
   alignItems: 'center',
   justifyContent: 'center',
+  // 44px 터치 영역 안의 여백만큼 왼쪽으로 빼고, head의 gap(14px)을 없애 주문번호와 붙임
+  margin: '0 -14px 0 -8px',
   cursor: 'pointer',
 });
 
 export { checkbox as checkInput } from '@/styles/variants.css';
 
-export const headGap = style({ width: 8 });
-
 export const orderId = style({ fontFamily: pixel, fontSize: 14, letterSpacing: -0.5 });
 
 export const muted = style({ fontSize: 13, color: vars.slate[600] });
 
-export const status = style({ fontSize: 12, fontWeight: 600, padding: '4px 8px' });
+export const status = tag;
 
 export const statusTone = styleVariants({
-  '상품 확인중': { backgroundColor: '#FFF1D6', color: '#7A4B00' },
-  배송중: { backgroundColor: '#DDF0FD', color: vars.ink[600] },
-  '배송 완료': { backgroundColor: vars.slate[100], color: vars.slate[700] },
-  환불: { backgroundColor: '#FFE3E3', color: danger },
+  '상품 확인중': [tagTone.warning],
+  배송중: [tagTone.info],
+  '배송 완료': [tagTone.success],
+  환불: [tagTone.danger],
 });
 
 export const total = style({ marginLeft: 'auto', fontSize: 18, fontWeight: 600, letterSpacing: -0.6 });
@@ -68,27 +69,11 @@ export const item = style({ display: 'flex', flexDirection: 'column', gap: 6 });
 
 export const itemTitle = style({ display: 'flex', alignItems: 'baseline', gap: 8, fontSize: 15, fontWeight: 500 });
 
-export const itemNum = style({
-  fontFamily: pixel,
-  fontSize: 12,
-  padding: '2px 6px',
-  backgroundColor: '#DDF0FD',
-  color: vars.ink[500],
-});
+export const itemNum = numTag;
 
 export const options = style({ display: 'flex', flexWrap: 'wrap', gap: 6 });
 
-export const option = style({
-  height: 28,
-  boxSizing: 'border-box',
-  display: 'inline-flex',
-  alignItems: 'center',
-  gap: 6,
-  padding: '0 10px',
-  border: `1px solid ${vars.slate[200]}`,
-  fontSize: 13,
-  color: vars.slate[700],
-});
+export const option = optionChip;
 
 export const optionCount = style({ fontWeight: 600, color: vars.slate[800] });
 
@@ -126,7 +111,7 @@ export const footRow = style({
   gap: '6px 20px',
 });
 
-export const footRefund = style({ display: 'block', backgroundColor: '#FFF5F5', lineHeight: '150%' });
+export const footRefund = style({ display: 'block', backgroundColor: vars.tone.danger.bg, lineHeight: '150%' });
 
 export const refundLabel = style({ color: danger, fontWeight: 600 });
 
@@ -154,7 +139,7 @@ export const input = style({
   color: vars.slate[800],
   backgroundColor: 'white',
   selectors: {
-    '&:focus': { outline: 'none', borderColor: vars.color.blue1, boxShadow: '3px 3px 0 0 #BFE3FF' },
+    '&:focus': { outline: 'none', borderColor: vars.color.blue1, boxShadow: `3px 3px 0 0 ${vars.color.blueLight}` },
     '&::placeholder': { color: vars.slate[500] },
   },
 });
@@ -169,49 +154,19 @@ globalStyle(`${dropError} > button`, { borderColor: danger });
 
 export const errorText = style({ fontSize: 13, color: danger });
 
-const btn = style({
-  height: 44,
-  padding: '0 18px',
-  font: 'inherit',
-  fontSize: 14,
-  fontWeight: 600,
-  cursor: 'pointer',
-  selectors: { '&:disabled': { opacity: 0.6, cursor: 'default' } },
-});
+export const primaryBtn = style([btn, btnKind.primary]);
 
-export const primaryBtn = style([
-  btn,
-  {
-    border: `1px solid ${vars.color.blue1}`,
-    backgroundColor: vars.color.blue1,
-    color: 'white',
-    transition: 'transform .15s ease, box-shadow .15s ease',
-    selectors: {
-      '&:hover:not(:disabled)': { transform: 'translate(-2px, -2px)', boxShadow: '4px 4px 0 0 #5BB8FE' },
-    },
-  },
-]);
+// 배송 거절은 환불로 들어가는 버튼이라 danger-line
+export const rejectBtn = style([btn, btnKind.dangerLine, { marginLeft: 'auto' }]);
 
-export const rejectBtn = style([
-  btn,
-  {
-    marginLeft: 'auto',
-    padding: '0 14px',
-    border: `1px solid ${vars.slate[200]}`,
-    backgroundColor: 'white',
-    color: danger,
-    selectors: { '&:hover': { backgroundColor: vars.slate[100] } },
-  },
-]);
-
-export const dangerBtn = style([btn, { padding: '0 16px', border: `1px solid ${danger}`, backgroundColor: danger, color: 'white' }]);
+export const dangerBtn = style([btn, btnKind.danger]);
 
 export const refundBox = style({
   display: 'flex',
   flexDirection: 'column',
   gap: 8,
   padding: 12,
-  border: '1px solid #F1C4C6',
+  border: `1px solid ${vars.tone.danger[2]}`,
   backgroundColor: 'white',
 });
 
@@ -227,7 +182,7 @@ export const cardError = style({
   margin: 0,
   padding: '10px 20px',
   borderTop: `1px solid ${vars.slate[100]}`,
-  backgroundColor: '#FFF5F5',
+  backgroundColor: vars.tone.danger.bg,
   fontSize: 14,
   color: danger,
 });

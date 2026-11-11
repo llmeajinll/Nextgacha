@@ -4,12 +4,21 @@ import { vars } from '@/styles/theme.css';
 export const nav = style({
   flex: '0 0 220px',
   boxSizing: 'border-box',
+  backgroundColor: vars.slate[100],
+  borderRight: `1px solid ${vars.slate[200]}`,
+});
+
+// 스크롤해도 메뉴가 화면에 남게. 메뉴가 화면보다 길면 메뉴 안에서 스크롤
+export const sticky = style({
+  position: 'sticky',
+  top: 0,
+  maxHeight: '100vh',
+  overflowY: 'auto',
+  boxSizing: 'border-box',
   padding: '24px 16px',
   display: 'flex',
   flexDirection: 'column',
   gap: 4,
-  backgroundColor: vars.slate[100],
-  borderRight: `1px solid ${vars.slate[200]}`,
 });
 
 export const label = style({

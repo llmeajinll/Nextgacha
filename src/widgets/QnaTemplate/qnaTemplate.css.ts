@@ -28,30 +28,26 @@ export const textareaStyle = style({
 export const wrapQnaContainer = style({
   boxSizing: 'border-box',
   marginBottom: '5px',
-  border: '4px solid #75C3FE',
+  border: `4px solid ${vars.color.blue1}`,
   padding: '10px',
-  backgroundColor: '#ddf0fd',
+  backgroundColor: vars.color.blueBg,
 });
 
 export const wrapTextareaContainer = style({
   boxSizing: 'border-box',
   width: '930px',
-  border: '2px solid #75C3FE',
+  border: `2px solid ${vars.color.blue1}`,
   padding: '10px',
   backgroundColor: 'white',
 });
 
 export const profileImage = style({
-  border: '2px solid #BFE3FF',
+  border: `2px solid ${vars.color.blueLight}`,
   borderRadius: '50px',
   backgroundColor: 'white',
   backgroundSize: '120%',
 });
 
-export const charCount = style({
-  marginLeft: 'auto',
-  fontFamily: 'silkscreen',
-});
 
 export const secretToggleRow = style({
   fontFamily: 'silkscreen',
@@ -61,7 +57,7 @@ export const secretToggleRow = style({
 
 export const secretLabel = style({
   paddingTop: '3px',
-  color: '#6F6F6F',
+  color: vars.color.black1,
 });
 
 export const postBtn = style({

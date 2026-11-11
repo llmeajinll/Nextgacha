@@ -7,6 +7,7 @@ import { ImgBtn, Range, ToggleBtn } from '@/shared/ui';
 import { Private, Qna } from '@/features/qna/ui';
 import useSplitRoute from '@/shared/hooks/useSplitRoute';
 import * as styles from './qnaTemplate.css';
+import { textareaBox, textareaCount } from '@/styles/ui.css';
 
 export default function QnaTemplate() {
   const [qna, setQna] = useState([]);
@@ -123,15 +124,15 @@ export default function QnaTemplate() {
               className={styles.profileImage}
             />
             <Range width='full' preset='column'>
-              <textarea
-                placeholder='궁금한 내용을 물어보세요!'
-                maxLength={150}
-                value={question}
-                onChange={(e) => setQuestion(e.target.value)}
-                className={styles.textareaStyle}
-              />
-              <div className={styles.charCount}>
-                {question.length} / 150
+              <div className={textareaBox}>
+                <textarea
+                  placeholder='궁금한 내용을 물어보세요!'
+                  maxLength={150}
+                  value={question}
+                  onChange={(e) => setQuestion(e.target.value)}
+                  className={styles.textareaStyle}
+                />
+                <span className={textareaCount}>{question.length}/150</span>
               </div>
             </Range>
           </Range>

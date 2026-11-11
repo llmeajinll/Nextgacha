@@ -1,4 +1,4 @@
-import { style, styleVariants } from '@vanilla-extract/css';
+import { globalStyle, style, styleVariants } from '@vanilla-extract/css';
 import { vars } from '@/styles/theme.css';
 // import {
 //   rangeWidth,
@@ -277,4 +277,38 @@ export const checkbox = style({
     '&:focus-visible': { outline: `2px solid ${vars.ink[400]}`, outlineOffset: 2 },
     '&:disabled': { borderColor: vars.slate[200], backgroundColor: vars.slate[50], cursor: 'default' },
   },
+});
+
+// 관리자 목록 검색창 (돋보기 + input)
+export const searchField = style({
+  flex: '0 1 340px',
+  minWidth: 220,
+  height: 44,
+  boxSizing: 'border-box',
+  padding: '0 0 0 12px',
+  display: 'flex',
+  alignItems: 'center',
+  gap: 8,
+  border: `1px solid ${vars.slate[200]}`,
+  backgroundColor: 'white',
+  color: vars.slate[500],
+  selectors: {
+    '&:focus-within': { borderColor: vars.color.blue1, boxShadow: `3px 3px 0 0 ${vars.color.blueLight}` },
+  },
+});
+
+globalStyle(`${searchField} svg`, { width: 20, height: 20, fill: 'currentColor', flex: '0 0 auto' });
+
+export const searchFieldInput = style({
+  flex: '1 1 auto',
+  minWidth: 0,
+  height: 42,
+  padding: '0 12px 0 0',
+  border: 0,
+  outline: 'none',
+  font: 'inherit',
+  fontSize: 15,
+  color: vars.slate[800],
+  backgroundColor: 'transparent',
+  selectors: { '&::placeholder': { color: vars.slate[500] } },
 });

@@ -61,7 +61,9 @@ export default function ProductManagePage() {
             등록된 상품의 가격, 할인율, 옵션별 재고를 고쳐요. 수정을 누르면 그 자리에서 바로 바꿀 수 있어요.
           </p>
         </div>
-        <Btn onClick={() => router.push('/manager/product_add')}>ADD PRODUCT</Btn>
+        <Btn kind='primary' scale='l' px onClick={() => router.push('/manager/product_add')}>
+          ADD PRODUCT
+        </Btn>
       </section>
 
       <div className={s.toolbar}>

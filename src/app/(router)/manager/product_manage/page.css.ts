@@ -55,68 +55,13 @@ export const toolbar = style({
 
 export const tabs = style({ display: 'flex', flexWrap: 'wrap', gap: 6 });
 
-export const tab = style({
-  height: 40,
-  boxSizing: 'border-box',
-  padding: '0 14px',
-  display: 'inline-flex',
-  alignItems: 'center',
-  gap: 8,
-  border: `1px solid ${vars.slate[200]}`,
-  backgroundColor: 'white',
-  font: 'inherit',
-  fontSize: 14,
-  color: vars.slate[800],
-  cursor: 'pointer',
-  selectors: { '&:hover': { borderColor: vars.color.blue1 } },
-});
+export { tab, tabOn, tabCount } from '@/styles/ui.css';
 
-export const tabOn = style({
-  borderColor: vars.color.blue1,
-  backgroundColor: vars.color.blue1,
-  color: 'white',
-  fontWeight: 600,
-  selectors: { '&:hover': { borderColor: vars.color.blue1 } },
-});
-
-export const tabCount = style({ fontFamily: pixel, fontSize: 12, opacity: 0.8 });
-
-export const search = style({
-  flex: '0 1 340px',
-  minWidth: 220,
-  height: 44,
-  boxSizing: 'border-box',
-  padding: '0 0 0 12px',
-  display: 'flex',
-  alignItems: 'center',
-  gap: 8,
-  border: `1px solid ${vars.slate[200]}`,
-  backgroundColor: 'white',
-  color: vars.slate[500],
-  selectors: {
-    '&:focus-within': { borderColor: vars.color.blue1, boxShadow: '3px 3px 0 0 #BFE3FF' },
-  },
-});
-
-globalStyle(`${search} svg`, { width: 20, height: 20, fill: 'currentColor', flex: '0 0 auto' });
-
-export const searchInput = style({
-  flex: '1 1 auto',
-  minWidth: 0,
-  height: 42,
-  padding: '0 12px 0 0',
-  border: 0,
-  outline: 'none',
-  font: 'inherit',
-  fontSize: 15,
-  color: vars.slate[800],
-  backgroundColor: 'transparent',
-  selectors: { '&::placeholder': { color: vars.slate[500] } },
-});
+export { searchField as search, searchFieldInput as searchInput } from '@/styles/variants.css';
 
 export const saved = style({
   padding: '10px 14px',
-  backgroundColor: '#DDF0FD',
+  backgroundColor: vars.color.blueBg,
   color: vars.ink[700],
   fontSize: 14,
 });

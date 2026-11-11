@@ -6,6 +6,7 @@ import { comma } from '@/shared/lib/comma';
 import { toKoreaTime } from '@/shared/lib/koreaTime';
 import type { AdminOrder } from '../model/status';
 import { refundOrder, toArrive, toSending } from '../api/orderActions';
+import { textareaBox, textareaCount } from '@/styles/ui.css';
 import * as s from './order.css';
 
 export const COURIERS = ['CJ대한통운', '우체국택배', '한진택배', '롯데택배', '로젠택배'];
@@ -57,12 +58,10 @@ export default function Order({
   return (
     <article className={checked ? `${s.card} ${s.cardChecked}` : s.card}>
       <div className={s.head}>
-        {onCheck ? (
+        {onCheck && (
           <label className={s.checkBox}>
             <input type='checkbox' checked={!!checked} onChange={onCheck} aria-label={`${order.orderId} 선택`} className={s.checkInput} />
           </label>
-        ) : (
-          <span className={s.headGap} />
         )}
         <span className={s.orderId}>{order.orderId}</span>
         <span className={s.muted}>{when(order.created_at, 'YYYY.MM.DD HH:mm')} 주문</span>
@@ -133,6 +132,7 @@ export default function Order({
               <DropDown
                 id={`or-courier-${order.orderId}`}
                 label={ship.courier}
+                value={ship.courier}
                 placeholder='택배사 선택'
                 options={COURIERS.map((c) => ({ value: c, label: c }))}
                 onSelect={(courier) => onShip({ ...ship, courier })}
@@ -191,21 +191,24 @@ export default function Order({
           {refundOpen && (
             <div className={s.refundBox}>
               <label htmlFor={`or-reason-${order.orderId}`} className={s.label}>
-                거절 사유 <span className={s.muted}>· 고객에게 보이는 환불 사유예요 (10자 이상)</span>
+                거절 사유 (10자 이상)
               </label>
-              <textarea
-                id={`or-reason-${order.orderId}`}
-                rows={2}
-                maxLength={200}
-                value={reason}
-                onChange={(e) => setReason(e.target.value)}
-                placeholder='예: 입고가 취소되어 보내드릴 수 없어요.'
-                aria-invalid={reasonError && reasonLen < 10}
-                className={reasonError && reasonLen < 10 ? `${s.textarea} ${s.inputError}` : s.textarea}
-              />
+              <div className={textareaBox}>
+                <textarea
+                  id={`or-reason-${order.orderId}`}
+                  rows={2}
+                  maxLength={200}
+                  value={reason}
+                  onChange={(e) => setReason(e.target.value)}
+                  placeholder='예: 입고가 취소되어 보내드릴 수 없어요.'
+                  aria-invalid={reasonError && reasonLen < 10}
+                  className={reasonError && reasonLen < 10 ? `${s.textarea} ${s.inputError}` : s.textarea}
+                />
+                <span className={textareaCount}>{reason.length}/200</span>
+              </div>
               <div className={s.refundFoot}>
-                <span className={reasonError && reasonLen < 10 ? s.errorText : s.hint}>
-                  {reasonLen}자 · 결제를 취소하고 재고와 포인트를 되돌려요.
+                <span role='status' className={s.errorText}>
+                  {reasonError && reasonLen < 10 ? '거절 사유를 10자 이상 적어 주세요.' : ''}
                 </span>
                 <button
                   type='button'

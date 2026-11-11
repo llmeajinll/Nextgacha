@@ -66,8 +66,16 @@ export const listStyle = style({
   textAlign: 'left',
   cursor: 'pointer',
   selectors: {
-    '&:hover, &:focus-visible': { outline: 'none', backgroundColor: '#F1F1F1' },
+    '&:hover, &:focus-visible': { outline: 'none', backgroundColor: vars.slate[100] },
   },
+});
+
+// 고른 항목 (관리자 화면의 주 버튼처럼 blue1 + 흰 글자)
+export const listOn = style({
+  backgroundColor: vars.color.blue1,
+  color: 'white',
+  fontWeight: 600,
+  selectors: { '&:hover, &:focus-visible': { backgroundColor: vars.color.blue2 } },
 });
 
 export const groupLabel = style({

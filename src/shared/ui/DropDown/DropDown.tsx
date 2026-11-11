@@ -10,6 +10,7 @@ import {
   arrow,
   listContainer,
   listStyle,
+  listOn,
   groupLabel,
 } from './dropDown.css';
 
@@ -17,9 +18,11 @@ import {
 export type DropDownOption = { value: string; label: string; group?: string };
 
 // label: 닫혀 있을 때 보일 글자(부모가 정함). 비어 있으면 placeholder
+// value: 지금 고른 값. 목록에서 그 항목을 표시
 export default function DropDown({
   id,
   label,
+  value,
   placeholder,
   options,
   onSelect,
@@ -27,6 +30,7 @@ export default function DropDown({
 }: {
   id?: string;
   label?: string;
+  value?: string;
   placeholder: string;
   options: DropDownOption[];
   onSelect: (value: string) => void;
@@ -54,7 +58,8 @@ export default function DropDown({
               <li>
                 <button
                   type='button'
-                  className={listStyle}
+                  aria-current={value !== undefined && o.value === value ? 'true' : undefined}
+                  className={value !== undefined && o.value === value ? `${listStyle} ${listOn}` : listStyle}
                   onClick={() => {
                     onSelect(o.value);
                     setIsOpen(false);

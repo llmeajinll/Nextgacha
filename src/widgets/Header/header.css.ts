@@ -24,7 +24,7 @@ export const wrapTextarea = style({
   width: 'fit-content',
   border: `3px solid ${vars.color.blue1}`,
   borderRight: `3px solid ${vars.color.blue1}`,
-  backgroundColor: '#ddf0fd',
+  backgroundColor: vars.color.blueBg,
 });
 
 export const menuContainer = style({

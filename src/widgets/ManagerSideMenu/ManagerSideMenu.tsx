@@ -13,22 +13,25 @@ export default function ManagerSideMenu() {
 
   return (
     <nav aria-label='관리자 메뉴' className={s.nav}>
-      <span className={s.label}>MENU</span>
-      {ITEMS.map((m) => {
-        // 대시보드는 정확히 /manager일 때만, 나머지는 하위 경로 포함
-        const isActive = m.base === '/manager' ? pathname === m.base : pathname.startsWith(m.base);
-        return (
-          <Link
-            key={m.href}
-            href={m.href}
-            aria-current={isActive ? 'page' : undefined}
-            className={isActive ? `${s.item} ${s.active}` : s.item}
-          >
-            <m.icon aria-hidden />
-            {m.ko}
-          </Link>
-        );
-      })}
+      {/* 배경 칸은 페이지 끝까지 늘어나고, 메뉴 목록만 스크롤을 따라옴 */}
+      <div className={s.sticky}>
+        <span className={s.label}>MENU</span>
+        {ITEMS.map((m) => {
+          // 대시보드는 정확히 /manager일 때만, 나머지는 하위 경로 포함
+          const isActive = m.base === '/manager' ? pathname === m.base : pathname.startsWith(m.base);
+          return (
+            <Link
+              key={m.href}
+              href={m.href}
+              aria-current={isActive ? 'page' : undefined}
+              className={isActive ? `${s.item} ${s.active}` : s.item}
+            >
+              <m.icon aria-hidden />
+              {m.ko}
+            </Link>
+          );
+        })}
+      </div>
     </nav>
   );
 }

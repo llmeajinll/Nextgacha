@@ -3,11 +3,10 @@
 import Image from 'next/image';
 import React, { useState } from 'react';
 import { Plus } from 'pixelarticons/react';
-import { Btn, ImgBtn, Tag } from '@/shared/ui';
+import { Btn, ImgBtn } from '@/shared/ui';
 import { CardProps } from '@/entities/product/model/types';
 import { comma } from '@/shared/lib/comma';
 import { toKoreaTime } from '@/shared/lib/koreaTime';
-import { vars } from '@/styles/theme.css';
 import postEditProduct from '../api/postEditProduct';
 import * as s from './productManageRow.css';
 
@@ -18,11 +17,7 @@ const stockOf = (p: Pick<CardProps, 'list'>) => p.list.reduce((a, o) => a + o.co
 export const statusOf = (p: CardProps): ProductStatus =>
   p.reserve ? 'reserve' : stockOf(p) === 0 ? 'soldout' : 'sale';
 
-const STATUS: Record<ProductStatus, { label: string; color: string }> = {
-  sale: { label: '판매 중', color: vars.ink[50] },
-  reserve: { label: '예약', color: vars.status.reserve },
-  soldout: { label: '품절', color: vars.status.soldout },
-};
+const STATUS: Record<ProductStatus, string> = { sale: '판매 중', reserve: '예약', soldout: '품절' };
 
 const pad = (n: number) => String(n).padStart(2, '0');
 
@@ -92,10 +87,14 @@ export default function ProductManageRow({
           <div className={s.productText}>
             <span className={s.title}>{product.title}</span>
             <div className={s.tags}>
-              {product.company && <Tag word={product.company} color={vars.slate[100]} />}
-              {product.group?.map((g) => <Tag key={g} word={g} color={vars.slate[50]} />)}
+              {product.company && <span className={s.companyTag}>{product.company}</span>}
+              {product.group?.map((g) => (
+                <span key={g} className={s.groupTag}>
+                  {g}
+                </span>
+              ))}
               {product.reserve && (
-                <Tag word={`${toKoreaTime(product.reserve).format('YYYY년 MM월')} 예약`} color={vars.status.reserve} />
+                <span className={s.reserveTag}>{`${toKoreaTime(product.reserve).format('YYYY년 MM월')} 예약`}</span>
               )}
             </div>
           </div>
@@ -110,13 +109,13 @@ export default function ProductManageRow({
           {status === 'sale' && zero > 0 && <span className={s.zero}>품절 옵션 {zero}</span>}
         </div>
         <span className={s.center}>
-          <Tag word={STATUS[status].label} color={STATUS[status].color} />
+          <span className={s.statusTag[status]}>{STATUS[status]}</span>
         </span>
         <button
           type='button'
           aria-expanded={editing}
           aria-label={`${product.title} ${editing ? '수정 닫기' : '수정'}`}
-          className={editing ? `${s.editBtn} ${s.editBtnOn}` : s.editBtn}
+          className={editing ? s.editBtnOn : s.editBtn}
           onClick={toggle}
         >
           {editing ? '닫기' : '수정'}
@@ -309,10 +308,12 @@ function Editor({
               {sendError || '빨간 칸을 확인해 주세요.'}
             </span>
           )}
-          <Btn color='reversePrimary' onClick={onCancel}>
+          <Btn kind='neutral' px onClick={onCancel}>
             CANCEL
           </Btn>
           <Btn
+            kind='primary'
+            px
             disabled={sending}
             onClick={() =>
               onSave(

@@ -12,6 +12,7 @@ import { Card } from '@/entities/product/ui';
 import type { CardProps } from '@/entities/product/model/types';
 import { Btn, DropDown, ImgBtn, ToggleBtn } from '@/shared/ui';
 import { comma } from '@/shared/lib/comma';
+import { textareaBox, textareaCount } from '@/styles/ui.css';
 import * as s from './page.css';
 
 const MAX_IMAGES = 5;
@@ -220,6 +221,7 @@ export default function ProductAddPage() {
                 <DropDown
                   id='pa-company'
                   label={menu?.series.find((m) => m.company === company)?.name}
+                  value={company}
                   placeholder='제조사 선택'
                   options={[
                     { value: '', label: '선택 안 함' },
@@ -533,15 +535,18 @@ export default function ProductAddPage() {
                       </div>
                     </div>
                     {b.type === 'text' ? (
-                      <textarea
-                        rows={4}
-                        maxLength={2000}
-                        value={b.text}
-                        onChange={(e) => setBlocks(blocks.map((x) => (x.id === b.id ? { ...b, text: e.target.value } : x)))}
-                        aria-label={`${i + 1}번 설명 글`}
-                        placeholder='구성품, 크기, 주의사항 등을 적어 주세요.'
-                        className={s.textarea}
-                      />
+                      <div className={textareaBox}>
+                        <textarea
+                          rows={4}
+                          maxLength={2000}
+                          value={b.text}
+                          onChange={(e) => setBlocks(blocks.map((x) => (x.id === b.id ? { ...b, text: e.target.value } : x)))}
+                          aria-label={`${i + 1}번 설명 글`}
+                          placeholder='구성품, 크기, 주의사항 등을 적어 주세요.'
+                          className={s.textarea}
+                        />
+                        <span className={textareaCount}>{b.text.length}/2000</span>
+                      </div>
                     ) : (
                       <label className={s.blockDrop}>
                         <span className={`${s.dropIcon} ${s.blockDropIcon}`}>
@@ -587,7 +592,9 @@ export default function ProductAddPage() {
               </span>
             )}
             <Btn
-              color='reversePrimary'
+              kind='neutral'
+              scale='l'
+              px
               onClick={(e) => {
                 // Btn은 type을 못 받아서 폼 안에서는 submit 버튼이 됨
                 e.preventDefault();
@@ -596,7 +603,9 @@ export default function ProductAddPage() {
             >
               CANCEL
             </Btn>
-            <Btn disabled={sending}>{sending ? 'SAVING…' : 'REGISTER'}</Btn>
+            <Btn kind='primary' scale='l' px disabled={sending}>
+              {sending ? 'SAVING…' : 'REGISTER'}
+            </Btn>
           </div>
         </form>
 

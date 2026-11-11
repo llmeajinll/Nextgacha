@@ -1,14 +1,15 @@
 import { style } from '@vanilla-extract/css';
+import { vars } from '@/styles/theme.css';
 
 export const pageContainer = style({
   width: '900px',
   padding: '10px 30px 40px 30px',
   margin: '40px auto 0 auto',
-  border: '4px solid #75C3FE',
+  border: `4px solid ${vars.color.blue1}`,
 });
 
 export const heading = style({
-  color: '#3AAAFF',
+  color: vars.color.blue2,
 });
 
 export const labelInline = style({
@@ -20,12 +21,12 @@ export const fieldLabel = style([
   labelInline,
   {
     fontWeight: '500',
-    color: '#4C4C4C',
+    color: vars.color.black2,
   },
 ]);
 
 export const fieldValue = style({
-  color: '#6F6F6F',
+  color: vars.color.black1,
 });
 
 export const productItem = style({
@@ -39,12 +40,12 @@ export const footerRow = style({
 
 export const footerLinkHome = style({
   fontFamily: 'silkscreen',
-  color: '#75C3FE',
+  color: vars.color.blue1,
 });
 
 export const footerLinkMypage = style({
   fontFamily: 'silkscreen',
-  color: '#999999',
+  color: vars.color.black3,
 });
 
 export const messageText = style([

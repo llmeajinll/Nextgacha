@@ -60,7 +60,7 @@ export const summaryCard = style({
   selectors: {
     '&:hover': {
       transform: 'translate(-3px, -3px)',
-      boxShadow: '6px 6px 0 0 #5BB8FE',
+      boxShadow: `6px 6px 0 0 ${vars.color.blue2}`,
       borderColor: vars.color.blue1,
     },
   },
@@ -96,10 +96,10 @@ export const iconTile = style({
 });
 
 export const tileTone = styleVariants({
-  order: { backgroundColor: '#DDF0FD', color: vars.color.blue1 },
-  pending: { backgroundColor: vars.status.new, color: '#8A5300' },
-  product: { backgroundColor: '#D6F5CF', color: '#1F6E2C' },
-  error: { backgroundColor: '#FFE3E3', color: '#A3262A' },
+  order: { backgroundColor: vars.tone.info.bg, color: vars.tone.info[1] },
+  pending: { backgroundColor: vars.tone.warning.bg, color: vars.tone.warning[1] },
+  product: { backgroundColor: vars.tone.success.bg, color: vars.tone.success[1] },
+  error: { backgroundColor: vars.tone.danger.bg, color: vars.tone.danger[1] },
 });
 
 // ── 관리 메뉴 카드 ──
@@ -144,7 +144,7 @@ export const card = style({
   selectors: {
     '&:hover': {
       transform: 'translate(-3px, -3px)',
-      boxShadow: '6px 6px 0 0 #5BB8FE',
+      boxShadow: `6px 6px 0 0 ${vars.color.blue2}`,
       borderColor: vars.color.blue1,
     },
   },
@@ -156,7 +156,7 @@ export const cardIcon = style({
   display: 'flex',
   alignItems: 'center',
   justifyContent: 'center',
-  backgroundColor: '#DDF0FD',
+  backgroundColor: vars.color.blueBg,
   color: vars.color.blue1,
 });
 

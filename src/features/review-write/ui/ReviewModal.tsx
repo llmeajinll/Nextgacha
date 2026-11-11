@@ -19,6 +19,7 @@ import {
   headerBar,
   fieldGroup,
 } from './reviewModal.css';
+import { textareaBox, textareaCount } from '@/styles/ui.css';
 
 export default function ReviewModal() {
   const router = useRouter();
@@ -129,13 +130,16 @@ export default function ReviewModal() {
               </Range>
 
               <Range preset='columnAlignCenter'>
-                <textarea
-                  className={textareaStyle}
-                  value={reviewInput}
-                  onChange={(e) => setreviewInput(e.target.value)}
-                  placeholder='10자 이상 적어주세요. (선택)'
-                  maxLength={100}
-                ></textarea>
+                <div className={textareaBox}>
+                  <textarea
+                    className={textareaStyle}
+                    value={reviewInput}
+                    onChange={(e) => setreviewInput(e.target.value)}
+                    placeholder='10자 이상 적어주세요. (선택)'
+                    maxLength={100}
+                  ></textarea>
+                  <span className={textareaCount}>{reviewInput.length}/100</span>
+                </div>
                 {show && (
                   <div
                     className={Text}

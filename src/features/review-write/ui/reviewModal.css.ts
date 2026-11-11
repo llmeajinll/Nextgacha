@@ -21,7 +21,7 @@ export const Text = style({
 export const warningText = style({
   fontSize: '16px',
   fontWeight: '500',
-  color: '#3aaaff',
+  color: vars.color.blue2,
 });
 
 export const titleLabel = style({

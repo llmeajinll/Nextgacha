@@ -1,9 +1,11 @@
 'use client';
 
 import React, { useState } from 'react';
+import Form from 'next/form';
+import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { CountTab, Pagination } from '@/shared/ui';
-import { ChevronRight } from 'pixelarticons/react';
+import { ChevronRight, Search } from 'pixelarticons/react';
 import Order, { type Ship } from '@/features/order-manage/ui/Order';
 import { toArrive, toSending } from '@/features/order-manage/api/orderActions';
 import {
@@ -20,17 +22,20 @@ export default function OrderTemplate({
   total,
   page,
   counts,
+  q,
 }: {
   status: OrderStatus;
   orders: AdminOrder[];
   total: number;
   page: number;
   counts: Record<OrderStatus, number>;
+  // 주문번호 검색어. 있으면 모든 상태에서 찾은 결과이고 일괄 처리는 안 함
+  q: string;
 }) {
   const router = useRouter();
   const slug = ORDER_STATUSES.find((x) => x.status === status)!.slug;
   // 일괄 처리는 상품 확인중 → 배송중, 배송중 → 배송 완료만
-  const next: OrderStatus | null = status === '상품 확인중' ? '배송중' : status === '배송중' ? '배송 완료' : null;
+  const next: OrderStatus | null = q ? null : status === '상품 확인중' ? '배송중' : status === '배송중' ? '배송 완료' : null;
   const toNext = next === '배송중' ? '배송중으로' : '배송 완료로';
 
   const [ships, setShips] = useState<Record<string, Ship>>({});
@@ -72,6 +77,27 @@ export default function OrderTemplate({
 
   return (
     <div className={s.container}>
+      <div className={s.searchRow}>
+        <Form action={`/manager/order/${slug}`} className={s.search}>
+          <Search aria-hidden />
+          <input
+            key={q}
+            type='search'
+            name='q'
+            inputMode='numeric'
+            defaultValue={q}
+            aria-label='주문번호 검색'
+            placeholder='주문번호로 검색'
+            className={s.searchInput}
+          />
+        </Form>
+        {q && (
+          <Link href={`/manager/order/${slug}`} className={s.ghostBtn}>
+            검색 지우기
+          </Link>
+        )}
+      </div>
+
       <nav aria-label='주문 상태' className={s.tabs}>
         {ORDER_STATUSES.map((t, i) => (
           <React.Fragment key={t.slug}>
@@ -80,7 +106,7 @@ export default function OrderTemplate({
               href={`/manager/order/${t.slug}`}
               label={t.status}
               count={counts[t.status]}
-              active={t.status === status}
+              active={!q && t.status === status}
             />
             {i < 2 && <ChevronRight aria-hidden className={s.tabArrow} />}
           </React.Fragment>
@@ -91,6 +117,12 @@ export default function OrderTemplate({
         <div role='status' className={s.toast}>
           {toast}
         </div>
+      )}
+
+      {q && (
+        <p role='status' className={s.muted}>
+          “{q}” 검색 결과 {total}건 · 모든 상태에서 찾았어요
+        </p>
       )}
 
       {next && orders.length > 0 && (
@@ -153,7 +185,7 @@ export default function OrderTemplate({
         </div>
       )}
 
-      <section aria-label={`${status} 주문`} className={s.list}>
+      <section aria-label={q ? '검색된 주문' : `${status} 주문`} className={s.list}>
         {orders.map((o) => (
           <Order
             key={o.orderId}
@@ -178,8 +210,8 @@ export default function OrderTemplate({
         ))}
         {orders.length === 0 && (
           <div className={s.empty}>
-            <span className={s.emptyTitle}>{status} 주문이 없어요.</span>
-            <span className={s.muted}>새 주문이 들어오면 여기에 보여요.</span>
+            <span className={s.emptyTitle}>{q ? `“${q}”에 맞는 주문이 없어요.` : `${status} 주문이 없어요.`}</span>
+            <span className={s.muted}>{q ? '주문번호를 다시 확인해 주세요.' : '새 주문이 들어오면 여기에 보여요.'}</span>
           </div>
         )}
       </section>
@@ -188,7 +220,7 @@ export default function OrderTemplate({
         current={page}
         total={total}
         pageSize={ORDER_PAGE_SIZE}
-        onChange={(p) => router.push(`/manager/order/${slug}?page=${p}`)}
+        onChange={(p) => router.push(`/manager/order/${slug}?${new URLSearchParams({ page: String(p), ...(q && { q }) })}`)}
       />
     </div>
   );

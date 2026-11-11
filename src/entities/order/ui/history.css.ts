@@ -74,7 +74,7 @@ const receiptBaseLabelProps = {
   fontSize: '13px',
   letterSpacing: '-1.3px',
   lineHeight: '18px',
-  color: '#4E4E4E',
+  color: vars.color.black2,
 };
 
 export const labelTitle = style({
@@ -102,7 +102,7 @@ export const title = style({
   fontSize: '15px',
   letterSpacing: '-1.5px',
   lineHeight: '18px',
-  color: '#4E4E4E',
+  color: vars.color.black2,
   fontWeight: '500',
 });
 
