@@ -1,36 +1,18 @@
 import React from 'react';
-import { Tag } from '@/shared/ui';
-import { containter } from './tagContainer.css';
 import { toKoreaTime } from '@/shared/lib/koreaTime';
-import { vars } from '@/styles/theme.css';
+import * as s from './tagContainer.css';
 
-export default function TagContainer({
-  create,
-  reserve,
-}: {
-  create: string;
-  reserve: string;
-}) {
-  // console.log(`create: ${create}, reserve: ${reserve}`);
+// 상품 카드의 NEW · HOT · 예약 태그
+export default function TagContainer({ create, reserve }: { create: string; reserve: string }) {
   return (
-    <div className={containter}>
+    <div className={s.container}>
       {create && (
         <>
-          <Tag word='NEW' color={vars.status.new} />
-          <Tag word='HOT' color={vars.status.hot} />
+          <span className={`${s.pxTag} ${s.tone.new}`}>NEW</span>
+          <span className={`${s.pxTag} ${s.tone.hot}`}>HOT</span>
         </>
       )}
-      {reserve && (
-        <Tag
-          word={`${toKoreaTime(reserve).format('YYYY년 MM월')} 예약`}
-          color={vars.status.reserve}
-        />
-      )}
-      {/*   
-      <Tag word='2025년 12월 예약' color={vars.status.reserve} />
-      <Tag word='HOT' color={vars.status.hot} />
-      <Tag word='NEW' color={vars.status.new} />
-      {/* <Tag word='SOLD OUT' color='#DCDCDC' /> */}
+      {reserve && <span className={`${s.reserveTag} ${s.tone.reserve}`}>{toKoreaTime(reserve).format('YYYY년 MM월')} 예약</span>}
     </div>
   );
 }

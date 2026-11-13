@@ -1,4 +1,4 @@
-import { ProductProps } from '@/entities/product/model/types';
+import { getCart } from '../api/getCart';
 import Cookies from 'js-cookie';
 
 import { useRouter } from 'next/navigation';
@@ -15,24 +15,7 @@ import {
 export default function useCart() {
   const queryClient = useQueryClient();
   const { openModal } = useModal();
-  const { data } = useSuspenseQuery({
-    queryKey: ['cartData'],
-    queryFn: async () =>
-      await fetch(`/api/getCart`, {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      } as any).then(async (res) => {
-        const data = await res.json();
-        if (data.ok === true) {
-          console.log('useSuspenseQuery : ', data.result);
-          return data.result;
-        } else {
-          return { cart: {}, keep: {}, stock: {} };
-        }
-      }),
-  });
+  const { data } = useSuspenseQuery({ queryKey: ['cartData'], queryFn: getCart });
 
   const mutation = useMutation({
     mutationFn: async ({
@@ -232,5 +215,14 @@ export default function useCart() {
     // });
   };
 
-  return { data, increase, decrease, erase, mutate, isPending };
+  // 선택 삭제: 한 번만 묻고 하나씩 지운다 (updateCart는 한 번에 한 옵션만 받음)
+  const eraseMany = async (items: { num: number; name: string }[]) => {
+    if (isPending || items.length === 0) return;
+    if (!window.confirm(`선택한 ${items.length}개 상품을 장바구니에서 뺄까요?`)) return;
+    for (const { num, name } of items) {
+      await mutation.mutateAsync({ num, name, preset: 'erase' }).catch(() => {});
+    }
+  };
+
+  return { data, increase, decrease, erase, eraseMany, mutate, isPending };
 }

@@ -1,44 +1,34 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
-import { useRouter } from 'next/navigation';
-
-import { auth } from '@/auth';
-import { cookies } from 'next/headers';
+import React from 'react';
 import Image from 'next/image';
-import { Parking } from 'pixelarticons/react';
-import { Range } from '@/shared/ui';
-import { profileImage, email, point, name, wrapper, pointRow, pointIcon } from './profile.css';
+import { useAtomValue } from 'jotai';
+import { User } from 'pixelarticons/react';
 import { comma } from '@/shared/lib/comma';
 import { userInfoAtom } from '@/entities/user/model/store';
-import { useAtom } from 'jotai';
-import { useModal } from '@/shared/hooks';
+import * as s from './profile.css';
 
 export default function Profile() {
-  const router = useRouter();
-  const { openModal } = useModal();
-  const [{ data, isPending, error }] = useAtom(userInfoAtom);
+  const { data } = useAtomValue(userInfoAtom);
 
-  if (isPending) return <div>LOADING...</div>;
-  if (error) return <div>에러다잇!</div>;
-
+  // 불러오는 동안에도 높이를 잡아 둬서 아래 탭이 밀리지 않게 한다
   return (
-    <Range gap='15' className={wrapper}>
-      <Image
-        src={data?.image || '/images/defaultImg.png'}
-        alt='image'
-        width={100}
-        height={100}
-        className={profileImage}
-      />
-      <Range preset='column' gap='5'>
-        <div className={name}>{data?.nickname}</div>
-        <div className={email}>{data?.email}</div>
-        <Range gap='4' className={pointRow}>
-          <Parking width={22} height={22} className={pointIcon} aria-label='포인트' />
-          <div className={point}>{comma(data?.point || 0)}P</div>
-        </Range>
-      </Range>
-    </Range>
+    <section aria-label='내 정보' className={s.wrapper}>
+      {data?.image ? (
+        <Image src={data.image} alt='' width={64} height={64} className={s.avatar} />
+      ) : (
+        <span aria-hidden className={s.avatar}>
+          <User width={32} height={32} />
+        </span>
+      )}
+      <span className={s.text}>
+        <span className={s.name}>{data?.nickname}</span>
+        <span className={s.email}>{data?.email}</span>
+      </span>
+      <span className={s.pointBox}>
+        <span className={s.pointLabel}>보유 포인트</span>
+        <span className={s.point}>{comma(data?.point ?? 0)}P</span>
+      </span>
+    </section>
   );
 }

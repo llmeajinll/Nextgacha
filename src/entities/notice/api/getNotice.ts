@@ -1,4 +1,4 @@
-import type { Notice } from '../model/types';
+import type { Notice, NoticeLink } from '../model/types';
 
 export async function getNotices(): Promise<Notice[]> {
   const res = await fetch('/api/getNotice');
@@ -6,7 +6,7 @@ export async function getNotices(): Promise<Notice[]> {
   return (await res.json()).notices;
 }
 
-export async function getNotice(num: number): Promise<{ notice: Notice; prev?: number; next?: number } | null> {
+export async function getNotice(num: number): Promise<{ notice: Notice; prev?: NoticeLink; next?: NoticeLink } | null> {
   const res = await fetch(`/api/getNotice?num=${num}`);
   if (res.status === 404) return null;
   if (!res.ok) throw new Error('공지 조회 실패');

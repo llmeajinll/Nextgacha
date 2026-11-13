@@ -1,24 +1,21 @@
 'use client';
 
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
 
 import Search from '@/features/search/ui/Search';
-import { Category } from '@/entities/product/ui';
+import MegaMenu from './MegaMenu';
 import {
   headerContainer,
+  bar,
   logo,
   menuContainer,
-  wrap,
+  nav,
+  tools,
   menu,
-  reportContainer,
-  wrapTextarea,
-  search,
   activeMenu,
-  reportBtn,
-  reportTitle,
-  reportTextarea,
-  reportSendBtn,
+  openMenu,
+  backdrop,
 } from './header.css';
 
 import Link from 'next/link';
@@ -32,9 +29,6 @@ import { useSearchParams, usePathname } from 'next/navigation';
 import { useSplitRoute as useSpliteRoute } from '@/shared/hooks';
 import { useAtom } from 'jotai';
 import { userInfoAtom } from '@/entities/user/model/store';
-import { Range, ImgBtn, Btn } from '@/shared/ui';
-import { textareaStyle } from '@/features/review-write/ui/reviewModal.css';
-import { textareaBox, textareaCount } from '@/styles/ui.css';
 
 export default function Header({
   session,
@@ -44,157 +38,85 @@ export default function Header({
   categoryMenu: CategoryMenu;
 }) {
   const [showCategory, setShowCategory] = useState(false);
-  const [showReport, setShowReport] = useState(false);
-  const [textareaValue, setTextAreaValue] = useState('');
-  const reportRef = useRef<HTMLDivElement | null>(null);
   const { firstRoute } = useSpliteRoute();
   const [{ data, isPending, error }] = useAtom(userInfoAtom);
   const pathname = usePathname();
   console.log(firstRoute);
   console.log('JOTAI userInfoAtom : ', data);
 
-  useEffect(() => {
-    function handleClickOutside(e: MouseEvent) {
-      if (reportRef.current && !reportRef.current.contains(e.target as Node)) {
-        setShowReport(false);
-      }
-    }
-
-    document.addEventListener('mousedown', handleClickOutside);
-
-    return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
-    };
-  }, [setShowReport]);
-
   return (
     <>
       {firstRoute !== 'manager' && (
-        <div className={headerContainer}>
-          {showCategory && <Category setShow={setShowCategory} menu={categoryMenu} />}
-          <div className={menuContainer}>
-            <div className={wrap}>
-              <Link href='/'>
-                <div className={logo}>NEXTGACHA</div>
-              </Link>
-              <div className={wrap}>
-                <span
-                  className={menu}
-                  onMouseEnter={() => setShowCategory(true)}
-                  onMouseLeave={() => setShowCategory(false)}
-                >
-                  <Link
-                    href='/search?type=main&tag=전체 상품&page=1'
-                    className={firstRoute === 'search' ? activeMenu : ''}
-                  >
-                    CATEGORY
-                  </Link>
-                </span>
-
-                <Link href='/notice'>
-                  <span
-                    className={`${menu} ${firstRoute === 'notice' ? activeMenu : ''}`}
-                  >
-                    NOTICE
+        <div
+          className={headerContainer}
+          onMouseLeave={() => setShowCategory(false)}
+          onKeyDown={(e) => e.key === 'Escape' && setShowCategory(false)}
+          onBlur={(e) => {
+            if (!e.currentTarget.contains(e.relatedTarget))
+              setShowCategory(false);
+          }}
+        >
+          <header className={bar}>
+            <div className={menuContainer}>
+              <Link href='/' className={logo} aria-label='NEXTGACHA 홈'>
+                {[...'NEXTGACHA'].map((c, i) => (
+                  <span key={i} aria-hidden>
+                    {c}
                   </span>
+                ))}
+              </Link>
+              <nav aria-label='쇼핑몰 메뉴' className={nav}>
+                <Link
+                  href='/search?type=main&tag=전체 상품&page=1'
+                  className={`${menu} ${firstRoute === 'search' ? activeMenu : showCategory ? openMenu : ''}`}
+                  aria-haspopup='true'
+                  aria-expanded={showCategory}
+                  onMouseEnter={() => setShowCategory(true)}
+                  onFocus={() => setShowCategory(true)}
+                >
+                  CATEGORY
+                </Link>
+                <Link
+                  href='/notice'
+                  className={`${menu} ${firstRoute === 'notice' ? activeMenu : ''}`}
+                  aria-current={firstRoute === 'notice' ? 'page' : undefined}
+                >
+                  NOTICE
                 </Link>
                 {session?.user && (
-                  <Link href={`/mypage/cart`}>
-                    <span
-                      className={`${menu} ${firstRoute === 'mypage' ? activeMenu : ''}`}
-                    >
-                      MYPAGE
-                    </span>
+                  <Link
+                    href='/mypage/cart'
+                    className={`${menu} ${firstRoute === 'mypage' ? activeMenu : ''}`}
+                    aria-current={firstRoute === 'mypage' ? 'page' : undefined}
+                  >
+                    MYPAGE
                   </Link>
                 )}
-              </div>
-            </div>
+              </nav>
 
-            <div className={wrap}>
-              <Search />
-              {session?.user ? (
-                <button className={menu} onClick={() => signOut()}>
-                  LOGOUT
-                </button>
-              ) : (
-                <button className={menu} onClick={() => signIn('kakao')}>
-                  LOGIN
-                </button>
-              )}
-              <div  ref={reportRef}>
-                <ImgBtn
-                  img='report'
-                  title='오류 신고'
-                  width={30}
-                  height={28}
-                  className={reportBtn}
-                  onClick={() => {
-                    setShowReport((prev) => !prev);
-                  }}
-                />
-
-                {showReport && (
-                  <div className={reportContainer}>
-                    <div className={wrapTextarea}>
-                      <div className={reportTitle}>🚨 오류 신고 🚨</div>
-                      <div className={textareaBox}>
-                        <textarea
-                          placeholder='오류를 입력해주세요 (최소 4자, 최대 200자)'
-                          className={`${textareaStyle} ${reportTextarea}`}
-                          maxLength={200}
-                          value={textareaValue}
-                          onChange={(e) => {
-                            setTextAreaValue(e.target.value);
-                          }}
-                        />
-                        <span className={textareaCount}>{textareaValue.length}/200</span>
-                      </div>
-                      <Btn
-                        className={reportSendBtn}
-                        onClick={async () => {
-                          if (textareaValue.length === 0) {
-                            alert('오류를 입력해주세요.');
-                            return;
-                          }
-                          if (
-                            textareaValue.length >= 1 &&
-                            textareaValue.length <= 4
-                          ) {
-                            alert('5자 이상 입력해주세요.');
-                            return;
-                          }
-                          await fetch('/api/postError', {
-                            method: 'POST',
-                            body: JSON.stringify({
-                              textareaValue,
-                              pathname: decodeURIComponent(pathname),
-                            }),
-                            headers: {
-                              'Content-Type': 'application/json',
-                            },
-                          }).then(async (res) => {
-                            const data = await res.json();
-                            console.log(data);
-                            if (data.ok === true) {
-                              alert('전송되었습니다.');
-                              setTextAreaValue('');
-                              setShowReport(false);
-                            } else {
-                              alert('오류가 발생하여 전송되지 못했습니다.');
-                              setTextAreaValue('');
-                              setShowReport(false);
-                            }
-                          });
-                        }}
-                      >
-                        SEND ({textareaValue.length})
-                      </Btn>
-                    </div>
-                  </div>
+              <div className={tools}>
+                <Search />
+                {session?.user ? (
+                  <button className={menu} onClick={() => signOut()}>
+                    LOGOUT
+                  </button>
+                ) : (
+                  <button className={menu} onClick={() => signIn('kakao')}>
+                    LOGIN
+                  </button>
                 )}
               </div>
             </div>
-          </div>
+          </header>
+          {showCategory && (
+            <>
+              <MegaMenu
+                menu={categoryMenu}
+                onClose={() => setShowCategory(false)}
+              />
+              <div className={backdrop} />
+            </>
+          )}
         </div>
       )}
     </>

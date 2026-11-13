@@ -1,18 +1,22 @@
 import React from 'react';
 import Link from 'next/link';
-import { Range } from '@/shared/ui';
-import type { Notice as NoticeType } from '../model/types';
-import { noticeContainer, noticeNum, noticeCreateDate, noticeTitle } from './notice.css';
+import { dotDate, type Notice as NoticeType } from '../model/types';
+import NoticeTag from './NoticeTag';
+import { row, tagCell, titleCell, title, newDesk, newMobile, date } from './notice.css';
 
-// 공지 목록 한 줄. 고정 공지는 번호 자리에 '공지'
-export default function Notice({ props }: { props: NoticeType }) {
+// 공지 목록 한 줄. 웹은 한 줄, 모바일은 (분류·날짜) 위 / 제목 아래
+export default function Notice({ props, isNew }: { props: NoticeType; isNew?: boolean }) {
   return (
-    <Range preset='between' gap='10' className={noticeContainer}>
-      <div className={noticeNum}>{props.pinned ? '공지' : props.num}</div>
-      <div className={noticeTitle}>
-        <Link href={`/notice/${props.num}`}>{props.title}</Link>
-      </div>
-      <div className={noticeCreateDate}>{props.publish_at.slice(0, 10)}</div>
-    </Range>
+    <Link href={`/notice/${props.num}`} className={row}>
+      <span className={tagCell}>
+        <NoticeTag category={props.category} />
+        {isNew && <span className={newMobile}>NEW</span>}
+      </span>
+      <span className={titleCell}>
+        <span className={title}>{props.title}</span>
+        {isNew && <span className={newDesk}>NEW</span>}
+      </span>
+      <span className={date}>{dotDate(props.publish_at)}</span>
+    </Link>
   );
 }

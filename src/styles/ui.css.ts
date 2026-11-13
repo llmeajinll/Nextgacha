@@ -1,11 +1,21 @@
 import { globalStyle, style, styleVariants } from '@vanilla-extract/css';
 import { vars } from './theme.css';
+import { fluid } from './fluid';
 
 // 디자인 캔버스 "버튼 정리 · 탭 정리 · 태그 정리"의 규칙. 각 화면의 *.css.ts에서
 // style([btn, btnSize.s, btnKind.neutral]) 처럼 조합해서 쓴다 (모서리 0, 테두리 1px)
 
 const pixel = 'silkscreen';
+
+// 쇼핑몰 모바일 화면 (태블릿 세로 이하)
+export const mobile = 'screen and (max-width: 1023px)';
 const { color, slate, tone } = vars;
+
+// 모바일 글자 크기 (디자인 type-mobile.css)
+const m = (n: number) => ({ '@media': { [mobile]: { fontSize: fluid(n) } } });
+
+// iOS가 16px 아래 입력칸에서 화면을 확대하지 않게
+globalStyle('input, textarea, select', { '@media': { [mobile]: { fontSize: 'max(16px, 1em) !important' } } });
 
 // ── 버튼 ──
 export const btn = style({
@@ -30,6 +40,7 @@ export const btn = style({
     '&:disabled': { backgroundColor: slate[100], borderColor: slate[200], color: slate[400], cursor: 'not-allowed' },
     '&:focus-visible': { outline: `2px solid ${color.blue2}`, outlineOffset: 2 },
   },
+  ...m(13),
 });
 
 globalStyle(`${btn} svg`, { fill: 'currentColor', flex: '0 0 auto' });
@@ -37,9 +48,9 @@ globalStyle(`${btn} svg:not([width])`, { width: 16, height: 16 });
 
 // L 50: 영역의 마지막 동작 · M 44: 기본 · S 36: 행·카드 안 동작
 export const btnSize = styleVariants({
-  l: { height: 50, padding: '0 20px', fontSize: 16 },
+  l: { height: 50, padding: '0 20px', fontSize: 16, ...m(14) },
   m: {},
-  s: { height: 36, padding: '0 12px', fontSize: 13 },
+  s: { height: 36, padding: '0 12px', fontSize: 13, ...m(12) },
 });
 
 // 영문 Silkscreen 라벨 (페이지 하단 큰 버튼과 그 짝)
@@ -49,6 +60,12 @@ export const btnPx = style({
   letterSpacing: -0.5,
   fontSize: 18,
   selectors: { [`&${btnSize.l}`]: { fontSize: 20 }, [`&${btnSize.s}`]: { fontSize: 15 } },
+  '@media': {
+    [mobile]: {
+      fontSize: fluid(16),
+      selectors: { [`&${btnSize.l}`]: { fontSize: fluid(17) }, [`&${btnSize.s}`]: { fontSize: fluid(14) } },
+    },
+  },
 });
 
 export const btnIcon = style({ width: 44, padding: 0, selectors: { [`&${btnSize.s}`]: { width: 36 } } });
@@ -139,6 +156,7 @@ const countBadge = {
   fontWeight: 400,
   backgroundColor: tone.soldout.bg,
   color: tone.soldout[2],
+  ...m(11),
 } as const;
 const countOn = { backgroundColor: 'white', color: color.blue2 };
 
@@ -166,6 +184,7 @@ export const tab = style({
     [on(tabOn)]: filled,
     '&:focus-visible': { outline: `2px solid ${color.blue2}`, outlineOffset: 2 },
   },
+  ...m(12),
 });
 export const tabCount = style(countBadge);
 globalStyle(`${tab}${tabOn} ${tabCount}, ${tab}[aria-pressed="true"] ${tabCount}, ${tab}[aria-current="page"] ${tabCount}`, countOn);
@@ -195,6 +214,7 @@ export const utab = style({
     [on(utabOn)]: { color: slate[800], borderBottomColor: color.blue1, fontWeight: 600 },
     '&:focus-visible': { outline: `2px solid ${color.blue2}`, outlineOffset: 2 },
   },
+  ...m(14),
 });
 
 // C. 선택 칩: 패널 안 작은 선택지 (할인율, 기간, 옵션)
@@ -220,6 +240,7 @@ export const chip = style({
     [on(chipOn)]: filled,
     '&:focus-visible': { outline: `2px solid ${color.blue2}`, outlineOffset: 2 },
   },
+  ...m(12),
 });
 export const chipCount = style(countBadge);
 globalStyle(`${chip}${chipOn} ${chipCount}, ${chip}[aria-pressed="true"] ${chipCount}`, countOn);
@@ -248,6 +269,27 @@ export const ltab = style({
     [on(ltabOn)]: { backgroundColor: color.blueBg, color: color.blue1, fontWeight: 600 },
     '&:focus-visible': { outline: `2px solid ${color.blue2}`, outlineOffset: -2 },
   },
+  ...m(14),
+});
+
+// ── 체크박스 (button role="checkbox" aria-checked, 안에 Check 아이콘) ──
+export const checkbox = style({
+  width: 24,
+  height: 24,
+  flex: '0 0 24px',
+  padding: 0,
+  boxSizing: 'border-box',
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'center',
+  cursor: 'pointer',
+  border: `1px solid ${slate[300]}`,
+  backgroundColor: 'white',
+  color: 'white',
+  selectors: {
+    '&[aria-checked="true"]': { borderColor: color.blue1, backgroundColor: color.blue1 },
+    '&:focus-visible': { outline: `2px solid ${color.blue2}`, outlineOffset: 2 },
+  },
 });
 
 // ── 태그 ──
@@ -261,7 +303,7 @@ export const tag = style({
   whiteSpace: 'nowrap',
 });
 // 상품 상태처럼 목록 행의 큰 태그
-export const tagL = style({ fontSize: 13, padding: '6px 10px' });
+export const tagL = style({ fontSize: 13, padding: '6px 10px', ...m(12) });
 // 상품명 아래 제조사·카테고리·예약 기간
 export const tagS = style({ padding: '4px 6px', fontWeight: 400, lineHeight: 1 });
 export const tagTone = styleVariants({

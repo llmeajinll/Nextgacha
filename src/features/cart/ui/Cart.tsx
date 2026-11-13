@@ -1,155 +1,151 @@
 'use client';
 
-import React, { Suspense, useEffect, useRef, useState } from 'react';
-import {
-  useSuspenseQuery,
-  useQueryClient,
-  useMutation,
-} from '@tanstack/react-query';
-import { useRouter } from 'next/navigation';
+import React from 'react';
 import Image from 'next/image';
-import { Range, ToggleBtn } from '@/shared/ui';
-import { Ticket } from '@/features/cart/ui';
-import { EmptyCard } from '@/shared/ui';
-import {
-  cartContainer,
-  ticketContainer,
-  cartRow,
-  toggleWrap,
-  productImage,
-} from './cart.css';
 import Link from 'next/link';
-import { useCart } from '@/features/cart/model';
-import { useModal } from '@/shared/hooks';
+import { Check, ChevronDown, Minus, Plus, Trash } from 'pixelarticons/react';
+import { comma } from '@/shared/lib/comma';
+import { useCart } from '../model';
+import * as s from './cart.css';
 
+type Line = { name: string; count: number };
+
+// 상품 하나(num)의 옵션 묶음 카드. 선택·접기 상태는 CartTemplate이 들고 있다
 export default function Cart({
-  props,
-  onClickCheck,
+  item,
+  isSelected,
+  onToggleLine,
+  open,
+  onToggleOpen,
+  maxPerItem,
 }: {
-  props?: any;
-  onClickCheck: (num: number, newData: any) => void;
+  item: any;
+  isSelected: (num: number, name: string) => boolean;
+  onToggleLine: (num: number, name: string) => void;
+  open: boolean;
+  onToggleOpen: () => void;
+  maxPerItem: number;
 }) {
-  const queryClient = useQueryClient();
-  const router = useRouter();
-  const scrollRef = useRef<HTMLDivElement>(null);
-  const { openModal } = useModal();
+  const { cart, keep, stock } = item;
+  const { increase, decrease, erase, isPending } = useCart();
+  const list: Line[] = cart?.list ?? [];
+  if (list.length === 0) return null;
 
-  const { cart, keep, stock } = props;
-  const { increase, decrease, erase, isPending, data } = useCart();
-
-  // console.log('cart, keep, stock : ', cart, keep, stock);
-
-  useEffect(() => {
-    const el = scrollRef.current;
-    if (!el) return;
-
-    const handleWheel = (e: WheelEvent) => {
-      if (e.deltaY === 0) return;
-      e.preventDefault();
-      el.scrollLeft += e.deltaY;
-    };
-
-    el.addEventListener('wheel', handleWheel, { passive: false });
-    return () => el.removeEventListener('wheel', handleWheel);
-  }, []);
-
-  console.log('cart', !cart);
+  const unit = stock.price * (1 - (stock.discount ?? 0) / 100);
+  const qtySum = list.reduce((a, l) => a + l.count, 0);
+  const countOf = (src: any, name: string) => src?.list?.find((v: any) => v.name === name)?.count ?? 0;
 
   return (
-    <>
-      {!cart || !cart.list || cart.list.length === 0 ? (
-        <EmptyCard>CART IS EMPTY</EmptyCard>
+    <article className={s.group}>
+      <header className={s.head}>
+        <Link href={`/${cart.num}/info`} tabIndex={-1} aria-hidden>
+          <Image
+            src={`${process.env.NEXT_PUBLIC_VERCEL_IMAGE_URL}${cart.num}.png`}
+            width={72}
+            height={72}
+            alt=''
+            className={s.thumb}
+          />
+        </Link>
+        <span className={s.headText}>
+          <Link href={`/${cart.num}/info`} className={s.title}>
+            {stock.title}
+          </Link>
+          <span className={s.sub}>
+            옵션 {list.length}종 · <span className={s.pxBlue}>{qtySum}</span>개 담음
+          </span>
+        </span>
+        <span className={s.sum}>
+          {comma(unit * qtySum)}
+          <span className={s.sumUnit}> WON</span>
+        </span>
+        <button
+          type='button'
+          className={s.iconBtn}
+          onClick={onToggleOpen}
+          aria-expanded={open}
+          aria-label={`${open ? '접기' : '펼치기'}: ${stock.title}`}
+        >
+          <ChevronDown width={18} height={18} aria-hidden className={`${s.chevron} ${open ? s.chevronOpen : ''}`} />
+        </button>
+      </header>
+
+      {!open ? (
+        <div className={s.chips}>
+          {list.map((l) => (
+            <span key={l.name} className={`${s.chip} ${isSelected(cart.num, l.name) ? '' : s.chipOff}`}>
+              {l.name}
+              <span className={s.chipQty}>×{l.count}</span>
+            </span>
+          ))}
+        </div>
       ) : (
-        <Range gap='10' className={cartRow}>
-          <div className={toggleWrap}>
-            <ToggleBtn
-              value={cart.check === true}
-              setValue={() => onClickCheck(cart.num, { check: !cart.check })}
-              label='주문할 상품 선택'
-            />
-          </div>
-
-          <Range className={cartContainer}>
-            <Image
-              // src={props?.image[0] || '/images/defaultImg.png'}
-              src={
-                `${process.env.NEXT_PUBLIC_VERCEL_IMAGE_URL}${cart.num}.png` ||
-                '/images/defaultImg.png'
-              }
-              width={130}
-              height={130}
-              alt='productImg'
-              className={productImage}
-              onClick={() => router.push(`/${cart.num}/info`)}
-            />
-
-            <Range preset='columnBetween'>
-              <Range
-                preset='left'
-                gap='none'
-                className={ticketContainer}
-                ref={scrollRef}
+        list.map((l) => {
+          const on = isSelected(cart.num, l.name);
+          const shipping = countOf(keep, l.name);
+          // 더 담을 수 있는 최대: 1인 한도에서 배송중을 뺀 값과 재고 중 작은 값 (useCart.increase와 같은 기준)
+          const cap = Math.min(maxPerItem - shipping, countOf(stock, l.name));
+          return (
+            <div key={l.name} className={`${s.line} ${on ? '' : s.lineOff}`}>
+              <button
+                type='button'
+                role='checkbox'
+                aria-checked={on}
+                aria-label={`${l.name} 선택`}
+                className={s.checkbox}
+                onClick={() => onToggleLine(cart.num, l.name)}
               >
-                {cart?.list.map((item: any, idx: number) => {
-                  // const limit = props.list.find(
-                  //   (val: { name: string; count: number }) => val.name === item.name
-                  // );
-
-                  const limit = { name: item.name, count: item.count };
-                  const data = {
-                    count: item.count,
-                    title: stock.title,
-                    price: stock.price,
-                    discount: stock.discount,
-                    code: item.code,
-                    num: cart.num,
-                    name: item.name,
-                    limit: limit,
-                  };
-
-                  // console.log('data : ', data);
-
-                  // console.log('ticket props in cart: ', props);
-                  return (
-                    <Ticket
-                      key={idx}
-                      props={data}
-                      increase={() => {
-                        if (isPending) return;
-                        const keepCount =
-                          keep?.list?.find((v: any) => v.name === item.name)
-                            ?.count ?? 0;
-                        const stockCount =
-                          stock?.list?.find((v: any) => v.name === item.name)
-                            ?.count ?? 0;
-                        increase(
-                          keepCount,
-                          stockCount,
-                          cart.num,
-                          item.name,
-                          item.count,
-                        );
-                      }}
-                      decrease={() => {
-                        if (isPending) return;
-                        decrease(
-                          cart.num,
-                          item.name,
-                          // , item.count
-                        );
-                      }}
-                      erase={() => {
-                        if (isPending) return;
-                        erase(cart.num, item.name);
-                      }}
-                    />
-                  );
-                })}
-              </Range>
-            </Range>
-          </Range>
-        </Range>
+                {on && <Check width={16} height={16} aria-hidden />}
+              </button>
+              <span className={s.name}>
+                <span className={s.nameText}>{l.name}</span>
+                <span className={s.sub}>
+                  {comma(unit)}원
+                  {shipping > 0 && (
+                    <>
+                      {' · '}
+                      <span className={s.ship}>{shipping}개 배송 중</span> · {Math.max(cap, 0)}개 담기 가능
+                    </>
+                  )}
+                </span>
+              </span>
+              <span role='group' aria-label={`${l.name} 수량`} className={s.stepper}>
+                <button
+                  type='button'
+                  className={s.stepBtn}
+                  aria-label='하나 빼기'
+                  disabled={isPending || l.count <= 1}
+                  onClick={() => decrease(cart.num, l.name)}
+                >
+                  <Minus width={16} height={16} aria-hidden />
+                </button>
+                <span className={s.qty} aria-live='polite'>
+                  {l.count}
+                </span>
+                <button
+                  type='button'
+                  className={s.stepBtn}
+                  aria-label='하나 더 담기'
+                  disabled={isPending || l.count >= cap}
+                  onClick={() => increase(shipping, countOf(stock, l.name), cart.num, l.name, l.count)}
+                >
+                  <Plus width={16} height={16} aria-hidden />
+                </button>
+              </span>
+              <span className={s.total}>{comma(unit * l.count)}</span>
+              <button
+                type='button'
+                className={s.del}
+                aria-label={`${l.name} 빼기`}
+                disabled={isPending}
+                onClick={() => erase(cart.num, l.name)}
+              >
+                <Trash width={16} height={16} aria-hidden />
+              </button>
+            </div>
+          );
+        })
       )}
-    </>
+    </article>
   );
 }

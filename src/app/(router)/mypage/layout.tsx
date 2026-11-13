@@ -1,4 +1,4 @@
-import { DetailTab } from '@/widgets';
+import { MypageTabs } from '@/widgets';
 import { Profile } from '@/entities/user/ui';
 import React from 'react';
 import { Provider } from 'jotai';
@@ -9,7 +9,7 @@ export default function mypageLayout({ menu }: { menu: React.ReactNode }) {
     <Provider>
       <div className={wrapper}>
         <Profile />
-        <DetailTab status='mypage' />
+        <MypageTabs />
         {menu}
       </div>
     </Provider>

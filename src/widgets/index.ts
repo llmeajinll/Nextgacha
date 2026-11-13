@@ -11,3 +11,6 @@ export { default as NoticeTemplate } from './NoticeTemplate/NoticeTemplate';
 export { default as ManagerHeader } from './ManagerHeader/ManagerHeader';
 export { default as ManagerSideMenu } from './ManagerSideMenu/ManagerSideMenu';
 export { default as ErrorTemplate } from './ErrorTemplate/ErrorTemplate';
+export { default as MobileNav } from './MobileNav/MobileNav';
+export { default as MypageTabs } from './MypageTabs/MypageTabs';
+export { default as FloatingActions } from './FloatingActions/FloatingActions';

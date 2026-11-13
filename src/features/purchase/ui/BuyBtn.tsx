@@ -25,6 +25,7 @@ import {
   detailAddressWrap,
   detailAddressInput,
   updateBtn,
+  blockBtn,
 } from './buyBtn.css';
 
 interface BuyBtnType {
@@ -38,9 +39,14 @@ interface BuyBtnType {
 export default function BuyBtn({
   props,
   width,
+  block,
+  label = 'BUY',
 }: {
   props: BuyBtnType;
   width?: number;
+  // 디자인 시스템 L 버튼으로 부모 폭을 채움 (마이페이지 장바구니)
+  block?: boolean;
+  label?: string;
 }) {
   console.log('buyBtn list : ', props);
   const queryClient = useAtomValue(queryClientAtom);
@@ -63,7 +69,7 @@ export default function BuyBtn({
   };
 
   const scriptUrl =
-    'https://t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js';
+    'https://t1.kakaocdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js';
   const open = useDaumPostcodePopup(scriptUrl);
 
   const handleComplete = async (data: any) => {
@@ -189,7 +195,11 @@ export default function BuyBtn({
 
   return (
     <div className={wrapper}>
-      {/* {ready && <div id='payment-method' />} */}
+      {block ? (
+        <Btn kind='primary' scale='l' px className={blockBtn} onClick={onClickPayment} disabled={isPending || props.list.length === 0}>
+          {label}
+        </Btn>
+      ) : (
       <Btn
         // size={props.size || 'medium'}
         onClick={onClickPayment}
@@ -207,8 +217,9 @@ export default function BuyBtn({
         }}
         disabled={isPending || props.list.length === 0}
       >
-        BUY
+        {label}
       </Btn>
+      )}
       {isHover && firstRoute !== 'mypage' && (
         <div
           className={tooltipWrap}

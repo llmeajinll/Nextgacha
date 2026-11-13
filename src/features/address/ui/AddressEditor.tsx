@@ -1,135 +1,159 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { useDaumPostcodePopup } from 'react-daum-postcode';
-import { Close } from 'pixelarticons/react';
-import {
-  addressInput,
-  addressBtn,
-  addressContainer,
-  writeBtn,
-  wrapper,
-  closeBtn,
-} from './addressModal.css';
-import { userInfoAtom } from '@/entities/user/model/store';
-import { useAtom, useAtomValue } from 'jotai';
-import { useModal } from '@/shared/hooks';
-import { Range } from '@/shared/ui';
+import { useAtomValue } from 'jotai';
 import { queryClientAtom } from 'jotai-tanstack-query';
+import { Check, Search } from 'pixelarticons/react';
+import { userInfoAtom } from '@/entities/user/model/store';
+import { useModal } from '@/shared/hooks';
+import * as s from './addressEditor.css';
 
-export default function AddressModal() {
+const SCRIPT = 'https://t1.kakaocdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js';
+
+type Draft = { zip: string; road: string; detail: string; noDetail: boolean };
+
+// ponytail: 주소는 user.address 문자열 하나라 "[우편번호] 도로명, 상세" 모양일 때만 칸을 나눠 채운다. 칸별로 저장하게 되면 이 파싱을 지우기
+function split(address = ''): Draft {
+  const m = /^\[(\d{5})\] (.+?)(?:, ([^,()]+))?$/.exec(address);
+  if (!m) return { zip: '', road: '', detail: '', noDetail: false };
+  return { zip: m[1], road: m[2], detail: m[3] ?? '', noDetail: !m[3] };
+}
+
+// 배송지 보기 ↔ 그 자리에서 고치기 (디자인 캔버스 MyCart). children은 제목과 주소 사이 장식(트럭 길)
+// 저장하면 루트에 data-run이 잠깐 붙는다 → 장식 쪽 css가 트럭을 달리게 할 수 있음
+export default function AddressEditor({ children }: { children?: React.ReactNode }) {
   const queryClient = useAtomValue(queryClientAtom);
+  const { data: user } = useAtomValue(userInfoAtom);
+  const { openModal } = useModal();
+  const openPostcode = useDaumPostcodePopup(SCRIPT);
 
-  const [show, setShow] = useState(false);
-  const [editMainAddress, setEditMainAddress] = useState('');
-  const [editDetailAddress, setEditDetailAddress] = useState('');
+  const [draft, setDraft] = useState<Draft | null>(null);
+  const [saving, setSaving] = useState(false);
+  const [saved, setSaved] = useState(false);
+  const [run, setRun] = useState(false);
 
-  const [{ data, isPending, error }] = useAtom(userInfoAtom);
-  const { openModal, closeModal } = useModal();
+  const patch = (p: Partial<Draft>) => setDraft((d) => (d ? { ...d, ...p } : d));
+  const detail = draft?.detail.trim() ?? '';
+  const cantSave = !draft?.road || (!draft.noDetail && !detail) || saving;
 
-  const scriptUrl =
-    'https://t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js';
-  const open = useDaumPostcodePopup(scriptUrl);
-
-  const handleComplete = (data: any) => {
-    let fullAddress = data.address;
-    let extraAddress = '';
-
-    if (data.addressType === 'R') {
-      if (data.bname !== '') extraAddress += data.bname;
-      if (data.buildingName !== '')
-        extraAddress +=
-          extraAddress !== '' ? `, ${data.buildingName}` : data.buildingName;
-      fullAddress += extraAddress !== '' ? ` (${extraAddress})` : '';
-    }
-
-    console.log(fullAddress); // 주소 결과 처리
-    setEditMainAddress(fullAddress);
-    // console.log(data.zonecode); // 우편번호
-  };
-
-  const handleClick = () => {
-    open({
-      onComplete: handleComplete,
-      width: 500,
-      height: 600,
-      top: 300, // 화면 상단에서의 거리
-      left: 500, // 화면 왼쪽에서의 거리
-      popupTitle: '배송지 주소 찾기', // 팝업창 타이틀
+  const search = () =>
+    openPostcode({
+      popupTitle: '배송지 주소 찾기',
+      onComplete: (data: any) => {
+        // 도로명이면 (법정동, 건물명)을 덧붙인다
+        const extra = data.addressType === 'R' ? [data.bname, data.buildingName].filter(Boolean).join(', ') : '';
+        patch({ zip: data.zonecode, road: extra ? `${data.address} (${extra})` : data.address });
+      },
     });
+
+  const save = async () => {
+    if (!draft || cantSave) return;
+    const address = `[${draft.zip}] ${draft.road}${draft.noDetail ? '' : `, ${detail}`}`;
+    setSaving(true);
+    const res = await fetch('/api/updateAddress', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ address }),
+    }).catch(() => null);
+    setSaving(false);
+    if (!res?.ok) {
+      openModal('배송지를 바꾸지 못했어요. 잠시 후 다시 시도해 주세요.');
+      return;
+    }
+    await queryClient.invalidateQueries({ queryKey: ['userInfo'] });
+    setDraft(null);
+    setSaved(true);
+    setRun(true);
+    setTimeout(() => setRun(false), 900);
   };
 
   return (
-    <div className={wrapper}>
-      <div onClick={() => setShow(!show)} className={writeBtn}>
-        [주소 수정]
-      </div>
-      {show && (
-        <Range preset='columnCenter' gap='8' className={addressContainer}>
-          <Range preset='between'>
-            <div>주소 수정</div>
-            <button onClick={() => setShow(false)} className={closeBtn} aria-label='닫기'>
-              <Close width={25} height={25} aria-hidden />
-            </button>
-          </Range>
-          <div>
-            <input
-              onClick={handleClick}
-              className={addressInput}
-              placeholder='주요 주소 입력 ( ex. 제주 첨단로 242)'
-              value={editMainAddress}
-              onChange={(e) => setEditMainAddress(e.target.value)}
-            />
-          </div>
-          <div>
-            <input
-              className={addressInput}
-              placeholder='상세 주소 입력 ( ex. 102호 / 상세 주소가 없을 시 . 입력)'
-              value={editDetailAddress}
-              onChange={(e) => setEditDetailAddress(e.target.value)}
-              maxLength={10}
-            />
-          </div>
+    <div className={s.root} data-run={run || undefined}>
+      <div className={s.head}>
+        <span className={s.title}>배송지</span>
+        {!draft && (
           <button
-            className={addressBtn}
-            onClick={async () => {
-              if (!editMainAddress || !editDetailAddress) {
-                openModal('주소를 입력해주세요.');
-                return;
-              }
-              const address = editMainAddress + ' ' + editDetailAddress;
-              await fetch('/api/updateAddress', {
-                method: 'POST',
-                headers: {
-                  'Content-Type': 'application/json',
-                },
-
-                body: JSON.stringify({
-                  address: address,
-                }),
-              }).then(async (res) => {
-                console.log(res);
-                if (res.ok === true) {
-                  const data = await res.json();
-                  // setUserInfo((prev: any) => ({
-                  //   ...prev,
-                  //   address: data.address,
-                  // }));
-                  // console.log('after userInfo : ', userInfo);
-                  queryClient.invalidateQueries({ queryKey: ['userInfo'] });
-                  setEditMainAddress('');
-                  setEditDetailAddress('');
-                  setShow(false);
-                  openModal('주소가 수정되었습니다.');
-                } else {
-                  openModal('주소 수정에 실패했습니다.');
-                }
-              });
+            type='button'
+            className={s.changeBtn}
+            onClick={() => {
+              setDraft(split(user?.address));
+              setSaved(false);
             }}
           >
-            EDIT
+            변경
           </button>
-        </Range>
+        )}
+      </div>
+
+      {children}
+
+      {!draft ? (
+        <div className={s.view}>{user?.address || <span className={s.empty}>배송지를 입력해 주세요.</span>}</div>
+      ) : (
+        <div className={s.form}>
+          <div className={s.field}>
+            <span id='ship-addr-label' className={s.label}>
+              주소
+            </span>
+            <div className={s.row}>
+              <input readOnly aria-label='우편번호' value={draft.zip} placeholder='우편번호' className={`${s.input} ${s.zip}`} />
+              <button type='button' className={s.searchBtn} onClick={search}>
+                <Search width={16} height={16} aria-hidden />
+                주소 검색
+              </button>
+            </div>
+            <input
+              readOnly
+              aria-labelledby='ship-addr-label'
+              value={draft.road}
+              placeholder='주소 검색으로 골라 주세요'
+              className={s.input}
+            />
+          </div>
+
+          <div className={s.field}>
+            <label htmlFor='ship-detail' className={s.label}>
+              상세 주소
+            </label>
+            <input
+              id='ship-detail'
+              value={draft.noDetail ? '' : draft.detail}
+              onChange={(e) => patch({ detail: e.target.value })}
+              disabled={draft.noDetail}
+              maxLength={50}
+              placeholder={draft.noDetail ? '상세 주소 없이 보내요' : '동 · 호수 (예: 101동 1001호)'}
+              className={`${s.input} ${s.editable}`}
+            />
+            <label className={s.check}>
+              <button
+                type='button'
+                role='checkbox'
+                aria-checked={draft.noDetail}
+                className={s.box}
+                onClick={() => patch({ noDetail: !draft.noDetail })}
+              >
+                {draft.noDetail && <Check width={14} height={14} aria-hidden />}
+              </button>
+              상세 주소 없음
+            </label>
+          </div>
+
+          <div className={s.row}>
+            <button type='button' className={s.cancelBtn} onClick={() => setDraft(null)}>
+              취소
+            </button>
+            <button type='button' className={s.saveBtn} onClick={save} disabled={cantSave}>
+              저장
+            </button>
+          </div>
+        </div>
+      )}
+
+      {saved && !draft && (
+        <span role='status' className={s.saved}>
+          배송지를 바꿨어요.
+        </span>
       )}
     </div>
   );

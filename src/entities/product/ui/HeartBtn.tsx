@@ -11,10 +11,12 @@ export default function HeartBtn({
   size = 28,
   status,
   num,
+  className,
 }: {
   size?: number;
   status?: boolean;
   num: number;
+  className?: string;
 }) {
   // console.log(num, status);
   const [like, setLike] = useState(status);
@@ -60,6 +62,7 @@ export default function HeartBtn({
       title='좋아요'
       active={!!like}
       onClick={onClickHeartBtn}
+      className={className}
     />
   );
 }

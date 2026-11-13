@@ -8,6 +8,8 @@ export const wrapper = style({
   width: '100%',
 });
 
+export const blockBtn = style({ display: 'flex', width: '100%' });
+
 export const dynamicWidthBtn = style({
   width: fallbackVar(btnWidthVar, '100%'),
 });
