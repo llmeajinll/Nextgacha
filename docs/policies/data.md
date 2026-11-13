@@ -33,11 +33,12 @@
   - 클러스터는 하나로 두고, DB 사용자를 환경별로 나눈다. 로컬·Preview는 `gacha_dev`(와 `gacha_test`)만 읽고 쓸 수 있는 사용자로 접속하고, 운영 사용자는 Production 환경변수에만 둔다.
   - 백업은 하루 한 번 `mongodump`로 운영 `gacha`를 덤프한다.
   - 복구 목표: 데이터 손실은 최대 24시간, 복구는 6시간 안 ([백업·복구 목표](./incident.md#백업복구-목표)).
+  - `gacha_dev`는 매일 03:00(KST) 운영 기준으로 덮어쓴다(한 방향, `.github/workflows/sync-dev-db.yml`). 개인정보가 없는 `product`·`counter`·`category`·`banner`·`notice`만 복사하고, 주문·회원·장바구니·리뷰·QnA·오류는 복사하지 않는다. dev에서 이 컬렉션을 바꾼 내용은 다음 복사 때 사라진다.
 - 결정할 것: 덤프를 실행할 곳(GitHub Actions 스케줄 등)과 저장 위치·보존 개수, 복구 연습 주기
 - 이유: 지금은 운영과 개발이 같은 클러스터, 같은 계정이라 개발 환경에서 실수로 운영 DB를 건드릴 수 있고, 데이터가 지워졌을 때 복구 방법이 없다.
 - 구현 시 바뀌는 곳: Atlas DB 사용자 추가, Vercel Preview·Development와 `.env.local`의 `MONGODB_URI` 교체 (코드 변경 없음)
 - 코드: `src/shared/api/mongodb.ts:14`
-- 변경 이력: 2026-11-09 신설, 2026-11-11 확정 (환경별 DB 사용자, 일 1회 `mongodump`, RPO 24시간·RTO 6시간)
+- 변경 이력: 2026-11-09 신설, 2026-11-11 확정 (환경별 DB 사용자, 일 1회 `mongodump`, RPO 24시간·RTO 6시간), 2026-11-13 운영 → dev 매일 복사 추가
 
 ## 상품 이미지 업로드
 - 상태: 확정

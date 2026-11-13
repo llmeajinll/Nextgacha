@@ -1,0 +1,45 @@
+name: Sync dev DB
+
+# 운영 gacha → gacha_dev 한 방향 복사. dev에서 바꾼 내용은 매번 운영 기준으로 덮어써진다.
+# 개인정보가 없는 컬렉션만 복사한다 (주문·회원·장바구니·리뷰·QnA·오류는 복사하지 않음).
+# 필요한 secret (DB 이름이 없는 URI: mongodb+srv://user:pass@host/?...):
+#   MONGODB_URI_NEXTGACHA_PROD_READ — 운영 gacha 읽기 전용 사용자
+#   MONGODB_URI_NEXTGACHA_DEV       — gacha_dev readWrite 사용자
+
+on:
+  schedule:
+    - cron: '0 18 * * *' # 매일 03:00 KST
+  workflow_dispatch:
+
+concurrency:
+  group: sync-dev-db
+  cancel-in-progress: false
+
+jobs:
+  sync:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    permissions: {}
+    steps:
+      - name: Install MongoDB Database Tools
+        run: |
+          curl -fsSL -o tools.deb https://fastdl.mongodb.org/tools/db/mongodb-database-tools-ubuntu2404-x86_64-100.13.0.deb
+          sudo apt-get install -y ./tools.deb
+
+      - name: Copy collections
+        env:
+          PROD_URI: ${{ secrets.MONGODB_URI_NEXTGACHA_PROD_READ }}
+          DEV_URI: ${{ secrets.MONGODB_URI_NEXTGACHA_DEV }}
+        run: |
+          set -euo pipefail
+          # URI에 DB 이름(…/myFirstDatabase?…)이 있으면 --db와 충돌하므로 뺀다
+          strip_db() { sed -E 's#^(mongodb(\+srv)?://[^/]+)/[^?]*#\1/#'; }
+          PROD_URI=$(strip_db <<< "$PROD_URI")
+          DEV_URI=$(strip_db <<< "$DEV_URI")
+          # product와 counter는 같이 복사해야 상품 번호가 맞는다
+          for c in product counter category banner notice; do
+            mongodump --uri "$PROD_URI" --db gacha --collection "$c" --archive --quiet \
+              | mongorestore --uri "$DEV_URI" --archive --drop --quiet \
+                  --nsInclude "gacha.$c" --nsFrom "gacha.$c" --nsTo "gacha_dev.$c"
+            echo "copied $c"
+          done
