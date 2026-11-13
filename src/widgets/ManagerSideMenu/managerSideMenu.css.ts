@@ -8,11 +8,11 @@ export const nav = style({
   borderRight: `1px solid ${vars.slate[200]}`,
 });
 
-// 스크롤해도 메뉴가 화면에 남게. 메뉴가 화면보다 길면 메뉴 안에서 스크롤
+// 스크롤해도 메뉴가 헤더(60px) 아래에 남게. 메뉴가 화면보다 길면 메뉴 안에서 스크롤
 export const sticky = style({
   position: 'sticky',
-  top: 0,
-  maxHeight: '100vh',
+  top: 60,
+  maxHeight: 'calc(100vh - 60px)',
   overflowY: 'auto',
   boxSizing: 'border-box',
   padding: '24px 16px',

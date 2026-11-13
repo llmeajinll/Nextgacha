@@ -1,7 +1,11 @@
 import { style } from '@vanilla-extract/css';
 import { vars } from '@/styles/theme.css';
 
+// 스크롤해도 화면 위에 남는다: Drawer·사이드 메뉴·이벤트 패널이 이 60px 아래를 기준으로 붙는다
 export const header = style({
+  position: 'sticky',
+  top: 0,
+  zIndex: 10,
   height: 60,
   boxSizing: 'border-box',
   padding: '0 24px',

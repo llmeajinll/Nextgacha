@@ -161,7 +161,7 @@ export const side = style({
   minWidth: 0,
   maxWidth: '100%',
   position: 'sticky',
-  top: 24,
+  top: 84, // 고정 헤더 60 + 여백 24
   border: `1px solid ${vars.slate[200]}`,
   backgroundColor: 'white',
   color: vars.slate[800],
