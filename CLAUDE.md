@@ -19,6 +19,8 @@ Next.js 16(App Router) 쇼핑몰 "Next Gacha". 핵심 비즈니스 규칙: 한 �
 - `pnpm test` — Node 내장 러너(`node --test --experimental-strip-types`)로 `src/**/*.test.ts` 실행.
   Jest 없음. 테스트는 순수 로직만 다룬다. 옆 파일은 상대 경로 + `.ts` 확장자를 붙여 import한다
   (plain Node에서는 `@/` 별칭이 안 풀린다).
+- `node --env-file=.env.local scripts/seed-notices.mjs <DB 이름>` — 예전에 코드에 고정돼 있던 공지를 `notice`
+  컬렉션으로 옮김(이미 공지가 있으면 건너뜀). 개발 DB `gacha_dev`에는 넣었고, 운영 `gacha`는 배포 전에 따로 실행해야 함.
 - `pnpm storybook` / `pnpm build-storybook` — Storybook 10 (`@storybook/nextjs-vite`). 스토리는
   컴포넌트 옆에 두지 **않고** 루트 `stories/`에 `src` 레이어 경로를 그대로 따라 둔다
   (`src/shared/ui/ImgBtn` → `stories/shared/ui/ImgBtn.stories.tsx`, title `shared/ImgBtn`).
@@ -66,7 +68,8 @@ jotai atom/store), `ui/`(컴포넌트 + 옆에 둔 `*.css.ts`), 필요하면 `li
   - `/api/protected/*` → 미로그인 시 401.
   - 고정된 `ADMIN_API_PATHS` 목록(postEditProduct, postEvent, postProduct,
     postCheckToSending, postSendingToFinish, getOrderSort, getError, postErrorStatus, postCategory,
-    postQnaAnswer, getUserDetail, postBanner, postBannerDelete, postBannerOrder) → `isAdminEmail(email)`이
+    postQnaAnswer, getUserDetail, postBanner, postBannerDelete, postBannerOrder, postNotice,
+    postNoticeDelete, postNoticeImage) → `isAdminEmail(email)`이
     아니면 403 (`ADMIN_EMAILS` 환경변수와 비교, `src/shared/lib/isAdmin.ts` 참고).
   - `/manager/*` 페이지 → 관리자가 아니면 `/`로 리다이렉트. 단 `/manager`는 공개.
     로컬 `next dev`에서는 관리자 화면 작업용으로 페이지·API 관리자 가드를 끈다(`skipAdminGuard`).
@@ -80,7 +83,7 @@ jotai atom/store), `ui/`(컴포넌트 + 옆에 둔 `*.css.ts`), 필요하면 `li
 
 - `src/shared/api/mongodb.ts`는 모듈 로드 시점(top-level `await`)에 `MongoClient` 하나를 열고
   컬렉션마다 handle을 export한다(`productColl`, `cartColl`, `orderColl`, `userColl`,
-  `reviewColl`, `qnaColl`, `errorColl`, `bannerColl`, `counterColl`). `gachaDB`에 직접
+  `reviewColl`, `qnaColl`, `errorColl`, `bannerColl`, `noticeColl`, `counterColl`). `gachaDB`에 직접
   접근하지 말고 필요한 컬렉션을 import한다.
 - 결제 승인(`src/app/api/postPaymentsConfirm/route.ts`)이 가장 중요한 트랜잭션 경로다:
   재고 재검증(`validateStock`, 구매 불가가 된 상품을 장바구니에서 정리도 함) → `verifyOrder`

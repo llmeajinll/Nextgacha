@@ -58,6 +58,9 @@ export const contentList = style({
   marginTop: '40px',
 });
 
+// 본문 사이 이미지: 가로를 채우고 비율 유지
+export const contentImage = style({ display: 'block', width: '100%', maxWidth: 960, height: 'auto', margin: '12px 0' });
+
 export const navRow = style({
   padding: '10px 20px',
   boxSizing: 'border-box',

@@ -22,6 +22,9 @@ const ADMIN_API_PATHS = [
   '/api/postBanner',
   '/api/postBannerDelete',
   '/api/postBannerOrder',
+  '/api/postNotice',
+  '/api/postNoticeDelete',
+  '/api/postNoticeImage',
 ];
 
 export default auth((req) => {
@@ -116,6 +119,9 @@ export const config = {
     '/api/postBanner',
     '/api/postBannerDelete',
     '/api/postBannerOrder',
+    '/api/postNotice',
+    '/api/postNoticeDelete',
+    '/api/postNoticeImage',
     '/mypage/:path*',
     '/manager/:path*',
     '/search',

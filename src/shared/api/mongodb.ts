@@ -25,6 +25,8 @@ const userColl = gachaDB.collection('user');
 const errorColl = gachaDB.collection('error');
 // 쇼핑몰 메인 상단 배너 (관리자 배너 관리)
 const bannerColl = gachaDB.collection('banner');
+// 쇼핑몰 공지 (관리자 공지 관리). 번호는 counterColl { id: 'notice' }
+const noticeColl = gachaDB.collection('notice');
 // 문서 하나(_id 'menu')에 헤더 카테고리 메뉴 전체를 저장
 const categoryColl = gachaDB.collection<{ _id: string; [key: string]: any }>('category');
 
@@ -42,5 +44,6 @@ export {
   userColl,
   errorColl,
   bannerColl,
+  noticeColl,
   categoryColl,
 };

@@ -1,6 +1,15 @@
-import { list } from '@vercel/blob';
+// 코드에 고정돼 있던 공지 20개 + '넥스트가챠 사용 안내'(고정 공지)를 notice 컬렉션으로 옮긴다.
+// 실행: node --env-file=.env.local scripts/seed-notices.mjs <DB 이름>
+//   DB 이름을 직접 적어야 돈다 (운영 'gacha'에 실수로 넣지 않게). 이미 공지가 있으면 아무것도 안 한다.
+import { MongoClient } from 'mongodb';
 
-export const notice = [
+const dbName = process.argv[2];
+if (!dbName) {
+  console.error('DB 이름을 적어 주세요. 예: node --env-file=.env.local scripts/seed-notices.mjs gacha_dev');
+  process.exit(1);
+}
+
+const legacy = [
   {
     num: 20,
     title: '크리스마스 연휴 배송 안내 ',
@@ -181,3 +190,43 @@ export const notice = [
       '2025년 9월 1일부터 30일까지 넥스트가챠 오픈 이벤트가 진행됩니다.\n기간 내에 가챠를 구매하시는 모든 분들께 추첨을 통해 특별한 경품을 드립니다. 많은 참여 부탁드립니다.',
   },
 ];
+
+const GUIDE = {
+  title: '넥스트가챠 사용 안내',
+  created_at: '2025-08-10 12:00:00',
+  content: '넥스트 가챠는 되팔이 방지를 위해 한번에 5개까지만 구매할 수 있고, 배송이 완료되기 전까지 같은 제품을 구매할 수 없는 구조로 되어있습니다.\n우리 모두 행복한 덕질 생활을 위한 정책이므로 양해부탁드리겠습니다.\n적립포인트는 택배 배송 완료 후 적립될 예정입니다.\n5만원 이상 구매 시 배송비가 무료입니다. 또한, 구매 후 7일 이내에 반품 및 교환이 가능합니다.\n현재 보안을 위해 로그인은 카카오, 구매는 토스페이를 통해서만 가능합니다.\n신상 가챠는 매월 1일에 예약 가챠는 매월 12일에 추가됩니다만, 깜짝 추가 가챠가 들어올 수 있습니다.\n앞으로도 더 나은 서비스로 찾아뵙겠습니다. 감사합니다!',
+};
+
+// 제목으로 분류 추정
+const categoryOf = (title) => (/이벤트/.test(title) ? 'event' : /배송/.test(title) ? 'ship' : /점검/.test(title) ? 'check' : 'notice');
+
+const toDoc = (n, num, pinned) => ({
+  num,
+  category: categoryOf(n.title),
+  title: n.title.trim(),
+  content: n.content,
+  ...(Array.isArray(n.list) && { list: n.list }),
+  pinned,
+  state: 'published',
+  publish_at: n.created_at.slice(0, 16),
+  created_at: n.created_at,
+  updated_at: n.created_at,
+});
+
+const client = new MongoClient(process.env.MONGODB_URI);
+try {
+  const db = client.db(dbName);
+  const notice = db.collection('notice');
+  if (await notice.estimatedDocumentCount()) {
+    console.log(`${dbName}.notice에 이미 공지가 있어서 건너뛰어요.`);
+  } else {
+    const maxNum = Math.max(...legacy.map((n) => n.num));
+    const docs = [...legacy.map((n) => toDoc(n, n.num, false)), toDoc(GUIDE, maxNum + 1, true)];
+    await notice.insertMany(docs);
+    await notice.createIndex({ num: 1 }, { unique: true });
+    await db.collection('counter').updateOne({ id: 'notice' }, { $max: { num: maxNum + 1 } }, { upsert: true });
+    console.log(`${dbName}.notice에 공지 ${docs.length}개를 넣었어요. 다음 번호는 ${maxNum + 2}.`);
+  }
+} finally {
+  await client.close();
+}
