@@ -157,7 +157,6 @@ export const chip = style({
   display: 'inline-flex',
   alignItems: 'center',
   gap: 2,
-  padding: '0 2px 0 12px',
   border: `1px solid ${vars.slate[200]}`,
   backgroundColor: 'white',
   fontSize: 14,
@@ -165,8 +164,29 @@ export const chip = style({
   selectors: { '&:hover': { borderColor: vars.color.blue1 } },
 });
 
+// 칩 높이를 꽉 채워서 hover 배경이 테두리에 붙게
+const chipBtn = { alignSelf: 'stretch', height: 'auto' } as const;
+
 // 항목·제조사·대분류 삭제는 ghost 아이콘 S
 export const xBtn = style([btn, btnSize.s, btnIcon, btnKind.ghost]);
+
+export const chipXBtn = style([xBtn, chipBtn]);
+
+// 순서 손잡이: 끌기 + 포커스 후 ←/→
+export const gripBtn = style([btn, btnSize.s, btnIcon, btnKind.ghost, chipBtn, { cursor: 'grab', color: vars.slate[500] }]);
+
+// 끌고 있는 항목 자리
+export const chipDragging = style({ opacity: 0.4, borderStyle: 'dashed', borderColor: vars.color.blue1 });
+
+
+export const srOnly = style({
+  position: 'absolute',
+  width: 1,
+  height: 1,
+  overflow: 'hidden',
+  clip: 'rect(0 0 0 0)',
+  whiteSpace: 'nowrap',
+});
 
 export const trashBtn = style({});
 
@@ -217,6 +237,9 @@ export const panelFoot = style({
   flexDirection: 'column',
   gap: 8,
 });
+
+// 대분류 추가 칸
+export const groupFoot = style([panelFoot, { padding: 8 }]);
 
 export const panelNotice = style({ padding: '12px 20px 0' });
 
