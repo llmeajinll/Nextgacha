@@ -11,10 +11,17 @@ export async function POST(req: Request) {
 
   const { qna_num, num } = await req.json();
 
+  // 객체({"$gt":0})가 들어오면 연산자로 해석돼 $pull이 남의 질문까지 지움 → 정수로만 받는다
+  const qnaNum = Number(qna_num);
+  const productNum = Number(num);
+  if (!Number.isInteger(qnaNum) || !Number.isInteger(productNum)) {
+    return NextResponse.json({ ok: false, message: 'invalid request' }, { status: 400 });
+  }
+
   // 본인 질문만 삭제 (email 일치 조건)
   const res = await qnaColl.updateOne(
-    { num: Number(num), qna: { $elemMatch: { qna_num, email } } },
-    { $pull: { qna: { qna_num } } as any },
+    { num: productNum, qna: { $elemMatch: { qna_num: qnaNum, email } } },
+    { $pull: { qna: { qna_num: qnaNum, email } } as any },
   );
 
   if (res.modifiedCount !== 1) {

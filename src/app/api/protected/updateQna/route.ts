@@ -11,13 +11,20 @@ export async function POST(req: Request) {
   }
 
   const { edit, qna_num, num } = await req.json();
+
+  // 객체({"$gt":0})가 들어오면 연산자로 해석돼 $pull이 남의 질문까지 지움 → 정수로만 받는다
+  const qnaNum = Number(qna_num);
+  const productNum = Number(num);
+  if (!Number.isInteger(qnaNum) || !Number.isInteger(productNum)) {
+    return NextResponse.json({ ok: false, message: 'invalid request' }, { status: 400 });
+  }
   if (typeof edit !== 'string' || edit.trim().length === 0 || edit.length > 1000) {
     return NextResponse.json({ ok: false, message: 'invalid request' }, { status: 400 });
   }
 
   // 본인 질문만 수정 (email 일치 조건). $는 매칭된 qna 배열 요소를 가리킴
   const res = await qnaColl.updateOne(
-    { num: Number(num), qna: { $elemMatch: { qna_num, email } } },
+    { num: productNum, qna: { $elemMatch: { qna_num: qnaNum, email } } },
     {
       $set: {
         'qna.$.question': edit,

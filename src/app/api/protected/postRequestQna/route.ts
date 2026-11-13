@@ -11,6 +11,13 @@ export async function POST(req: Request) {
   }
 
   const { requestInput, num, qna_num } = await req.json();
+
+  // 객체({"$gt":0})가 들어오면 연산자로 해석돼 $pull이 남의 질문까지 지움 → 정수로만 받는다
+  const qnaNum = Number(qna_num);
+  const productNum = Number(num);
+  if (!Number.isInteger(qnaNum) || !Number.isInteger(productNum)) {
+    return NextResponse.json({ ok: false, message: 'invalid request' }, { status: 400 });
+  }
   if (
     typeof requestInput !== 'string' ||
     requestInput.trim().length === 0 ||
@@ -21,7 +28,7 @@ export async function POST(req: Request) {
 
   // 본인 질문에만 추가 질문 가능 (email 일치 조건)
   const res = await qnaColl.updateOne(
-    { num: Number(num), qna: { $elemMatch: { qna_num, email } } },
+    { num: productNum, qna: { $elemMatch: { qna_num: qnaNum, email } } },
     {
       $push: {
         'qna.$.request': {
