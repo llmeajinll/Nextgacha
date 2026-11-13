@@ -38,15 +38,9 @@ export default function ReactSlick({ image, preset }: PropsType) {
 
   const isStringArray = Array.isArray(image) && typeof image[0] === 'string';
 
-  const getShortestAngle = (current: number, target: number) => {
-    let diff = target - current;
-    console.log(diff);
-
-    if (diff > 180) diff -= 360;
-    if (diff < -180) diff += 360;
-
-    return current + diff;
-  };
+  // 레버는 항상 시계 방향(오른쪽)으로만 돈다: 목표 각도까지 0~360도 사이만큼 앞으로
+  const getClockwiseAngle = (current: number, target: number) =>
+    current + ((((target - current) % 360) + 360) % 360);
 
   let settings = {
     dots: true,
@@ -58,9 +52,8 @@ export default function ReactSlick({ image, preset }: PropsType) {
     autoplaySpeed: 4000,
 
     beforeChange: (current: number, next: number) => {
-      console.log('current:', current, 'next:', next);
       const targetAngle = 360 * (next / imgCount);
-      setAngle((prev) => getShortestAngle(prev, targetAngle));
+      setAngle((prev) => getClockwiseAngle(prev, targetAngle));
     },
   };
 
@@ -120,12 +113,8 @@ export default function ReactSlick({ image, preset }: PropsType) {
                 key={idx}
                 className={slices}
                 style={assignInlineVars({ [rotateVar]: `${angle}deg` })}
-                onClick={() => {
-                  // console.log(idx, divideAngle * idx);
-                  sliderRef.current?.slickGoTo(idx);
-                  // setAngle(divideAngle * idx);
-                  setAngle(angle);
-                }}
+                // 각도는 beforeChange가 맞춘다 (여기서 절대값으로 덮으면 왼쪽으로 되감김)
+                onClick={() => sliderRef.current?.slickGoTo(idx)}
               >
                 {/* {idx} */}
               </div>
