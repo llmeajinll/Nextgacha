@@ -2,6 +2,7 @@ import NextAuth from 'next-auth';
 import { authConfig } from './auth.config';
 import { userColl } from './shared/api/mongodb';
 import { koreaTime } from './shared/lib/koreaTime';
+import { clientSignals } from './shared/lib/clientSignals';
 
 export const { handlers, signIn, signOut, auth } = NextAuth({
   ...authConfig,
@@ -32,6 +33,8 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
               created_at: koreaTime(),
             });
           }
+          // 관리자 회원 상세의 최근 IP·기기 (결제 때도 갱신)
+          await userColl.updateOne({ email: user.email }, { $set: { lastSeen: await clientSignals() } });
           return true; // 로그인 승인
         } catch (error) {
           console.error('로그인 DB 작업 중 에러:', error);

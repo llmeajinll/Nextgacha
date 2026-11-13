@@ -16,6 +16,8 @@ export type AdminUserDetail = {
   reviews: number;
   qna: number;
   likes: number;
+  // 마지막 로그인·결제 때의 IP·기기 ID (at: koreaTime() KST). 기록 전 회원은 null
+  lastSeen: { ip: string | null; deviceId: string | null; at: string } | null;
   // 장바구니 + 진행 중 주문(확인중·배송중)을 옵션별로 합친 수량. 같은 옵션은 최대 5개
   keep: { num: number; title: string; name: string; count: number }[];
   recent: { orderId: string; created_at: string; status: string; totalPrice: number }[];

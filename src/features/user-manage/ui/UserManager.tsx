@@ -204,6 +204,10 @@ export default function UserManager({ users }: { users: AdminUser[] }) {
               <dd>{d ? d.address || '—' : '…'}</dd>
               <dt>활동</dt>
               <dd>{d ? `리뷰 ${d.reviews} · 문의 ${d.qna} · 찜 ${d.likes}` : '…'}</dd>
+              <dt>최근 IP</dt>
+              <dd>{d ? (d.lastSeen ? `${d.lastSeen.ip ?? '—'} · ${d.lastSeen.at.slice(0, 16)}` : '기록 없음') : '…'}</dd>
+              <dt>기기 ID</dt>
+              <dd>{d ? d.lastSeen?.deviceId ?? '기록 없음' : '…'}</dd>
             </dl>
           </section>
 

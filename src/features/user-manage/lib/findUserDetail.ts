@@ -9,7 +9,7 @@ type Line = { num: number; product?: { name: string; count: number }[] };
 export async function findUserDetail(id: string): Promise<AdminUserDetail | null> {
   const user = await userColl.findOne(
     { _id: new ObjectId(id) },
-    { projection: { email: 1, address: 1, like: 1, keep: 1 } },
+    { projection: { email: 1, address: 1, like: 1, keep: 1, lastSeen: 1 } },
   );
   if (!user?.email) return null;
   const email: string = user.email;
@@ -52,6 +52,7 @@ export async function findUserDetail(id: string): Promise<AdminUserDetail | null
       reviews: reviews?.n ?? 0,
       qna: qna?.n ?? 0,
       likes: (user.like ?? []).length,
+      lastSeen: user.lastSeen ?? null,
       keep: [...sum.values()]
         .filter((k) => k.count > 0)
         .map((k) => ({ ...k, title: titles.get(k.num) ?? `${k.num}번 상품` }))
