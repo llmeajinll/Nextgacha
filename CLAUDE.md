@@ -6,9 +6,8 @@
 
 Next.js 16(App Router) 쇼핑몰 "Next Gacha". 핵심 비즈니스 규칙: 한 사용자는 같은 상품을
 최대 5개까지만 보유할 수 있다(장바구니 + 배송 중 합산). 상품/비즈니스 배경은 README.md 참고.
-도메인 규칙은 정확하지만 **아키텍처 설명은 오래됐다**: 아직 Atomic Design 구조
-(`atoms/molecules/organisms`)를 설명하는데, 이는 FSD(Feature-Sliced Design) 재구성으로 완전히
-대체됐다(git log `4cacb0d`..`2a3d26a`). README의 "아키텍처" 섹션이 아니라 아래 구조를 따른다.
+구조는 처음의 Atomic Design(`atoms/molecules/organisms`)에서 FSD(Feature-Sliced Design)로 옮겼다
+(git log `4cacb0d`..`2a3d26a`). 아래 구조를 따른다.
 
 ## 명령어
 

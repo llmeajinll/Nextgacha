@@ -31,7 +31,7 @@
 - 상태: 확정
 - 정책: 돈·재고·포인트를 바꾸는 변경은 테스트를 같이 쓴다. 순수 함수는 지금처럼 Node 기본 러너로, DB가 필요한 흐름(결제 승인, 환불, 배송 완료)은 테스트 전용 DB `gacha_test`로 테스트한다.
   - `gacha_test`는 테스트마다 비우고 필요한 문서만 넣는다. 운영 `gacha`에는 접근할 수 없는 DB 사용자로 접속한다([환경 분리와 백업](./data.md#환경-분리와-백업)).
-- 이유: 테스트는 `orderPolicy`, `comma`, `koreaTime` 3개뿐이다. 가장 위험한 결제·환불·배송 완료 흐름은 테스트가 없다.
+- 이유: 테스트는 순수 함수만 다룬다(10개 파일: `orderPolicy`, `findSuspects`, 폼 파서, `koreaTime` 등). 가장 위험한 결제·환불·배송 완료 흐름은 테스트가 없다.
 - 코드: `src/features/purchase/lib/orderPolicy.test.ts`, `.github/workflows/ci.yml` (DB 테스트 미구현)
 - 변경 이력: 2026-11-09 신설, 2026-11-11 확정 (돈·재고·포인트 변경 시 필수, `gacha_test`)
 

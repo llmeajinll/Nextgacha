@@ -23,7 +23,8 @@
   - 마이그레이션 스크립트는 `scripts/migrations/YYYY-MM-DD-이름.ts`에 두고, 같은 스크립트를 두 번 돌려도 결과가 같게 쓴다. `gacha_dev`에서 먼저 돌린 뒤 `gacha`에 돌린다.
   - Mongo `$jsonSchema` 검증은 지금은 걸지 않는다. 타입과 라우트 입력 검증([입력 검증 방식](./api.md#입력-검증-방식))으로 막는다.
 - 다시 볼 때: 관리자 화면 말고 DB를 직접 고치는 경로(스크립트, Atlas UI)가 늘어나면 `$jsonSchema`를 다시 검토한다.
-- 이유: 지금은 스키마 검증이 없고 `any`가 많다. 필드가 없는 옛 문서는 그때그때 `?? 0`으로 처리하고 있다.
+- 이유: 스키마 검증이 없다. 필드가 없는 옛 문서는 그때그때 `?? 0`으로 처리하고 있다.
+- 현황: `any`는 없앴다. cart·user·order·review·qna·category 문서 타입은 컬렉션 제네릭으로 쓰기 위해 `src/shared/api/docs.ts`에 모았다(`mongodb.ts`가 shared라 entities를 import할 수 없음). product·banner·notice·counter·error는 아직 타입이 없다.
 - 코드: `src/app/api/postCheckToSending/route.ts:59` (`usedPoint ?? 0`)
 - 변경 이력: 2026-11-09 신설, 2026-11-10 확정 (`scripts/migrations/`, `$jsonSchema` 보류)
 
@@ -66,11 +67,11 @@
 
 ## 데이터 보존 기간
 - 상태: 확정
-- 정책: `page_views`는 12개월, `errorColl`의 시스템 에러(`type: 'system'`)는 6개월 보존한다. TTL 인덱스로 지운다. 주문은 [회원 탈퇴](./members.md#회원-탈퇴)의 법정 보관 기간, 관리자 작업 기록은 5년([관리자 작업 기록](./admin.md#관리자-작업-기록))을 따른다.
+- 정책: `page_views`(수집은 GA4 이전으로 멈춤, 옛 데이터만 남아 있음)는 12개월, `errorColl`의 시스템 에러(`type: 'system'`)는 6개월 보존한다. TTL 인덱스로 지운다. 주문은 [회원 탈퇴](./members.md#회원-탈퇴)의 법정 보관 기간, 관리자 작업 기록은 5년([관리자 작업 기록](./admin.md#관리자-작업-기록))을 따른다.
 - 결정할 것: 사용자 제보(`type: 'report'`) 보존 기간
 - 순서: TTL 인덱스는 `Date` 타입 필드가 필요해서 [시간 저장 형식](#시간-저장-형식) 변환 뒤에 건다.
-- 이유: 지금은 두 컬렉션 모두 지우는 곳이 없어서 계속 커진다. `getError`는 `errorColl` 전체를 제한 없이 한 번에 읽는다.
-- 코드: 미구현. `src/app/api/track/route.ts`, `src/app/api/getError/route.ts:16`
+- 이유: 지금은 두 컬렉션 모두 지우는 곳이 없어서 계속 커진다.
+- 코드: 미구현. `src/features/error-manage/lib/findErrors.ts`
 - 변경 이력: 2026-11-09 신설, 2026-11-11 확정 (`page_views` 12개월, 시스템 에러 6개월, TTL)
 
 ## 레포 밖의 DB 로직
