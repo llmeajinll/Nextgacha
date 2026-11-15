@@ -3,7 +3,7 @@ import { vars } from '@/styles/theme.css';
 import {btn, btnKind, btnSize, mobile } from '@/styles/ui.css';
 import { fluid } from '@/styles/fluid';
 
-const { color, slate, status } = vars;
+const { color, slate, status, statusText } = vars;
 
 // 웹: 1120px 안 위아래로 쌓기 / 모바일: 배너는 화면 끝까지, 섹션 머리만 16px 들여쓰기
 export const page = style({
@@ -45,13 +45,12 @@ export const badge = style({
   fontSize: 12,
   lineHeight: 1,
   padding: '5px 8px 6px',
-  color: 'white',
   '@media': { [mobile]: { fontSize: fluid(10), padding: '4px 7px 5px' } },
 });
 export const badgeTone = styleVariants({
-  hot: { backgroundColor: status.hot },
-  new: { backgroundColor: status.new },
-  reserve: { backgroundColor: status.reserve },
+  hot: { backgroundColor: status.hot, color: statusText.hot },
+  new: { backgroundColor: status.new, color: statusText.new },
+  reserve: { backgroundColor: status.reserve, color: statusText.reserve },
 });
 
 export const moreLink = style([btn, btnSize.s, btnKind.link, { '@media': { [mobile]: { height: 44, padding: '0 0 0 4px' } } }]);
@@ -75,3 +74,6 @@ export const grid = style({
   },
 });
 globalStyle(`${grid} > *`, { '@media': { [mobile]: { flex: '0 0 156px', scrollSnapAlign: 'start' } } });
+
+// 상품이 없을 때: 모바일은 섹션 머리와 같이 16px 들여쓰기
+export const empty = style({ '@media': { [mobile]: { width: 'auto', margin: '0 16px' } } });

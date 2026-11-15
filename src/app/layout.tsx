@@ -3,7 +3,7 @@ import { Suspense } from 'react';
 import { Noto_Sans_KR } from 'next/font/google';
 import './globals.css';
 import { SessionProvider } from 'next-auth/react';
-import { Header } from '@/widgets';
+import Header from '@/widgets/Header/Header';
 import { relativeWrap } from './layout.css';
 import SiteFrame from './SiteFrame';
 import GoogleAnalytics from './GoogleAnalytics';

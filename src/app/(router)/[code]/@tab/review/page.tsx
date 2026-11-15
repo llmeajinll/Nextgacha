@@ -6,10 +6,11 @@ import { ReviewProps } from '@/entities/review/model/types';
 import { Range } from '@/shared/ui';
 import getReview from '@/entities/review/api/getReview';
 import { Review } from '@/entities/review/ui';
+import DeleteReviewBtn from '@/features/review-write/ui/DeleteReviewBtn';
 import { emptyState, listWrap, grid, moreBtn } from './page.css';
 
 export default function ReviewTab() {
-  const [review, setReview] = useState<any[]>([]);
+  const [review, setReview] = useState<ReviewProps[]>([]);
   const [page, setPage] = useState(0);
   const [hasMore, setHasMore] = useState(true);
   const [isLoading, setIsLoading] = useState(false);
@@ -17,12 +18,10 @@ export default function ReviewTab() {
   const { firstRoute } = useSplitRoute();
 
   async function fetchReview(page: number) {
-    console.log('page : ', page);
     setIsLoading(true);
     try {
       const res = await fetch(`/api/getReview?num=${firstRoute}&page=${page}`);
       const { result, hasMore } = await res.json();
-      console.log(result, hasMore);
       setReview((prev) => [...prev, ...result]);
       setHasMore(hasMore);
     } catch (err) {
@@ -59,7 +58,19 @@ export default function ReviewTab() {
             <>
               {review &&
                 review.map((val: ReviewProps, idx: number) => (
-                  <Review props={val} key={val.orderId + idx} />
+                  <Review
+                    props={val}
+                    key={val.orderId + idx}
+                    action={
+                      val.isMine && (
+                        <DeleteReviewBtn
+                          num={Number(firstRoute)}
+                          orderId={val.orderId}
+                          onDeleted={() => setReview((prev) => prev.filter((r) => r.orderId !== val.orderId))}
+                        />
+                      )
+                    }
+                  />
                 ))}
             </>
 

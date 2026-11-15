@@ -6,11 +6,12 @@ import { useModal } from '@/shared/hooks';
 import { ImgBtn, Range, ToggleBtn } from '@/shared/ui';
 import { Private, Qna } from '@/features/qna/ui';
 import useSplitRoute from '@/shared/hooks/useSplitRoute';
+import type { QnaProps } from '@/entities/qna/model/types';
 import * as styles from './qnaTemplate.css';
 import { textareaBox, textareaCount } from '@/styles/ui.css';
 
 export default function QnaTemplate() {
-  const [qna, setQna] = useState([]);
+  const [qna, setQna] = useState<QnaProps[]>([]);
   const [question, setQuestion] = useState('');
   const [secret, setSecret] = useState(false);
   const { firstRoute } = useSplitRoute();
@@ -27,12 +28,11 @@ export default function QnaTemplate() {
     })
       .then(async (res) => {
         const data = await res.json();
-        // console.log('qna page: ', data.result);
 
         return data.result.qna;
       })
       .catch((err) => {
-        console.log(err);
+        console.error(err);
         return [];
       });
 
@@ -45,7 +45,7 @@ export default function QnaTemplate() {
   }, []);
 
   // 리뷰 작성 보내는 api
-  const fetchPostQna = async (data: any) => {
+  const fetchPostQna = async (data: { num: string; email: string; question: string; secret: boolean }) => {
     await fetch('/api/protected/postQna', {
       method: 'POST',
       body: JSON.stringify(data),
@@ -53,7 +53,6 @@ export default function QnaTemplate() {
         'Content-Type': 'application/json',
       },
     }).then((res) => {
-      // console.log('res : ', res);
       if (res.ok) {
         setSecret(false);
         setQuestion('');
@@ -162,7 +161,7 @@ export default function QnaTemplate() {
       ) : (
         <div>
           {qna &&
-            qna.map((val: any, idx: number) => {
+            qna.map((val, idx) => {
               // 1. 공개글이거나(false) 2. 내가 작성자인 경우 true
               const canView = val.secret === false || val.isMine;
 

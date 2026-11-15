@@ -7,15 +7,13 @@ export default async function getReview(num: string) {
   })
     .then((res) => {
       const data = res.json();
-      // console.log(data);
       return data;
     })
     .catch((err) => {
-      console.log('fetch getReview error:', err);
+      console.error('fetch getReview error:', err);
       return null;
     });
 
-  // console.log('header user:', data);
 
   return data;
 }

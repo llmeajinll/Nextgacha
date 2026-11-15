@@ -9,7 +9,6 @@ export default function Home() {
   // useEffect(() => {
   //   fetch('/api/Test')
   //     .then((data) => {
-  //       console.log(data);
   //       setTest(data.message);
   //     })
   //     .catch((error) => {

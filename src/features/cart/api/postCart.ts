@@ -1,5 +1,4 @@
-export async function postCart(data: any) {
-  // console.log(data);
+export async function postCart(data: { num: number; updatedArray: { name: string; count: number }[] }) {
   const result = await fetch(`/api/protected/postCart`, {
     method: 'POST',
     body: JSON.stringify(data),
@@ -11,11 +10,10 @@ export async function postCart(data: any) {
       return res.json();
     })
     .catch((err) => {
-      console.log(err);
+      console.error(err);
       return { message: '로그인 후에 장바구니 추가가 가능합니다.' };
       // alert('로그인 후에 장바구니 추가가 가능합니다.');
     });
 
-  // console.log(result);
   return result;
 }

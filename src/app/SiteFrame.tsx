@@ -1,7 +1,7 @@
 'use client';
 
 import { usePathname } from 'next/navigation';
-import { FloatingActions, MobileNav } from '@/widgets';
+import { FloatingActions, Footer, MobileNav } from '@/widgets';
 import { fluidContainer, fluidMain, layoutContainer, webOnly } from './layout.css';
 
 // 쇼핑몰은 1314px 컨테이너 + 사이트 Header, 메인·/notice·/mypage/cart는 모바일까지 유연한 폭, /manager/*는 자체 layout(관리자 헤더, 전체 폭)을 그대로 씀
@@ -22,6 +22,7 @@ export default function SiteFrame({
         <div className={webOnly}>{header}</div>
         <MobileNav />
         <main className={fluidMain}>{children}</main>
+        <Footer />
         <FloatingActions lift={pathname === '/mypage/cart' ? 'navPay' : 'nav'} />
       </div>
     );
@@ -31,6 +32,7 @@ export default function SiteFrame({
     <div className={layoutContainer}>
       {header}
       <main>{children}</main>
+      <Footer />
       <FloatingActions />
     </div>
   );

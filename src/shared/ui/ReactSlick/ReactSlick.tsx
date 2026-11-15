@@ -12,8 +12,9 @@ import { lever, handle, dot, slices, rotateVar } from './reactSlick.css';
 import { assignInlineVars } from '@vanilla-extract/dynamic';
 
 type Preset = keyof typeof reactSlickVariant;
+type Slide = { url?: string; onClick?: () => void };
 type PropsType1 = {
-  image?: { url?: string; onClick?: () => void }[];
+  image?: Slide[];
 };
 type PropsType2 = {
   image?: string[];
@@ -72,8 +73,8 @@ export default function ReactSlick({ image, preset }: PropsType) {
     <div className={`${reactSlickVariant[preset ?? 'small']}`}>
       <Slider {...settings} ref={sliderRef}>
         {image?.map((val, idx) => {
-          const url = isStringArray ? (val as string) : (val as any).url;
-          const onClick = !isStringArray ? (val as any).onClick : undefined;
+          const url = isStringArray ? (val as string) : (val as Slide).url;
+          const onClick = !isStringArray ? (val as Slide).onClick : undefined;
 
           return (
             <div

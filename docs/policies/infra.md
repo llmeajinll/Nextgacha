@@ -21,4 +21,5 @@
 ## 외부 호출 타임아웃
 - 상태: 확정
 - 정책: 외부 API 호출에는 모두 타임아웃을 건다. 기본 10초. Toss는 타임아웃 후 처리까지 [Toss 요청 타임아웃](./payments.md#toss-요청-타임아웃)을 따른다.
+- 코드: Toss `src/features/purchase/lib/toss.ts:23`, 카카오 알림 `src/shared/lib/notifyAdmin.ts`
 - 변경 이력: 2026-11-09 신설, 2026-11-10 확정

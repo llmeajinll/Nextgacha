@@ -14,7 +14,7 @@
 - 상태: 확정
 - 정책: 재고가 0인 상품은 목록에서 숨긴다. 재입고 알림을 만든다(신청한 사용자에게 재고가 생기면 알림).
 - 결정할 것: 재입고 알림 채널 ([배송 지연 안내](#배송-지연-안내)와 같은 카카오톡을 쓸지)
-- 코드: 미구현. 장바구니 정리 `src/app/api/getCart/route.ts`, `src/features/purchase/lib/validateStock.ts`
+- 코드: 품절 숨김 `src/entities/product/lib/findProducts.ts`(모든 옵션 재고 0이면 목록·검색에서 뺌, 상세는 열림). **재입고 알림은 미구현** (채널 결정 + 알림톡 발송 대행사 필요). 장바구니 정리 `src/app/api/getCart/route.ts`, `src/features/purchase/lib/validateStock.ts`
 - 변경 이력: 2026-11-10 신설, 2026-11-11 확정 (품절 숨김, 재입고 알림)
 
 ## 배송 지연 안내

@@ -6,13 +6,13 @@
 
 Next.js 16(App Router) 쇼핑몰 "Next Gacha". 핵심 비즈니스 규칙: 한 사용자는 같은 상품을
 최대 5개까지만 보유할 수 있다(장바구니 + 배송 중 합산). 상품/비즈니스 배경은 README.md 참고.
-도메인 규칙은 정확하지만 **아키텍처 설명은 오래됐다**: 아직 Atomic Design 구조
-(`atoms/molecules/organisms`)를 설명하는데, 이는 FSD(Feature-Sliced Design) 재구성으로 완전히
-대체됐다(git log `4cacb0d`..`2a3d26a`). README의 "아키텍처" 섹션이 아니라 아래 구조를 따른다.
+구조는 처음의 Atomic Design(`atoms/molecules/organisms`)에서 FSD(Feature-Sliced Design)로 옮겼다
+(git log `4cacb0d`..`2a3d26a`). 아래 구조를 따른다.
 
 ## 명령어
 
-- `pnpm dev` — 개발 서버 (turbopack이 아니라 webpack, 스크립트에 `--webpack` 명시)
+- `pnpm dev` — 개발 서버 (turbopack이 아니라 webpack, 스크립트에 `--webpack` 명시). 포트는 `-p 3000` 고정:
+  3000이 이미 쓰이면 3001로 넘어가지 않고 에러로 멈춘다(카카오 로그인 Redirect URI·`baseUrl`이 `localhost:3000` 기준)
 - `pnpm build` / `pnpm start` — 프로덕션 빌드 / 실행
 - `pnpm lint` — `eslint .` (flat config, `eslint-config-next` 16; `next lint`는 더 이상 없음)
 - `pnpm typecheck` — `tsc --noEmit`
@@ -53,7 +53,7 @@ jotai atom/store), `ui/`(컴포넌트 + 옆에 둔 `*.css.ts`), 필요하면 `li
 경로별 규칙은 `.claude/rules/`에 있고, 해당 파일을 작업할 때 로드된다:
 `fsd.md`(레이어 규칙, `src/**`), `styling.md`(Vanilla Extract, theme 토큰, `*.tsx`/`*.css.ts`),
 `api-routes.md`(라우트 등록, 신뢰할 수 없는 입력, 시크릿/로그; `src/app/api/**`, `src/proxy.ts`,
-`features|entities/*/lib/**`).
+`features|entities/*/lib/**`). TypeScript 규칙(any 금지, 외부 입력은 `unknown` → 검사 함수)은 `docs/policies/typescript.md`.
 `fsd-guard` 서브에이전트(`.claude/agents/`)가 변경분을 `fsd.md` 기준으로 검사한다.
 
 ### 인증 & 접근 제어
@@ -69,7 +69,7 @@ jotai atom/store), `ui/`(컴포넌트 + 옆에 둔 `*.css.ts`), 필요하면 `li
   - 고정된 `ADMIN_API_PATHS` 목록(postEditProduct, postEvent, postProduct,
     postCheckToSending, postSendingToFinish, getOrderSort, getError, postErrorStatus, postCategory,
     postQnaAnswer, getUserDetail, postBanner, postBannerDelete, postBannerOrder, postNotice,
-    postNoticeDelete, postNoticeImage) → `isAdminEmail(email)`이
+    postNoticeDelete, postNoticeImage, postReviewHide) → `isAdminEmail(email)`이
     아니면 403 (`ADMIN_EMAILS` 환경변수와 비교, `src/shared/lib/isAdmin.ts` 참고).
   - `/manager/*` 페이지 → 관리자가 아니면 `/`로 리다이렉트. 단 `/manager`는 공개.
     로컬 `next dev`에서는 관리자 화면 작업용으로 페이지·API 관리자 가드를 끈다(`skipAdminGuard`).
@@ -83,19 +83,26 @@ jotai atom/store), `ui/`(컴포넌트 + 옆에 둔 `*.css.ts`), 필요하면 `li
 
 - `src/shared/api/mongodb.ts`는 모듈 로드 시점(top-level `await`)에 `MongoClient` 하나를 열고
   컬렉션마다 handle을 export한다(`productColl`, `cartColl`, `orderColl`, `userColl`,
-  `reviewColl`, `qnaColl`, `errorColl`, `bannerColl`, `noticeColl`, `counterColl`). `gachaDB`에 직접
-  접근하지 말고 필요한 컬렉션을 import한다.
+  `reviewColl`, `qnaColl`, `errorColl`, `bannerColl`, `noticeColl`, `counterColl`, `adminLogColl`). `gachaDB`에 직접
+  접근하지 말고 필요한 컬렉션을 import한다. 인덱스(유니크·TTL)는 `scripts/migrations/2026-11-15-indexes.mjs`로
+  건다(`gacha_dev` 적용됨, 운영 `gacha`는 배포 전 실행).
+- 시스템 에러는 `errorColl`에 직접 넣지 말고 `shared/api/recordSystemError`를 쓴다(`createdAt` TTL 필드,
+  `notify: true`면 관리자 카톡 — `KAKAO_ADMIN_REFRESH_TOKEN`). 관리자 변경(가격·재고·할인·환불·송장)은
+  `shared/api/adminLog`의 `logAdmin`으로 남긴다.
 - 결제 승인(`src/app/api/postPaymentsConfirm/route.ts`)이 가장 중요한 트랜잭션 경로다:
   재고 재검증(`validateStock`, 구매 불가가 된 상품을 장바구니에서 정리도 함) → `verifyOrder`
   (금액/포인트/한도를 DB 기준으로 다시 계산; **클라이언트의 `amount`/`usedPoint`/가격은 절대 믿지
-  않는다** — `addPoint`도 서버에서 계산) → TossPayments 승인 호출 → `DONE`이면
+  않는다** — `addPoint`도 서버에서 계산. 할인 기간·예약 판매 기간도 `entities/product/lib/salePolicy.ts`로
+  다시 판정) → TossPayments 승인 호출(10초 타임아웃, `Idempotency-Key`; 응답이 없으면 orderId로 조회해
+  승인됐으면 취소) → `DONE`이면
   `reducePoint` → `reduceStock` → `addOrder` → `resetCart`를 하나의
   `mongodbClient.startSession().withTransaction(...)` 안에서 실행(모두 `src/features/purchase/lib/`).
   각 단계는 실패 시 **throw**한다(catch해서 `{ok:false}`를 반환하면 일부만 처리된 주문이 조용히
   커밋된다). 트랜잭션이 실패하면 라우트가 Toss 결제를 취소하고, 취소마저 실패하면 `errorColl`에
-  기록한다. 가격/배송비/포인트/한도 규칙은 순수 함수 `orderPolicy.ts`에 있으며
-  (자체 검사: `node --experimental-strip-types src/features/purchase/lib/orderPolicy.check.ts`)
-  `CartTemplate`/`InfoPanel`과 항상 맞춰야 한다.
+  기록한다. 그래도 놓친 "결제됨 + 주문 없음"은 Toss 웹훅 `/api/webhooks/toss`가 1분 뒤 다시 확인해 취소한다.
+  `PAYMENTS_DISABLED=1`이면 `postCheckStock`·`postPaymentsConfirm`이 결제를 막는다. 가격/배송비/포인트/한도
+  규칙은 순수 함수 `orderPolicy.ts`에 있으며(`orderPolicy.test.ts`) `CartTemplate`/`InfoPanel`과 항상 맞춰야 한다.
+  쇼핑몰 조회 API는 할인 기간을 반영한 `discount`를 내려주므로 클라이언트 계산식은 그대로 둔다.
 - 서버 컴포넌트는 이 앱의 `/api/*` 라우트를 `fetch`하면 **안 된다**: 요청에 세션 쿠키가 없어서
   middleware가 protected/admin 라우트에 401/403을 돌려준다. 조회 로직은 공용 서버 함수
   (예: `features/order-manage/lib/findOrdersByStatus.ts`)로 만들어 라우트 핸들러와 페이지가 함께
@@ -109,7 +116,9 @@ jotai atom/store), `ui/`(컴포넌트 + 옆에 둔 `*.css.ts`), 필요하면 `li
   (`postSendingToFinish`)와 환불(`postCheckToSending` `send: 'refund'`)은 email/list/points를
   **요청 body가 아니라 주문 문서에서** 읽고, 트랜잭션 안에서 `subtractKeep`으로 `user.keep`을
   조정한다. 환불은 Toss 결제를 먼저 취소하고(`orderId`로 조회), 그다음 재고/keep/`usedPoint`를
-  되돌린다.
+  되돌린다. 환불 흐름은 `features/purchase/lib/refundOrder.ts` 하나를 관리자 환불과 구매자 취소
+  (`/api/protected/postCancelOrder`)가 같이 쓴다. 주문에는 `paymentKey`를 저장하고(옛 주문은 orderId 조회),
+  구매자용 조회 API는 `paymentKey`를 내보내지 않는다.
 - 장바구니가 두 층인 건 의도된 설계다(고칠 버그 아님): 상품 상세에서 수량을 고르는 중에는 Jotai
   메모리 atom, 확정된 장바구니는 MongoDB `cartColl` 문서("장바구니 담기" 때 저장). 1인 5개 한도는
   세 번 검사한다: 클라이언트 hook(즉각 UX), 장바구니 API(`postCart`/`updateCart`의

@@ -10,10 +10,8 @@ export async function POST(req: Request) {
   if (!email) {
     return NextResponse.json({ ok: false, message: 'unauthorized' }, { status: 401 });
   }
-  // console.log('data : ', data.code, 'email : ', session?.user?.email);
 
   const { name, num, preset } = data;
-  console.log('name, num, preset : ', name, num, preset);
 
   // 갯수 증가할 때
   if (preset === 'increase') {
@@ -28,7 +26,6 @@ export async function POST(req: Request) {
       { arrayFilters: [{ 'outer.num': num }, { 'inner.name': name }] },
     );
 
-    console.log('increase result : ', result);
     return NextResponse.json({ ok: true, result });
   }
   // 갯수 감소할 때
@@ -49,7 +46,6 @@ export async function POST(req: Request) {
         ],
       },
     );
-    console.log(`decrease result : `, result);
     return NextResponse.json({ ok: true, result }, { status: 200 });
   }
   // 상품 삭제할 때
@@ -57,14 +53,14 @@ export async function POST(req: Request) {
     const result = await cartColl.updateOne(
       { user: email, 'cart.num': num },
       {
-        $pull: { 'cart.$.product': { name } } as any,
+        $pull: { 'cart.$.product': { name } },
       },
     );
 
     // 만약 product 배열이 비었다면 해당 num 그룹 자체를 제거 (선택사항)
     await cartColl.updateOne(
       { user: email },
-      { $pull: { cart: { product: { $size: 0 } } } as any },
+      { $pull: { cart: { product: { $size: 0 } } } },
     );
 
     return NextResponse.json({ ok: true, result }, { status: 200 });

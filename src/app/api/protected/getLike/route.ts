@@ -60,7 +60,5 @@ export async function GET(req: Request) {
     total: totalResult[0]?.likeCount ?? 0,
   };
 
-  console.log('result : ', result);
-
   return NextResponse.json({ result, ok: true });
 }

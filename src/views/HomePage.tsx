@@ -5,6 +5,7 @@ import { Banner } from '@/widgets';
 import { findProducts } from '@/entities/product/lib/findProducts';
 import { findActiveBanners } from '@/entities/banner/lib/findActiveBanners';
 import { Card } from '@/entities/product/ui';
+import { EmptyState } from '@/shared/ui';
 import * as s from './homePage.css';
 
 const sections = [
@@ -20,7 +21,7 @@ export default async function HomePage() {
   const email = (await auth())?.user?.email;
   const [banners, ...results] = await Promise.all([
     findActiveBanners(),
-    ...sections.map(({ tag }) => findProducts({ tag, count: 4, email })),
+    ...sections.map(({ tag }) => findProducts({ tag, count: 8, email })),
   ]);
 
   return (
@@ -41,11 +42,15 @@ export default async function HomePage() {
               <ChevronRight width={14} height={14} aria-hidden />
             </Link>
           </header>
-          <div className={s.grid}>
-            {results[i].data.map((val) => (
-              <Card props={val} key={val._id} />
-            ))}
-          </div>
+          {results[i].data.length ? (
+            <div className={s.grid}>
+              {results[i].data.map((val) => (
+                <Card props={val} key={val._id} />
+              ))}
+            </div>
+          ) : (
+            <EmptyState className={s.empty}>아직 {title}이 없어요</EmptyState>
+          )}
         </section>
       ))}
     </div>

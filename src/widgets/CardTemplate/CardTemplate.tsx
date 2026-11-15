@@ -27,19 +27,6 @@ export default function CardTemplate({
   const [products, setProducts] = useState([] as CardProps[]);
   const [searchProducts, setSearchProducts] = useAtom(searchProductsAtom);
 
-  console.log('serachProducts : ', searchProducts);
-
-  console.log(
-    'CardTemplate tag:',
-    tag,
-    'search:',
-    search,
-    'count:',
-    count,
-    'props:',
-    props,
-  );
-
   return (
     <div className={pageWrap}>
       <ScrollToTop />

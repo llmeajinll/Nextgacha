@@ -25,7 +25,7 @@ export async function POST(req: Request) {
   // const koreaTime = dayjs().tz('Asia/Seoul');
 
   try {
-    const discountResult = await errorColl.insertOne({
+    await errorColl.insertOne({
       textareaValue,
       pathname,
       type: 'report',
@@ -33,11 +33,9 @@ export async function POST(req: Request) {
       created_at: koreaTime(),
     });
 
-    console.log('discountResult : ', discountResult);
-
     return NextResponse.json({ ok: true }, { status: 200 });
   } catch (error) {
-    console.log(`${error} 오류다이`);
+    console.error('오류 제보 저장 실패:', error instanceof Error ? error.message : error);
   }
   return NextResponse.json({ ok: false }, { status: 200 });
 }

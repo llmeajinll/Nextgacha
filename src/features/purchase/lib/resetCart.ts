@@ -15,13 +15,13 @@ export async function resetCart({
   for (const line of list) {
     await cartColl.updateOne(
       { user: email, 'cart.num': line.num },
-      { $pull: { 'cart.$.product': { name: { $in: line.product.map((p) => p.name) } } } } as any,
+      { $pull: { 'cart.$.product': { name: { $in: line.product.map((p) => p.name) } } } },
       { session: mongodbSession },
     );
   }
   await cartColl.updateOne(
     { user: email },
-    { $pull: { cart: { product: { $size: 0 } } } } as any,
+    { $pull: { cart: { product: { $size: 0 } } } },
     { session: mongodbSession },
   );
 }

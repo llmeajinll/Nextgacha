@@ -49,7 +49,7 @@ export async function POST(req: Request) {
             'cart.num': num,
           },
           {
-            $push: { 'cart.$.product': { name, count } } as any,
+            $push: { 'cart.$.product': { name, count } },
           }
         );
 
@@ -63,7 +63,7 @@ export async function POST(req: Request) {
                   num: num,
                   product: [{ name, count }],
                 },
-              } as any,
+              },
             }
           );
         }

@@ -63,8 +63,14 @@ test('상품 수정: 재고 0은 허용, 이상한 값은 거부', () => {
 });
 
 test('이벤트 할인: 0~99%, 상품 번호 1~500개', () => {
-  assert.deepEqual(parseProductEvent({ discount: 20, nums: [3, 5, 3] }), { discount: 20, nums: [3, 5] });
-  assert.deepEqual(parseProductEvent({ discount: 0, nums: [1] }), { discount: 0, nums: [1] });
+  assert.deepEqual(parseProductEvent({ discount: 20, nums: [3, 5, 3] }), { discount: 20, nums: [3, 5], start: null, end: null });
+  assert.deepEqual(parseProductEvent({ discount: 0, nums: [1] }), { discount: 0, nums: [1], start: null, end: null });
+  const period = parseProductEvent({ discount: 10, nums: [1], start: '2026-11-01T00:00:00+09:00', end: '2026-11-07T00:00:00+09:00' });
+  assert.equal(period?.end?.toISOString(), '2026-11-06T15:00:00.000Z');
+  // 기간은 둘 다 있어야 하고 순서가 맞아야 함, 할인을 내릴 때(0)는 무시
+  assert.equal(parseProductEvent({ discount: 10, nums: [1], start: '2026-11-01' }), null);
+  assert.equal(parseProductEvent({ discount: 10, nums: [1], start: '2026-11-07', end: '2026-11-01' }), null);
+  assert.equal(parseProductEvent({ discount: 0, nums: [1], start: 'x', end: 'y' })?.start, null);
   assert.equal(parseProductEvent({ discount: 100, nums: [1] }), null);
   assert.equal(parseProductEvent({ discount: 10, nums: [] }), null);
   assert.equal(parseProductEvent({ discount: 10, nums: [{ $gt: 0 }] }), null);

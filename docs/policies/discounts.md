@@ -14,5 +14,5 @@
 - 정책: 할인에 시작일·종료일을 둔다. 화면 표시와 결제 승인(`verifyOrder`) 모두 같은 기준(KST)으로 "지금 할인 중인지" 판정한다.
 - 이유: 지금은 한 번 켜면 관리자나 Atlas Trigger가 끌 때까지 계속 적용된다. 날짜로 판정하면 끄는 작업이 늦거나 실패해도 할인이 남지 않는다.
 - 구현 시 바뀌는 곳: `postEvent`(기간 저장), 가격 계산(`orderPolicy.ts`), Atlas Trigger의 할인 끄기 부분은 제거 ([이벤트 운영](./operations.md#이벤트-운영))
-- 코드: 미구현. 현재 `src/app/api/postEvent/route.ts:17`
-- 변경 이력: 2026-11-09 신설, 2026-11-11 확정 (시작·종료일, KST)
+- 코드: 판정 `src/entities/product/lib/salePolicy.ts` `activeDiscount`(종료일 당일까지 포함), 저장 `src/app/api/postEvent/route.ts` (`discountStart`·`discountEnd`), 관리자 이벤트 화면 기간 입력. 조회(`findProducts`, `getOneProduct`, `getCart`, `getSimpleCart`)와 `verifyOrder`가 같은 함수를 쓴다. Atlas Trigger의 할인 끄기는 Atlas에서 직접 지워야 함
+- 변경 이력: 2026-11-09 신설, 2026-11-11 확정 (시작·종료일, KST), 2026-11-15 구현

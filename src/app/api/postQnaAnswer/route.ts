@@ -13,7 +13,7 @@ export async function POST(req: Request) {
 
   try {
     const doc = await qnaColl.findOne({ num, 'qna.qna_num': qna_num }, { projection: { 'qna.$': 1 } });
-    const request: { writer: string }[] = doc?.qna?.[0]?.request ?? [];
+    const request = doc?.qna?.[0]?.request ?? [];
     if (!doc) return NextResponse.json({ ok: false, message: '문의를 찾을 수 없어요.' }, { status: 404 });
 
     const filter = { arrayFilters: [{ 'q.qna_num': qna_num }] };

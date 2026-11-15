@@ -42,7 +42,7 @@
   - 환경마다 값이 달라야 하는 변수: `MONGODB_DB`, `BLOB_READ_WRITE_TOKEN`, `NEXT_PUBLIC_VERCEL_IMAGE_URL`, Toss 키 두 개 ([환경 간 공유 자원](./data.md#환경-간-공유-자원-blob결제-키)).
   - 시크릿은 Vercel에서 `sensitive` 타입으로 두고, 코드에서 안 쓰는 변수는 지운다.
 - 이유: `TOSS_SECRET_KEY` 이름 변경 때 이 순서로 진행했다. 옛 이름 `NEXT_PUBLIC_TOSSPAYMENTS_SECRET_KEY`는 아직 Vercel에 남아 있고, `NEXT_PUBLIC_`이 붙은 시크릿이라 코드가 다시 참조하는 순간 브라우저 번들에 들어간다. 그 외 미사용: `NEXT_PUBLIC_TOSSPAYMENTS_SECURITY_KEY`, `NEXT_PUBLIC_API_URL`, `NEXT_PUBLIC_URL`, `DATA_API_KEY`, `DATA_API_URL`, `AUTH_SECERT`(오타). `MONGODB_URI`, `KAKAO_*`, `NEXTAUTH_SECRET`은 `encrypted`라 대시보드에서 값이 보인다.
-- 코드: 레포에 `.env.example` 없음
+- 코드: `.env.example`
 - 변경 이력: 2026-11-10 신설, 2026-11-10 확정 (`infra.md` 환경변수 관리 병합)
 
 ## DB 변경이 있는 배포

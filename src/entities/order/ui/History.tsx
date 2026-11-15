@@ -1,9 +1,12 @@
 'use client';
 
-import { useState, useEffect, useRef } from 'react';
+/* eslint-disable @next/next/no-img-element -- 영수증 일러스트: 내용 높이에 맞춰 늘리는 장식 이미지라 next/image 최적화 대상이 아님 (docs/policies/design.md 아이콘 예외) */
+
+import { useState, useEffect, useRef, type ReactNode } from 'react';
 import { useRouter, usePathname, useSearchParams } from 'next/navigation';
 import { Range } from '@/shared/ui';
 import { comma } from '@/shared/lib/comma';
+import type { OrderView } from '../model/types';
 import {
   reviewBtn,
   bigLabelTitle,
@@ -65,8 +68,8 @@ function ReceiptLabel({
   );
 }
 
-export default function History({ props }: { props: any }) {
-  console.log('props:', props);
+// action: 주문 상태에 따른 버튼 자리 (예: 구매자 취소). entity가 feature를 import하지 않도록 바깥에서 넣는다
+export default function History({ props, action }: { props: OrderView; action?: ReactNode }) {
 
   const route = useRouter();
   const pathname = usePathname();
@@ -137,17 +140,11 @@ export default function History({ props }: { props: any }) {
       >
         <div ref={middleRef} className={innerPadMiddle}>
           <Range className={labelTitle}>list</Range>
-          {props.list.map((value: any, index: number) => {
-            console.log(
-              'value.list : ',
-              value?.product.map((val: any, idx: number) => {
-                console.log(val);
-              }),
-            );
+          {props.list.map((value, index) => {
             return (
               <div key={props.orderId + index} className={listContainer}>
                 <div className={title}>{value?.title || 'error'}</div>
-                {value?.product.map((val: any) => (
+                {value?.product.map((val) => (
                   <Range
                     key={props.orderId + val.name + value.num}
                     className={contentContainer}
@@ -189,6 +186,7 @@ export default function History({ props }: { props: any }) {
               GIVE A REVIEW
             </button>
           )}
+          {action}
         </div>
 
         <img

@@ -18,12 +18,9 @@ export default function DetailCategory() {
 
   const detailParams = searchParams.get('detail') || ' ';
   const filterParams = searchParams.get('filter') || ' ';
-  // console.log('search page search:', search);
   //   const targetCategory = getStandardCategory(search);
-  //   console.log(`${search} 로 검색하여 ${targetCategory} 결과를 찾습니다.`);
   type DetailKey = keyof typeof detailFilter;
   //   const filterParams = searchParams.get('filter');
-  console.log('detailParams : ', detailParams);
 
   const detail = useMemo(() => {
     return detailFilter[(detailParams as DetailKey) || ''];

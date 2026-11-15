@@ -5,7 +5,8 @@ import { StarRating } from '@/shared/ui';
 import dayjs from 'dayjs';
 import { container, itemLabel, content } from './review.css';
 
-export default function Review({ props }: { props: ReviewProps }) {
+// action: 본인 리뷰 삭제 버튼 같은 동작 자리 (entity가 feature를 import하지 않도록 바깥에서 넣는다)
+export default function Review({ props, action }: { props: ReviewProps; action?: React.ReactNode }) {
   return (
     <Range preset='column' key={props.orderId} className={container}>
       <StarRating value={props.rate} disabled={true} />
@@ -20,6 +21,7 @@ export default function Review({ props }: { props: ReviewProps }) {
 
       <div className={content}>{props.content}</div>
       <Writer writer={props.user} created_at={props.created_at} />
+      {action}
     </Range>
   );
 }

@@ -1,4 +1,5 @@
 import { productColl, userColl } from '@/shared/api/mongodb';
+import { canBuy, withActiveDiscount } from '@/entities/product/lib/salePolicy';
 import {
   calcOrder,
   isValidOrderList,
@@ -27,12 +28,29 @@ export async function verifyOrder({
     return fail('사용 포인트가 올바르지 않습니다.');
   if (!Number.isFinite(amount)) return fail('결제 금액이 올바르지 않습니다.');
 
-  const products = await productColl
+  const now = new Date();
+  const docs = await productColl
     .find({ num: { $in: list.map((l) => l.num) } })
-    .project<{ num: number; price: number; discount?: number; title: string }>(
-      { _id: 0, num: 1, price: 1, discount: 1, title: 1 },
-    )
+    .project<{
+      num: number;
+      price: number;
+      discount?: number;
+      isDiscount?: boolean;
+      discountStart?: Date | string;
+      discountEnd?: Date | string;
+      reserveStart?: Date | string;
+      reserveEnd?: Date | string;
+      title: string;
+    }>({
+      _id: 0, num: 1, price: 1, discount: 1, isDiscount: 1, discountStart: 1, discountEnd: 1,
+      reserveStart: 1, reserveEnd: 1, title: 1,
+    })
     .toArray();
+
+  // 예약 기간 밖(시작 전·마감 후)이면 결제 불가. 할인은 화면과 같은 기준(기간)으로 다시 판정
+  const closed = docs.find((p) => !canBuy(p, now));
+  if (closed) return fail(`${closed.title}은(는) 지금 구매할 수 없는 예약 상품입니다.`);
+  const products = docs.map((p) => withActiveDiscount(p, now));
 
   const calc = calcOrder(products, list, usedPoint);
   if (!calc) return fail('존재하지 않는 상품이 포함되어 있습니다.');

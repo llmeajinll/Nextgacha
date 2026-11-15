@@ -16,7 +16,7 @@ export default function Page() {
 
   const [sendList, setsendList] = useState([]);
   const [isProcessing, setIsProcessing] = useState(true);
-  const [result, setResult] = useState<any>(null);
+  const [result, setResult] = useState<unknown>(null);
   const { openModal } = useModal();
 
   useEffect(() => {
@@ -34,7 +34,6 @@ export default function Page() {
 
       // const list = JSON.parse(savedItems);
       setsendList(list);
-      // console.log('list : ', list);
       try {
         // 2. 백엔드 API 호출 (승인 요청)
         const response = await fetch('/api/postPaymentsConfirm', {
@@ -49,9 +48,7 @@ export default function Page() {
             usedPoint,
           }),
         });
-        console.log('response : ', response);
         const result = await response.json();
-        console.log(result.data);
         if (result.ok) {
           // 3. 결제 최종 완료!
           ['pending_order_items', 'address', 'used_point'].forEach((key) =>

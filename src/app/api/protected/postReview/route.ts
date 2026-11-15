@@ -40,7 +40,7 @@ export async function POST(req: Request) {
       }
 
       // 2. 리뷰 일괄 등록 (상품 목록/구매일은 클라이언트 값이 아닌 주문 문서 기준)
-      const operations = order.list.map((val: any) => {
+      const operations = order.list.map((val) => {
         const reviewInfo = {
           created_at: koreaTime(),
           purchaseDate: order.created_at,

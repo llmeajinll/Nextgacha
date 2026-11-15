@@ -17,22 +17,24 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         if (!user.email) return '/signin?error=email_required';
 
         try {
-          const existingUser = await userColl.findOne({ email: user.email });
-
-          if (!existingUser) {
-            // 첫 로그인 시 DB 생성
-            await userColl.insertOne({
-              email: user.email,
-              nickname: user.name,
-              address: '',
-              qna: [],
-              review: [],
-              like: [],
-              keep: [],
-              point: 0,
-              created_at: koreaTime(),
-            });
-          }
+          // 첫 로그인 시 DB 생성. upsert라 동시에 두 번 와도 문서는 하나 (user.email 유니크 인덱스가 최종 방어)
+          await userColl.updateOne(
+            { email: user.email },
+            {
+              $setOnInsert: {
+                email: user.email,
+                nickname: user.name,
+                address: '',
+                qna: [],
+                review: [],
+                like: [],
+                keep: [],
+                point: 0,
+                created_at: koreaTime(),
+              },
+            },
+            { upsert: true },
+          );
           // 관리자 회원 상세의 최근 IP·기기 (결제 때도 갱신)
           await userColl.updateOne({ email: user.email }, { $set: { lastSeen: await clientSignals() } });
           return true; // 로그인 승인

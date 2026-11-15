@@ -36,7 +36,7 @@ export async function POST(req: Request) {
           content: requestInput,
           created_at: koreaTime(),
         },
-      } as any,
+      },
     },
   );
 

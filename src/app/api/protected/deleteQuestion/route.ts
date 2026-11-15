@@ -21,7 +21,7 @@ export async function POST(req: Request) {
   // 본인 질문만 삭제 (email 일치 조건)
   const res = await qnaColl.updateOne(
     { num: productNum, qna: { $elemMatch: { qna_num: qnaNum, email } } },
-    { $pull: { qna: { qna_num: qnaNum, email } } as any },
+    { $pull: { qna: { qna_num: qnaNum, email } } },
   );
 
   if (res.modifiedCount !== 1) {

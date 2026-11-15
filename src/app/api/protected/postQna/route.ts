@@ -47,7 +47,7 @@ export async function POST(req: Request) {
           qna_num: counter?.qna_num,
           request: [],
         },
-      } as any,
+      },
     },
     { upsert: true },
   );

@@ -1,6 +1,8 @@
 import { NextResponse } from 'next/server';
 import { reviewColl } from '@/shared/api/mongodb';
 import { maskEmail } from '@/shared/lib/maskEmail';
+import { auth } from '@/auth';
+import type { ReviewProps } from '@/entities/review/model/types';
 
 export async function GET(req: Request) {
   const { searchParams } = new URL(req.url);
@@ -8,7 +10,6 @@ export async function GET(req: Request) {
   const num = Number(searchParams.get('num'));
   const page = Number(searchParams.get('page')) || 0;
   const limit = 8;
-  // console.log('num: ', num);
 
   if (!Number.isInteger(num) || num <= 0) {
     return NextResponse.json({ ok: false, error: 'num is required' }, { status: 400 });
@@ -20,9 +21,17 @@ export async function GET(req: Request) {
       {
         $facet: {
           // 데이터 가져오기 전용 파이프라인
-          metadata: [{ $project: { total: { $size: '$review' } } }],
+          // 관리자가 숨긴 리뷰는 빼고 센다 (reviews.md "리뷰 수정·삭제와 숨김")
+          metadata: [
+            {
+              $project: {
+                total: { $size: { $filter: { input: '$review', cond: { $ne: ['$$this.hidden', true] } } } },
+              },
+            },
+          ],
           data: [
             { $unwind: '$review' },
+            { $match: { 'review.hidden': { $ne: true } } },
             { $sort: { 'review.created_at': -1 } },
             { $skip: page * limit },
             { $limit: limit },
@@ -52,15 +61,19 @@ export async function GET(req: Request) {
     //   ])
     //   .toArray();
 
-    const [facetResult] = await reviewColl.aggregate(pipeline).toArray();
+    const [facetResult] = await reviewColl
+      .aggregate<{ metadata: { total: number }[]; data: ReviewProps[] }>(pipeline)
+      .toArray();
 
     // const totalCount = await reviewColl.countDocuments({ num });
     // const hasMore = (page + 1) * limit < totalCount;
     const totalCount = facetResult.metadata[0]?.total || 0;
-    // 작성자 이메일 원문은 내보내지 않는다
-    const result = facetResult.data.map((review: any) => ({
+    // 작성자 이메일 원문은 내보내지 않는다. 본인 리뷰인지는 서버가 계산 (삭제 버튼)
+    const email = (await auth())?.user?.email;
+    const result = facetResult.data.map((review) => ({
       ...review,
       user: maskEmail(review.user),
+      isMine: !!email && review.user === email,
     }));
     const hasMore = (page + 1) * limit < totalCount;
 

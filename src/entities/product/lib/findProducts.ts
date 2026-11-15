@@ -1,5 +1,7 @@
+import type { Document, Filter } from 'mongodb';
 import { productColl, userColl } from '@/shared/api/mongodb';
 import { CardProps } from '@/entities/product/model/types';
+import { hiddenReserveFilter, withActiveDiscount } from './salePolicy';
 
 // 상품 목록 조회 (getProduct 라우트 + 서버 컴포넌트 공용). email이 있으면 좋아요 여부 포함
 export async function findProducts(props: {
@@ -9,8 +11,11 @@ export async function findProducts(props: {
   page?: number;
   filter?: string | null;
   email?: string | null;
+  // 관리자 화면용: 숨김 없이 전부, 할인은 저장된 값 그대로
+  admin?: boolean;
 }) {
-  const { tag, search = '', filter, email } = props;
+  const { tag, search = '', filter, email, admin = false } = props;
+  const now = new Date();
   // 한 번에 가져올 수 있는 개수 상한 (count=999999로 전체 덤프 방지)
   const count = Math.min(Math.max(props.count || 20, 1), 100);
   const page = Math.max(props.page || 1, 1);
@@ -18,7 +23,7 @@ export async function findProducts(props: {
   const twoMonthsAgo = new Date();
   twoMonthsAgo.setMonth(twoMonthsAgo.getMonth() - 2);
 
-  let query: Record<string, any> = {};
+  let query: Filter<Document> = {};
 
   // 사용자 입력을 정규식 리터럴로 (특수문자로 인한 500 / ReDoS 방지)
   const escapeRegex = (text: string) =>
@@ -47,6 +52,13 @@ export async function findProducts(props: {
     query['list.name'] = { $regex: escapeRegex(filter), $options: 'i' };
   }
 
+  if (!admin) {
+    // 품절(모든 옵션 재고 0) 숨김 (operations.md "품절·재입고")
+    query['list.count'] = { $gt: 0 };
+    // 예약 마감 후 2주 숨김 (preorders.md "예약 상품 판매 기간")
+    query.$nor = [hiddenReserveFilter(now)];
+  }
+
   const [product, total, user] = await Promise.all([
     productColl
       .find(query)
@@ -62,7 +74,7 @@ export async function findProducts(props: {
 
   const likes: number[] = user?.like || [];
   const data = product.map((item) => ({
-    ...item,
+    ...(admin ? item : withActiveDiscount(item, now)),
     like: likes.includes(item.num),
   }));
 

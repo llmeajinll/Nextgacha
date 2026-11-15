@@ -66,10 +66,9 @@
 
 ## 공개 API 남용 방지
 - 상태: 미정
-- 정책: 미정. 방향은 페이지뷰 수집을 직접 만든 `/api/track` 대신 외부 분석 도구(Amplitude 등)로 옮기는 것을 검토한다. 옮기면 `/api/track`과 `page_views` 남용 문제는 없어진다.
+- 정책: 페이지뷰 수집은 GA4로 옮겼고 직접 만든 `/api/track`과 관리자 통계(`/manager/statistics`)는 지웠다(`d674d00`). 남은 공개 쓰기 API의 제한은 미정.
 - 결정할 것:
-  - 외부 분석 도구를 쓸지, 쓴다면 어떤 것인지. 관리자 통계(`/manager/statistics`)가 `page_views`를 읽고 있어서 같이 바뀐다.
   - 남는 공개 쓰기 API의 제한: `/api/postCartProduct` 요청 배열 상한(예: 50), `/api/postError` IP당 요청 제한(Vercel Firewall 규칙 등)
-- 이유: 지금은 스팸 요청만으로 `pageViewsColl`과 `errorColl`을 계속 키우거나, DB 조회를 무제한으로 일으킬 수 있다.
-- 코드: `src/app/api/track/route.ts:77`, `src/app/api/postCartProduct/route.ts:9`, `src/app/api/postError/route.ts`
-- 변경 이력: 2026-11-09 신설, 2026-11-11 외부 분석 도구 검토로 방향 변경
+- 이유: 지금은 스팸 요청만으로 `errorColl`을 계속 키우거나, DB 조회를 무제한으로 일으킬 수 있다.
+- 코드: `src/app/api/postCartProduct/route.ts`, `src/app/api/postError/route.ts`
+- 변경 이력: 2026-11-09 신설, 2026-11-11 외부 분석 도구 검토로 방향 변경, 2026-11-15 GA4 이전 반영 (`/api/track` 삭제)

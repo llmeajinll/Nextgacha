@@ -15,9 +15,11 @@ import {
   strikePrice,
 } from './ticket.css';
 import { Range, CountBtn } from '@/shared/ui';
-import { ProductProps } from '@/entities/product/model/types';
 import { comma } from '@/shared/lib/comma';
 import { useModal } from '@/shared/hooks';
+
+// 임시 장바구니에서 한 옵션(줄)의 표시용 값
+type TicketProps = { name: string; title: string; price: number; num: number; count: number; discount: number };
 
 export default function Ticket({
   props,
@@ -26,14 +28,12 @@ export default function Ticket({
   erase,
 }: // onClick,
 {
-  props: any;
-  // props: ProductProps;
-  increase: (props: ProductProps) => void;
-  decrease: (props: ProductProps) => void;
-  erase: (props: ProductProps) => void;
+  props: TicketProps;
+  increase: (props: TicketProps) => void;
+  decrease: (props: TicketProps) => void;
+  erase: (props: TicketProps) => void;
 }) {
   const { openModal } = useModal();
-  // console.log('ticket : ', props);
   return (
     <div className={ticketContainer}>
       <div className={contentContainer}>

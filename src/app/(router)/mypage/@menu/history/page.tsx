@@ -5,7 +5,9 @@ import { useSearchParams, useRouter, usePathname } from 'next/navigation';
 import getHistory from '@/entities/order/api/getHistory';
 import { ScrollToTop } from '@/shared/ui';
 import { History } from '@/entities/order/ui';
+import type { OrderView } from '@/entities/order/model/types';
 import { EmptyCard } from '@/shared/ui';
+import CancelOrderBtn from '@/features/order-cancel/ui/CancelOrderBtn';
 import { Pagination } from '@/shared/ui';
 import { grid, paginationWrap } from './page.css';
 
@@ -15,7 +17,7 @@ export default function HistoryPage() {
   const searchParams = useSearchParams();
   const page = searchParams.get('page');
 
-  const [history, setHistory] = useState([]);
+  const [history, setHistory] = useState<OrderView[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [total, setTotal] = useState(0);
   const [loading, setLoading] = useState(true);
@@ -34,18 +36,17 @@ export default function HistoryPage() {
       })
         .then(async (res) => {
           const data = await res.json();
-          console.log(data);
           if (data.ok === true) {
             setHistory(data.result.historyResult);
             setTotal(data.result.total);
           }
         })
         .catch((err) => {
-          console.log('fetch getHistory error:', err);
+          console.error('fetch getHistory error:', err);
           return null;
         });
     } catch (err) {
-      console.log('fetch getHistory error:', err);
+      console.error('fetch getHistory error:', err);
 
       setLoading(false);
       return null;
@@ -71,9 +72,18 @@ export default function HistoryPage() {
       ) : (
         <>
           <div className={grid}>
-            {history.map((val: any) => {
-              // console.log(val);
-              return <History props={val} key={val.orderId} />;
+            {history.map((val) => {
+              return (
+                <History
+                  props={val}
+                  key={val.orderId}
+                  action={
+                    val.status === '상품 확인중' && (
+                      <CancelOrderBtn orderId={val.orderId} onCanceled={() => fetchHistoryData(currentPage)} />
+                    )
+                  }
+                />
+              );
             })}
           </div>
           <Pagination
@@ -82,7 +92,6 @@ export default function HistoryPage() {
             total={total}
             pageSize={8}
             onChange={(page) => {
-              console.log('onChange page : ', page);
               setCurrentPage(page);
               fetchHistoryData(page);
 

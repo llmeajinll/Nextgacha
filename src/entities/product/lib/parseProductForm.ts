@@ -105,7 +105,8 @@ export function parseProductEdit(b: unknown): ProductEdit | null {
 }
 
 // 이벤트 관리(postEvent): 고른 상품들에 같은 할인율을 걸거나(1~99) 내린다(0)
-export type ProductEvent = { discount: number; nums: number[] };
+// start·end는 할인 기간 (KST 자정 ISO 문자열, end 당일까지 포함). 둘 다 없으면 기간 제한 없음
+export type ProductEvent = { discount: number; nums: number[]; start: Date | null; end: Date | null };
 
 export function parseProductEvent(b: unknown): ProductEvent | null {
   if (!b || typeof b !== 'object') return null;
@@ -114,5 +115,13 @@ export function parseProductEvent(b: unknown): ProductEvent | null {
   if (discount === null || !Array.isArray(f.nums) || f.nums.length < 1 || f.nums.length > 500) return null;
   const nums = f.nums.map((n) => (typeof n === 'number' ? int(String(n), 1, Number.MAX_SAFE_INTEGER) : null));
   if (nums.some((n) => n === null)) return null;
-  return { discount, nums: [...new Set(nums as number[])] };
+
+  let start: Date | null = null;
+  let end: Date | null = null;
+  if (discount > 0 && (f.start || f.end)) {
+    start = date(f.start);
+    end = date(f.end);
+    if (!start || !end || end < start) return null;
+  }
+  return { discount, nums: [...new Set(nums as number[])], start, end };
 }

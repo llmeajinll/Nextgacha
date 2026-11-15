@@ -17,7 +17,7 @@ export default function MypageTabs() {
   const pathname = usePathname();
   // 장바구니 화면(useCart)과 같은 캐시라 CART 탭에서는 요청이 한 번만 나간다
   const { data } = useQuery({ queryKey: ['cartData'], queryFn: getCart });
-  const cartCount = Array.isArray(data) ? data.reduce((a: number, it: any) => a + (it.cart?.list?.length ?? 0), 0) : 0;
+  const cartCount = Array.isArray(data) ? data.reduce((a, it) => a + (it.cart?.list?.length ?? 0), 0) : 0;
 
   return (
     <nav aria-label='마이페이지 메뉴' className={tabs}>

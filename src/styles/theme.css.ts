@@ -61,6 +61,13 @@ export const vars = createGlobalTheme(':root', {
     reserve: '#BCE2FF',
     event: '#B9F0AE',
   },
+  // 상태 태그 글자: 같은 색 계열의 진한 색 (배경 대비 4.5:1 이상)
+  statusText: {
+    new: '#8A5300',
+    hot: '#8F1F30',
+    reserve: '#1C5F99',
+    event: '#2B6E22',
+  },
   font: {
     cardTitle: {
       fontSize: '18px',

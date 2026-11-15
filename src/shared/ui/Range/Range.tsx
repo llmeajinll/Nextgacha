@@ -36,8 +36,6 @@ export default function Range({
   style,
   children,
 }: Props) {
-  // console.log(width, height, preset, style);
-  // console.log(rangePresetVariant[preset ?? 'center']);
 
   //   let inlineVars: Record<string, string> = {};
 
@@ -69,7 +67,6 @@ export default function Range({
   //     ...(typeof gap === 'number' && { [rangeGap]: `${gap}px` }),
   //   };
 
-  //   console.log(inlineStyles);
 
   // let inlineStyles = {};
 

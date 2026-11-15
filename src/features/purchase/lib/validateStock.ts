@@ -1,17 +1,17 @@
 import { productColl, cartColl } from '@/shared/api/mongodb';
 import { auth } from '@/auth';
+import type { OrderLine } from './orderPolicy';
 
-export async function validateStock(list: any[]) {
+type StockItem = { name: string; count: number };
+
+export async function validateStock(list: OrderLine[]) {
   if (!list || list.length === 0) return { isAvailable: false };
 
   const session = await auth();
   const email = session?.user?.email;
 
-  console.log('========== validateStock ==========');
-  console.log('validateStock input list:', JSON.stringify(list, null, 2));
-
   // 1. 모든 num을 추출하여 DB에서 한꺼번에 조회
-  const nums = list.map((i: any) => i.num);
+  const nums = list.map((i) => i.num);
   const dbDocs = await productColl
     .find({ num: { $in: nums } })
     .project({ _id: 0, num: 1, list: 1 }) // 상품 상세 정보(list 배열) 가져오기
@@ -35,35 +35,26 @@ export async function validateStock(list: any[]) {
     // item.product 배열 순회 (예: [{ name: 'A', count: 2 }, ...])
     for (const p of item.product) {
       // DB의 list 배열에서 같은 이름을 가진 세부 상품 찾기
-      const actual = parentDoc.list.find((li: any) => li.name === p.name);
-
-      console.log(
-        `[검증] num: ${item.num}, 상품명: ${p.name} -> DB재고: ${
-          actual?.count ?? 0
-        }, 요청: ${p.count}`
-      );
+      const actual = parentDoc.list.find((li: StockItem) => li.name === p.name);
 
       // 상품이 없거나 재고가 부족한 경우
       if (!actual || actual.count < p.count) {
-        console.log(
-          `[재고부족 발견] 삭제 시도: num ${item.num}, 상품명 ${p.name}`
-        );
 
-        // 3. cartCollection에서 해당 상품($pull) 제거
-        await cartColl.updateOne(
+        // 3. cartCollection에서 해당 상품($pull) 제거 (비로그인이면 지울 장바구니가 없음)
+        if (email) await cartColl.updateOne(
           {
             user: email,
             'cart.num': item.num,
           },
           {
-            $pull: { 'cart.$.product': { name: p.name } as any },
+            $pull: { 'cart.$.product': { name: p.name } },
           }
         );
 
         // 4. 상품 제거 후, 만약 product 배열이 비어버렸다면 해당 num 그룹 자체를 제거
-        await cartColl.updateOne(
+        if (email) await cartColl.updateOne(
           { user: email },
-          { $pull: { cart: { product: { $size: 0 } } } as any }
+          { $pull: { cart: { product: { $size: 0 } } } }
         );
 
         return {
@@ -74,6 +65,5 @@ export async function validateStock(list: any[]) {
     }
   }
 
-  console.log('validateStock 검증 통과');
   return { isAvailable: true };
 }

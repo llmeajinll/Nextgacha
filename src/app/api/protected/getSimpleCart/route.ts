@@ -1,4 +1,5 @@
 import { NextResponse } from 'next/server';
+import { activeDiscountExpr } from '@/entities/product/lib/salePolicy';
 import { auth } from '@/auth';
 import { userColl, cartColl, productColl } from '@/shared/api/mongodb';
 
@@ -6,8 +7,6 @@ export async function GET(req: Request) {
   const { searchParams } = new URL(req.url);
   const numStr = searchParams.get('num') || '';
   const num = Number(numStr);
-
-  console.log(num, typeof num);
 
   const session = await auth();
   const email = session?.user?.email;
@@ -70,7 +69,7 @@ export async function GET(req: Request) {
             stock: {
               list: '$list',
               price: '$price',
-              discount: '$discount',
+              discount: activeDiscountExpr(),
               title: '$title',
             },
             cart: {
@@ -88,8 +87,6 @@ export async function GET(req: Request) {
         { $limit: 1 },
       ])
       .toArray();
-
-    console.log('getSimpleCart : ', result[0]);
 
     return NextResponse.json({ ok: true, result: result[0] || [] });
   } catch (error) {

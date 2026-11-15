@@ -8,7 +8,7 @@ import { v4 as uuidv4 } from 'uuid';
 import { useAtom, useAtomValue } from 'jotai';
 import { userInfoAtom } from '@/entities/user/model/store';
 import { useModal } from '@/shared/hooks';
-import { useDaumPostcodePopup } from 'react-daum-postcode';
+import { useDaumPostcodePopup, type Address } from 'react-daum-postcode';
 import { queryClientAtom } from 'jotai-tanstack-query';
 import useSplitRoute from '@/shared/hooks/useSplitRoute';
 import { assignInlineVars } from '@vanilla-extract/dynamic';
@@ -48,7 +48,6 @@ export default function BuyBtn({
   block?: boolean;
   label?: string;
 }) {
-  console.log('buyBtn list : ', props);
   const queryClient = useAtomValue(queryClientAtom);
 
   const [isHover, setIsHover] = useState(false);
@@ -72,7 +71,7 @@ export default function BuyBtn({
     'https://t1.kakaocdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js';
   const open = useDaumPostcodePopup(scriptUrl);
 
-  const handleComplete = async (data: any) => {
+  const handleComplete = async (data: Address) => {
     let fullAddress = data.address;
     let extraAddress = '';
 
@@ -113,15 +112,12 @@ export default function BuyBtn({
   const onClickPayment = async (e: React.MouseEvent<HTMLButtonElement>) => {
     e.stopPropagation();
 
-    console.log('buyBtn userInfo : ', props?.list);
-
     if (data === undefined) {
       alert('로그인 후 구매할 수 있습니다.');
       return;
     }
 
     if (props.price === 0) {
-      console.log('list no');
       alert('담은 제품이 없습니다.');
       return;
     }
@@ -147,14 +143,13 @@ export default function BuyBtn({
         return res.json();
       })
       .catch((err) => {
-        console.log(err);
+        console.error(err);
       });
 
     if (result?.ok !== true) {
       window.alert(result?.message ?? '재고 확인에 실패했습니다.');
       return;
     } else {
-      // console.log('통과');
       localStorage.setItem('pending_order_items', JSON.stringify(props.list));
       localStorage.setItem('address', JSON.stringify(data?.address));
       localStorage.setItem('used_point', JSON.stringify(props.usedPoint));
@@ -186,7 +181,7 @@ export default function BuyBtn({
         },
       })
       .catch((err) => {
-        console.log('err : ', err);
+        console.error('err : ', err);
         // alert('결재 취소');
       });
   };

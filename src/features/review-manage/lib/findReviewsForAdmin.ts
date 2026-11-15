@@ -24,6 +24,9 @@ export async function findReviewsForAdmin(): Promise<AdminReview[]> {
           content: '$review.content',
           options: { $ifNull: ['$review.list.name', []] },
           created_at: kstString('$review.created_at'),
+          orderId: '$review.orderId',
+          hidden: { $eq: ['$review.hidden', true] },
+          hiddenReason: '$review.hiddenReason',
         },
       },
     ])

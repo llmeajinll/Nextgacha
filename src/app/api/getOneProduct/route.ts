@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import { productColl, userColl } from '@/shared/api/mongodb';
 import { auth } from '@/auth';
+import { withActiveDiscount } from '@/entities/product/lib/salePolicy';
 
 export async function GET(req: Request) {
   const { searchParams } = new URL(req.url);
@@ -9,22 +10,22 @@ export async function GET(req: Request) {
 
   const num = Number(searchParams.get('num'));
 
-  let func = await productColl.findOne({ num });
-  if (!func) {
+  const doc = await productColl.findOne({ num });
+  if (!doc) {
     return NextResponse.json({ ok: false, result: null }, { status: 404 });
   }
 
-  const isLogin = email ? true : false;
+  // 할인은 지금 기준(기간)으로 바꿔서 내보낸다. 클라이언트 가격 계산은 그대로
+  const func = withActiveDiscount(doc);
 
   let result = null;
 
-  if (isLogin === true) {
+  if (email) {
     const user = await userColl.findOne(
-      { email: session?.user?.email },
+      { email },
       { projection: { like: 1, _id: 0 } },
     );
 
-    // console.log('========== like:', user?.like);
 
     const isLike = (user?.like || [])?.includes(num);
     result = {
@@ -32,16 +33,13 @@ export async function GET(req: Request) {
       like: isLike,
     };
 
-    // console.log('[server] if result : ', result);
   } else {
     result = {
       ...func,
       like: false,
     };
 
-    // console.log('[server] else result : ', result);
   }
-  // console.log('getOneProduct ; ', result);
 
   return NextResponse.json({ result, ok: true });
 }
