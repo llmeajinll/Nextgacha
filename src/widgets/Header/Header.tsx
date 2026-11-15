@@ -1,5 +1,3 @@
-'use server';
-
 import { auth } from '@/auth';
 import { findCategoryMenu } from '@/entities/product/lib/findCategoryMenu';
 import HeaderClient from './HeaderClient';

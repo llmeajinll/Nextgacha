@@ -48,4 +48,6 @@ paths:
 
 - entities/features slice 내부: `api/`(클라이언트 fetcher → 내부 `/api/*`), `model/`(타입, jotai atom), `ui/`(컴포넌트 + `*.css.ts`), `lib/`(순수 로직·서버 함수).
 - widgets: `widgets/<Name>/<Name>.tsx` + `<name>.css.ts`, 공개는 `widgets/index.ts` barrel에 등록.
+  단 서버 전용 위젯(`auth()`·DB를 읽는 `Header`)은 barrel에 넣지 않고 파일 경로로 직접 import한다
+  (클라이언트 컴포넌트가 barrel을 import하면 mongodb가 브라우저 번들에 들어가 빌드가 깨진다).
 - 특정 도메인(주문, 상품 등)을 아는 코드는 shared에 두지 않는다. 판단이 애매하면 "다른 쇼핑몰 프로젝트에 그대로 가져가도 되나?"로 판단.
