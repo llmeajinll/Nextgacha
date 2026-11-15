@@ -14,7 +14,8 @@ export async function GET(req: Request) {
   const page = Number(pageStr);
 
   const historyResult = await orderColl
-    .find({ email })
+    // 결제 식별자·기기 정보는 화면에 필요 없다
+    .find({ email }, { projection: { paymentKey: 0, deviceId: 0, ip: 0 } })
 
     .sort({ _id: -1 })
     .skip((page - 1) * 8)

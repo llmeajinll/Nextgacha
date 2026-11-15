@@ -1,4 +1,5 @@
 import { NextResponse } from 'next/server';
+import { activeDiscountExpr } from '@/entities/product/lib/salePolicy';
 import { auth } from '@/auth';
 import { userColl, cartColl, productColl } from '@/shared/api/mongodb';
 
@@ -68,7 +69,7 @@ export async function GET(req: Request) {
             stock: {
               list: '$list',
               price: '$price',
-              discount: '$discount',
+              discount: activeDiscountExpr(),
               title: '$title',
             },
             cart: {

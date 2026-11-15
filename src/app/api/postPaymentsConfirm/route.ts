@@ -1,8 +1,8 @@
 import { NextResponse } from 'next/server';
 import { auth } from '@/auth';
-import { errorColl, mongodbClient, userColl } from '@/shared/api/mongodb';
+import { mongodbClient, userColl } from '@/shared/api/mongodb';
+import { recordSystemError } from '@/shared/api/recordSystemError';
 import { clientSignals } from '@/shared/lib/clientSignals';
-import { koreaTime } from '@/shared/lib/koreaTime';
 import { validateStock } from '@/features/purchase/lib/validateStock';
 import { verifyOrder } from '@/features/purchase/lib/verifyOrder';
 import { reduceStock } from '@/features/purchase/lib/reduceStock';
@@ -12,7 +12,12 @@ import { resetCart } from '@/features/purchase/lib/resetCart';
 import {
   cancelTossPayment,
   confirmTossPayment,
+  getTossPaymentByOrderId,
 } from '@/features/purchase/lib/toss';
+import { isPaymentDisabled, PAYMENTS_DISABLED_MESSAGE } from '@/features/purchase/lib/paymentSwitch';
+
+const PATH = '/api/postPaymentsConfirm';
+const UNKNOWN_MESSAGE = '결제가 확인되지 않았습니다. 주문 내역을 확인해주세요.';
 
 
 export async function POST(req: Request) {
@@ -27,8 +32,19 @@ export async function POST(req: Request) {
     );
   }
 
+  if (isPaymentDisabled()) {
+    return NextResponse.json({ message: PAYMENTS_DISABLED_MESSAGE, ok: false }, { status: 503 });
+  }
+
   const { paymentKey, orderId, amount, list, address, usedPoint } =
-    await req.json();
+    await req.json().catch(() => ({}));
+  if (
+    typeof paymentKey !== 'string' || paymentKey.length > 200 ||
+    typeof orderId !== 'string' || orderId.length > 64 ||
+    typeof address !== 'string' || address.length > 300
+  ) {
+    return NextResponse.json({ message: '결제 정보가 올바르지 않습니다.', ok: false }, { status: 400 });
+  }
 
   const lastSeen = await clientSignals();
   const { deviceId, ip } = lastSeen;
@@ -57,14 +73,18 @@ export async function POST(req: Request) {
   }
 
   // 3. [Toss 승인 API 호출] 여기서 실제로 돈이 정산됩니다.
-  const data = await confirmTossPayment({
-    paymentKey,
-    orderId,
-    amount: Number(amount),
-  });
+  let data;
+  try {
+    data = await confirmTossPayment({ paymentKey, orderId, amount: Number(amount) });
+  } catch (err) {
+    // 타임아웃·네트워크 오류: 승인됐는지 모름 → 조회해서 승인됐으면 취소 (payments.md "Toss 요청 타임아웃")
+    console.error('Toss 승인 응답 없음:', orderId, err instanceof Error ? err.name : err);
+    await cancelIfApproved(orderId, err);
+    return NextResponse.json({ message: UNKNOWN_MESSAGE, ok: false }, { status: 504 });
+  }
 
   if (data.status !== 'DONE') {
-    console.error('Toss 승인 실패:', data);
+    console.error('Toss 승인 실패:', orderId, data.code);
     return NextResponse.json(
       { message: data.message ?? '결제 승인에 실패했습니다.', ok: false },
       { status: 400 },
@@ -84,6 +104,7 @@ export async function POST(req: Request) {
       await reduceStock({ list: verified.orderList, mongodbSession });
       await addOrder({
         orderId,
+        paymentKey,
         list: verified.orderList,
         amount: Number(amount),
         email,
@@ -128,20 +149,30 @@ export async function POST(req: Request) {
 
 async function cancelPayment(paymentKey: string, orderId: string, cause: unknown) {
   try {
-    await cancelTossPayment(paymentKey, '주문 처리 실패');
+    await cancelTossPayment(paymentKey, '주문 처리 실패', { orderId, reason: 'order-failed' });
   } catch (cancelErr) {
-    // 결제는 됐는데 주문도 취소도 안 된 상태 → 관리자 수동 처리용으로 기록
-    console.error('결제 취소 실패:', cancelErr);
-    await errorColl
-      .insertOne({
-        textareaValue: `[결제 취소 실패] orderId=${orderId} paymentKey=${paymentKey} cause=${String(
-          cause,
-        )} cancelError=${String(cancelErr)}`,
-        pathname: '/api/postPaymentsConfirm',
-        type: 'system',
-        status: '접수',
-        created_at: koreaTime(),
-      })
-      .catch((e) => console.error('에러 기록 실패:', e));
+    // 결제는 됐는데 주문도 취소도 안 된 상태 → 관리자 수동 처리용으로 기록 + 카톡
+    console.error('결제 취소 실패:', orderId);
+    await recordSystemError(
+      `[결제 취소 실패] orderId=${orderId} paymentKey=${paymentKey} cause=${String(
+        cause,
+      )} cancelError=${String(cancelErr)}`,
+      PATH,
+      { notify: true },
+    );
+  }
+}
+
+// 승인 응답을 못 받았을 때. 조회도 실패하면 기록만 남기고 결제 대사 웹훅(/api/webhooks/toss)에 맡긴다
+async function cancelIfApproved(orderId: string, cause: unknown) {
+  try {
+    const payment = await getTossPaymentByOrderId(orderId);
+    if (payment?.status === 'DONE') await cancelPayment(payment.paymentKey, orderId, cause);
+  } catch (lookupErr) {
+    await recordSystemError(
+      `[결제 확인 불가] orderId=${orderId} cause=${String(cause)} lookupError=${String(lookupErr)}`,
+      PATH,
+      { notify: true },
+    );
   }
 }

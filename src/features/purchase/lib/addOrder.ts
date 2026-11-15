@@ -5,6 +5,7 @@ import type { OrderLine } from './orderPolicy';
 
 export async function addOrder({
   orderId,
+  paymentKey,
   list,
   amount,
   email,
@@ -17,6 +18,7 @@ export async function addOrder({
   ip,
 }: {
   orderId: string;
+  paymentKey: string;
   list: OrderLine[];
   amount: number;
   email: string;
@@ -33,6 +35,8 @@ export async function addOrder({
       customer: name,
       email: email,
       orderId: orderId,
+      // 환불·대사 때 Toss 조회 없이 바로 취소 (payments.md "주문에 결제 식별자 저장")
+      paymentKey,
       list: list,
       address: address,
       status: '상품 확인중',

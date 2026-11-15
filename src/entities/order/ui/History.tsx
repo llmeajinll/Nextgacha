@@ -2,7 +2,7 @@
 
 /* eslint-disable @next/next/no-img-element -- 영수증 일러스트: 내용 높이에 맞춰 늘리는 장식 이미지라 next/image 최적화 대상이 아님 (docs/policies/design.md 아이콘 예외) */
 
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, type ReactNode } from 'react';
 import { useRouter, usePathname, useSearchParams } from 'next/navigation';
 import { Range } from '@/shared/ui';
 import { comma } from '@/shared/lib/comma';
@@ -68,7 +68,8 @@ function ReceiptLabel({
   );
 }
 
-export default function History({ props }: { props: OrderView }) {
+// action: 주문 상태에 따른 버튼 자리 (예: 구매자 취소). entity가 feature를 import하지 않도록 바깥에서 넣는다
+export default function History({ props, action }: { props: OrderView; action?: ReactNode }) {
 
   const route = useRouter();
   const pathname = usePathname();
@@ -185,6 +186,7 @@ export default function History({ props }: { props: OrderView }) {
               GIVE A REVIEW
             </button>
           )}
+          {action}
         </div>
 
         <img

@@ -1,14 +1,8 @@
 import { NextResponse } from 'next/server';
-import {
-  errorColl,
-  mongodbClient,
-  orderColl,
-  productColl,
-  userColl,
-} from '@/shared/api/mongodb';
-import { koreaTime } from '@/shared/lib/koreaTime';
-import { subtractKeep } from '@/features/purchase/lib/orderPolicy';
-import { cancelTossPaymentByOrderId } from '@/features/purchase/lib/toss';
+import { auth } from '@/auth';
+import { orderColl } from '@/shared/api/mongodb';
+import { logAdmin } from '@/shared/api/adminLog';
+import { refundOrder } from '@/features/purchase/lib/refundOrder';
 
 const CHECKING = '상품 확인중';
 
@@ -23,80 +17,10 @@ const parseShip = (o: { orderId?: unknown; courier?: unknown; invoice?: unknown 
   return orderId && courier && invoice ? { orderId, courier, invoice } : null;
 };
 
-// 상품 확인중 주문 거절 → Toss 결제 취소 + 재고 복구 + 배송중(keep) 차감 + 사용 포인트 반환
-async function refundOrder(orderId: string, reason: string) {
-  const order = await orderColl.findOne({ orderId, status: CHECKING });
-  if (!order) return { ok: false, message: '환불할 수 없는 주문입니다.' };
-
-  // 1. 돈부터 돌려준다 (실패하면 DB는 그대로)
-  try {
-    await cancelTossPaymentByOrderId(orderId, reason);
-  } catch (err) {
-    console.error('Toss 결제 취소 실패:', err);
-    return { ok: false, message: '결제 취소에 실패했습니다.' };
-  }
-
-  // 2. DB 정리. 여기서 실패하면 결제만 취소된 상태 → 관리자 수동 처리용으로 기록
-  const session = mongodbClient.startSession();
-  try {
-    await session.withTransaction(async () => {
-      const claimed = await orderColl.findOneAndUpdate(
-        { orderId, status: CHECKING },
-        { $set: { status: '환불', reason, refundedDate: koreaTime() } },
-        { session },
-      );
-      if (!claimed) throw new Error('이미 처리된 주문입니다.');
-
-      await productColl.bulkWrite(
-        order.list.flatMap((line) =>
-          line.product.map((p) => ({
-            updateOne: {
-              filter: { num: line.num, 'list.name': p.name },
-              update: { $inc: { 'list.$.count': p.count } },
-            },
-          })),
-        ),
-        { session },
-      );
-
-      const user = await userColl.findOne(
-        { email: order.email },
-        { session, projection: { keep: 1 } },
-      );
-      await userColl.updateOne(
-        { email: order.email },
-        {
-          // usedPoint는 이번 변경 이후 주문부터 저장됨 (이전 주문은 0으로 간주)
-          $inc: { point: order.usedPoint ?? 0 },
-          $set: { keep: subtractKeep(user?.keep ?? [], order.list) },
-        },
-        { session },
-      );
-    });
-    return { ok: true };
-  } catch (err) {
-    console.error('환불 DB 처리 실패:', err);
-    await errorColl
-      .insertOne({
-        textareaValue: `[환불 DB 처리 실패 - 결제는 취소됨] orderId=${orderId} error=${String(err)}`,
-        pathname: '/api/postCheckToSending',
-        type: 'system',
-        status: '접수',
-        created_at: koreaTime(),
-      })
-      .catch((e) => console.error('에러 기록 실패:', e));
-    return {
-      ok: false,
-      message: '결제는 취소되었지만 주문 정리에 실패했습니다. 에러 페이지를 확인해주세요.',
-    };
-  } finally {
-    await session.endSession();
-  }
-}
-
 export async function POST(req: Request) {
   const data = await req.json().catch(() => ({}));
   const { send } = data;
+  const admin = (await auth())?.user?.email;
   const invalid = () => NextResponse.json({ ok: false, message: 'invalid request' }, { status: 400 });
 
   // 한개
@@ -108,6 +32,9 @@ export async function POST(req: Request) {
       { orderId, status: CHECKING },
       { $set: { courier, invoice, status: '배송중' } },
     );
+    if (result.modifiedCount === 1) {
+      await logAdmin(admin, { action: 'invoice', target: orderId, before: null, after: { courier, invoice } });
+    }
     return NextResponse.json(
       { ok: result.modifiedCount === 1, result },
       { status: result.modifiedCount === 1 ? 200 : 400 },
@@ -132,6 +59,16 @@ export async function POST(req: Request) {
           },
         })),
       );
+      // ponytail: bulkWrite는 어떤 주문이 실제로 바뀌었는지 안 알려줘서 요청한 주문 전체를 기록. 정확히 하려면 주문별 updateOne
+      await logAdmin(
+        admin,
+        orders.map((o: { orderId: string; courier: string; invoice: string }) => ({
+          action: 'invoice' as const,
+          target: o.orderId,
+          before: null,
+          after: { courier: o.courier, invoice: o.invoice },
+        })),
+      );
       return NextResponse.json({ ok: true, modifiedCount: result.modifiedCount }, { status: 200 });
     } catch (error) {
       console.error('주문 업데이트 중 에러 발생:', error);
@@ -144,8 +81,15 @@ export async function POST(req: Request) {
     // 고객에게 보이는 환불 사유 (화면에서도 10자 이상 받음)
     const reason = str(data.reason, 200);
     if (!orderId || !reason || reason.length < 10) return invalid();
-    const result = await refundOrder(orderId, reason);
-    return NextResponse.json(result, { status: result.ok ? 200 : 400 });
+    const result = await refundOrder(orderId, reason, { by: 'admin' });
+    if (!result.ok) return NextResponse.json(result, { status: result.status });
+    await logAdmin(admin, {
+      action: 'refund',
+      target: orderId,
+      before: { status: '상품 확인중', totalPrice: result.order.totalPrice },
+      after: { status: '환불', reason },
+    });
+    return NextResponse.json({ ok: true }, { status: 200 });
   }
 
   return NextResponse.json({ ok: false, message: 'invalid send' }, { status: 400 });

@@ -1,5 +1,6 @@
 import { MypageTabs } from '@/widgets';
 import { Profile } from '@/entities/user/ui';
+import WithdrawBtn from '@/features/withdraw/ui/WithdrawBtn';
 import React from 'react';
 import { Provider } from 'jotai';
 import { wrapper } from './layout.css';
@@ -11,6 +12,7 @@ export default function mypageLayout({ menu }: { menu: React.ReactNode }) {
         <Profile />
         <MypageTabs />
         {menu}
+        <WithdrawBtn />
       </div>
     </Provider>
   );

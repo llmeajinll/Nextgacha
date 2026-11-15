@@ -13,7 +13,10 @@ export async function GET(req: Request) {
   const orderId = searchParams.get('orderId') || '';
 
   try {
-    const result = await orderColl.findOne({ orderId, email });
+    const result = await orderColl.findOne(
+      { orderId, email },
+      { projection: { paymentKey: 0, deviceId: 0, ip: 0 } },
+    );
 
     return NextResponse.json({ ok: true, result, status: 200 });
   } catch (err) {

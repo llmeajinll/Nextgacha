@@ -7,6 +7,7 @@ import { ScrollToTop } from '@/shared/ui';
 import { History } from '@/entities/order/ui';
 import type { OrderView } from '@/entities/order/model/types';
 import { EmptyCard } from '@/shared/ui';
+import CancelOrderBtn from '@/features/order-cancel/ui/CancelOrderBtn';
 import { Pagination } from '@/shared/ui';
 import { grid, paginationWrap } from './page.css';
 
@@ -72,7 +73,17 @@ export default function HistoryPage() {
         <>
           <div className={grid}>
             {history.map((val) => {
-              return <History props={val} key={val.orderId} />;
+              return (
+                <History
+                  props={val}
+                  key={val.orderId}
+                  action={
+                    val.status === '상품 확인중' && (
+                      <CancelOrderBtn orderId={val.orderId} onCanceled={() => fetchHistoryData(currentPage)} />
+                    )
+                  }
+                />
+              );
             })}
           </div>
           <Pagination
