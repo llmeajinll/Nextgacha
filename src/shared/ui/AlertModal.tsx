@@ -1,13 +1,13 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useEffect } from 'react';
 import { usePathname } from 'next/navigation';
 import { Close } from 'pixelarticons/react';
 import { Range, ImgBtn } from '@/shared/ui';
 import * as styles from './alertModal.css';
 import { modalAtom } from '@/shared/model/store';
 import { useAtom } from 'jotai';
-import { useModal } from '@/shared/hooks';
+import { useIsClient, useModal } from '@/shared/hooks';
 
 // {
 //   onCheck,
@@ -20,14 +20,11 @@ import { useModal } from '@/shared/hooks';
 export default function AlertModal() {
   const pathname = usePathname();
   const [modalState, setModalState] = useAtom(modalAtom);
-  const [isMounted, setIsMounted] = useState(false);
+  const isMounted = useIsClient();
   const { closeModal } = useModal();
 
-  console.log('modalState : ', modalState);
-
+  // 페이지를 옮기면 열려 있던 알림을 닫는다
   useEffect(() => {
-    setIsMounted(true);
-    console.log('Modal state changed: ', modalState);
     if (modalState.isOpen === true) {
       closeModal();
     }

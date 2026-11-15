@@ -1,17 +1,13 @@
 'use client';
 import { createPortal } from 'react-dom';
-import { useEffect, useState } from 'react';
+import { useIsClient } from '@/shared/hooks';
 
 export default function ModalPortal({
   children,
 }: {
   children: React.ReactNode;
 }) {
-  const [mounted, setMounted] = useState(false);
-
-  useEffect(() => {
-    setMounted(true);
-  }, []);
+  const mounted = useIsClient();
 
   if (!mounted) return null;
 

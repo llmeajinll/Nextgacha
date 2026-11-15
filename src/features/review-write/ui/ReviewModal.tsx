@@ -1,5 +1,5 @@
 'use client';
-import React, { useState, useEffect } from 'react';
+import React, { useMemo, useState, useSyncExternalStore } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { Close } from 'pixelarticons/react';
 import { useModal } from '@/shared/hooks';
@@ -22,6 +22,9 @@ import {
 } from './reviewModal.css';
 import { textareaBox, textareaCount } from '@/styles/ui.css';
 
+// sessionStorage는 이 화면이 떠 있는 동안 바뀌지 않으므로 구독할 것이 없다
+const subscribeNothing = () => () => {};
+
 export default function ReviewModal() {
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -32,16 +35,15 @@ export default function ReviewModal() {
   const [show, setShow] = useState(false);
   const [warningSize1, setWarningSize1] = useState(14);
   const [warningSize2, setWarningSize2] = useState(10);
-  const [productInfo, setProductInfo] = useState<OrderView | null>(null);
   const { openModal } = useModal();
 
-  useEffect(() => {
-    const getItem = sessionStorage.getItem('productInfo');
-    const item = getItem ? (JSON.parse(getItem) as OrderView) : null;
-    setProductInfo(item);
-  }, []);
-
-  console.log(productInfo);
+  // 주문 내역에서 넘겨 둔 주문 정보. 서버 렌더·hydration 첫 렌더에서는 null
+  const raw = useSyncExternalStore(
+    subscribeNothing,
+    () => sessionStorage.getItem('productInfo'),
+    () => null,
+  );
+  const productInfo = useMemo(() => (raw ? (JSON.parse(raw) as OrderView) : null), [raw]);
 
   return (
     <div className={`modal-overlay ${overlay}`}>
@@ -151,7 +153,6 @@ export default function ReviewModal() {
                 className={styles.modalBtn}
                 onClick={async () => {
                   if (value === 0) {
-                    console.log('왜 안돼');
                     setWarningSize1((prev) =>
                       prev <= 40 ? (prev += 4) : prev,
                     );
@@ -173,7 +174,6 @@ export default function ReviewModal() {
                     purchaseDate: productInfo?.created_at,
                     list: productInfo?.list,
                   };
-                  console.log(data);
 
                   await fetch('/api/protected/postReview', {
                     method: 'POST',
@@ -202,7 +202,7 @@ export default function ReviewModal() {
                       }
                     })
                     .catch((err) => {
-                      console.log(err);
+                      console.error(err);
                       alert('오류가 발생했습니다.');
                       // router.replace(`/mypage/history?page=${page}`);
                       router.back();

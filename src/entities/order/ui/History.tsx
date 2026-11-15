@@ -1,5 +1,7 @@
 'use client';
 
+/* eslint-disable @next/next/no-img-element -- 영수증 일러스트: 내용 높이에 맞춰 늘리는 장식 이미지라 next/image 최적화 대상이 아님 (docs/policies/design.md 아이콘 예외) */
+
 import { useState, useEffect, useRef } from 'react';
 import { useRouter, usePathname, useSearchParams } from 'next/navigation';
 import { Range } from '@/shared/ui';
@@ -67,7 +69,6 @@ function ReceiptLabel({
 }
 
 export default function History({ props }: { props: OrderView }) {
-  console.log('props:', props);
 
   const route = useRouter();
   const pathname = usePathname();
@@ -139,12 +140,6 @@ export default function History({ props }: { props: OrderView }) {
         <div ref={middleRef} className={innerPadMiddle}>
           <Range className={labelTitle}>list</Range>
           {props.list.map((value, index) => {
-            console.log(
-              'value.list : ',
-              value?.product.map((val) => {
-                console.log(val);
-              }),
-            );
             return (
               <div key={props.orderId + index} className={listContainer}>
                 <div className={title}>{value?.title || 'error'}</div>
