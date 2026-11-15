@@ -19,11 +19,14 @@ const findProduct = cache(async (code: string) => {
   );
 });
 
-export async function generateMetadata({
-  params,
-}: {
+// Next가 만드는 타입 검사는 generateMetadata도 layout과 같은 props(@tab 슬롯 포함)를 받는다고 본다
+type Props = {
+  children: React.ReactNode;
+  tab: React.ReactNode;
   params: Promise<{ code: string }>;
-}): Promise<Metadata> {
+};
+
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const product = await findProduct((await params).code);
   if (!product) return {};
   return {
@@ -33,15 +36,7 @@ export async function generateMetadata({
   };
 }
 
-export default async function DetailLayout({
-  children,
-  tab,
-  params,
-}: {
-  children: React.ReactNode;
-  tab: React.ReactNode;
-  params: Promise<{ code: string }>;
-}) {
+export default async function DetailLayout({ children, tab, params }: Props) {
   const { code } = await params;
   if (!(await findProduct(code))) notFound();
 
