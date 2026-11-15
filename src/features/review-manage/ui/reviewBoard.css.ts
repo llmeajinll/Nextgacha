@@ -1,6 +1,6 @@
 import { createVar, globalStyle, style, styleVariants } from '@vanilla-extract/css';
 import { vars } from '@/styles/theme.css';
-import { btn, btnIcon, btnKind } from '@/styles/ui.css';
+import { btn, btnIcon, btnKind, btnSize, tag, tagTone } from '@/styles/ui.css';
 import { searchField } from '@/styles/variants.css';
 
 const pixel = 'silkscreen';
@@ -232,3 +232,10 @@ export const emptyPixel = style({ fontFamily: pixel, fontSize: 20, color: slate[
 
 // theme의 globalStyle('div', { color })가 상속을 끊으므로 안쪽 div는 부모 색을 따르게
 globalStyle(`${container} div`, { color: 'inherit' });
+
+// 관리자 숨김 (cardFoot 오른쪽)
+export const hideCtl = style({ marginLeft: 'auto', display: 'flex', alignItems: 'center', gap: 6 });
+export const hideSelect = style({ height: 30, border: `1px solid ${slate[200]}`, fontSize: 12, backgroundColor: 'white' });
+export const hideBtn = style([btn, btnSize.s, btnKind.neutral]);
+export const hiddenTag = style([tag, tagTone.warning]);
+export const cardHidden = style({ opacity: 0.6 });

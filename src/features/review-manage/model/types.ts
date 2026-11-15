@@ -8,4 +8,7 @@ export type AdminReview = {
   options: string[]; // 주문한 옵션 이름
   created_at: string; // koreaTime() 'YYYY-MM-DD HH:mm:ss' (KST)
   writer: string; // 닉네임, 없으면 마스킹한 이메일
+  orderId: string; // 주문당 리뷰 하나 → num + orderId로 리뷰를 찾는다
+  hidden: boolean;
+  hiddenReason?: string;
 };

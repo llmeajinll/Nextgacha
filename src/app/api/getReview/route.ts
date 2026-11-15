@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import { reviewColl } from '@/shared/api/mongodb';
 import { maskEmail } from '@/shared/lib/maskEmail';
+import { auth } from '@/auth';
 import type { ReviewProps } from '@/entities/review/model/types';
 
 export async function GET(req: Request) {
@@ -20,9 +21,17 @@ export async function GET(req: Request) {
       {
         $facet: {
           // 데이터 가져오기 전용 파이프라인
-          metadata: [{ $project: { total: { $size: '$review' } } }],
+          // 관리자가 숨긴 리뷰는 빼고 센다 (reviews.md "리뷰 수정·삭제와 숨김")
+          metadata: [
+            {
+              $project: {
+                total: { $size: { $filter: { input: '$review', cond: { $ne: ['$$this.hidden', true] } } } },
+              },
+            },
+          ],
           data: [
             { $unwind: '$review' },
+            { $match: { 'review.hidden': { $ne: true } } },
             { $sort: { 'review.created_at': -1 } },
             { $skip: page * limit },
             { $limit: limit },
@@ -59,10 +68,12 @@ export async function GET(req: Request) {
     // const totalCount = await reviewColl.countDocuments({ num });
     // const hasMore = (page + 1) * limit < totalCount;
     const totalCount = facetResult.metadata[0]?.total || 0;
-    // 작성자 이메일 원문은 내보내지 않는다
+    // 작성자 이메일 원문은 내보내지 않는다. 본인 리뷰인지는 서버가 계산 (삭제 버튼)
+    const email = (await auth())?.user?.email;
     const result = facetResult.data.map((review) => ({
       ...review,
       user: maskEmail(review.user),
+      isMine: !!email && review.user === email,
     }));
     const hasMore = (page + 1) * limit < totalCount;
 
