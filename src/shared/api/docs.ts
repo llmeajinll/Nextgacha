@@ -21,6 +21,8 @@ export type OrderDoc = {
   customer: string;
   email: string;
   orderId: string;
+  // 2026-11-15 이후 주문부터 저장. 옛 주문은 orderId로 Toss 조회
+  paymentKey?: string;
   list: CartLine[];
   address: string;
   status: string;
@@ -36,6 +38,10 @@ export type OrderDoc = {
   ip: string | null;
   reason?: string;
   refundedDate?: string;
+  // 구매자가 직접 취소한 주문
+  canceledBy?: 'user';
+  // 회원 탈퇴 후 법정 보관 중인 주문
+  withdrawnAt?: Date;
 };
 
 export type ReviewDoc = {
@@ -48,6 +54,9 @@ export type ReviewDoc = {
     content: string;
     orderId: string;
     rate: number;
+    // 관리자 숨김: 삭제가 아니라 표시만 막는다
+    hidden?: boolean;
+    hiddenReason?: string;
   }[];
 };
 
@@ -70,4 +79,14 @@ export type CategoryDoc = {
   ani: string[];
   series: { company: string; name: string; items: string[] }[];
   groups?: { name: string; items: string[] }[];
+};
+
+export type AdminLogDoc = {
+  admin: string;
+  action: 'price' | 'stock' | 'discount' | 'refund' | 'invoice';
+  // 상품 num 또는 주문 orderId
+  target: number | string;
+  before: unknown;
+  after: unknown;
+  createdAt: Date;
 };

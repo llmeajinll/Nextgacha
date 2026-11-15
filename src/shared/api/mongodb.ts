@@ -1,5 +1,5 @@
 import { MongoClient } from 'mongodb';
-import type { CartDoc, CategoryDoc, OrderDoc, QnaDoc, ReviewDoc, UserDoc } from './docs';
+import type { AdminLogDoc, CartDoc, CategoryDoc, OrderDoc, QnaDoc, ReviewDoc, UserDoc } from './docs';
 // import mongoose from 'mongoose';
 
 const url: string = process.env.MONGODB_URI!;
@@ -30,6 +30,8 @@ const bannerColl = gachaDB.collection('banner');
 const noticeColl = gachaDB.collection('notice');
 // 문서 하나(_id 'menu')에 헤더 카테고리 메뉴 전체를 저장
 const categoryColl = gachaDB.collection<CategoryDoc>('category');
+// 관리자 작업 기록 (가격·재고·할인 변경, 환불, 송장 입력). 5년 보존 TTL
+const adminLogColl = gachaDB.collection<AdminLogDoc>('adminLog');
 
 
 export {
@@ -46,4 +48,5 @@ export {
   bannerColl,
   noticeColl,
   categoryColl,
+  adminLogColl,
 };

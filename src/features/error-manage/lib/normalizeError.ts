@@ -2,8 +2,8 @@ import type { AdminError, ErrorStatus, ErrorType } from '../model/types';
 
 // 서버가 남기는 기록은 pathname이 API 경로, 사용자 제보는 페이지 경로
 export const SYSTEM_PATH = /^\/api\//;
-// 실제 기록: '[결제 취소 실패] ...', '[환불 DB 처리 실패 - 결제는 취소됨] ...'
-export const PAYMENT_MESSAGE = /^\[(결제 취소 실패|환불 DB 처리 실패)/;
+// 실제 기록: '[결제 취소 실패] ...', '[환불 DB 처리 실패 - 결제는 취소됨] ...', '[결제 확인 불가] ...', '[결제 대사 ...] ...'
+export const PAYMENT_MESSAGE = /^\[(결제 취소 실패|환불 DB 처리 실패|결제 확인 불가|결제 대사)/;
 
 type ErrorDoc = {
   _id: unknown;
