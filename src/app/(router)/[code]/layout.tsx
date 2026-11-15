@@ -7,6 +7,7 @@ import { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import { cache } from 'react';
 import { productColl } from '@/shared/api/mongodb';
+import { saleState } from '@/entities/product/lib/salePolicy';
 import { panelWrap, tabWrap } from './layout.css';
 
 // generateMetadata와 layout이 같은 요청에서 한 번만 조회하도록 cache
@@ -15,7 +16,7 @@ const findProduct = cache(async (code: string) => {
   if (!Number.isInteger(num) || num <= 0) return null;
   return productColl.findOne(
     { num },
-    { projection: { _id: 0, title: 1, company: 1, image: 1 } },
+    { projection: { _id: 0, title: 1, company: 1, image: 1, reserveStart: 1, reserveEnd: 1 } },
   );
 });
 
@@ -38,7 +39,9 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
 export default async function DetailLayout({ children, tab, params }: Props) {
   const { code } = await params;
-  if (!(await findProduct(code))) notFound();
+  const product = await findProduct(code);
+  // 예약 마감 후 2주는 상세도 숨긴다 (preorders.md)
+  if (!product || saleState(product) === 'hidden') notFound();
 
   return (
     <>

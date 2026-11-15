@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import { productColl, userColl } from '@/shared/api/mongodb';
 import { auth } from '@/auth';
+import { withActiveDiscount } from '@/entities/product/lib/salePolicy';
 
 export async function GET(req: Request) {
   const { searchParams } = new URL(req.url);
@@ -9,12 +10,13 @@ export async function GET(req: Request) {
 
   const num = Number(searchParams.get('num'));
 
-  let func = await productColl.findOne({ num });
-  if (!func) {
+  const doc = await productColl.findOne({ num });
+  if (!doc) {
     return NextResponse.json({ ok: false, result: null }, { status: 404 });
   }
 
-  const isLogin = email ? true : false;
+  // 할인은 지금 기준(기간)으로 바꿔서 내보낸다. 클라이언트 가격 계산은 그대로
+  const func = withActiveDiscount(doc);
 
   let result = null;
 

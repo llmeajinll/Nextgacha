@@ -5,7 +5,7 @@ import type { CardProps } from '../model/types';
 export default async function getAllProducts(): Promise<CardProps[]> {
   const all: CardProps[] = [];
   for (let page = 1; ; page++) {
-    const { data = [], total = 0 } = await getProducts({ tag: 'all', count: 100, page });
+    const { data = [], total = 0 } = await getProducts({ tag: 'all', count: 100, page, admin: true });
     all.push(...data);
     if (data.length === 0 || all.length >= total) break;
   }

@@ -329,3 +329,11 @@ export const sideError = style({
 // theme의 globalStyle('div', { color })가 상속을 끊으므로 패널 안 div는 부모 색을 따르게
 globalStyle(`${side} div`, { color: 'inherit' });
 globalStyle(`${row} div`, { color: 'inherit' });
+
+// 할인 기간 (시작~종료 날짜)
+export const periodRow = style({ display: 'flex', alignItems: 'center', gap: 8 });
+
+export const dateInput = style([
+  rateInput,
+  { height: 44, fontFamily: 'inherit', fontSize: 14 },
+]);

@@ -1,5 +1,7 @@
 import { NextResponse } from 'next/server';
+import { auth } from '@/auth';
 import { productColl } from '@/shared/api/mongodb';
+import { logAdmin } from '@/shared/api/adminLog';
 import { koreaTime } from '@/shared/lib/koreaTime';
 import { parseProductEdit } from '@/entities/product/lib/parseProductForm';
 
@@ -13,13 +15,23 @@ export async function POST(req: Request) {
 
   const { num, price, discount, list } = edit;
   try {
-    const result = await productColl.updateOne(
+    // 바꾸기 전 값 (관리자 작업 기록용)
+    const before = await productColl.findOneAndUpdate(
       { num },
       { $set: { price, discount, isDiscount: discount > 0, list, updated_at: koreaTime() } },
+      { projection: { _id: 0, price: 1, discount: 1, list: 1 } },
     );
-    if (result.matchedCount === 0) {
+    if (!before) {
       return NextResponse.json({ ok: false, message: 'not found' }, { status: 404 });
     }
+    const same = (a: unknown, b: unknown) => JSON.stringify(a) === JSON.stringify(b);
+    await logAdmin((await auth())?.user?.email, [
+      ...(before.price !== price ? [{ action: 'price' as const, target: num, before: before.price, after: price }] : []),
+      ...((before.discount ?? 0) !== discount
+        ? [{ action: 'discount' as const, target: num, before: before.discount ?? 0, after: discount }]
+        : []),
+      ...(!same(before.list, list) ? [{ action: 'stock' as const, target: num, before: before.list, after: list }] : []),
+    ]);
     return NextResponse.json({ ok: true, product: { num, price, discount, isDiscount: discount > 0, list } });
   } catch (err) {
     console.error('상품 수정 실패:', err instanceof Error ? err.message : err);

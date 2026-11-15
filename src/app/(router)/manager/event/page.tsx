@@ -41,6 +41,10 @@ export default function EventPage() {
   const [skipReserve, setSkipReserve] = useState(true);
   const [rate, setRate] = useState('20');
   const [rateError, setRateError] = useState(false);
+  // 할인 기간 'YYYY-MM-DD' (KST). 둘 다 비우면 내릴 때까지 계속
+  const [start, setStart] = useState('');
+  const [end, setEnd] = useState('');
+  const periodBad = (!!start !== !!end) || (!!start && !!end && end < start);
   const [confirming, setConfirming] = useState<'' | 'apply' | 'clear'>('');
   const [sending, setSending] = useState(false);
   const [error, setError] = useState('');
@@ -99,7 +103,7 @@ export default function EventPage() {
     setSending(true);
     setError('');
     try {
-      await postEvent({ discount, nums });
+      await postEvent({ discount, nums, ...(discount > 0 && start && end ? { start, end } : {}) });
       queryClient.setQueryData<CardProps[]>(['manageProducts'], (prev) =>
         prev?.map((p) => (nums.includes(p.num) ? { ...p, discount, isDiscount: discount > 0 } : p)),
       );
@@ -341,6 +345,41 @@ export default function EventPage() {
             </div>
 
             <div className={s.field}>
+              <span className={s.label}>
+                할인 기간 <span className={s.hint}>비우면 내릴 때까지, 종료일 당일까지 적용</span>
+              </span>
+              <div className={s.periodRow}>
+                <input
+                  type='date'
+                  aria-label='할인 시작일'
+                  value={start}
+                  onChange={(e) => {
+                    setStart(e.target.value);
+                    setConfirming('');
+                  }}
+                  className={periodBad ? `${s.dateInput} ${s.inputError}` : s.dateInput}
+                />
+                ~
+                <input
+                  type='date'
+                  aria-label='할인 종료일'
+                  value={end}
+                  min={start || undefined}
+                  onChange={(e) => {
+                    setEnd(e.target.value);
+                    setConfirming('');
+                  }}
+                  className={periodBad ? `${s.dateInput} ${s.inputError}` : s.dateInput}
+                />
+              </div>
+              {periodBad && (
+                <span role='status' className={s.errorText}>
+                  시작일과 종료일을 둘 다, 순서대로 골라 주세요.
+                </span>
+              )}
+            </div>
+
+            <div className={s.field}>
               <div className={s.selHead}>
                 <span className={s.label}>고른 상품</span>
                 {selected.length > 0 && (
@@ -383,7 +422,9 @@ export default function EventPage() {
               <div className={confirming === 'clear' ? `${s.confirm} ${s.confirmDanger}` : s.confirm}>
                 <span>
                   {confirming === 'apply'
-                    ? `고른 ${selected.length}개 상품에 ${rateNum}% 할인을 걸까요? 쇼핑몰에 바로 보여요.`
+                    ? `고른 ${selected.length}개 상품에 ${rateNum}% 할인을 걸까요? ${
+                        start && end ? `${start} ~ ${end} 동안 쇼핑몰에 보여요.` : '쇼핑몰에 바로 보여요.'
+                      }`
                     : `할인 중인 ${withDiscount.length}개 상품의 할인을 내릴까요? 정가로 돌아가요.`}
                 </span>
                 <div className={s.confirmBtns}>
@@ -419,6 +460,7 @@ export default function EventPage() {
                     setConfirming('');
                     return;
                   }
+                  if (periodBad) return;
                   setConfirming('apply');
                   setToast('');
                 }}

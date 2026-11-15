@@ -13,6 +13,7 @@ export async function GET(req: Request) {
     page: Number(searchParams.get('page')),
     filter: searchParams.get('filter'),
     email: session?.user?.email,
+    admin: searchParams.get('admin') === '1',
   });
 
   return NextResponse.json(result);
