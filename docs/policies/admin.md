@@ -21,5 +21,5 @@
 - 상태: 확정
 - 정책: 가격 변경, 재고 변경, 할인 변경, 환불, 송장 입력을 별도 컬렉션(`adminLogColl`)에 남긴다. 기록 내용은 누가(관리자 이메일), 언제, 무엇을(대상 상품·주문), 바꾸기 전·후 값. 5년 보존한다.
 - 이유: 지금은 누가 언제 가격을 바꾸거나 환불했는지 알 수 없다. 환불·송장 기록은 주문·결제 기록과 같은 기간(5년) 보관한다.
-- 코드: 미구현. 대상 `src/app/api/postEditProduct/route.ts`, `postEvent`, `postCheckToSending`
-- 변경 이력: 2026-11-09 신설, 2026-11-11 확정 (5가지 작업, 5년)
+- 코드: `src/shared/api/adminLog.ts` → `adminLog` 컬렉션 (TTL 5년). 호출 `src/app/api/postEditProduct/route.ts:28`(가격·재고·할인), `postEvent`(할인), `postCheckToSending`(송장·환불). 조회 화면은 없음(Atlas에서 확인)
+- 변경 이력: 2026-11-09 신설, 2026-11-11 확정 (5가지 작업, 5년), 2026-11-15 구현

@@ -14,7 +14,7 @@
 ## 감지
 - 상태: 확정
 - 정책: 시스템 에러는 Sentry로 모으고, P1에 해당하는 실패(결제 취소 실패, 환불 DB 실패, 결제 대사 불일치)는 관리자 카카오톡으로 바로 알린다. 방법은 [에러 알림](./engineering.md#에러-알림).
-- 코드: 미구현. `src/app/api/postPaymentsConfirm/route.ts` `cancelPayment`, `src/app/api/postCheckToSending/route.ts` `refundOrder`
+- 코드: 카카오톡 `src/shared/api/recordSystemError.ts` (`cancelPayment`, `cancelIfApproved`, `src/features/purchase/lib/refundOrder.ts`, `src/app/api/webhooks/toss/route.ts`에서 호출). Sentry 미구현
 - 변경 이력: 2026-11-10 신설, 2026-11-11 확정 (Sentry + 관리자 카카오톡)
 
 ## 대응 순서
@@ -45,8 +45,8 @@
 - 상태: 확정
 - 정책: P1·P2 장애 동안 공지사항(`/notice`)에 글을 올린다. 결제 장애 때는 환경변수 하나로 결제 버튼을 막는 스위치를 둔다. 장애 알림은 관리자 카카오톡으로 받는다([감지](#감지)).
 - 구현 메모: 스위치는 서버(`postPaymentsConfirm`)에서도 확인해야 버튼을 우회한 요청까지 막는다. Vercel 환경변수를 바꾸면 재배포가 필요하다.
-- 코드: 미구현
-- 변경 이력: 2026-11-10 신설, 2026-11-11 확정 (공지사항 글, 결제 차단 스위치)
+- 코드: 스위치 `src/features/purchase/lib/paymentSwitch.ts` (`PAYMENTS_DISABLED=1`, `postCheckStock`·`postPaymentsConfirm`에서 확인). 공지는 관리자 공지 화면에서 수동
+- 변경 이력: 2026-11-10 신설, 2026-11-11 확정 (공지사항 글, 결제 차단 스위치), 2026-11-15 구현
 
 ## 사후 기록
 - 상태: 확정

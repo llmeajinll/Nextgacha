@@ -38,6 +38,7 @@
 | [design.md](./design.md) | 디자인·UX (아이콘, 색 사용, 접근성, 문구, 화면 크기, Storybook) |
 | [infra.md](./infra.md) | 서버 (Node 버전, 서버 전용 코드, 외부 호출 타임아웃) |
 | [ux.md](./ux.md) | 프론트 UX 비기능 (로딩, 중복 제출, 알림, 에러 문구, 성능 기준) |
+| [typescript.md](./typescript.md) | TypeScript (strict, any 금지, 외부 입력 타입, 단언, 타입 위치, 리터럴 유니온, JS 파일) |
 
 ## 정책 블록 형식
 

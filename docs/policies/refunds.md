@@ -7,8 +7,8 @@
 - 정책: 구매자는 `상품 확인중`(송장 입력 전)인 주문만 직접 취소할 수 있다. 예약 상품도 같은 기준이다. 처리는 관리자 환불(`refundOrder`)과 같은 흐름(Toss 취소 → 재고·keep·usedPoint 복구)을 재사용한다.
 - 예외: `배송중` 이후에는 취소할 수 없다 ([배송 후 반품/교환](#배송-후-반품교환-청약철회)).
 - 이유: 지금은 관리자가 거절할 때만 환불되므로, 구매자는 문의 말고는 취소할 방법이 없다.
-- 코드: 미구현. 재사용 대상 `src/app/api/postCheckToSending/route.ts:27` `refundOrder`
-- 변경 이력: 2026-11-09 신설, 2026-11-11 확정 (`상품 확인중`만, 예약 상품 포함)
+- 코드: `src/app/api/protected/postCancelOrder/route.ts`, 공용 흐름 `src/features/purchase/lib/refundOrder.ts`(관리자 환불도 사용), 버튼 `src/features/order-cancel/ui/CancelOrderBtn.tsx`(마이페이지 주문 내역)
+- 변경 이력: 2026-11-09 신설, 2026-11-11 확정 (`상품 확인중`만, 예약 상품 포함), 2026-11-15 구현
 
 ## 배송 후 반품/교환 (청약철회)
 - 상태: 확정

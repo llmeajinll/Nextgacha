@@ -14,8 +14,8 @@
 - 상태: 확정
 - 정책: `orderColl.orderId`, `userColl.email`, `cartColl.user`, `productColl.num`에 유니크 인덱스를 건다.
 - 이유: 지금은 중복을 애플리케이션 코드로만 막는다. 첫 로그인 요청이 동시에 두 번 오면 `findOne` → `insertOne` 사이 경쟁으로 같은 이메일의 유저 문서가 2개 생길 수 있다.
-- 코드: `src/auth.ts:19` (인덱스 정의는 없음)
-- 변경 이력: 2026-11-09 신설, 2026-11-10 확정
+- 코드: `scripts/migrations/2026-11-15-indexes.mjs` (`gacha_dev` 적용 완료, `gacha`는 배포 전 실행 필요). 첫 로그인은 upsert로 바꿈 `src/auth.ts`
+- 변경 이력: 2026-11-09 신설, 2026-11-10 확정, 2026-11-15 구현
 
 ## 스키마와 마이그레이션
 - 상태: 확정
@@ -71,8 +71,8 @@
 - 결정할 것: 사용자 제보(`type: 'report'`) 보존 기간
 - 순서: TTL 인덱스는 `Date` 타입 필드가 필요해서 [시간 저장 형식](#시간-저장-형식) 변환 뒤에 건다.
 - 이유: 지금은 두 컬렉션 모두 지우는 곳이 없어서 계속 커진다.
-- 코드: 미구현. `src/features/error-manage/lib/findErrors.ts`
-- 변경 이력: 2026-11-09 신설, 2026-11-11 확정 (`page_views` 12개월, 시스템 에러 6개월, TTL)
+- 코드: `scripts/migrations/2026-11-15-indexes.mjs` — 시스템 에러는 `createdAt`(Date, `recordSystemError`가 넣음) TTL 183일, `page_views`는 `lastVisit`+12개월을 `expireAt`에 채우고 TTL. `createdAt`이 없는 옛 시스템 에러는 지워지지 않는다([시간 저장 형식](#시간-저장-형식) 변환 뒤 정리)
+- 변경 이력: 2026-11-09 신설, 2026-11-11 확정 (`page_views` 12개월, 시스템 에러 6개월, TTL), 2026-11-15 구현
 
 ## 레포 밖의 DB 로직
 - 상태: 확정

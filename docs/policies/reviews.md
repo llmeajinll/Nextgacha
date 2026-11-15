@@ -10,5 +10,5 @@
   - 작성자는 언제든 삭제할 수 있다. 삭제한 뒤 다시 쓸 수는 없다(`order.review` 플래그를 되돌리지 않는다).
   - 관리자는 욕설·비방, 광고, 개인정보 포함, 상품과 무관한 리뷰를 숨길 수 있다. 숨김은 삭제가 아니라 표시만 막는다.
 - 결정할 것: 수정 기한 N일
-- 코드: 미구현. 작성 `src/app/api/protected/postReview/route.ts`, 관리자 리뷰 화면 없음
+- 코드: 삭제 `src/app/api/protected/deleteReview/route.ts`(상품 상세 리뷰 탭의 본인 리뷰), 숨김 `src/app/api/postReviewHide/route.ts` + 관리자 리뷰 화면 `ReviewBoard` `HideControl`, 공개 조회 `getReview`가 숨긴 리뷰를 뺀다. **수정은 미구현** (기한 N일 결정 필요)
 - 변경 이력: 2026-11-09 신설, 2026-11-11 확정 (기간 내 수정, 삭제 가능·재작성 불가, 관리자 숨김 4가지 사유)

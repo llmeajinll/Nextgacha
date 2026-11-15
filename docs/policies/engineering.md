@@ -15,9 +15,9 @@
   - 시스템 에러는 Sentry로 모은다.
   - 돈이나 데이터가 어긋나는 실패(결제 취소 실패, 환불 DB 실패, [결제 대사](./payments.md#결제-대사-toss--주문-맞춰-보기) 불일치)는 기록과 동시에 관리자 카카오톡으로 알린다.
   - `errorColl`은 `type` 필드로 사용자 제보(`report`)와 시스템 에러(`system`)를 나눈다.
-- 구현 메모: 카카오톡 알림은 카카오 "나에게 보내기" API를 쓴다. 관리자 계정의 `talk_message` 동의와 refresh token 보관(약 2개월마다 갱신)이 필요하다. Sentry는 카카오톡 연동이 없어서, 카톡 알림은 위 실패 지점에서 서버가 직접 보낸다.
+- 구현 메모: 카카오톡 알림은 카카오 "나에게 보내기" API를 쓴다. 관리자 계정의 `talk_message` 동의와 refresh token 보관(약 2개월마다 갱신)이 필요하다. Sentry는 카카오톡 연동이 없어서, 카톡 알림은 위 실패 지점에서 서버가 직접 보낸다. 토큰 발급·테스트 발송은 `scripts/kakao-admin-token.mjs`.
 - 이유: 운영에서는 `console.log`가 제거되고 `console.error`만 남는다. 심각한 실패는 `errorColl`에 쌓이기만 하고 아무도 알림을 받지 못한다. `errorColl`에는 사용자 제보(`postError`)와 시스템 에러가 섞여 있다.
-- 코드: `type` 필드는 구현 (`postError`는 `report`, 결제 취소·환불 실패 기록은 `system`, 옛 문서는 pathname으로 판정 — `src/features/error-manage/lib/normalizeError.ts`). Sentry·카카오톡 알림은 미구현. `next.config.ts:10`, `src/app/api/postPaymentsConfirm/route.ts` `cancelPayment`, `src/app/api/postCheckToSending/route.ts` `refundOrder`
+- 코드: `type` 필드는 구현 (`postError`는 `report`, 결제 취소·환불 실패 기록은 `system`, 옛 문서는 pathname으로 판정 — `src/features/error-manage/lib/normalizeError.ts`). 카카오톡 알림은 구현(`src/shared/lib/notifyAdmin.ts`, `src/shared/api/recordSystemError.ts` `notify: true` — 결제 취소 실패, 결제 확인 불가, 환불 DB 실패, 결제 대사. 환경변수 `KAKAO_ADMIN_REFRESH_TOKEN` 필요). Sentry는 미구현(프로젝트·DSN 필요). `next.config.ts:10`, `src/app/api/postPaymentsConfirm/route.ts` `cancelPayment`, `src/app/api/postCheckToSending/route.ts` `refundOrder`
 - 변경 이력: 2026-11-09 신설, 2026-11-11 확정 (Sentry + 관리자 카카오톡, `type` 필드)
 
 ## 로그 개인정보
@@ -39,5 +39,5 @@
 - 상태: 확정
 - 정책: `next.config.ts`의 `headers()`로 기본 보안 헤더(`X-Frame-Options`, `X-Content-Type-Options`, `Referrer-Policy`)를 건다. CSP는 Toss SDK, 카카오, Vercel Blob 출처를 정리한 뒤에 따로 건다.
 - 이유: 지금은 보안 헤더가 하나도 없다.
-- 코드: `next.config.ts`
-- 변경 이력: 2026-11-09 신설, 2026-11-10 확정
+- 코드: `next.config.ts:20` (CSP는 아직)
+- 변경 이력: 2026-11-09 신설, 2026-11-10 확정, 2026-11-15 구현
