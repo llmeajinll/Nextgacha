@@ -18,8 +18,6 @@ export async function GET(req: Request) {
     return NextResponse.json({ ok: false, message: 'unauthorized' }, { status: 401 });
   }
 
-  console.log('auth email : ', email);
-
   const pipeline = [
     { $match: { user: email } },
     {
@@ -112,8 +110,6 @@ export async function GET(req: Request) {
 
   const { cart, stock, keep } = data;
 
-  console.log('cart', cart, 'stock', stock, 'keep', keep);
-
   const keepMap = new Map((keep || []).map((item) => [item.num, item]));
   const stockMap = new Map((stock || []).map((item) => [item.num, item]));
 
@@ -124,8 +120,6 @@ export async function GET(req: Request) {
   for (const cartItem of cart || []) {
     const num = cartItem.num;
     const stockInfo = stockMap.get(num);
-
-    console.log('stockInfo : ', stockInfo);
 
     // 1. 상품 정보(stock) 자체가 없으면 품절로 간주하고 전체 삭제 대상 등록
     if (!stockInfo) {
@@ -143,14 +137,12 @@ export async function GET(req: Request) {
       // 재고가 없거나, 장바구니 수량이 재고 수량보다 큰 경우 삭제 대상 등록
       if (!actualStock || p.count > actualStock.count) {
         namesToRemove.push(p.name);
-        console.log(`[삭제대상] num: ${num}, 상품명: ${p.name} (재고 부족)`);
       } else {
         validProducts.push(p);
       }
     }
 
     if (namesToRemove.length > 0) {
-      console.log('부분 삭제 실행 (일부 상품만 재고 초과인 경우)');
       await cartColl.updateOne({ user: email, 'cart.num': num }, {
         $pull: { 'cart.$.product': { name: { $in: namesToRemove } } },
       });
@@ -176,9 +168,6 @@ export async function GET(req: Request) {
     await cartColl.updateOne({ user: email }, {
       $pull: { cart: { num: { $in: numsToDelete } } },
     });
-    console.log(
-      `[삭제 완료] 품절/재고 부족 상품 그룹 ${numsToDelete.length}건 제거`
-    );
   }
 
   return NextResponse.json(

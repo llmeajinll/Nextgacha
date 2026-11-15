@@ -10,9 +10,6 @@ export async function validateStock(list: OrderLine[]) {
   const session = await auth();
   const email = session?.user?.email;
 
-  console.log('========== validateStock ==========');
-  console.log('validateStock input list:', JSON.stringify(list, null, 2));
-
   // 1. 모든 num을 추출하여 DB에서 한꺼번에 조회
   const nums = list.map((i) => i.num);
   const dbDocs = await productColl
@@ -40,17 +37,8 @@ export async function validateStock(list: OrderLine[]) {
       // DB의 list 배열에서 같은 이름을 가진 세부 상품 찾기
       const actual = parentDoc.list.find((li: StockItem) => li.name === p.name);
 
-      console.log(
-        `[검증] num: ${item.num}, 상품명: ${p.name} -> DB재고: ${
-          actual?.count ?? 0
-        }, 요청: ${p.count}`
-      );
-
       // 상품이 없거나 재고가 부족한 경우
       if (!actual || actual.count < p.count) {
-        console.log(
-          `[재고부족 발견] 삭제 시도: num ${item.num}, 상품명 ${p.name}`
-        );
 
         // 3. cartCollection에서 해당 상품($pull) 제거 (비로그인이면 지울 장바구니가 없음)
         if (email) await cartColl.updateOne(
@@ -77,6 +65,5 @@ export async function validateStock(list: OrderLine[]) {
     }
   }
 
-  console.log('validateStock 검증 통과');
   return { isAvailable: true };
 }

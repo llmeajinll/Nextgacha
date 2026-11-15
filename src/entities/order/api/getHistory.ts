@@ -6,15 +6,13 @@ export default async function getHistory() {
     },
   })
     .then((res) => {
-      // console.log(res);
       return res;
     })
     .catch((err) => {
-      console.log('fetch getHistory error:', err);
+      console.error('fetch getHistory error:', err);
       return null;
     });
 
-  // console.log('header user:', data);
 
   return data;
 }

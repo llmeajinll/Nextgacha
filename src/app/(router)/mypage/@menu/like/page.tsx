@@ -19,17 +19,15 @@ export default function Page() {
     try {
       await fetch(`/api/protected/getLike?page=${page}`)
         .then(async (res) => {
-          // console.log(res);
           const data = await res.json();
-          console.log(data);
           if (data.ok === true) {
             setLike(data.result.likeResult);
             setTotal(data.result.total);
           }
         })
-        .catch((err) => console.log(err));
+        .catch((err) => console.error(err));
     } catch (err) {
-      console.log('fetch getLike error:', err);
+      console.error('fetch getLike error:', err);
       setLoading(false);
       return null;
     } finally {
@@ -41,7 +39,6 @@ export default function Page() {
     fetchLikeData(currentPage);
   }, []);
 
-  // console.log(like);
 
   if (loading) {
     return <EmptyCard>LIKE LOADING...</EmptyCard>;
@@ -64,7 +61,6 @@ export default function Page() {
             total={total}
             pageSize={20}
             onChange={(page) => {
-              console.log('onChange page : ', page);
               setCurrentPage(page);
               fetchLikeData(page);
             }}

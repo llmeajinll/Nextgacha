@@ -22,10 +22,7 @@ export default function SearchPage() {
   // let TAG = undefined;
 
   const search = searchParams.get('search');
-  // console.log('search page search:', search);
   const targetCategory = getStandardCategory(search);
-
-  console.log(`${search} 로 검색하여 ${targetCategory} 결과를 찾습니다.`);
 
   const type = searchParams.get('type');
   const company = searchParams.get('company');
@@ -39,11 +36,8 @@ export default function SearchPage() {
 
   const [searchProducts, setSearchProducts] = useAtom(searchProductsAtom);
 
-  // console.log(detail);
   type TagKey = keyof typeof tagCategory;
   const TAG = !tag ? undefined : tagCategory[(tag as TagKey) || '전체'];
-
-  console.log('TAG : ', TAG);
 
   const handleSearch = async (page: number) => {
     const params = new URLSearchParams();
@@ -55,8 +49,6 @@ export default function SearchPage() {
     let url = '';
 
     url = `/api/getProduct?${params.toString()}&count=20`;
-
-    console.log('url : ', url);
 
     const res = await fetch(url, {
       method: 'GET',

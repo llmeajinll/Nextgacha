@@ -42,7 +42,6 @@ export default function Qna({
   const [requestInput, setRequestInput] = useState('');
   const [editInput, setEditInput] = useState(props.question);
   const { openModal, closeModal } = useModal();
-  console.log(props);
 
   const onSendRequest = async () => {
     const data = {
@@ -76,7 +75,7 @@ export default function Qna({
         }
       })
       .catch((err) => {
-        console.log(err);
+        console.error(err);
         openModal(
           '오류가 발생하였습니다.',
 
@@ -156,7 +155,7 @@ export default function Qna({
         }
       })
       .catch((err) => {
-        console.log(err);
+        console.error(err);
         openModal(
           '오류가 발생하였습니다.',
 

@@ -41,8 +41,6 @@ export default function Header({
   const { firstRoute } = useSpliteRoute();
   const [{ data, isPending, error }] = useAtom(userInfoAtom);
   const pathname = usePathname();
-  console.log(firstRoute);
-  console.log('JOTAI userInfoAtom : ', data);
 
   return (
     <>

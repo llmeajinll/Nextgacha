@@ -24,7 +24,6 @@ export async function GET(req: Request) {
       { projection: { like: 1, _id: 0 } },
     );
 
-    // console.log('========== like:', user?.like);
 
     const isLike = (user?.like || [])?.includes(num);
     result = {
@@ -32,16 +31,13 @@ export async function GET(req: Request) {
       like: isLike,
     };
 
-    // console.log('[server] if result : ', result);
   } else {
     result = {
       ...func,
       like: false,
     };
 
-    // console.log('[server] else result : ', result);
   }
-  // console.log('getOneProduct ; ', result);
 
   return NextResponse.json({ result, ok: true });
 }

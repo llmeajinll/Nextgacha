@@ -25,18 +25,15 @@ export default function Page({
   const resolveParams = use(params);
   const orderId = resolveParams.orderId;
 
-  console.log('orderId', orderId);
-
   const fetchData = async () => {
     try {
       const res = await fetch(`/api/getOneHistory?orderId=${orderId}`);
       const data = await res.json();
       if (data.ok) {
-        console.log('res: ', data.result);
         setOrder(data.result);
       }
     } catch (err) {
-      console.log(err);
+      console.error(err);
     }
   };
 

@@ -36,7 +36,7 @@ export async function GET(req: Request) {
       }
     )
     .catch((err) => {
-      console.log('mongodb getUser error:', err);
+      console.error('mongodb getUser error:', err instanceof Error ? err.message : err);
       return null;
     });
 

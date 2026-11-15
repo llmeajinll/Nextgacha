@@ -9,7 +9,6 @@ export async function GET(req: Request) {
   const num = Number(searchParams.get('num'));
   const page = Number(searchParams.get('page')) || 0;
   const limit = 8;
-  // console.log('num: ', num);
 
   if (!Number.isInteger(num) || num <= 0) {
     return NextResponse.json({ ok: false, error: 'num is required' }, { status: 400 });

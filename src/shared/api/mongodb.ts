@@ -31,7 +31,6 @@ const noticeColl = gachaDB.collection('notice');
 // 문서 하나(_id 'menu')에 헤더 카테고리 메뉴 전체를 저장
 const categoryColl = gachaDB.collection<CategoryDoc>('category');
 
-// console.log(productDB);
 
 export {
   mongodbClient,

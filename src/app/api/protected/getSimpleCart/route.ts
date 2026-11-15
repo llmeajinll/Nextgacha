@@ -7,8 +7,6 @@ export async function GET(req: Request) {
   const numStr = searchParams.get('num') || '';
   const num = Number(numStr);
 
-  console.log(num, typeof num);
-
   const session = await auth();
   const email = session?.user?.email;
 
@@ -88,8 +86,6 @@ export async function GET(req: Request) {
         { $limit: 1 },
       ])
       .toArray();
-
-    console.log('getSimpleCart : ', result[0]);
 
     return NextResponse.json({ ok: true, result: result[0] || [] });
   } catch (error) {

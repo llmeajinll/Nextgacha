@@ -32,15 +32,12 @@ export default function TicketPanel() {
   // const data = tempCartQuery?.data;
   // const increase = tempCartQuery?.increase;
 
-  console.log('TicketPanel props:', tempCart?.product);
-  // console.log('tempCart : ', tempCart);
 
   return (
     <>
       {Array.isArray(tempCart?.product) && tempCart.product.length > 0 && (
         <TicketContainer status='detail'>
           {tempCart?.product?.map((val, key) => {
-            console.log('tempCart val : ', val.name);
             return (
               <Ticket
                 props={{

@@ -31,15 +31,12 @@ import {
 import { postCart } from '@/features/cart/api/postCart';
 
 export default function InfoPanel({ props }: { props: CardProps }) {
-  // console.log('infopanel', props);
   const router = useRouter();
   const { openModal } = useModal();
 
   const [tempCart] = useAtom(tempCartAtom);
   const [showText, setShowText] = useState(false);
   const textDomRef = useRef<HTMLDivElement | null>(null);
-
-  console.log('jotai tempCart : ', tempCart);
 
   const totalPrice = useMemo(() => {
     return tempCart?.product.reduce((a, b) => {
@@ -63,7 +60,6 @@ export default function InfoPanel({ props }: { props: CardProps }) {
       openModal('담은 상품이 없습니다.');
       return;
     }
-    console.log('POST cart', tempCart.product, tempCart.num);
     await postCart({
       num: tempCart.num,
       updatedArray: tempCart.product,
@@ -82,8 +78,6 @@ export default function InfoPanel({ props }: { props: CardProps }) {
       }
     });
   };
-
-  console.log('discountPrice : ', discountPrice);
 
   return (
     <Suspense fallback={<div>InfoPanel loading...</div>}>

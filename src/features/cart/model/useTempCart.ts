@@ -15,7 +15,6 @@ import {
 // const fetcher = (url: string) =>
 //   fetch(url, { credentials: 'include' }).then(async (res) => {
 //     const result = await res.json();
-//     // console.log(result);
 //     if (result.ok === true) {
 //       return result.data.cart;
 //     } else if (result.ok === false) {
@@ -29,7 +28,6 @@ import {
 const MAX_LIMIT = 5;
 export default function useTempCart(num: number | string) {
   // const
-  console.log('useTempCart : ', num);
   const queryClient = useQueryClient();
   const { openModal, closeModal } = useModal();
   const [tempCart, setTempCart] = useAtom(tempCartAtom);
@@ -60,7 +58,6 @@ export default function useTempCart(num: number | string) {
       ).then(async (res): Promise<SimpleCart> => {
         const data = await res.json();
         if (data.ok === true) {
-          console.log('tempCartData : ', data.result);
           setTempCart({
             title: data.result.stock.title,
             price: data.result.stock.price,
@@ -78,11 +75,8 @@ export default function useTempCart(num: number | string) {
   });
 
   const { cart, stock, keep } = data ?? { cart: [], stock: { list: [] }, keep: [] };
-  console.log(data);
 
   const increase = ({ name }: { name: string }) => {
-    console.log('increase, name : ', name);
-    console.log(cart, stock, keep);
     if (userData === undefined) {
       alert('로그인 후 장바구니를 담을 수 있습니다.');
       return;
@@ -94,14 +88,6 @@ export default function useTempCart(num: number | string) {
     const keepCount = keep.find((v) => v.name === name)?.count ?? 0;
     const stockCount = stock.list.find((v) => v.name === name)?.count ?? 0;
 
-    console.log(
-      'tempCount, cartCount, keepCount, stockCount : ',
-      tempCount,
-      cartCount,
-      keepCount,
-      stockCount,
-    );
-
     const owned = cartCount + keepCount + tempCount;
     const baseCap = Math.min(MAX_LIMIT, stockCount);
     const effectiveCap = owned >= MAX_LIMIT ? MAX_LIMIT : baseCap;
@@ -109,7 +95,6 @@ export default function useTempCart(num: number | string) {
 
     if (ableGet === true) {
       // setTempCart;
-      console.log('가농');
       setTempCart((prev) => {
         const current = prev ?? { num: Number(num), product: [] };
 
@@ -131,18 +116,14 @@ export default function useTempCart(num: number | string) {
           product: [...current.product, { name, count: 1 }],
         };
       });
-      console.log('임시 수량 증가:', name);
     } else {
       openModal(
         `더 담울 수 없습니다. (장바구니 : ${cartCount}개, 배송중: ${keepCount}, 재고: ${stockCount})`,
       );
     }
-
-    console.log('after ADd : ', tempCart);
   };
 
   const decrease = ({ name }: { name: string }) => {
-    console.log('decrease name : ', name);
 
     // 1. 현재 리스트에서 해당 아이템을 먼저 찾습니다.
     const targetItem = tempCart.product.find((v) => v.name === name);
@@ -170,11 +151,8 @@ export default function useTempCart(num: number | string) {
   };
 
   const erase = ({ name }: { name: string }) => {
-    console.log('erase name : ', name);
-    console.log(tempCart);
     openModal('삭제하시겠습니까?', {
       onClickCheck: () => {
-        console.log('onclickcheck');
         setTempCart((prev) => ({
           ...prev,
           product: prev.product.filter((v) => v.name !== name),
@@ -208,8 +186,6 @@ export default function useTempCart(num: number | string) {
       await queryClient.cancelQueries({ queryKey: ['tempCartData'] });
       const previousData = queryClient.getQueryData<unknown[]>(['tempCartData']);
       if (previousData && Array.isArray(previousData)) {
-        console.log('previousData : ', previousData);
-
         return { previousData };
       }
     },
@@ -217,8 +193,6 @@ export default function useTempCart(num: number | string) {
     onSuccess: async () => {
       // 'cartData' 키를 가진 쿼리를 무효화하여 서버에서 최신 데이터를 다시 읽어옵니다.
       queryClient.invalidateQueries({ queryKey: ['tempCartData'] });
-      const previousData = queryClient.getQueryData(['tempCartData']);
-      console.log(previousData);
     },
     onError: (error) => {
       console.error('업데이트 실패:', error);

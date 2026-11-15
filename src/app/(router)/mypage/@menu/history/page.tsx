@@ -35,18 +35,17 @@ export default function HistoryPage() {
       })
         .then(async (res) => {
           const data = await res.json();
-          console.log(data);
           if (data.ok === true) {
             setHistory(data.result.historyResult);
             setTotal(data.result.total);
           }
         })
         .catch((err) => {
-          console.log('fetch getHistory error:', err);
+          console.error('fetch getHistory error:', err);
           return null;
         });
     } catch (err) {
-      console.log('fetch getHistory error:', err);
+      console.error('fetch getHistory error:', err);
 
       setLoading(false);
       return null;
@@ -73,7 +72,6 @@ export default function HistoryPage() {
         <>
           <div className={grid}>
             {history.map((val) => {
-              // console.log(val);
               return <History props={val} key={val.orderId} />;
             })}
           </div>
@@ -83,7 +81,6 @@ export default function HistoryPage() {
             total={total}
             pageSize={8}
             onChange={(page) => {
-              console.log('onChange page : ', page);
               setCurrentPage(page);
               fetchHistoryData(page);
 

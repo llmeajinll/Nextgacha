@@ -22,7 +22,6 @@ export async function GET(req: Request) {
     .toArray();
   const total = await orderColl.countDocuments({ email });
 
-  console.log('historyResult : ', historyResult, 'total', total);
   const result = { historyResult, total };
 
   return NextResponse.json({ result, status: 200, ok: true });

@@ -9,7 +9,6 @@ export async function POST(req: Request) {
   }
   const { list } = await req.json();
   const result = await validateStock(list);
-  //   console.log(result);
   if (result.isAvailable === false) {
     return Response.json(result, { status: 400 });
   }

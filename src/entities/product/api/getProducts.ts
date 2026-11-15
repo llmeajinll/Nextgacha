@@ -19,18 +19,16 @@ export default async function getProducts(props: {
   })
     .then(async (res) => {
       const result = await res.json();
-      console.log(result);
       if (result) {
         return result;
       }
       return [];
     })
     .catch((err) => {
-      console.log('fetch getDetailProduct error:', err);
+      console.error('fetch getDetailProduct error:', err);
       return { data: [], total: 0 };
     });
 
-  // console.log('header user:', data);
 
   return data;
 }

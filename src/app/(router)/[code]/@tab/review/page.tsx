@@ -17,12 +17,10 @@ export default function ReviewTab() {
   const { firstRoute } = useSplitRoute();
 
   async function fetchReview(page: number) {
-    console.log('page : ', page);
     setIsLoading(true);
     try {
       const res = await fetch(`/api/getReview?num=${firstRoute}&page=${page}`);
       const { result, hasMore } = await res.json();
-      console.log(result, hasMore);
       setReview((prev) => [...prev, ...result]);
       setHasMore(hasMore);
     } catch (err) {

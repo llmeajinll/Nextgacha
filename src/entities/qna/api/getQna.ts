@@ -7,15 +7,13 @@ export default async function getQna(num: string) {
   })
     .then((res) => {
       const data = res.json();
-      // console.log('getQna Api', data);
       return data;
     })
     .catch((err) => {
-      console.log('fetch getQna error:', err);
+      console.error('fetch getQna error:', err);
       return null;
     });
 
-  // console.log('header user:', data);
 
   return data;
 }

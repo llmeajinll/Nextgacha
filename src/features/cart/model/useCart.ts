@@ -51,18 +51,11 @@ export default function useCart() {
       // ponytail: 낙관적 업데이트는 없다. 예전 코드는 캐시를 객체로 가정(실제는 배열)해서 항상 아무것도 안 했고,
       // 응답이 오면 onSettled가 다시 읽는다. 필요하면 previousData에서 해당 줄 count만 바꿔 setQueryData 한다.
       return { previousData };
-      // if (previousData && Array.isArray(previousData)) {
-      //   console.log('previousData : ', previousData);
-
-      //   return { previousData };
-      // }
     },
     // 2. 서버 업데이트 성공 후 실행
     onSuccess: async () => {
       // 'cartData' 키를 가진 쿼리를 무효화하여 서버에서 최신 데이터를 다시 읽어옵니다.
       queryClient.invalidateQueries({ queryKey: ['cartData'] });
-      const previousData = queryClient.getQueryData(['cartData']);
-      console.log(previousData);
     },
     onError: (error, vars, context) => {
       console.error('업데이트 실패:', error);
@@ -78,8 +71,6 @@ export default function useCart() {
 
   const { mutate, isPending } = mutation;
 
-  console.log('useCart data : ', mutate, isPending, data);
-
   const increase = (
     keepCount: number,
     stockCount: number,
@@ -88,19 +79,14 @@ export default function useCart() {
     count: number,
     // newData: any
   ) => {
-    console.log('INCREASE num, name, count : ', num, name, count);
-
-    console.log('keepCount : ', keepCount);
 
     // B. 해당 물건의 실제 재고 (stock)
 
-    console.log('stockCount : ', stockCount);
     // const stockCount = stockItem ? stockItem.count : 0;
 
     // C. 최대 한도 계산 (재고량 vs 5개 중 작은 값)
     // const maxLimit = Math.min(5, stockCount);
     const isLeft = keepCount + count < Math.min(5, stockCount + keepCount);
-    console.log(isLeft, keepCount + count, Math.min(5, stockCount + keepCount));
 
     if (isLeft === true) {
       if (isPending) return;
@@ -132,21 +118,14 @@ export default function useCart() {
     // count: number,
     // newData: any
   ) => {
-    console.log('DECREASE1', name);
     if (isPending) return;
 
     const current = queryClient.getQueryData<CartItem[]>(['cartData']);
     const item = current?.find((item) => item.num === num)?.cart.list.find((v) => v.name === name);
 
-    console.log(
-      'DECREASE current : ',
-      current?.find((item) => item.num === num),
-    );
-
     if (!item) return;
 
     const count = item.count;
-    console.log('DECREASE num, name, count : ', num, name, count);
 
     if (count > 1) {
       mutation.mutate({
@@ -155,7 +134,6 @@ export default function useCart() {
         preset: 'decrease',
       });
     } else if (count === 1) {
-      console.log('decrease count is 1');
       if (window.confirm('상품을 삭제하시겠습니까?')) {
         mutation.mutate({
           num,
@@ -164,7 +142,6 @@ export default function useCart() {
         });
       }
     } else if (count <= 0) {
-      console.log('count is 0 or less, doing nothing');
       mutation.mutate({
         num,
         name,
@@ -174,7 +151,6 @@ export default function useCart() {
   };
 
   const erase = (num: number, name: string) => {
-    console.log('ERASE num, name, count : ', num, name);
     if (window.confirm('상품을 삭제하시겠습니까?')) {
       mutation.mutate({
         num,

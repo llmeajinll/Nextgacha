@@ -34,7 +34,6 @@ export default function Ticket({
   erase: (props: TicketProps) => void;
 }) {
   const { openModal } = useModal();
-  // console.log('ticket : ', props);
   return (
     <div className={ticketContainer}>
       <div className={contentContainer}>

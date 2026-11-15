@@ -8,7 +8,6 @@ import InfoPanel from './InfoPanel';
 import { useTempCart } from '@/features/cart/model';
 
 export default function ProductPurchasePanel({ num }: { num: string }) {
-  console.log('url num', num);
 
   const [info, setInfo] = useState<CardProps>({} as CardProps);
   const { tempCart } = useTempCart(num);
@@ -18,17 +17,15 @@ export default function ProductPurchasePanel({ num }: { num: string }) {
       await fetch(`/api/getOneProduct?num=${num}`)
         .then(async (res) => {
           const data = await res.json();
-          console.log('res : ', data.result);
           setInfo(data.result);
           // return data;
         })
         .catch((err) => {
-          console.log('err : ', err);
+          console.error('err : ', err);
           return [];
         });
     };
     fetchInfo();
-    console.log('tempCart : ', tempCart);
   }, [tempCart]);
 
   return (
