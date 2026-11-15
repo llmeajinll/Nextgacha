@@ -6,7 +6,7 @@ import { fluid } from '@/styles/fluid';
 const { color, slate, tone } = vars;
 const reduced = '(prefers-reduced-motion: reduce)';
 
-// 올리면 왼쪽 위로 2px 뜨고 픽셀 그림자 (디자인 .hm-card)
+// 올리면 왼쪽 위로 2px 뜨고 픽셀 그림자 (TOP·알림 버튼과 같은 그림자)
 export const card = style({
   width: '100%',
   boxSizing: 'border-box',
@@ -18,7 +18,7 @@ export const card = style({
   selectors: {
     '&:hover, &:focus-within': {
       transform: 'translate(-2px, -2px)',
-      boxShadow: `4px 4px 0 0 ${color.blue2}`,
+      boxShadow: `3px 3px 0 0 ${color.blueLight}`,
       borderColor: color.blue1,
     },
   },

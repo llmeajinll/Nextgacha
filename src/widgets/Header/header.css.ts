@@ -41,10 +41,9 @@ export const logo = style({
   lineHeight: 1,
   color: color.blue1,
 });
-globalStyle(`${logo} span`, { display: 'inline-block', textShadow: `0 0 0 ${color.blue2}`, transition: 'text-shadow .2s steps(2)' });
+globalStyle(`${logo} span`, { display: 'inline-block' });
 globalStyle(`${logo}:hover span, ${logo}:focus-visible span`, {
   animation: `${wave} .54s steps(3) both`,
-  textShadow: `3px 3px 0 ${color.blue2}`,
 });
 globalStyle(`${logo}:hover span, ${logo}:focus-visible span`, {
   '@media': { '(prefers-reduced-motion: reduce)': { animation: 'none', transform: 'translateY(-2px)' } },
