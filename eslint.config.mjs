@@ -8,7 +8,8 @@ export default defineConfig([
   globalIgnores(['node_modules/**', '.next/**', 'out/**', 'build/**', 'next-env.d.ts']),
   {
     rules: {
-      '@typescript-eslint/no-explicit-any': 'off',
+      // any는 쓰지 않는다 (docs/policies/typescript.md). 외부 값은 unknown으로 받고 좁힌다
+      '@typescript-eslint/no-explicit-any': 'error',
       '@typescript-eslint/no-unused-vars': 'off',
 
       'prefer-const': 'off',

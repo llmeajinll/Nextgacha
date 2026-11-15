@@ -15,6 +15,21 @@ const nextConfig: NextConfig = {
       process.env.NODE_ENV === 'production' ? { exclude: ['error', 'warn'] } : false,
   },
 
+  // 기본 보안 헤더 (docs/policies/engineering.md "보안 헤더").
+  // ponytail: CSP는 아직 없음. Toss SDK·카카오·Vercel Blob·GA 출처를 정리한 뒤 Content-Security-Policy 추가
+  async headers() {
+    return [
+      {
+        source: '/:path*',
+        headers: [
+          { key: 'X-Frame-Options', value: 'SAMEORIGIN' },
+          { key: 'X-Content-Type-Options', value: 'nosniff' },
+          { key: 'Referrer-Policy', value: 'strict-origin-when-cross-origin' },
+        ],
+      },
+    ];
+  },
+
   images: {
     remotePatterns: [
       {
