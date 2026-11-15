@@ -5,6 +5,7 @@ import { useSearchParams, useRouter, usePathname } from 'next/navigation';
 import getHistory from '@/entities/order/api/getHistory';
 import { ScrollToTop } from '@/shared/ui';
 import { History } from '@/entities/order/ui';
+import type { OrderView } from '@/entities/order/model/types';
 import { EmptyCard } from '@/shared/ui';
 import { Pagination } from '@/shared/ui';
 import { grid, paginationWrap } from './page.css';
@@ -15,7 +16,7 @@ export default function HistoryPage() {
   const searchParams = useSearchParams();
   const page = searchParams.get('page');
 
-  const [history, setHistory] = useState([]);
+  const [history, setHistory] = useState<OrderView[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [total, setTotal] = useState(0);
   const [loading, setLoading] = useState(true);
@@ -71,7 +72,7 @@ export default function HistoryPage() {
       ) : (
         <>
           <div className={grid}>
-            {history.map((val: any) => {
+            {history.map((val) => {
               // console.log(val);
               return <History props={val} key={val.orderId} />;
             })}

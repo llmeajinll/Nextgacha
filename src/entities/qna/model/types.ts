@@ -6,5 +6,5 @@ export interface QnaProps {
   created_at: string;
   updated_at: string;
   question: string;
-  private: boolean;
+  secret?: boolean;
 }

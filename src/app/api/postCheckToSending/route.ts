@@ -16,7 +16,7 @@ const CHECKING = '상품 확인중';
 const str = (v: unknown, max: number) =>
   typeof v === 'string' && v.trim().length > 0 && v.trim().length <= max ? v.trim() : null;
 
-const parseShip = (o: any) => {
+const parseShip = (o: { orderId?: unknown; courier?: unknown; invoice?: unknown } | null | undefined) => {
   const orderId = str(o?.orderId, 100);
   const courier = str(o?.courier, 30);
   const invoice = str(o?.invoice, 30);
@@ -48,8 +48,8 @@ async function refundOrder(orderId: string, reason: string) {
       if (!claimed) throw new Error('이미 처리된 주문입니다.');
 
       await productColl.bulkWrite(
-        order.list.flatMap((line: any) =>
-          line.product.map((p: any) => ({
+        order.list.flatMap((line) =>
+          line.product.map((p) => ({
             updateOne: {
               filter: { num: line.num, 'list.name': p.name },
               update: { $inc: { 'list.$.count': p.count } },
@@ -119,7 +119,7 @@ export async function POST(req: Request) {
     if (orders.length === 0 || orders.some((o: unknown) => !o)) return invalid();
     try {
       const result = await orderColl.bulkWrite(
-        orders.map((order: any) => ({
+        orders.map((order: { orderId: string; courier: string; invoice: string }) => ({
           updateOne: {
             filter: { orderId: order.orderId, status: CHECKING },
             update: {

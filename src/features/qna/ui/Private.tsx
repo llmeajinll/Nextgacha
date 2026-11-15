@@ -2,20 +2,20 @@ import React from 'react';
 import { Lock } from 'pixelarticons/react';
 import { Writer } from '@/shared/ui';
 import { Range } from '@/shared/ui';
+import type { QnaProps } from '@/entities/qna/model/types';
 import { privateContainer, lockText, stacked, lockIcon } from './private.css';
 
 export default function Private({
   props,
   stacked: isStacked,
 }: {
-  props: any;
+  props: QnaProps;
   stacked?: boolean;
 }) {
   return (
     <Range
       width='full'
       preset='between'
-      key={props._id}
       gap='10'
       className={`${privateContainer} ${isStacked ? stacked : ''}`}
     >
@@ -24,7 +24,7 @@ export default function Private({
       <Writer
         writer='
   anonymity'
-        created_at={props.create_at}
+        created_at={props.created_at}
       />
     </Range>
   );

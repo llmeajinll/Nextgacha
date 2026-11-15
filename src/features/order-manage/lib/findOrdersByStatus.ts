@@ -26,7 +26,8 @@ export async function findOrdersByStatus(status: OrderStatus, page = 1, q = '') 
         { projection: { _id: 0, orderId: 1, email: 1, deviceId: 1, ip: 1, address: 1, 'list.num': 1 } },
       )
       .toArray()) as unknown as OrderSignals[];
-    for (const order of data) if (order.status === '상품 확인중') order.suspects = findSuspects(order as unknown as OrderSignals, active);
+    const rows: ((typeof data)[number] & { suspects?: ReturnType<typeof findSuspects> })[] = data;
+    for (const order of rows) if (order.status === '상품 확인중') order.suspects = findSuspects(order as unknown as OrderSignals, active);
   }
 
   // 클라이언트 컴포넌트/JSON으로 넘기므로 ObjectId → string

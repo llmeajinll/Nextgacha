@@ -1,3 +1,4 @@
+import type { Document, Filter } from 'mongodb';
 import { productColl, userColl } from '@/shared/api/mongodb';
 import { CardProps } from '@/entities/product/model/types';
 
@@ -18,7 +19,7 @@ export async function findProducts(props: {
   const twoMonthsAgo = new Date();
   twoMonthsAgo.setMonth(twoMonthsAgo.getMonth() - 2);
 
-  let query: Record<string, any> = {};
+  let query: Filter<Document> = {};
 
   // 사용자 입력을 정규식 리터럴로 (특수문자로 인한 500 / ReDoS 방지)
   const escapeRegex = (text: string) =>

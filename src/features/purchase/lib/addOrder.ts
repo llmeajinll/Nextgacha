@@ -1,6 +1,7 @@
 import { orderColl } from '@/shared/api/mongodb';
 import { ClientSession } from 'mongodb';
 import { koreaTime } from '@/shared/lib/koreaTime';
+import type { OrderLine } from './orderPolicy';
 
 export async function addOrder({
   orderId,
@@ -16,7 +17,7 @@ export async function addOrder({
   ip,
 }: {
   orderId: string;
-  list: any[];
+  list: OrderLine[];
   amount: number;
   email: string;
   name: string;

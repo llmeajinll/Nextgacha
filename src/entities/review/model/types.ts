@@ -5,5 +5,5 @@ export interface ReviewProps {
   created_at: string;
   rate: number;
   content: string;
-  purchasDate: string;
+  purchaseDate: string;
 }

@@ -18,9 +18,9 @@ export async function GET(req: Request) {
 
   let result = null;
 
-  if (isLogin === true) {
+  if (email) {
     const user = await userColl.findOne(
-      { email: session?.user?.email },
+      { email },
       { projection: { like: 1, _id: 0 } },
     );
 

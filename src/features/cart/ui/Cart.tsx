@@ -6,9 +6,8 @@ import Link from 'next/link';
 import { Check, ChevronDown, Minus, Plus, Trash } from 'pixelarticons/react';
 import { comma } from '@/shared/lib/comma';
 import { useCart } from '../model';
+import type { CartItem, Stock } from '../model/types';
 import * as s from './cart.css';
-
-type Line = { name: string; count: number };
 
 // 상품 하나(num)의 옵션 묶음 카드. 선택·접기 상태는 CartTemplate이 들고 있다
 export default function Cart({
@@ -19,7 +18,7 @@ export default function Cart({
   onToggleOpen,
   maxPerItem,
 }: {
-  item: any;
+  item: CartItem;
   isSelected: (num: number, name: string) => boolean;
   onToggleLine: (num: number, name: string) => void;
   open: boolean;
@@ -28,12 +27,12 @@ export default function Cart({
 }) {
   const { cart, keep, stock } = item;
   const { increase, decrease, erase, isPending } = useCart();
-  const list: Line[] = cart?.list ?? [];
+  const list: Stock[] = cart?.list ?? [];
   if (list.length === 0) return null;
 
   const unit = stock.price * (1 - (stock.discount ?? 0) / 100);
   const qtySum = list.reduce((a, l) => a + l.count, 0);
-  const countOf = (src: any, name: string) => src?.list?.find((v: any) => v.name === name)?.count ?? 0;
+  const countOf = (src: { list: Stock[] } | undefined, name: string) => src?.list?.find((v) => v.name === name)?.count ?? 0;
 
   return (
     <article className={s.group}>

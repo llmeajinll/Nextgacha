@@ -1,6 +1,15 @@
 import { NextResponse } from 'next/server';
 import { auth } from '@/auth';
-import { userColl, cartColl } from '@/shared/api/mongodb';
+import { cartColl } from '@/shared/api/mongodb';
+import type { Stock } from '@/shared/api/docs';
+import type { CartItem } from '@/features/cart/model/types';
+
+// $facet 결과: 장바구니 줄 / 배송중 줄 / 상품 정보
+type Facet = {
+  cart: { num: number; list: Stock[]; check: boolean }[];
+  keep: { num: number; list: Stock[] }[];
+  stock: CartItem['stock'][];
+};
 
 export async function GET(req: Request) {
   const session = await auth();
@@ -97,27 +106,19 @@ export async function GET(req: Request) {
     },
   ];
 
-  const res = await cartColl.aggregate(pipeline).toArray();
+  const res = await cartColl.aggregate<Facet>(pipeline).toArray();
 
-  const data =
-    res && res.length > 0 ? (res[0] as any) : { cart: [], keep: [], stock: [] };
+  const data: Facet = res[0] ?? { cart: [], keep: [], stock: [] };
 
   const { cart, stock, keep } = data;
 
   console.log('cart', cart, 'stock', stock, 'keep', keep);
 
-  const cartMap = new Map<any, any>(
-    (cart || []).map((item: any) => [item.num, item])
-  );
-  const keepMap = new Map<any, any>(
-    (keep || []).map((item: any) => [item.num, item])
-  );
-  const stockMap = new Map<any, any>(
-    (stock || []).map((item: any) => [item.num, item])
-  );
+  const keepMap = new Map((keep || []).map((item) => [item.num, item]));
+  const stockMap = new Map((stock || []).map((item) => [item.num, item]));
 
-  const validResults = [];
-  const numsToDelete = [];
+  const validResults: CartItem[] = [];
+  const numsToDelete: number[] = [];
 
   // --- 재고 검증 로직 시작 ---
   for (const cartItem of cart || []) {
@@ -132,12 +133,12 @@ export async function GET(req: Request) {
       continue;
     }
 
-    const validProducts = [];
-    const namesToRemove = [];
+    const validProducts: Stock[] = [];
+    const namesToRemove: string[] = [];
 
     // 2. 장바구니 세부 품목(list) 순회 및 재고 비교
     for (const p of cartItem.list || []) {
-      const actualStock = stockInfo.list?.find((s: any) => s.name === p.name);
+      const actualStock = stockInfo.list?.find((s) => s.name === p.name);
 
       // 재고가 없거나, 장바구니 수량이 재고 수량보다 큰 경우 삭제 대상 등록
       if (!actualStock || p.count > actualStock.count) {
@@ -152,7 +153,7 @@ export async function GET(req: Request) {
       console.log('부분 삭제 실행 (일부 상품만 재고 초과인 경우)');
       await cartColl.updateOne({ user: email, 'cart.num': num }, {
         $pull: { 'cart.$.product': { name: { $in: namesToRemove } } },
-      } as any);
+      });
     }
 
     // 4. 결과 배열 구성
@@ -174,7 +175,7 @@ export async function GET(req: Request) {
   if (numsToDelete.length > 0) {
     await cartColl.updateOne({ user: email }, {
       $pull: { cart: { num: { $in: numsToDelete } } },
-    } as any);
+    });
     console.log(
       `[삭제 완료] 품절/재고 부족 상품 그룹 ${numsToDelete.length}건 제거`
     );

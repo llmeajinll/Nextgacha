@@ -57,14 +57,14 @@ export async function POST(req: Request) {
     const result = await cartColl.updateOne(
       { user: email, 'cart.num': num },
       {
-        $pull: { 'cart.$.product': { name } } as any,
+        $pull: { 'cart.$.product': { name } },
       },
     );
 
     // 만약 product 배열이 비었다면 해당 num 그룹 자체를 제거 (선택사항)
     await cartColl.updateOne(
       { user: email },
-      { $pull: { cart: { product: { $size: 0 } } } as any },
+      { $pull: { cart: { product: { $size: 0 } } } },
     );
 
     return NextResponse.json({ ok: true, result }, { status: 200 });

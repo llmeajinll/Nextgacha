@@ -9,7 +9,7 @@ import { Review } from '@/entities/review/ui';
 import { emptyState, listWrap, grid, moreBtn } from './page.css';
 
 export default function ReviewTab() {
-  const [review, setReview] = useState<any[]>([]);
+  const [review, setReview] = useState<ReviewProps[]>([]);
   const [page, setPage] = useState(0);
   const [hasMore, setHasMore] = useState(true);
   const [isLoading, setIsLoading] = useState(false);

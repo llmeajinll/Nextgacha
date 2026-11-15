@@ -16,7 +16,7 @@ export default function Page() {
 
   const [sendList, setsendList] = useState([]);
   const [isProcessing, setIsProcessing] = useState(true);
-  const [result, setResult] = useState<any>(null);
+  const [result, setResult] = useState<unknown>(null);
   const { openModal } = useModal();
 
   useEffect(() => {

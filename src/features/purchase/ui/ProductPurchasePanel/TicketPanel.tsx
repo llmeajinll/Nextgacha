@@ -39,14 +39,14 @@ export default function TicketPanel() {
     <>
       {Array.isArray(tempCart?.product) && tempCart.product.length > 0 && (
         <TicketContainer status='detail'>
-          {tempCart?.product?.map((val: any, key: number) => {
+          {tempCart?.product?.map((val, key) => {
             console.log('tempCart val : ', val.name);
             return (
               <Ticket
                 props={{
                   title,
-                  price,
-                  num,
+                  price: price ?? 0,
+                  num: num ?? 0,
                   name: val.name,
                   count: val.count,
                   discount: discount,

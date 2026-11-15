@@ -48,7 +48,7 @@ export async function POST(req: Request) {
     send === 'one'
       ? [data.orderId]
       : send === 'many'
-        ? (data.orders ?? []).map((o: any) => o.orderId)
+        ? (data.orders ?? []).map((o: { orderId: string }) => o.orderId)
         : [];
 
   if (orderIds.length === 0 || orderIds.some((id) => typeof id !== 'string')) {

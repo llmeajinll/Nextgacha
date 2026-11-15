@@ -4,6 +4,7 @@ import { useState, useEffect, useRef } from 'react';
 import { useRouter, usePathname, useSearchParams } from 'next/navigation';
 import { Range } from '@/shared/ui';
 import { comma } from '@/shared/lib/comma';
+import type { OrderView } from '../model/types';
 import {
   reviewBtn,
   bigLabelTitle,
@@ -65,7 +66,7 @@ function ReceiptLabel({
   );
 }
 
-export default function History({ props }: { props: any }) {
+export default function History({ props }: { props: OrderView }) {
   console.log('props:', props);
 
   const route = useRouter();
@@ -137,17 +138,17 @@ export default function History({ props }: { props: any }) {
       >
         <div ref={middleRef} className={innerPadMiddle}>
           <Range className={labelTitle}>list</Range>
-          {props.list.map((value: any, index: number) => {
+          {props.list.map((value, index) => {
             console.log(
               'value.list : ',
-              value?.product.map((val: any, idx: number) => {
+              value?.product.map((val) => {
                 console.log(val);
               }),
             );
             return (
               <div key={props.orderId + index} className={listContainer}>
                 <div className={title}>{value?.title || 'error'}</div>
-                {value?.product.map((val: any) => (
+                {value?.product.map((val) => (
                   <Range
                     key={props.orderId + val.name + value.num}
                     className={contentContainer}

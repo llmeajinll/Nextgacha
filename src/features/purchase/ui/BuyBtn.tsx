@@ -8,7 +8,7 @@ import { v4 as uuidv4 } from 'uuid';
 import { useAtom, useAtomValue } from 'jotai';
 import { userInfoAtom } from '@/entities/user/model/store';
 import { useModal } from '@/shared/hooks';
-import { useDaumPostcodePopup } from 'react-daum-postcode';
+import { useDaumPostcodePopup, type Address } from 'react-daum-postcode';
 import { queryClientAtom } from 'jotai-tanstack-query';
 import useSplitRoute from '@/shared/hooks/useSplitRoute';
 import { assignInlineVars } from '@vanilla-extract/dynamic';
@@ -72,7 +72,7 @@ export default function BuyBtn({
     'https://t1.kakaocdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js';
   const open = useDaumPostcodePopup(scriptUrl);
 
-  const handleComplete = async (data: any) => {
+  const handleComplete = async (data: Address) => {
     let fullAddress = data.address;
     let extraAddress = '';
 

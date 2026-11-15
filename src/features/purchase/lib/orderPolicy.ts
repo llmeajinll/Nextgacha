@@ -23,8 +23,9 @@ export function isValidOrderList(list: unknown): list is OrderLine[] {
         Array.isArray(line.product) &&
         line.product.length > 0 &&
         line.product.every(
-          (p: any) =>
+          (p: { name?: unknown; count?: unknown }) =>
             typeof p?.name === 'string' &&
+            typeof p.count === 'number' &&
             Number.isInteger(p.count) &&
             p.count > 0,
         ),

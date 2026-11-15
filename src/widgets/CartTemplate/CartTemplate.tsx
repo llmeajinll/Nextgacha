@@ -6,6 +6,7 @@ import { useAtomValue } from 'jotai';
 import { Check, Truck } from 'pixelarticons/react';
 import { Cart } from '@/features/cart/ui';
 import { useCart } from '@/features/cart/model';
+import type { CartItem } from '@/features/cart/model/types';
 import BuyBtn from '@/features/purchase/ui/BuyBtn';
 import AddressEditor from '@/features/address/ui/AddressEditor';
 import { calcOrder, MAX_PER_ITEM } from '@/features/purchase/lib/orderPolicy';
@@ -57,7 +58,7 @@ function RoadDeco({ kind }: { kind: (typeof ROAD)[number]['kind'] }) {
 export default function CartTemplate() {
   const { data: user } = useAtomValue(userInfoAtom);
   const { data, eraseMany, isPending } = useCart();
-  const items: any[] = Array.isArray(data) ? data : [];
+  const items: CartItem[] = Array.isArray(data) ? data : [];
 
   // 기본은 모두 선택. 새로 담긴 옵션도 선택된 채로 보이게 "뺀 것"만 기억한다
   const [unchecked, setUnchecked] = useState<Set<string>>(new Set());
@@ -66,7 +67,7 @@ export default function CartTemplate() {
   const [clamp, setClamp] = useState('');
 
   const lines = useMemo(
-    () => items.flatMap((it) => (it.cart?.list ?? []).map((l: any) => ({ num: it.cart.num, name: l.name, count: l.count }))),
+    () => items.flatMap((it) => (it.cart?.list ?? []).map((l) => ({ num: it.cart.num, name: l.name, count: l.count }))),
     [items],
   );
   const isSelected = (num: number, name: string) => !unchecked.has(key(num, name));
@@ -98,8 +99,8 @@ export default function CartTemplate() {
           num: it.cart.num,
           title: it.stock.title,
           product: (it.cart.list ?? [])
-            .filter((l: any) => !unchecked.has(key(it.cart.num, l.name)))
-            .map((l: any) => ({ name: l.name, count: l.count })),
+            .filter((l) => !unchecked.has(key(it.cart.num, l.name)))
+            .map((l) => ({ name: l.name, count: l.count })),
         }))
         .filter((g) => g.product.length > 0),
     [items, unchecked],

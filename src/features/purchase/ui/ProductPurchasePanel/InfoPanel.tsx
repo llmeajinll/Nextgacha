@@ -42,7 +42,7 @@ export default function InfoPanel({ props }: { props: CardProps }) {
   console.log('jotai tempCart : ', tempCart);
 
   const totalPrice = useMemo(() => {
-    return tempCart?.product.reduce((a: any, b: any) => {
+    return tempCart?.product.reduce((a, b) => {
       return (
         a +
         b.count * ((tempCart?.price || 0) * (1 - tempCart.discount / 100) || 0)
@@ -59,7 +59,7 @@ export default function InfoPanel({ props }: { props: CardProps }) {
   const discountPrice = props.price * (1 - props.discount / 100);
 
   const onClickCart = async () => {
-    if (tempCart.product.length === 0) {
+    if (tempCart.num === null || tempCart.product.length === 0) {
       openModal('담은 상품이 없습니다.');
       return;
     }

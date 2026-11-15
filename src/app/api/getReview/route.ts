@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import { reviewColl } from '@/shared/api/mongodb';
 import { maskEmail } from '@/shared/lib/maskEmail';
+import type { ReviewProps } from '@/entities/review/model/types';
 
 export async function GET(req: Request) {
   const { searchParams } = new URL(req.url);
@@ -52,13 +53,15 @@ export async function GET(req: Request) {
     //   ])
     //   .toArray();
 
-    const [facetResult] = await reviewColl.aggregate(pipeline).toArray();
+    const [facetResult] = await reviewColl
+      .aggregate<{ metadata: { total: number }[]; data: ReviewProps[] }>(pipeline)
+      .toArray();
 
     // const totalCount = await reviewColl.countDocuments({ num });
     // const hasMore = (page + 1) * limit < totalCount;
     const totalCount = facetResult.metadata[0]?.total || 0;
     // 작성자 이메일 원문은 내보내지 않는다
-    const result = facetResult.data.map((review: any) => ({
+    const result = facetResult.data.map((review) => ({
       ...review,
       user: maskEmail(review.user),
     }));

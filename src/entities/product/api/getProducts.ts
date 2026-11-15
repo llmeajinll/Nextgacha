@@ -16,7 +16,7 @@ export default async function getProducts(props: {
     headers: {
       'Content-Type': 'application/json',
     },
-  } as any)
+  })
     .then(async (res) => {
       const result = await res.json();
       console.log(result);

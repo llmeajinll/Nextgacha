@@ -5,6 +5,9 @@ import { auth } from '@/auth';
 export async function GET(req: Request) {
   const session = await auth();
   const email = session?.user?.email;
+  if (!email) {
+    return NextResponse.json({ ok: false, message: 'unauthorized' }, { status: 401 });
+  }
 
   const { searchParams } = new URL(req.url);
   const pageStr = searchParams.get('page') || '';

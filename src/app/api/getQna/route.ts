@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
 import { qnaColl } from '@/shared/api/mongodb';
+import type { QnaDoc } from '@/shared/api/docs';
 import { auth } from '@/auth';
 import { isAdminEmail } from '@/shared/lib/isAdmin';
 import { maskEmail } from '@/shared/lib/maskEmail';
@@ -17,7 +18,7 @@ export async function GET(req: Request) {
   const isAdmin = isAdminEmail(viewer);
 
   const [data] = await qnaColl
-    .aggregate([
+    .aggregate<QnaDoc>([
       { $match: { num } },
       {
         $project: {
@@ -33,7 +34,7 @@ export async function GET(req: Request) {
     .toArray();
 
   // 이메일 원문은 내보내지 않는다. 비밀글은 작성자/관리자에게만 내용 공개
-  const qna = (data?.qna ?? []).map(({ email, ...item }: any) => {
+  const qna = (data?.qna ?? []).map(({ email, ...item }) => {
     const isMine = !!viewer && email === viewer;
     const hidden = item.secret === true && !isMine && !isAdmin;
     return {

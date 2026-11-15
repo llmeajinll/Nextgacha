@@ -3,6 +3,7 @@ import React, { useState, useEffect } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { Close } from 'pixelarticons/react';
 import { useModal } from '@/shared/hooks';
+import type { OrderView } from '@/entities/order/model/types';
 import { Range } from '@/shared/ui';
 import { StarRating } from '@/shared/ui';
 import * as styles from '@/shared/ui/alertModal.css';
@@ -31,17 +32,12 @@ export default function ReviewModal() {
   const [show, setShow] = useState(false);
   const [warningSize1, setWarningSize1] = useState(14);
   const [warningSize2, setWarningSize2] = useState(10);
-  interface ProductInfo {
-    orderId?: string;
-    list?: any[];
-    [key: string]: any;
-  }
-  const [productInfo, setProductInfo] = useState<ProductInfo | null>(null);
+  const [productInfo, setProductInfo] = useState<OrderView | null>(null);
   const { openModal } = useModal();
 
   useEffect(() => {
     const getItem = sessionStorage.getItem('productInfo');
-    const item = getItem ? (JSON.parse(getItem) as ProductInfo) : null;
+    const item = getItem ? (JSON.parse(getItem) as OrderView) : null;
     setProductInfo(item);
   }, []);
 
@@ -96,13 +92,13 @@ export default function ReviewModal() {
               >
                 <div className={titleLabel}>주문 상품</div>
                 <Range className={contentLabel} gap='5' preset='column'>
-                  {productInfo?.list?.map((value: any, index: number) => (
+                  {productInfo?.list?.map((value, index) => (
                     <div key={value.num}>
                       <div key={value.num + index} className={titleLabel}>
                         {value?.title ?? '상품 정보 없음'}
                       </div>
                       <Range gap='10'>
-                        {value.product.map((val: any) => (
+                        {value.product.map((val) => (
                           <div
                             key={val.name + value.num}
                             className={detailContentLabel}

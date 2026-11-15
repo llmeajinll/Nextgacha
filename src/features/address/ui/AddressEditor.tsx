@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
-import { useDaumPostcodePopup } from 'react-daum-postcode';
+import { useDaumPostcodePopup, type Address } from 'react-daum-postcode';
 import { useAtomValue } from 'jotai';
 import { queryClientAtom } from 'jotai-tanstack-query';
 import { Check, Search } from 'pixelarticons/react';
@@ -40,7 +40,7 @@ export default function AddressEditor({ children }: { children?: React.ReactNode
   const search = () =>
     openPostcode({
       popupTitle: '배송지 주소 찾기',
-      onComplete: (data: any) => {
+      onComplete: (data: Address) => {
         // 도로명이면 (법정동, 건물명)을 덧붙인다
         const extra = data.addressType === 'R' ? [data.bname, data.buildingName].filter(Boolean).join(', ') : '';
         patch({ zip: data.zonecode, road: extra ? `${data.address} (${extra})` : data.address });

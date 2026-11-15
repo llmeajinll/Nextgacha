@@ -3,6 +3,7 @@ import { Range } from '@/shared/ui';
 import React, { useState, useEffect, use } from 'react';
 import Link from 'next/link';
 import { comma } from '@/shared/lib/comma';
+import type { OrderView } from '@/entities/order/model/types';
 import {
   pageContainer,
   heading,
@@ -20,7 +21,7 @@ export default function Page({
 }: {
   params: Promise<{ orderId: string }>;
 }) {
-  const [order, setOrder] = useState({} as any);
+  const [order, setOrder] = useState<OrderView | null>(null);
   const resolveParams = use(params);
   const orderId = resolveParams.orderId;
 
@@ -55,15 +56,15 @@ export default function Page({
       </div>
       <div>
         <span className={fieldLabel}>결제 금액</span>
-        <span className={fieldValue}>{comma(order?.totalPrice)}원</span>
+        <span className={fieldValue}>{comma(order?.totalPrice ?? 0)}원</span>
       </div>
       <Range>
         <span className={fieldLabel}>주문 상품</span>
-        {(order?.list || [])?.map((value: any, index: number) => (
+        {(order?.list || []).map((value, index) => (
           <div key={index}>
             <div className={fieldValue}>{value.title}</div>
             <Range>
-              {value.product.map((val: any, idx: number) => (
+              {value.product.map((val, idx) => (
                 <div key={idx} className={productItem}>
                   {val.name} : {val.count}개
                 </div>

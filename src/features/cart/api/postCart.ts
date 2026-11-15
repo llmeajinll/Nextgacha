@@ -1,4 +1,4 @@
-export async function postCart(data: any) {
+export async function postCart(data: { num: number; updatedArray: { name: string; count: number }[] }) {
   // console.log(data);
   const result = await fetch(`/api/protected/postCart`, {
     method: 'POST',

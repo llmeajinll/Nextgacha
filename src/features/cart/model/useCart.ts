@@ -1,4 +1,5 @@
 import { getCart } from '../api/getCart';
+import type { CartItem } from './types';
 import Cookies from 'js-cookie';
 
 import { useRouter } from 'next/navigation';
@@ -40,34 +41,15 @@ export default function useCart() {
     },
     onMutate: async ({ preset, name, num }) => {
       await queryClient.cancelQueries({ queryKey: ['cartData'] });
-      const previousData = queryClient.getQueryData<any[]>(['cartData']);
+      const previousData = queryClient.getQueryData<CartItem[]>(['cartData']);
 
       if (
-        previousData
-          ?.find((i: any) => i.num === num)
-          ?.cart?.list?.find((v: any) => v.name === name)?.count > 5
+        (previousData?.find((i) => i.num === num)?.cart.list.find((v) => v.name === name)?.count ?? 0) > 5
       ) {
         return;
       }
-      queryClient.setQueryData(['cartData'], (old: any) => {
-        if (!old) return old;
-
-        const next = structuredClone(old);
-
-        console.log('======== oldData ======== : ', old);
-
-        const item = next?.cart?.list?.find((v: any) => v.name === name);
-        if (!item) return old;
-
-        if (preset === 'increase') item.count += 1;
-        if (preset === 'decrease') item.count -= 1;
-        if (preset === 'erase') {
-          next.cart.list = next.cart.list.filter((v: any) => v.name !== name);
-        }
-
-        return next;
-      });
-
+      // ponytail: 낙관적 업데이트는 없다. 예전 코드는 캐시를 객체로 가정(실제는 배열)해서 항상 아무것도 안 했고,
+      // 응답이 오면 onSettled가 다시 읽는다. 필요하면 previousData에서 해당 줄 count만 바꿔 setQueryData 한다.
       return { previousData };
       // if (previousData && Array.isArray(previousData)) {
       //   console.log('previousData : ', previousData);
@@ -153,14 +135,12 @@ export default function useCart() {
     console.log('DECREASE1', name);
     if (isPending) return;
 
-    const current = queryClient.getQueryData<any>(['cartData']);
-    const item = current
-      ?.find((item: any) => item.num === num)
-      ?.cart?.list?.find((v: any) => v.name === name);
+    const current = queryClient.getQueryData<CartItem[]>(['cartData']);
+    const item = current?.find((item) => item.num === num)?.cart.list.find((v) => v.name === name);
 
     console.log(
       'DECREASE current : ',
-      current?.find((item: any) => item.num === num),
+      current?.find((item) => item.num === num),
     );
 
     if (!item) return;
