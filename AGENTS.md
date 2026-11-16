@@ -19,6 +19,9 @@ Next.js 16(App Router) 쇼핑몰 "Next Gacha". 핵심 비즈니스 규칙: 한 �
 - `pnpm test` — Node 내장 러너(`node --test --experimental-strip-types`)로 `src/**/*.test.ts` 실행.
   Jest 없음. 테스트는 순수 로직만 다룬다. 옆 파일은 상대 경로 + `.ts` 확장자를 붙여 import한다
   (plain Node에서는 `@/` 별칭이 안 풀린다).
+- `pnpm test:db` — `src/**/*.dbtest.ts`를 실제 MongoDB `gacha_test`에서 실행(`.env.local` 필요, CI 제외).
+  `scripts/ts-alias.mjs` resolve 훅이 `@/`와 확장자 없는 import를 풀어 준다. 테스트는 `MONGODB_DB=gacha_test`를 직접 넣고
+  DB 이름이 다르면 멈추며, Toss는 `fetch` 스텁으로 대신한다. 결제·환불·교환 트랜잭션을 바꾸면 돌린다.
 - `node --env-file=.env.local scripts/seed-notices.mjs <DB 이름>` — 예전에 코드에 고정돼 있던 공지를 `notice`
   컬렉션으로 옮김(이미 공지가 있으면 건너뜀). 개발 DB `gacha_dev`에는 넣었고, 운영 `gacha`는 배포 전에 따로 실행해야 함.
 - `pnpm storybook` / `pnpm build-storybook` — Storybook 10 (`@storybook/nextjs-vite`). 스토리는
@@ -69,7 +72,7 @@ jotai atom/store), `ui/`(컴포넌트 + 옆에 둔 `*.css.ts`), 필요하면 `li
   - 고정된 `ADMIN_API_PATHS` 목록(postEditProduct, postEvent, postProduct,
     postCheckToSending, postSendingToFinish, getOrderSort, getError, postErrorStatus, postCategory,
     postQnaAnswer, getUserDetail, postBanner, postBannerDelete, postBannerOrder, postNotice,
-    postNoticeDelete, postNoticeImage, postReviewHide) → `isAdminEmail(email)`이
+    postNoticeDelete, postNoticeImage, postReviewHide, postRestock, postExchange) → `isAdminEmail(email)`이
     아니면 403 (`ADMIN_EMAILS` 환경변수와 비교, `src/shared/lib/isAdmin.ts` 참고).
   - `/manager/*` 페이지 → 관리자가 아니면 `/`로 리다이렉트. 단 `/manager`는 공개.
     로컬 `next dev`에서는 관리자 화면 작업용으로 페이지·API 관리자 가드를 끈다(`skipAdminGuard`).
@@ -111,14 +114,22 @@ jotai atom/store), `ui/`(컴포넌트 + 옆에 둔 `*.css.ts`), 필요하면 `li
 - `withTransaction(...)` 콜백 안에서는 다시 throw하지 않는 `.catch()`/`try-catch`를 절대 쓰지
   않는다: 드라이버가 트랜잭션 중단을 알 수 없어 무한 재시도할 수 있다. 단일 문서 쓰기나 외부 호출
   (Blob 업로드, Toss)은 애초에 트랜잭션으로 감싸지 않는다.
-- 주문 상태 전환(`상품 확인중` → `배송중` → `배송 완료`, 또는 `상품 확인중` → `환불`)은 update에
+- 주문 상태 전환(`상품 확인중` → `배송중` → `배송 완료`, `상품 확인중` → `환불`, 불량 교환 `배송 완료` → `교환 요청` →
+  `교환 완료`(관리자 `postExchange`, `features/purchase/lib/shipExchange.ts`가 재고 차감) 또는 반려 시 `배송 완료`)은 update에
   `status` 필터를 걸어서 더블클릭/재시도가 아무 일도 하지 않게 한다. 배송 완료
   (`postSendingToFinish`)와 환불(`postCheckToSending` `send: 'refund'`)은 email/list/points를
   **요청 body가 아니라 주문 문서에서** 읽고, 트랜잭션 안에서 `subtractKeep`으로 `user.keep`을
   조정한다. 환불은 Toss 결제를 먼저 취소하고(`orderId`로 조회), 그다음 재고/keep/`usedPoint`를
-  되돌린다. 환불 흐름은 `features/purchase/lib/refundOrder.ts` 하나를 관리자 환불과 구매자 취소
-  (`/api/protected/postCancelOrder`)가 같이 쓴다. 주문에는 `paymentKey`를 저장하고(옛 주문은 orderId 조회),
+  되돌린다. 환불 흐름은 `features/purchase/lib/refundOrder.ts` 하나를 관리자 환불, 구매자 취소
+  (`/api/protected/postCancelOrder`), 기한 초과 자동 환불(`/api/cron/overdue-orders`)이 같이 쓴다. 주문에는 `paymentKey`를 저장하고(옛 주문은 orderId 조회),
   구매자용 조회 API는 `paymentKey`를 내보내지 않는다.
+- 기한 값(주문 확인 3영업일, 문의 답변 2영업일, 리뷰 수정 5일)은 `shared/lib/businessDays.ts`. 매일 09:00 KST에
+  Vercel Cron(`vercel.json` `crons`)이 `/api/cron/overdue-orders`를 불러 3영업일 넘은 `상품 확인중` 주문을 자동 환불한다.
+  이 라우트는 proxy matcher 밖이고 `Authorization: Bearer $CRON_SECRET`으로 직접 인증한다(`CRON_SECRET` 없으면 거절).
+- 구매자 알림은 사이트 안 알림뿐이다(알림톡 없음): `shared/api/notifyUser`가 `notificationColl`에 넣고(TTL 90일),
+  헤더·모바일 종 아이콘(`features/notification`)이 `/api/protected/getNotifications`로 읽는다. 재입고 알림 신청자는
+  상품 문서 `restockSubs`(이메일 배열)에 있으므로 상품을 내보내는 조회에서는 항상 빼야 한다.
+- 처리되지 않은 서버 에러는 `src/instrumentation.ts` `onRequestError`가 `recordSystemError`로 남긴다(Sentry 없음).
 - 장바구니가 두 층인 건 의도된 설계다(고칠 버그 아님): 상품 상세에서 수량을 고르는 중에는 Jotai
   메모리 atom, 확정된 장바구니는 MongoDB `cartColl` 문서("장바구니 담기" 때 저장). 1인 5개 한도는
   세 번 검사한다: 클라이언트 hook(즉각 UX), 장바구니 API(`postCart`/`updateCart`의

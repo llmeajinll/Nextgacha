@@ -16,4 +16,6 @@ export type OrderView = {
   addPoint: number;
   list: OrderLineView[];
   review?: boolean;
+  // 관리자가 교환 요청을 반려한 사유
+  exchangeRejected?: string;
 };

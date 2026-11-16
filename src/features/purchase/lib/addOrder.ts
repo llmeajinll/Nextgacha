@@ -1,5 +1,5 @@
 import { orderColl } from '@/shared/api/mongodb';
-import { ClientSession } from 'mongodb';
+import type { ClientSession } from 'mongodb';
 import { koreaTime } from '@/shared/lib/koreaTime';
 import type { OrderLine } from './orderPolicy';
 

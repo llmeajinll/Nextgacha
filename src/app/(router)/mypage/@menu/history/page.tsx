@@ -8,6 +8,7 @@ import { History } from '@/entities/order/ui';
 import type { OrderView } from '@/entities/order/model/types';
 import { EmptyCard } from '@/shared/ui';
 import CancelOrderBtn from '@/features/order-cancel/ui/CancelOrderBtn';
+import ExchangeRequestBtn from '@/features/order-cancel/ui/ExchangeRequestBtn';
 import { Pagination } from '@/shared/ui';
 import { grid, paginationWrap } from './page.css';
 
@@ -78,8 +79,12 @@ export default function HistoryPage() {
                   props={val}
                   key={val.orderId}
                   action={
-                    val.status === '상품 확인중' && (
+                    val.status === '상품 확인중' ? (
                       <CancelOrderBtn orderId={val.orderId} onCanceled={() => fetchHistoryData(currentPage)} />
+                    ) : (
+                      val.status === '배송 완료' && (
+                        <ExchangeRequestBtn orderId={val.orderId} onRequested={() => fetchHistoryData(currentPage)} />
+                      )
                     )
                   }
                 />

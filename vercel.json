@@ -3,5 +3,6 @@
     "env": {
       "NEXT_PRIVATE_SKIP_CACHE": "1"
     }
-  }
+  },
+  "crons": [{ "path": "/api/cron/overdue-orders", "schedule": "0 0 * * *" }]
 }

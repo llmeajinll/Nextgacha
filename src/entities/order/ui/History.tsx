@@ -35,6 +35,8 @@ const STATUS_TEXT: Record<string, string> = {
   배송중: 'sending',
   '배송 완료': 'finish',
   환불: 'refund',
+  '교환 요청': 'exchange requested',
+  '교환 완료': 'exchanged',
 };
 
 function ReceiptLabel({

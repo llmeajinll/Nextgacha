@@ -48,6 +48,8 @@ export const statusTone = styleVariants({
   배송중: [tagTone.info],
   '배송 완료': [tagTone.success],
   환불: [tagTone.danger],
+  '교환 요청': [tagTone.warning],
+  '교환 완료': [tagTone.success],
 });
 
 export const total = style({ marginLeft: 'auto', fontSize: 18, fontWeight: 600, letterSpacing: -0.6 });

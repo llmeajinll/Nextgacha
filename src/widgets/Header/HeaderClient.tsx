@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 
 import Search from '@/features/search/ui/Search';
 import MegaMenu from './MegaMenu';
+import NotificationBell from '@/features/notification/ui/NotificationBell';
 import {
   headerContainer,
   bar,
@@ -94,6 +95,7 @@ export default function Header({
 
               <div className={tools}>
                 <Search />
+                <NotificationBell />
                 {session?.user ? (
                   <button className={menu} onClick={() => signOut()}>
                     LOGOUT

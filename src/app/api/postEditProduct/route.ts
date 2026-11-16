@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server';
 import { auth } from '@/auth';
 import { productColl } from '@/shared/api/mongodb';
 import { logAdmin } from '@/shared/api/adminLog';
+import { notifyUser } from '@/shared/api/notifyUser';
 import { koreaTime } from '@/shared/lib/koreaTime';
 import { parseProductEdit } from '@/entities/product/lib/parseProductForm';
 
@@ -19,10 +20,18 @@ export async function POST(req: Request) {
     const before = await productColl.findOneAndUpdate(
       { num },
       { $set: { price, discount, isDiscount: discount > 0, list, updated_at: koreaTime() } },
-      { projection: { _id: 0, price: 1, discount: 1, list: 1 } },
+      { projection: { _id: 0, price: 1, discount: 1, list: 1, title: 1, restockSubs: 1 } },
     );
     if (!before) {
       return NextResponse.json({ ok: false, message: 'not found' }, { status: 404 });
+    }
+    // 품절이던 상품에 재고가 생기면 재입고 알림 신청자에게 알리고 신청·예정 시각을 비운다
+    const hasStock = (l: { count: number }[] = []) => l.some((o) => o.count > 0);
+    if (!hasStock(before.list) && hasStock(list)) {
+      await notifyUser(before.restockSubs ?? [], `${before.title}가 재입고되었습니다.`, `/${num}`).catch((e) =>
+        console.error('재입고 알림 실패:', num, e instanceof Error ? e.message : e),
+      );
+      await productColl.updateOne({ num }, { $set: { restockSubs: [], restockAt: null } });
     }
     const same = (a: unknown, b: unknown) => JSON.stringify(a) === JSON.stringify(b);
     await logAdmin((await auth())?.user?.email, [

@@ -17,3 +17,4 @@ export { default as EmptyState } from './EmptyState/EmptyState';
 export { default as Pagination } from './Pagination/Pagination';
 export { default as CountTab } from './CountTab/CountTab';
 export { default as Drawer } from './Drawer/Drawer';
+export { default as Chip } from './Chip/Chip';

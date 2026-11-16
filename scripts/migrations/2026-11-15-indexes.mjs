@@ -22,6 +22,8 @@ const TTL = [
   ['error', 'createdAt', 183 * DAY, { type: 'system' }],
   // 관리자 작업 기록 5년
   ['adminLog', 'createdAt', 5 * 365 * DAY, undefined],
+  // 사이트 안 알림 90일
+  ['notification', 'createdAt', 90 * DAY, undefined],
 ];
 
 const client = new MongoClient(process.env.MONGODB_URI);
@@ -51,6 +53,7 @@ try {
     );
     console.log(`${coll}.${field} TTL ${Math.round(seconds / DAY)}일 OK`);
   }
+  await db.collection('notification').createIndex({ email: 1, createdAt: -1 });
   // page_views(GA4 이전으로 수집 중단)는 날짜가 KST 문자열이라 TTL이 안 먹는다
   // → 마지막 방문(lastVisit) + 12개월을 Date로 expireAt에 넣고, expireAt 시각에 지우는 TTL을 건다
   const pv = db.collection('page_views');

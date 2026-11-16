@@ -12,7 +12,7 @@ export async function POST() {
   const email = (await auth())?.user?.email;
   if (!email) return NextResponse.json({ ok: false, message: '로그인이 필요합니다.' }, { status: 401 });
 
-  const active = await orderColl.countDocuments({ email, status: { $in: ['상품 확인중', '배송중'] } });
+  const active = await orderColl.countDocuments({ email, status: { $in: ['상품 확인중', '배송중', '교환 요청'] } });
   if (active > 0) {
     return NextResponse.json(
       { ok: false, message: '진행 중인 주문이 있어 탈퇴할 수 없습니다. 배송이 끝난 뒤 다시 시도해주세요.' },

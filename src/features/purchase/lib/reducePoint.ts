@@ -1,6 +1,6 @@
 import { userColl } from '@/shared/api/mongodb';
-import { ClientSession } from 'mongodb';
-import { mergeKeep, overCapItem, OrderLine } from './orderPolicy';
+import type { ClientSession } from 'mongodb';
+import { mergeKeep, overCapItem, type OrderLine } from './orderPolicy';
 
 // 포인트 차감 + 배송중(keep)에 주문 수량 추가.
 // 트랜잭션 안에서 user 문서를 읽고 쓰므로, 동시 결제는 write conflict로 직렬화된다.

@@ -22,6 +22,8 @@ export async function GET(req: Request) {
           from: 'product',
           localField: 'like',
           foreignField: 'num',
+          // 재입고 알림 신청자 이메일은 내보내지 않는다
+          pipeline: [{ $project: { restockSubs: 0 } }],
           as: 'likedItems',
         },
       },

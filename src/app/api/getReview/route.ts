@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server';
 import { reviewColl } from '@/shared/api/mongodb';
 import { maskEmail } from '@/shared/lib/maskEmail';
 import { auth } from '@/auth';
+import { daysBefore, REVIEW_EDIT_DAYS } from '@/shared/lib/businessDays';
 import type { ReviewProps } from '@/entities/review/model/types';
 
 export async function GET(req: Request) {
@@ -70,10 +71,13 @@ export async function GET(req: Request) {
     const totalCount = facetResult.metadata[0]?.total || 0;
     // 작성자 이메일 원문은 내보내지 않는다. 본인 리뷰인지는 서버가 계산 (삭제 버튼)
     const email = (await auth())?.user?.email;
+    const editFrom = daysBefore(REVIEW_EDIT_DAYS);
     const result = facetResult.data.map((review) => ({
       ...review,
       user: maskEmail(review.user),
       isMine: !!email && review.user === email,
+      // 작성 후 5일 안의 본인 리뷰만 수정 가능 (updateReview가 다시 확인)
+      canEdit: !!email && review.user === email && review.created_at >= editFrom,
     }));
     const hasMore = (page + 1) * limit < totalCount;
 
