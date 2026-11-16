@@ -1,6 +1,7 @@
 'use client';
 
 import Image from 'next/image';
+import { useRouter } from 'next/navigation';
 import React, { useState } from 'react';
 import { Plus } from 'pixelarticons/react';
 import { Btn, ImgBtn } from '@/shared/ui';
@@ -8,6 +9,7 @@ import { CardProps } from '@/entities/product/model/types';
 import { comma } from '@/shared/lib/comma';
 import { toKoreaTime } from '@/shared/lib/koreaTime';
 import postEditProduct from '../api/postEditProduct';
+import RestockControl from './RestockControl';
 import * as s from './productManageRow.css';
 
 export type ProductStatus = 'sale' | 'reserve' | 'soldout';
@@ -49,6 +51,7 @@ export default function ProductManageRow({
   onToggle: () => void;
   onSaved: (p: CardProps) => void;
 }) {
+  const router = useRouter();
   const [draft, setDraft] = useState<Draft | null>(null);
   const [submitted, setSubmitted] = useState(false);
   const [sending, setSending] = useState(false);
@@ -111,15 +114,25 @@ export default function ProductManageRow({
         <span className={s.center}>
           <span className={s.statusTag[status]}>{STATUS[status]}</span>
         </span>
-        <button
-          type='button'
-          aria-expanded={editing}
-          aria-label={`${product.title} ${editing ? '수정 닫기' : '수정'}`}
-          className={editing ? s.editBtnOn : s.editBtn}
-          onClick={toggle}
-        >
-          {editing ? '닫기' : '수정'}
-        </button>
+        <div className={s.btnGroup}>
+          <button
+            type='button'
+            aria-label={`${product.title} 수정 (상품 추가/수정 페이지)`}
+            className={s.fullEditBtn}
+            onClick={() => router.push(`/manager/product_add?edit=${product.num}`)}
+          >
+            수정
+          </button>
+          <button
+            type='button'
+            aria-expanded={editing}
+            aria-label={`${product.title} ${editing ? '간편 수정 닫기' : '간편 수정 열기'}`}
+            className={editing ? s.quickBtnOn : s.quickBtn}
+            onClick={toggle}
+          >
+            {editing ? '닫기' : '간편수정'}
+          </button>
+        </div>
       </div>
 
       {editing && draft && (
@@ -170,6 +183,7 @@ function Editor({
   onCancel: () => void;
   onSave: (edit: { num: number; price: number; discount: number; list: { name: string; count: number }[] } | null) => void;
 }) {
+  const router = useRouter();
   const price = Number(draft.price);
   const disc = Math.min(Math.max(Number(draft.discount) || 0, 0), 99);
   const priceBad = !(Number.isInteger(price) && price > 0);
@@ -191,8 +205,17 @@ function Editor({
   return (
     <div className={s.editor}>
       <div className={s.editorHead}>
-        <span className={s.editorKind}>EDIT</span>
-        <span className={s.editorTitle}>{product.title}</span>
+        <div className={s.editorHeadLeft}>
+          <span className={s.editorKind}>EDIT</span>
+          <span className={s.editorTitle}>{product.title}</span>
+        </div>
+        <button
+          type='button'
+          className={s.editorFullBtn}
+          onClick={() => router.push(`/manager/product_add?edit=${product.num}`)}
+        >
+          제목·전체 정보 수정 ↗
+        </button>
       </div>
       <div className={s.editorBody}>
         <div className={s.priceGrid}>
@@ -301,6 +324,8 @@ function Editor({
             옵션 추가
           </button>
         </div>
+
+        <RestockControl product={product} />
 
         <div className={s.actions}>
           {((submitted && invalid) || sendError) && (

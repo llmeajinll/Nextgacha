@@ -51,3 +51,6 @@ export const tabLink = style({
     '&:focus-visible': { outline: `2px solid ${color.blue2}`, outlineOffset: -2 },
   },
 });
+
+// 로고 오른쪽 끝의 알림 종
+export const topBell = style({ marginLeft: 'auto' });

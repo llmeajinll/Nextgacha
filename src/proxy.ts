@@ -26,6 +26,8 @@ const ADMIN_API_PATHS = [
   '/api/postNoticeDelete',
   '/api/postNoticeImage',
   '/api/postReviewHide',
+  '/api/postRestock',
+  '/api/postExchange',
 ];
 
 export default auth((req) => {
@@ -124,6 +126,8 @@ export const config = {
     '/api/postNoticeDelete',
     '/api/postNoticeImage',
     '/api/postReviewHide',
+    '/api/postRestock',
+    '/api/postExchange',
     '/mypage/:path*',
     '/manager/:path*',
     '/search',

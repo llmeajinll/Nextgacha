@@ -499,6 +499,46 @@ export const previewBox = style({
   justifyContent: 'center',
 });
 
+export const thumbDelete = style({
+  position: 'absolute',
+  right: 2,
+  top: 2,
+  zIndex: 2,
+  width: 24,
+  height: 24,
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'center',
+  backgroundColor: 'rgba(0, 0, 0, 0.6)',
+  color: 'white',
+  border: 'none',
+  cursor: 'pointer',
+  padding: 0,
+  selectors: {
+    '&:hover': {
+      backgroundColor: 'rgba(0, 0, 0, 0.85)',
+    },
+  },
+});
+
+export const blockPreview = style({
+  margin: 12,
+  display: 'flex',
+  flexDirection: 'column',
+  gap: 8,
+  alignItems: 'center',
+  padding: 12,
+  border: `1px solid ${vars.slate[200]}`,
+  backgroundColor: vars.slate[50],
+});
+
+export const blockPreviewImg = style({
+  maxWidth: '100%',
+  height: 'auto',
+  maxHeight: 300,
+  objectFit: 'contain',
+});
+
 // theme의 globalStyle('div', { color })가 상속을 끊으므로 컨테이너 안 div는 부모 색을 따르게
 globalStyle(`${container} div`, { color: 'inherit' });
 

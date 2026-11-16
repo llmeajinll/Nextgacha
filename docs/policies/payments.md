@@ -41,3 +41,12 @@
 - 이유: 지금은 환불할 때마다 orderId로 Toss를 한 번 더 조회한다. 대사·고객 문의 때도 주문과 결제를 바로 연결할 수 없다.
 - 코드: 저장 `src/features/purchase/lib/addOrder.ts:39`, 취소 `src/features/purchase/lib/toss.ts` `cancelOrderPayment`(없으면 orderId 조회). 조회 API(`getHistory`, `getOneHistory`)는 `paymentKey`를 내보내지 않는다
 - 변경 이력: 2026-11-09 신설, 2026-11-10 확정, 2026-11-15 구현
+
+## 결제창 이탈 및 모달 종료 시 상태 정리
+- 상태: 확정
+- 정책: Toss 결제창이 열려 있는 상태에서 페이지를 벗어나거나 결제를 취소/종료할 때, `localStorage`의 대기 중인 주문 데이터(`pending_order_items`, `address`, `used_point`)를 즉시 파기하고 구매 버튼의 비활성화(disabled/loading) 상태를 초기화한다. 또한 결제 인증 중 사용자의 실수로 인한 창 닫기나 뒤로가기를 방지하도록 `beforeunload` 경고를 건다.
+- 예외: 정상 결제 승인 리다이렉트(`/success`)로 넘어가는 순간에는 백엔드 `/api/postPaymentsConfirm` 호출을 위해 임시 데이터를 보존하고, 승인 성공 직후 삭제한다.
+- 이유: 결제를 취소/이탈했는데 이전 주문 정보가 스토리지에 남아 있으면 다음 결제 시 오작동을 유발할 수 있고, 사용자의 실수로 결제가 중단되는 경험을 줄이기 위함이다.
+- 코드: `src/features/purchase/ui/BuyBtn.tsx`
+- 변경 이력: 2026-11-16 신설
+

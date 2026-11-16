@@ -22,6 +22,9 @@ export type CardProps = {
   updated_at: string;
   discount: number;
   isDiscount: boolean;
+  // 재입고 예정 시각(관리자가 정함)과 내가 재입고 알림을 신청했는지 (getOneProduct)
+  restockAt?: string | null;
+  restockRequested?: boolean;
   // 할인 기간 (없으면 제한 없음). 쇼핑몰 조회는 서버가 기간을 반영한 discount를 내려준다
   discountStart?: string | null;
   discountEnd?: string | null;

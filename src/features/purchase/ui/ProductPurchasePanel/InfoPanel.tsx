@@ -12,6 +12,7 @@ import { useModal } from '@/shared/hooks';
 
 import { Btn, ImgBtn, ReactSlick, Range } from '@/shared/ui';
 import BuyBtn from '@/features/purchase/ui/BuyBtn';
+import RestockAlert from '@/features/purchase/ui/RestockAlert';
 import { HeartBtn } from '@/entities/product/ui';
 import { DropDown } from '@/features/cart/ui';
 import { LabelTitle } from '@/shared/ui';
@@ -152,6 +153,7 @@ export default function InfoPanel({ props }: { props: CardProps }) {
             </Range>
 
             <DropDown props={props} status={props.reserve !== ''} />
+            {!props.reserve && <RestockAlert product={props} />}
 
             <Range width='full' preset='between' gap='10'>
               <BuyBtn

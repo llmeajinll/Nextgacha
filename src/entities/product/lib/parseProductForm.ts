@@ -8,7 +8,7 @@ export type ProductForm = {
   group: string[];
   list: { name: string; count: number }[];
   reserve: { start: Date; end: Date; ship: Date } | null;
-  detail: ({ type: 'text'; text: string } | { type: 'image' })[];
+  detail: ({ type: 'text'; text: string } | { type: 'image'; url?: string })[];
 };
 
 const text = (v: unknown, max: number) =>
@@ -45,7 +45,11 @@ function parseList(raw: unknown, minCount: number) {
   return new Set(names).size === names.length ? (list as ProductForm['list']) : null;
 }
 
-export function parseProductForm(f: Record<string, unknown>): ProductForm | null {
+export function parseProductForm(
+  f: Record<string, unknown>,
+  options: { minCount?: number } = {},
+): ProductForm | null {
+  const minCount = options.minCount ?? 1;
   const title = text(f.title, 100);
   const price = int(f.price, 1, 10_000_000);
   const discount = f.discount ? int(f.discount, 0, 99) : 0;
@@ -57,7 +61,7 @@ export function parseProductForm(f: Record<string, unknown>): ProductForm | null
   const group = groupRaw.map((g) => text(g, 30));
   if (group.some((g) => g === null)) return null;
 
-  const list = parseList(json(f.list), 1);
+  const list = parseList(json(f.list), minCount);
   if (!list) return null;
 
   let reserve: ProductForm['reserve'] = null;
@@ -72,7 +76,10 @@ export function parseProductForm(f: Record<string, unknown>): ProductForm | null
   const detailRaw = json(f.detail ?? '[]');
   if (!Array.isArray(detailRaw) || detailRaw.length > 30) return null;
   const detail = detailRaw.map((b) => {
-    if (b?.type === 'image') return { type: 'image' as const };
+    if (b?.type === 'image') {
+      const u = typeof b.url === 'string' && b.url.trim().length > 0 ? b.url.trim() : undefined;
+      return u ? { type: 'image' as const, url: u } : { type: 'image' as const };
+    }
     const t = b?.type === 'text' ? text(b.text, 2000) : null;
     return t === null ? null : { type: 'text' as const, text: t };
   });

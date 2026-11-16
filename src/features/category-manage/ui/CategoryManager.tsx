@@ -1,7 +1,8 @@
 'use client';
 
 import { useRef, useState, type KeyboardEvent } from 'react';
-import { Close, Menu, Trash } from 'pixelarticons/react';
+import { Trash } from 'pixelarticons/react';
+import { Chip } from '@/shared/ui';
 import type { CategoryMenu } from '@/entities/product/model/types';
 import { RESERVED_GROUP_NAMES } from '@/entities/product/lib/parseCategoryMenu';
 import postCategoryMenu from '../api/postCategoryMenu';
@@ -261,10 +262,11 @@ export default function CategoryManager({ initial }: { initial: CategoryMenu }) 
                   }}
                 >
                   {sb.items.map((val, idx) => (
-                    <span
+                    <Chip
                       key={val}
+                      label={val}
                       draggable
-                      className={drag?.val === val && drag.sub === sb.id ? `${s.chip} ${s.chipDragging}` : s.chip}
+                      dragging={drag?.val === val && drag.sub === sb.id}
                       onDragStart={(e) => {
                         e.dataTransfer.effectAllowed = 'move';
                         e.dataTransfer.setData('text/plain', val);
@@ -285,29 +287,17 @@ export default function CategoryManager({ initial }: { initial: CategoryMenu }) 
                         else if (menu !== drag.start) saveOrderSoon(menu);
                         setDrag(null);
                       }}
-                    >
-                      <button
-                        type='button'
-                        className={s.gripBtn}
-                        aria-label={`${val} 순서 옮기기`}
-                        aria-describedby='order-hint'
-                        title='끌거나 ←/→ 키로 순서 바꾸기'
-                        onKeyDown={(e) => moveByKey(e, sb.id, sb.items, val)}
-                      >
-                        <Menu aria-hidden />
-                      </button>
-                      {val}
-                      <button
-                        type='button'
-                        className={s.chipXBtn}
-                        aria-label={`${val} 삭제`}
-                        title='삭제'
-                        disabled={saving}
-                        onClick={() => setItems(sb.id, sb.items.filter((v) => v !== val))}
-                      >
-                        <Close aria-hidden />
-                      </button>
-                    </span>
+                      grip={{
+                        ariaLabel: `${val} 순서 옮기기`,
+                        describedBy: 'order-hint',
+                        title: '끌거나 ←/→ 키로 순서 바꾸기',
+                        onKeyDown: (e) => moveByKey(e, sb.id, sb.items, val),
+                      }}
+                      removeTitle='삭제'
+                      removeAriaLabel={`${val} 삭제`}
+                      removeDisabled={saving}
+                      onRemove={() => setItems(sb.id, sb.items.filter((v) => v !== val))}
+                    />
                   ))}
                   {sb.items.length === 0 && <span className={s.empty}>아직 항목이 없어요.</span>}
                 </div>

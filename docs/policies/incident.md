@@ -13,9 +13,9 @@
 
 ## 감지
 - 상태: 확정
-- 정책: 시스템 에러는 Sentry로 모으고, P1에 해당하는 실패(결제 취소 실패, 환불 DB 실패, 결제 대사 불일치)는 관리자 카카오톡으로 바로 알린다. 방법은 [에러 알림](./engineering.md#에러-알림).
-- 코드: 카카오톡 `src/shared/api/recordSystemError.ts` (`cancelPayment`, `cancelIfApproved`, `src/features/purchase/lib/refundOrder.ts`, `src/app/api/webhooks/toss/route.ts`에서 호출). Sentry 미구현
-- 변경 이력: 2026-11-10 신설, 2026-11-11 확정 (Sentry + 관리자 카카오톡)
+- 정책: 시스템 에러는 Next `onRequestError` 훅으로 `errorColl`에 남기고(`/manager/error`), 자세한 로그는 Vercel 런타임 로그에서 본다. P1에 해당하는 실패(결제 취소 실패, 환불 DB 실패, 결제 대사 불일치)는 관리자 카카오톡으로 바로 알린다. 방법은 [에러 알림](./engineering.md#에러-알림).
+- 코드: 카카오톡 `src/shared/api/recordSystemError.ts` (`cancelPayment`, `cancelIfApproved`, `src/features/purchase/lib/refundOrder.ts`, `src/app/api/webhooks/toss/route.ts`에서 호출), 처리되지 않은 서버 에러 `src/instrumentation.ts`. Sentry는 쓰지 않는다(다시 볼 때는 [에러 알림](./engineering.md#에러-알림))
+- 변경 이력: 2026-11-10 신설, 2026-11-11 확정 (Sentry + 관리자 카카오톡), 2026-11-16 Sentry 대신 `onRequestError` + Vercel 런타임 로그
 
 ## 대응 순서
 - 상태: 확정

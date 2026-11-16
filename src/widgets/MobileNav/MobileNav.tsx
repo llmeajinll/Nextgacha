@@ -4,7 +4,8 @@ import React from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { Bell, Grid3x3, Home, Search, User } from 'pixelarticons/react';
-import { topBar, logo, bottomBar, tabLink } from './mobileNav.css';
+import NotificationBell from '@/features/notification/ui/NotificationBell';
+import { topBar, logo, bottomBar, tabLink, topBell } from './mobileNav.css';
 
 const CATEGORY = '/search?type=main&tag=전체 상품&page=1';
 
@@ -26,6 +27,9 @@ export default function MobileNav() {
         <Link href='/' className={logo} aria-label='NEXTGACHA 홈'>
           NEXTGACHA
         </Link>
+        <div className={topBell}>
+          <NotificationBell />
+        </div>
       </header>
       <nav aria-label='쇼핑몰 메뉴' className={bottomBar}>
         {TABS.map(({ label, href, Icon, on }) => (

@@ -1,16 +1,17 @@
 'use client';
 
-import React, { useEffect, useMemo, useRef, useState } from 'react';
+import React, { Suspense, useEffect, useMemo, useRef, useState } from 'react';
 import Image from 'next/image';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { useQuery } from '@tanstack/react-query';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
-import { Calendar, Image as ImageIcon, Plus, Upload } from 'pixelarticons/react';
+import { Calendar, Close, Image as ImageIcon, Plus, Upload } from 'pixelarticons/react';
 import getCategoryMenu from '@/entities/product/api/getCategoryMenu';
+import getOneProduct from '@/entities/product/api/getOneProduct';
 import { Card } from '@/entities/product/ui';
 import type { CardProps } from '@/entities/product/model/types';
-import { Btn, DropDown, ImgBtn, ToggleBtn } from '@/shared/ui';
+import { Btn, Chip, DropDown, ImgBtn, ToggleBtn } from '@/shared/ui';
 import { comma } from '@/shared/lib/comma';
 import { textareaBox, textareaCount } from '@/styles/ui.css';
 import * as s from './page.css';
@@ -19,15 +20,21 @@ const MAX_IMAGES = 5;
 // Vercel 함수 요청 본문 한도(4.5MB)보다 조금 작게
 const MAX_UPLOAD_BYTES = 4 * 1024 * 1024;
 
-type Block = { id: number; type: 'text'; text: string } | { id: number; type: 'image'; file: File | null };
+type Block = { id: number; type: 'text'; text: string } | { id: number; type: 'image'; file: File | null; url?: string };
 
 const pad = (n: number) => String(n).padStart(2, '0');
 const ymd = (d: Date) => `${d.getFullYear()}.${pad(d.getMonth() + 1)}.${pad(d.getDate())}`;
 
-export default function ProductAddPage() {
+function ProductAddForm() {
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const editParam = searchParams.get('edit') || searchParams.get('num');
+  const editNum = editParam && Number.isInteger(Number(editParam)) ? Number(editParam) : null;
+  const isEdit = editNum !== null;
+
   const { data: menu } = useQuery({ queryKey: ['categoryMenu'], queryFn: getCategoryMenu });
 
+  const [loadingInitial, setLoadingInitial] = useState(isEdit);
   const [title, setTitle] = useState('');
   const [company, setCompany] = useState('');
   const [group, setGroup] = useState<string[]>([]);
@@ -41,7 +48,11 @@ export default function ProductAddPage() {
   const [resStart, setResStart] = useState<Date | null>(null);
   const [resEnd, setResEnd] = useState<Date | null>(null);
   const [resShip, setResShip] = useState<Date | null>(null);
+
+  // 대표 이미지: 기존 URL과 새로 선택한 파일들
+  const [existingImages, setExistingImages] = useState<string[]>([]);
   const [images, setImages] = useState<File[]>([]);
+
   const nextId = useRef(3);
   const [blocks, setBlocks] = useState<Block[]>([
     { id: 1, type: 'text', text: '' },
@@ -51,8 +62,54 @@ export default function ProductAddPage() {
   const [sending, setSending] = useState(false);
   const [sendError, setSendError] = useState('');
 
-  const imageUrls = useMemo(() => images.map((f) => URL.createObjectURL(f)), [images]);
-  useEffect(() => () => imageUrls.forEach((u) => URL.revokeObjectURL(u)), [imageUrls]);
+  // 수정 모드일 때 기존 데이터 불러오기
+  useEffect(() => {
+    if (!editNum) return;
+    let ignore = false;
+    getOneProduct(editNum)
+      .then((data) => {
+        if (ignore || !data) return;
+        setTitle(data.title || '');
+        setCompany(data.company || '');
+        setGroup(data.group || []);
+        setPrice(String(data.price || ''));
+        setDiscount(data.discount ? String(data.discount) : '');
+        if (data.list && data.list.length > 0) {
+          setList(data.list.map((o) => ({ name: o.name, count: String(o.count) })));
+        }
+        if (data.reserve) {
+          setReserve(true);
+          setResShip(new Date(data.reserve));
+          if (data.reserveStart) setResStart(new Date(data.reserveStart));
+          if (data.reserveEnd) setResEnd(new Date(data.reserveEnd));
+        }
+        if (data.image && data.image.length > 0) {
+          setExistingImages(data.image);
+        }
+        if (data.detail && data.detail.length > 0) {
+          setBlocks(
+            data.detail.map((b, i) =>
+              b.type === 'text'
+                ? { id: i + 1, type: 'text', text: b.text }
+                : { id: i + 1, type: 'image', file: null, url: b.url },
+            ),
+          );
+          nextId.current = data.detail.length + 1;
+        }
+      })
+      .finally(() => {
+        if (!ignore) setLoadingInitial(false);
+      });
+
+    return () => {
+      ignore = true;
+    };
+  }, [editNum]);
+
+  const newImageUrls = useMemo(() => images.map((f) => URL.createObjectURL(f)), [images]);
+  useEffect(() => () => newImageUrls.forEach((u) => URL.revokeObjectURL(u)), [newImageUrls]);
+
+  const allImageUrls = useMemo(() => [...existingImages, ...newImageUrls], [existingImages, newImageUrls]);
 
   const priceNum = Number(price) || 0;
   const disc = Math.min(Math.max(Number(discount) || 0, 0), 99);
@@ -61,10 +118,13 @@ export default function ProductAddPage() {
   const names = list.map((o) => o.name.trim());
   const optionErrors = list.map((o, i) => {
     const nameBad = !names[i];
-    const countBad = !(Number.isInteger(Number(o.count)) && Number(o.count) > 0);
+    const n = Number(o.count);
+    const countBad = isEdit
+      ? !(Number.isInteger(n) && n >= 0 && o.count !== '')
+      : !(Number.isInteger(n) && n > 0);
     if (nameBad && countBad) return '옵션 이름과 수량을 입력해 주세요.';
     if (nameBad) return '옵션 이름을 입력해 주세요.';
-    if (countBad) return '수량을 1개 이상 입력해 주세요.';
+    if (countBad) return isEdit ? '수량을 0개 이상 입력해 주세요.' : '수량을 1개 이상 입력해 주세요.';
     if (names.indexOf(names[i]) !== i) return '같은 이름의 옵션이 있어요.';
     return '';
   });
@@ -72,7 +132,7 @@ export default function ProductAddPage() {
   const blockErrors = blocks.map((b) =>
     b.type === 'text'
       ? b.text.trim() ? '' : '글을 입력하거나 블록을 지워 주세요.'
-      : b.file ? '' : '이미지를 선택하거나 블록을 지워 주세요.',
+      : b.file || b.url ? '' : '이미지를 선택하거나 블록을 지워 주세요.',
   );
   const errors = {
     name: !title.trim(),
@@ -82,7 +142,7 @@ export default function ProductAddPage() {
     resStart: reserve && !resStart,
     resEnd: reserve && (!resEnd || resOrderBad),
     resShip: reserve && !resShip,
-    image: images.length === 0,
+    image: allImageUrls.length === 0,
     block: blockErrors.some(Boolean),
   };
   const invalid = Object.values(errors).some(Boolean);
@@ -99,13 +159,24 @@ export default function ProductAddPage() {
 
   const setOption = (i: number, key: 'name' | 'count', v: string) =>
     setList(list.map((o, j) => (j === i ? { ...o, [key]: v } : o)));
+
   const moveBlock = (i: number, d: number) => {
     const next = [...blocks];
     [next[i], next[i + d]] = [next[i + d], next[i]];
     setBlocks(next);
   };
+
   const addBlock = (type: Block['type']) =>
     setBlocks([...blocks, type === 'text' ? { id: nextId.current++, type, text: '' } : { id: nextId.current++, type, file: null }]);
+
+  const removeImageAt = (index: number) => {
+    if (index < existingImages.length) {
+      setExistingImages(existingImages.filter((_, i) => i !== index));
+    } else {
+      const newIdx = index - existingImages.length;
+      setImages(images.filter((_, i) => i !== newIdx));
+    }
+  };
 
   const submit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -120,6 +191,10 @@ export default function ProductAddPage() {
     }
 
     const fd = new FormData();
+    if (isEdit && editNum) {
+      fd.append('num', String(editNum));
+      fd.append('keepImages', JSON.stringify(existingImages));
+    }
     fd.append('title', title);
     fd.append('company', company);
     fd.append('group', JSON.stringify(group));
@@ -132,14 +207,22 @@ export default function ProductAddPage() {
       fd.append('reserveShip', resShip.toISOString());
     }
     images.forEach((f) => fd.append('image', f));
-    fd.append('detail', JSON.stringify(blocks.map((b) => (b.type === 'text' ? { type: 'text', text: b.text } : { type: 'image' }))));
+
+    // 상세 블록: 새 파일이 있으면 { type: 'image' }로 슬롯 비우고 detailImage append,
+    // 기존 이미지가 그대로면 { type: 'image', url: b.url } 전송
+    const detailPayload = blocks.map((b) => {
+      if (b.type === 'text') return { type: 'text', text: b.text };
+      if (b.file) return { type: 'image' };
+      return { type: 'image', url: b.url };
+    });
+    fd.append('detail', JSON.stringify(detailPayload));
     blocks.forEach((b) => b.type === 'image' && b.file && fd.append('detailImage', b.file));
 
     setSending(true);
     const res = await fetch('/api/postProduct', { method: 'POST', body: fd }).catch(() => null);
     setSending(false);
     if (!res?.ok) {
-      setSendError('등록하지 못했어요. 입력값을 확인하고 다시 시도해 주세요.');
+      setSendError(isEdit ? '수정하지 못했어요. 입력값을 확인하고 다시 시도해 주세요.' : '등록하지 못했어요. 입력값을 확인하고 다시 시도해 주세요.');
       return;
     }
     router.push('/manager/product_manage');
@@ -159,25 +242,38 @@ export default function ProductAddPage() {
     price: priceNum,
     discount: disc,
     isDiscount: disc > 0,
-    image: imageUrls,
+    image: allImageUrls,
     create: reserve ? '' : 'new',
     reserve: reserve && resShip ? resShip.toISOString() : '',
     like: false,
-    num: 0,
+    num: editNum || 0,
   } as CardProps;
+
+  if (loadingInitial) {
+    return (
+      <div className={s.container}>
+        <section className={s.titleSection}>
+          <span className={s.eyebrow}>EDIT PRODUCT</span>
+          <h1 className={s.title}>상품 정보 불러오는 중…</h1>
+        </section>
+      </div>
+    );
+  }
 
   return (
     <div className={s.container}>
       <section className={s.titleSection}>
-        <span className={s.eyebrow}>ADD PRODUCT</span>
-        <h1 className={s.title}>상품 추가</h1>
+        <span className={s.eyebrow}>{isEdit ? 'EDIT PRODUCT' : 'ADD PRODUCT'}</span>
+        <h1 className={s.title}>{isEdit ? `상품 수정 · #${editNum}` : '상품 추가'}</h1>
         <p className={s.subText}>
-          새 캡슐토이 상품을 등록합니다. <span className={s.required}>*</span> 표시는 필수 항목이에요.
+          {isEdit
+            ? '상품의 모든 정보(제목, 이미지, 카테고리, 옵션 등)를 수정합니다. * 표시는 필수 항목이에요.'
+            : '새 캡슐토이 상품을 등록합니다. * 표시는 필수 항목이에요.'}
         </p>
       </section>
 
       <div className={s.columns}>
-        <form aria-label='상품 등록' className={s.form} onSubmit={submit} noValidate>
+        <form aria-label={isEdit ? '상품 수정' : '상품 등록'} className={s.form} onSubmit={submit} noValidate>
           {/* 01 기본 정보 */}
           <section className={s.panel}>
             <div className={s.panelHead}>
@@ -233,16 +329,12 @@ export default function ProductAddPage() {
               {group.length > 0 && (
                 <div className={`${s.chips} ${s.fieldFull}`}>
                   {group.map((v) => (
-                    <span key={v} className={s.chip}>
-                      {v}
-                      <ImgBtn
-                        img='close'
-                        size={20}
-                        title={`${v} 카테고리 빼기`}
-                        className={s.iconBtn}
-                        onClick={() => setGroup(group.filter((g) => g !== v))}
-                      />
-                    </span>
+                    <Chip
+                      key={v}
+                      label={v}
+                      removeTitle={`${v} 카테고리 빼기`}
+                      onRemove={() => setGroup(group.filter((g) => g !== v))}
+                    />
                   ))}
                 </div>
               )}
@@ -345,7 +437,7 @@ export default function ProductAddPage() {
                     <div className={`${s.unitRow} ${s.optionQty}`}>
                       <input
                         type='number'
-                        min={1}
+                        min={isEdit ? 0 : 1}
                         inputMode='numeric'
                         value={o.count}
                         onChange={(e) => setOption(i, 'count', e.target.value)}
@@ -461,7 +553,7 @@ export default function ProductAddPage() {
                 </h2>
               </div>
               <span className={s.pixelCount}>
-                {images.length} / {MAX_IMAGES}
+                {allImageUrls.length} / {MAX_IMAGES}
               </span>
             </div>
             <div className={s.panelBody}>
@@ -479,21 +571,39 @@ export default function ProductAddPage() {
                   multiple
                   aria-label='상품 이미지 선택'
                   className={s.fileInput}
-                  onChange={(e) => setImages(Array.from(e.target.files ?? []).slice(0, MAX_IMAGES))}
+                  disabled={allImageUrls.length >= MAX_IMAGES}
+                  onChange={(e) => {
+                    const remain = MAX_IMAGES - existingImages.length;
+                    const selected = Array.from(e.target.files ?? []).slice(0, Math.max(remain, 0));
+                    setImages(selected);
+                  }}
                 />
               </label>
               {imageError && <span className={s.errorText}>이미지를 한 장 이상 올려 주세요.</span>}
               <div className={s.thumbs}>
-                {Array.from({ length: MAX_IMAGES }, (_, i) => (
-                  <div key={i} className={i === 0 ? `${s.thumb} ${s.thumbMain}` : s.thumb}>
-                    {imageUrls[i] ? (
-                      <Image src={imageUrls[i]} alt={`상품 이미지 ${i + 1}`} width={160} height={160} className={s.thumbImg} />
-                    ) : (
-                      i === 0 && <ImageIcon aria-hidden />
-                    )}
-                    {i === 0 && <span className={s.mainBadge}>MAIN</span>}
-                  </div>
-                ))}
+                {Array.from({ length: MAX_IMAGES }, (_, i) => {
+                  const url = allImageUrls[i];
+                  return (
+                    <div key={i} className={i === 0 ? `${s.thumb} ${s.thumbMain}` : s.thumb}>
+                      {url ? (
+                        <>
+                          <Image src={url} alt={`상품 이미지 ${i + 1}`} width={160} height={160} className={s.thumbImg} />
+                          <button
+                            type='button'
+                            title={`${i + 1}번 이미지 삭제`}
+                            className={s.thumbDelete}
+                            onClick={() => removeImageAt(i)}
+                          >
+                            <Close aria-hidden />
+                          </button>
+                        </>
+                      ) : (
+                        i === 0 && <ImageIcon aria-hidden />
+                      )}
+                      {i === 0 && <span className={s.mainBadge}>MAIN</span>}
+                    </div>
+                  );
+                })}
               </div>
             </div>
           </section>
@@ -548,25 +658,32 @@ export default function ProductAddPage() {
                         <span className={textareaCount}>{b.text.length}/2000</span>
                       </div>
                     ) : (
-                      <label className={s.blockDrop}>
-                        <span className={`${s.dropIcon} ${s.blockDropIcon}`}>
-                          <ImageIcon aria-hidden />
-                        </span>
-                        <span className={s.blockDropTitle}>
-                          {b.file ? b.file.name : '상세 이미지'} <span className={s.link}>{b.file ? '바꾸기' : '파일 선택'}</span>
-                        </span>
-                        <span className={s.blockDropHint}>가로 960px 권장 · 세로로 긴 이미지도 괜찮아요</span>
-                        <input
-                          type='file'
-                          accept='image/*'
-                          aria-label={`${i + 1}번 상세 이미지 선택`}
-                          className={s.fileInput}
-                          onChange={(e) => {
-                            const file = e.target.files?.[0] ?? null;
-                            setBlocks(blocks.map((x) => (x.id === b.id ? { ...b, file } : x)));
-                          }}
-                        />
-                      </label>
+                      <>
+                        {b.url && !b.file && (
+                          <div className={s.blockPreview}>
+                            <Image src={b.url} alt={`상세 이미지 ${i + 1}`} width={400} height={300} className={s.blockPreviewImg} />
+                          </div>
+                        )}
+                        <label className={s.blockDrop}>
+                          <span className={`${s.dropIcon} ${s.blockDropIcon}`}>
+                            <ImageIcon aria-hidden />
+                          </span>
+                          <span className={s.blockDropTitle}>
+                            {b.file ? b.file.name : b.url ? '기존 이미지 유지 중' : '상세 이미지'} <span className={s.link}>{b.file || b.url ? '바꾸기' : '파일 선택'}</span>
+                          </span>
+                          <span className={s.blockDropHint}>가로 960px 권장 · 세로로 긴 이미지도 괜찮아요</span>
+                          <input
+                            type='file'
+                            accept='image/*'
+                            aria-label={`${i + 1}번 상세 이미지 선택`}
+                            className={s.fileInput}
+                            onChange={(e) => {
+                              const file = e.target.files?.[0] ?? null;
+                              setBlocks(blocks.map((x) => (x.id === b.id ? { ...b, file } : x)));
+                            }}
+                          />
+                        </label>
+                      </>
                     )}
                   </div>
                   {submitted && blockErrors[i] && <span className={s.errorText}>{blockErrors[i]}</span>}
@@ -598,13 +715,13 @@ export default function ProductAddPage() {
               onClick={(e) => {
                 // Btn은 type을 못 받아서 폼 안에서는 submit 버튼이 됨
                 e.preventDefault();
-                router.push('/manager');
+                router.push('/manager/product_manage');
               }}
             >
               CANCEL
             </Btn>
             <Btn kind='primary' scale='l' px disabled={sending}>
-              {sending ? 'SAVING…' : 'REGISTER'}
+              {sending ? 'SAVING…' : isEdit ? '수정 완료' : 'REGISTER'}
             </Btn>
           </div>
         </form>
@@ -621,5 +738,22 @@ export default function ProductAddPage() {
         </aside>
       </div>
     </div>
+  );
+}
+
+export default function ProductAddPage() {
+  return (
+    <Suspense
+      fallback={
+        <div className={s.container}>
+          <section className={s.titleSection}>
+            <span className={s.eyebrow}>PRODUCT</span>
+            <h1 className={s.title}>불러오는 중…</h1>
+          </section>
+        </div>
+      }
+    >
+      <ProductAddForm />
+    </Suspense>
   );
 }

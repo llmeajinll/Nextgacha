@@ -1,6 +1,6 @@
 import { productColl } from '@/shared/api/mongodb';
-import { ClientSession } from 'mongodb';
-import { OrderLine } from './orderPolicy';
+import type { ClientSession } from 'mongodb';
+import type { OrderLine } from './orderPolicy';
 
 // 재고가 충분한 경우에만 차감. 하나라도 부족하면 throw → 전체 롤백
 export async function reduceStock({

@@ -22,6 +22,11 @@ export const toSending = (orders: Ship[]) =>
 export const toArrive = (orderIds: string[]) =>
   post('/api/postSendingToFinish', { send: 'many', orders: orderIds.map((orderId) => ({ orderId })) });
 
+// 교환 요청 → 교환 완료 (같은 상품을 다시 보냄, 재고 차감) / 반려 (배송 완료로, 사유 10자 이상)
+export const exchangeDone = (orderId: string) => post('/api/postExchange', { orderId, action: 'done' });
+export const exchangeReject = (orderId: string, reason: string) =>
+  post('/api/postExchange', { orderId, action: 'reject', reason });
+
 // 상품 확인중 → 환불 (결제 취소 + 재고·포인트 복구)
 export const refundOrder = (orderId: string, reason: string) =>
   post('/api/postCheckToSending', { send: 'refund', orderId, reason });

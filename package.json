@@ -10,6 +10,7 @@
     "lint": "eslint .",
     "typecheck": "tsc --noEmit",
     "test": "node --test --experimental-strip-types 'src/**/*.test.ts'",
+    "test:db": "node --env-file=.env.local --import ./scripts/ts-alias.mjs --test --test-concurrency=1 --experimental-strip-types 'src/**/*.dbtest.ts'",
     "storybook": "storybook dev -p 6006",
     "build-storybook": "storybook build"
   },

@@ -5,7 +5,7 @@ import { DropDown } from '@/shared/ui';
 import { comma } from '@/shared/lib/comma';
 import { toKoreaTime } from '@/shared/lib/koreaTime';
 import type { AdminOrder } from '../model/status';
-import { refundOrder, toArrive, toSending } from '../api/orderActions';
+import { exchangeDone, exchangeReject, refundOrder, toArrive, toSending } from '../api/orderActions';
 import { textareaBox, textareaCount } from '@/styles/ui.css';
 import * as s from './order.css';
 
@@ -253,6 +253,70 @@ export default function Order({
           </span>
           <span>
             <span className={s.muted}>도착</span> {when(order.arrivedDate, 'YYYY.MM.DD')}
+          </span>
+        </div>
+      )}
+
+      {order.status === '교환 요청' && (
+        <div className={s.foot}>
+          <span>
+            <span className={s.muted}>불량 내용</span> {order.exchangeReason}
+          </span>
+          <div className={s.refundBox}>
+            <label htmlFor={`or-exreason-${order.orderId}`} className={s.label}>
+              반려 사유 (반려할 때만, 10자 이상)
+            </label>
+            <div className={textareaBox}>
+              <textarea
+                id={`or-exreason-${order.orderId}`}
+                rows={2}
+                maxLength={200}
+                value={reason}
+                onChange={(e) => setReason(e.target.value)}
+                placeholder='예: 사진으로 불량을 확인할 수 없어요.'
+                aria-invalid={reasonError && reasonLen < 10}
+                className={reasonError && reasonLen < 10 ? `${s.textarea} ${s.inputError}` : s.textarea}
+              />
+              <span className={textareaCount}>{reason.length}/200</span>
+            </div>
+            <div className={s.refundFoot}>
+              <span role='status' className={s.errorText}>
+                {reasonError && reasonLen < 10 ? '반려 사유를 10자 이상 적어 주세요.' : ''}
+              </span>
+              <button
+                type='button'
+                className={s.rejectBtn}
+                disabled={sending}
+                onClick={() => {
+                  if (reasonLen < 10) {
+                    setReasonError(true);
+                    return;
+                  }
+                  run(() => exchangeReject(order.orderId, reason.trim()), `주문 ${order.orderId}의 교환 요청을 반려했어요.`);
+                }}
+              >
+                반려
+              </button>
+              <button
+                type='button'
+                className={s.primaryBtn}
+                disabled={sending}
+                onClick={() => run(() => exchangeDone(order.orderId), `주문 ${order.orderId}의 교환 상품을 보냈어요. 재고에서 뺐어요.`)}
+              >
+                교환 상품 보내기 (재고 차감)
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {order.status === '교환 완료' && (
+        <div className={`${s.foot} ${s.footRow}`}>
+          <span>
+            <span className={s.muted}>불량 내용</span> {order.exchangeReason}
+          </span>
+          <span>
+            <span className={s.muted}>교환 발송</span> {when(order.exchangedDate ?? '', 'YYYY.MM.DD')}
           </span>
         </div>
       )}

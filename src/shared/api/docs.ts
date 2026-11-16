@@ -39,7 +39,13 @@ export type OrderDoc = {
   reason?: string;
   refundedDate?: string;
   // 구매자가 직접 취소한 주문
-  canceledBy?: 'user';
+  canceledBy?: 'user' | 'system';
+  // 불량 교환 (배송 완료 → 교환 요청 → 교환 완료)
+  exchangeReason?: string;
+  exchangeRequestedDate?: string;
+  exchangedDate?: string;
+  // 관리자가 교환 요청을 거절한 사유 (상태는 배송 완료로 돌아감)
+  exchangeRejected?: string;
   // 회원 탈퇴 후 법정 보관 중인 주문
   withdrawnAt?: Date;
 };
@@ -81,9 +87,19 @@ export type CategoryDoc = {
   groups?: { name: string; items: string[] }[];
 };
 
+// 사이트 안 알림 (재입고 예정, 자동 환불 안내 등). 90일 뒤 TTL로 지움
+export type NotificationDoc = {
+  email: string;
+  message: string;
+  // 눌렀을 때 갈 사이트 안 경로
+  link: string;
+  read: boolean;
+  createdAt: Date;
+};
+
 export type AdminLogDoc = {
   admin: string;
-  action: 'price' | 'stock' | 'discount' | 'refund' | 'invoice';
+  action: 'price' | 'stock' | 'discount' | 'refund' | 'invoice' | 'exchange' | 'other';
   // 상품 num 또는 주문 orderId
   target: number | string;
   before: unknown;

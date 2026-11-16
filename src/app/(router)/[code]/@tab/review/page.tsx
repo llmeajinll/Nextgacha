@@ -7,6 +7,7 @@ import { Range } from '@/shared/ui';
 import getReview from '@/entities/review/api/getReview';
 import { Review } from '@/entities/review/ui';
 import DeleteReviewBtn from '@/features/review-write/ui/DeleteReviewBtn';
+import EditReviewBtn from '@/features/review-write/ui/EditReviewBtn';
 import { emptyState, listWrap, grid, moreBtn } from './page.css';
 
 export default function ReviewTab() {
@@ -60,14 +61,27 @@ export default function ReviewTab() {
                 review.map((val: ReviewProps, idx: number) => (
                   <Review
                     props={val}
-                    key={val.orderId + idx}
+                    key={`${val.orderId}-${idx}-${val.rate}`}
                     action={
                       val.isMine && (
+                        <>
+                          {val.canEdit && (
+                            <EditReviewBtn
+                              num={Number(firstRoute)}
+                              orderId={val.orderId}
+                              rate={val.rate}
+                              content={val.content}
+                              onSaved={(next) =>
+                                setReview((prev) => prev.map((r) => (r.orderId === val.orderId ? { ...r, ...next } : r)))
+                              }
+                            />
+                          )}
                         <DeleteReviewBtn
                           num={Number(firstRoute)}
                           orderId={val.orderId}
                           onDeleted={() => setReview((prev) => prev.filter((r) => r.orderId !== val.orderId))}
                         />
+                        </>
                       )
                     }
                   />

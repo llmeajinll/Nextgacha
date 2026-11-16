@@ -9,7 +9,7 @@ const tint = vars.color.blueBg;
 // 헤더와 행이 같은 칸 너비를 쓴다
 export const rowGrid = style({
   display: 'grid',
-  gridTemplateColumns: '44px minmax(260px, 1fr) 92px 64px 64px 100px 76px 72px',
+  gridTemplateColumns: '44px minmax(220px, 1fr) 92px 64px 64px 100px 76px 148px',
   alignItems: 'center',
   gap: 12,
   padding: '10px 20px',
@@ -88,6 +88,47 @@ export const editBtn = style([btn, btnKind.neutral, { padding: '0 12px' }]);
 
 export const editBtnOn = style([btn, btnKind.secondary, { padding: '0 12px' }]);
 
+export const btnGroup = style({
+  display: 'flex',
+  alignItems: 'center',
+  gap: 6,
+  justifyContent: 'flex-end',
+});
+
+export const fullEditBtn = style([
+  btn,
+  btnKind.primary,
+  {
+    padding: '0 10px',
+    fontSize: 13,
+    height: 34,
+    whiteSpace: 'nowrap',
+    textDecoration: 'none',
+  },
+]);
+
+export const quickBtn = style([
+  btn,
+  btnKind.neutral,
+  {
+    padding: '0 8px',
+    fontSize: 13,
+    height: 34,
+    whiteSpace: 'nowrap',
+  },
+]);
+
+export const quickBtnOn = style([
+  btn,
+  btnKind.secondary,
+  {
+    padding: '0 8px',
+    fontSize: 13,
+    height: 34,
+    whiteSpace: 'nowrap',
+  },
+]);
+
 // ── 편집 영역 ──
 export const editor = style({
   margin: '0 20px 20px',
@@ -96,15 +137,35 @@ export const editor = style({
 });
 
 export const editorHead = style({
-  height: 44,
+  minHeight: 44,
   boxSizing: 'border-box',
-  padding: '0 16px',
+  padding: '6px 16px',
   borderBottom: `1px solid ${vars.slate[100]}`,
   backgroundColor: vars.slate[50],
   display: 'flex',
   alignItems: 'center',
+  justifyContent: 'space-between',
   gap: 8,
 });
+
+export const editorHeadLeft = style({
+  display: 'flex',
+  alignItems: 'center',
+  gap: 8,
+  minWidth: 0,
+});
+
+export const editorFullBtn = style([
+  btn,
+  btnKind.secondary,
+  {
+    padding: '0 12px',
+    fontSize: 13,
+    height: 32,
+    whiteSpace: 'nowrap',
+    textDecoration: 'none',
+  },
+]);
 
 export const editorKind = style({ fontFamily: pixel, fontSize: 13, color: vars.ink[400] });
 

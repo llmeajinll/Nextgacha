@@ -53,15 +53,16 @@ export async function findProducts(props: {
   }
 
   if (!admin) {
-    // 품절(모든 옵션 재고 0) 숨김 (operations.md "품절·재입고")
-    query['list.count'] = { $gt: 0 };
+    // 품절(모든 옵션 재고 0) 숨김 (operations.md "품절·재입고"). 예약 상품은 화면에서 재고 0도 [예약]으로 보여주므로 빼지 않는다
+    query.$and = [{ $or: [{ 'list.count': { $gt: 0 } }, { reserve: { $nin: ['', null] } }] }];
     // 예약 마감 후 2주 숨김 (preorders.md "예약 상품 판매 기간")
     query.$nor = [hiddenReserveFilter(now)];
   }
 
   const [product, total, user] = await Promise.all([
     productColl
-      .find(query)
+      // 재입고 알림 신청자 이메일은 내보내지 않는다
+      .find(query, { projection: { restockSubs: 0 } })
       .sort({ create: -1 })
       .skip((page - 1) * count)
       .limit(count)

@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { ArrowRight, Box, Bug, ListBox, Truck } from 'pixelarticons/react';
+import { ArrowRight, Box, Bug, Clock, ListBox, Message, Truck } from 'pixelarticons/react';
 import { MANAGER_MENUS as MENUS } from '@/shared/model/managerMenus';
 import * as s from './managerMenu.css';
 
@@ -8,6 +8,9 @@ export type ManagerSummary = {
   pendingOrders: number;
   onSale: number;
   todayErrors: number;
+  // 기한을 넘긴 건수 (배송 처리 3영업일, 문의 답변 2영업일)
+  overdueOrders: number;
+  overdueQna: number;
 };
 
 // summary가 null이면(비관리자) 숫자 대신 '-'
@@ -17,6 +20,8 @@ export default function ManagerMenu({ summary }: { summary: ManagerSummary | nul
     { label: '배송 처리 대기', value: summary?.pendingOrders, icon: Truck, tone: s.tileTone.pending },
     { label: '판매 중인 상품', value: summary?.onSale, icon: Box, tone: s.tileTone.product },
     { label: '오늘 오류 신고', value: summary?.todayErrors, icon: Bug, tone: s.tileTone.error },
+    { label: '배송 기한 초과 (3영업일)', value: summary?.overdueOrders, icon: Clock, tone: s.tileTone.error },
+    { label: '답변 기한 초과 문의 (2영업일)', value: summary?.overdueQna, icon: Message, tone: s.tileTone.error },
   ];
 
   return (
