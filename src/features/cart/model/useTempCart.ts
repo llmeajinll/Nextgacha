@@ -1,15 +1,15 @@
 import React, { useState } from 'react';
 import { useAtom } from 'jotai';
-import { tempCartAtom } from '@/features/cart/model/store';
+import { tempCartAtom } from './store';
 import type { SimpleCart } from './types';
 import { userInfoAtom } from '@/entities/user/model/store';
 import { ProductProps } from '@/entities/product/model/types';
-import { useCart } from '@/features/cart/model';
+import useCart from './useCart';
 import { useModal } from '@/shared/hooks';
 import {
   useMutation,
+  useQuery,
   useQueryClient,
-  useSuspenseQuery,
 } from '@tanstack/react-query';
 
 // const fetcher = (url: string) =>
@@ -43,7 +43,9 @@ export default function useTempCart(num: number | string) {
   //   };
   // }
 
-  const { data } = useSuspenseQuery({
+  // useSuspenseQuery는 서버 렌더링 중에도 queryFn을 실행해서, 상대 주소 fetch가 "Failed to parse URL"로 깨진다.
+  // 로그인 세션이 필요한 보호 API라 서버에서 부를 수도 없으므로 브라우저에서만 조회한다 (로딩 중엔 아래 빈 값)
+  const { data } = useQuery({
     queryKey: ['tempCartData', Number(num)],
     queryFn: async (): Promise<SimpleCart | null> => {
       if (!isValidNum) return null;

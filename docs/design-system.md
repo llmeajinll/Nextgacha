@@ -48,14 +48,14 @@ import { vars } from '@/styles/theme.css';
 |---|---|---|
 | `#3AAAFF` | 하드 그림자·진한 파랑 (AlertModal, ReviewModal, checkout, addressTruck) | `blue2` |
 | `#99D3FF` | 모달 버튼 배경 (AlertModal) | `blue0` |
-| `#BFE3FF` | 버튼 베벨·프로필 테두리 (AlertModal, QnaTemplate) | `blueLight1` |
+| `#BFE3FF` | 버튼 베벨·프로필 테두리 (AlertModal, ProductQna) | `blueLight1` |
 | `#DDF0FD`, `#D3EEFF` | 연한 하늘색 배경 (헤더 제보창, QnA) | `blueBg` |
 | `#FDFDFD`, `#EFEFEF`, `#F1F1F1` | 레버 배경·핸들, 드롭다운 배경 | `gray0` |
 | `white` | 배경 (34회) | `bg` |
 | `lightgray`(`#D3D3D3`) | 테두리 `1px solid lightgray` 25회, 원가 취소선 | → `gray1`로 통일 대상 |
 | `gray`(`#808080`) | 작성자/빈 상태 텍스트 | → `black3`로 통일 대상 |
 | `red` | 폼 에러 텍스트 (상품 등록) | `danger` |
-| `#5BDB44` | 주문 상태 강조 (OrderTemplate) | `success` |
+| `#5BDB44` | 주문 상태 강조 (OrderBoard) | `success` |
 | `#8E75FE`, `#0070F3`, `#4CAF50`, `#2196F3` | 관리자 이벤트/통계 화면 전용 | 관리자 전용으로 유지 |
 
 **오버레이**: 모달 배경 `rgba(0,0,0,0.5)`, 검색 오버레이 `rgba(0,0,0,0.4)`.
@@ -317,7 +317,7 @@ flex 박스 래퍼다. 레이아웃은 직접 flex를 쓰기보다 이걸로 조
 
 | # | 내용 | 위치 | 제안 |
 |---|---|---|---|
-| 1 | `fontFamily: 'notosans'` / `'Noto Sans Kr'`가 next/font 해시 이름과 달라 **시스템 폰트로 렌더**됨 | `features/review-write/ui/reviewModal.css.ts:12`, `features/search/ui/search.css.ts:13`, `widgets/QnaTemplate/qnaTemplate.css.ts:24` | 해당 줄 삭제 (상속) |
+| 1 | `fontFamily: 'notosans'` / `'Noto Sans Kr'`가 next/font 해시 이름과 달라 **시스템 폰트로 렌더**됨 | `features/review-write/ui/reviewModal.css.ts:12`, `features/search/ui/search.css.ts:13`, `features/qna/ui/qnaWriteForm.css.ts` | 해당 줄 삭제 (상속) |
 | 2 | `vars.status.*` 미사용, 태그 색이 `TagContainer`에 hex로 하드코딩 | `entities/product/ui/TagContainer.tsx` | `vars.status.new` 등으로 교체 |
 | 3 | `#75C3FE`가 토큰 대신 hex로 11회 쓰임 | event, checkout, buyBtn, card, qnaTemplate, productManageCard | `vars.color.blue1` |
 | 4 | 테두리 `1px solid lightgray` 25회 (`gray1`=`#D9D9D9`와 거의 같은 `#D3D3D3`) | 다수 | `vars.color.gray1`로 통일 |

@@ -13,7 +13,7 @@ import {
   contentItem,
 } from './category.css';
 import { categoryVariant } from '@/styles/variants.css';
-import type { CategoryMenu } from '@/entities/product/model/types';
+import type { CategoryMenu } from '../model/types';
 import Link from 'next/link';
 import { useSearchParams } from 'next/navigation';
 

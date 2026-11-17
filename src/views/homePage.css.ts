@@ -58,7 +58,7 @@ export const moreLink = style([btn, btnSize.s, btnKind.link, { '@media': { [mobi
 // 웹: 칸 240px 이상으로 채우기 / 모바일: 156px 카드를 옆으로 밀기
 export const grid = style({
   display: 'grid',
-  gridTemplateColumns: 'repeat(auto-fit, minmax(min(240px, 100%), 1fr))',
+  gridTemplateColumns: 'repeat(auto-fill, minmax(min(240px, 100%), 1fr))',
   gap: 20,
   '@media': {
     [mobile]: {

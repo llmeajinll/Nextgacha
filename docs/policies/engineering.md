@@ -5,8 +5,8 @@
 ## 금액 계산식 단일 출처
 - 상태: 확정
 - 정책: 금액·배송비·포인트·한도 상수와 계산은 `orderPolicy.ts`에만 둔다. 클라이언트 컴포넌트도 이 파일을 import해서 쓰고, 숫자를 직접 쓰지 않는다.
-- 이유: `InfoPanel`은 `orderPolicy.ts`를 쓰지만 `CartTemplate`은 `50000`, `3000`, `0.01`을 하드코딩한다. 배송비 하나만 바꿔도 장바구니 금액과 서버 검증 금액이 달라져서 결제가 전부 거절된다.
-- 코드: `src/widgets/CartTemplate/CartTemplate.tsx:80`, `:188`, `:231`, 기준 `src/features/purchase/lib/orderPolicy.ts`
+- 이유: `InfoPanel`은 `orderPolicy.ts`를 쓰지만 `CartCheckout`은 `50000`, `3000`, `0.01`을 하드코딩한다. 배송비 하나만 바꿔도 장바구니 금액과 서버 검증 금액이 달라져서 결제가 전부 거절된다.
+- 코드: `src/widgets/CartCheckout/CartCheckout.tsx:80`, `:188`, `:231`, 기준 `src/features/purchase/lib/orderPolicy.ts`
 - 변경 이력: 2026-11-09 신설, 2026-11-10 확정
 
 ## 에러 알림

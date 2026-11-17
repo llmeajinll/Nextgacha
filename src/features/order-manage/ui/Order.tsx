@@ -6,7 +6,8 @@ import { comma } from '@/shared/lib/comma';
 import { toKoreaTime } from '@/shared/lib/koreaTime';
 import type { AdminOrder } from '../model/status';
 import { exchangeDone, exchangeReject, refundOrder, toArrive, toSending } from '../api/orderActions';
-import { textareaBox, textareaCount } from '@/styles/ui.css';
+import OrderDetail from './OrderDetail';
+import ReasonField from './ReasonField';
 import * as s from './order.css';
 
 export const COURIERS = ['CJ대한통운', '우체국택배', '한진택배', '롯데택배', '로젠택배'];
@@ -72,55 +73,7 @@ export default function Order({
         </span>
       </div>
 
-      <div className={s.body}>
-        <div className={s.items}>
-          <span className={s.pixelLabel}>ITEMS · {order.list.length}</span>
-          {order.list.map((item) => (
-            <div key={item.num} className={s.item}>
-              <div className={s.itemTitle}>
-                <span className={s.itemNum}>{item.num}</span>
-                <span>{item.title || `${item.num}번 상품`}</span>
-              </div>
-              <div className={s.options}>
-                {item.product.map((p) => (
-                  <span key={p.name} className={s.option}>
-                    {p.name}
-                    <b className={s.optionCount}>×{p.count}</b>
-                  </span>
-                ))}
-              </div>
-            </div>
-          ))}
-        </div>
-        <dl className={s.info}>
-          <dt>고객</dt>
-          <dd>{order.customer}</dd>
-          <dt>이메일</dt>
-          <dd className={s.wrap}>{order.email}</dd>
-          <dt>배송지</dt>
-          <dd>{order.address}</dd>
-          <dt>결제</dt>
-          <dd>
-            {comma(order.totalPrice)}원{' '}
-            <span className={s.muted}>
-              · 포인트 사용 {comma(order.usedPoint ?? 0)}P · 적립 {comma(order.addPoint ?? 0)}P
-            </span>
-          </dd>
-          {!!order.suspects?.length && (
-            <>
-              <dt className={s.suspectLabel}>중복 의심</dt>
-              <dd className={s.suspect}>
-                같은 상품을 산 다른 계정이 있어요. 보내기 전에 확인해 주세요.
-                {order.suspects.map((x) => (
-                  <span key={x.orderId} className={s.wrap}>
-                    {x.email} <span className={s.muted}>· 주문 {x.orderId} · {x.by.join(', ')}</span>
-                  </span>
-                ))}
-              </dd>
-            </>
-          )}
-        </dl>
-      </div>
+      <OrderDetail order={order} />
 
       {isCheck && (
         <div className={s.foot}>
@@ -190,22 +143,14 @@ export default function Order({
           )}
           {refundOpen && (
             <div className={s.refundBox}>
-              <label htmlFor={`or-reason-${order.orderId}`} className={s.label}>
-                거절 사유 (10자 이상)
-              </label>
-              <div className={textareaBox}>
-                <textarea
-                  id={`or-reason-${order.orderId}`}
-                  rows={2}
-                  maxLength={200}
-                  value={reason}
-                  onChange={(e) => setReason(e.target.value)}
-                  placeholder='예: 입고가 취소되어 보내드릴 수 없어요.'
-                  aria-invalid={reasonError && reasonLen < 10}
-                  className={reasonError && reasonLen < 10 ? `${s.textarea} ${s.inputError}` : s.textarea}
-                />
-                <span className={textareaCount}>{reason.length}/200</span>
-              </div>
+              <ReasonField
+                id={`or-reason-${order.orderId}`}
+                label='거절 사유 (10자 이상)'
+                value={reason}
+                onChange={setReason}
+                placeholder='예: 입고가 취소되어 보내드릴 수 없어요.'
+                invalid={reasonError && reasonLen < 10}
+              />
               <div className={s.refundFoot}>
                 <span role='status' className={s.errorText}>
                   {reasonError && reasonLen < 10 ? '거절 사유를 10자 이상 적어 주세요.' : ''}
@@ -263,22 +208,14 @@ export default function Order({
             <span className={s.muted}>불량 내용</span> {order.exchangeReason}
           </span>
           <div className={s.refundBox}>
-            <label htmlFor={`or-exreason-${order.orderId}`} className={s.label}>
-              반려 사유 (반려할 때만, 10자 이상)
-            </label>
-            <div className={textareaBox}>
-              <textarea
-                id={`or-exreason-${order.orderId}`}
-                rows={2}
-                maxLength={200}
-                value={reason}
-                onChange={(e) => setReason(e.target.value)}
-                placeholder='예: 사진으로 불량을 확인할 수 없어요.'
-                aria-invalid={reasonError && reasonLen < 10}
-                className={reasonError && reasonLen < 10 ? `${s.textarea} ${s.inputError}` : s.textarea}
-              />
-              <span className={textareaCount}>{reason.length}/200</span>
-            </div>
+            <ReasonField
+              id={`or-exreason-${order.orderId}`}
+              label='반려 사유 (반려할 때만, 10자 이상)'
+              value={reason}
+              onChange={setReason}
+              placeholder='예: 사진으로 불량을 확인할 수 없어요.'
+              invalid={reasonError && reasonLen < 10}
+            />
             <div className={s.refundFoot}>
               <span role='status' className={s.errorText}>
                 {reasonError && reasonLen < 10 ? '반려 사유를 10자 이상 적어 주세요.' : ''}

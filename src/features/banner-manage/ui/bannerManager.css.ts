@@ -8,25 +8,6 @@ const { slate, color, tone } = vars;
 
 export const container = style({ display: 'flex', flexDirection: 'column', gap: 24, color: slate[800] });
 
-// ── 제목 ──
-export const titleSection = style({
-  display: 'flex',
-  flexWrap: 'wrap',
-  alignItems: 'flex-end',
-  justifyContent: 'space-between',
-  gap: 16,
-  paddingBottom: 20,
-  borderBottom: `1px solid ${slate[200]}`,
-});
-
-export const titleText = style({ display: 'flex', flexDirection: 'column', gap: 8 });
-
-export const eyebrow = style({ fontFamily: pixel, fontSize: 14, letterSpacing: -0.7, color: color.blue1 });
-
-export const title = style({ margin: 0, fontSize: 28, fontWeight: 700, letterSpacing: -1.4, lineHeight: '120%' });
-
-export const subText = style({ margin: 0, fontSize: 15, letterSpacing: -0.5, color: slate[600] });
-
 export const addBtn = style([btn, btnSize.l, btnPx, btnKind.primary]);
 
 export const toast = style({ padding: '12px 16px', backgroundColor: tone.success.bg, color: slate[800], fontSize: 14 });

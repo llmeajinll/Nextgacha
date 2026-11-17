@@ -4,3 +4,4 @@ export { default as ProductInfo } from './ProductInfo';
 export { default as TagContainer } from './TagContainer';
 export { default as Category } from './Category';
 export { default as DetailCategory } from './DetailCategory';
+export { default as CardGrid } from './CardGrid';

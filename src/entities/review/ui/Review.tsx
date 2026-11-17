@@ -1,4 +1,4 @@
-import { ReviewProps } from '@/entities/review/model/types';
+import { ReviewProps } from '../model/types';
 import React from 'react';
 import { Range, Writer } from '@/shared/ui';
 import { StarRating } from '@/shared/ui';

@@ -93,3 +93,13 @@ export const heart = style({
 
 // theme의 globalStyle('div', { color }) 때문에 div가 색을 상속하지 않음
 globalStyle(`${card} div`, { color: 'inherit' });
+
+// 상품 카드 4열 목록 (검색 결과, 찜 목록)
+export const cardGrid = style({
+  width: '1274px',
+  display: 'grid',
+  gridTemplateColumns: 'repeat(4, 300px)',
+  justifyContent: 'space-between',
+  margin: '15px auto',
+  gap: '10px',
+});

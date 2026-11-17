@@ -23,8 +23,8 @@
 ## 중복 제출 방지
 - 상태: 확정
 - 정책: 서버에 쓰기 요청을 보내는 버튼은 요청이 끝날 때까지 disabled로 둔다. 실패하면 다시 누를 수 있게 풀어준다. 서버 쪽 방어(주문 상태 `status` 조건 등, `CLAUDE.md`)와 별개로 화면에서도 막는다.
-- 이유: 지금은 요청 중 비활성화가 `OrderTemplate`과 결제 버튼(유저 정보 로딩 중일 때만) 정도다. 리뷰 등록은 요청 중에도 다시 누를 수 있어서 같은 리뷰가 두 번 올라갈 수 있다.
-- 코드: 잘 된 예 `src/widgets/OrderTemplate/OrderTemplate.tsx:186` / 없음 `src/features/review-write/ui/ReviewModal.tsx:152`, `src/features/qna/ui/Qna.tsx`, `src/features/order-manage/ui/Order.tsx`
+- 이유: 지금은 요청 중 비활성화가 `OrderBoard`와 결제 버튼(유저 정보 로딩 중일 때만) 정도다. 리뷰 등록은 요청 중에도 다시 누를 수 있어서 같은 리뷰가 두 번 올라갈 수 있다.
+- 코드: 잘 된 예 `src/features/order-manage/ui/OrderBoard.tsx:186` / 없음 `src/features/review-write/ui/ReviewModal.tsx:152`, `src/features/qna/ui/Qna.tsx`, `src/features/order-manage/ui/Order.tsx`
 - 변경 이력: 2026-11-09 신설, 2026-11-10 확정
 
 ## 결과 알림 방식

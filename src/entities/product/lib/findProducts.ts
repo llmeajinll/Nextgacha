@@ -1,6 +1,6 @@
 import type { Document, Filter } from 'mongodb';
 import { productColl, userColl } from '@/shared/api/mongodb';
-import { CardProps } from '@/entities/product/model/types';
+import { CardProps } from '../model/types';
 import { hiddenReserveFilter, withActiveDiscount } from './salePolicy';
 
 // 상품 목록 조회 (getProduct 라우트 + 서버 컴포넌트 공용). email이 있으면 좋아요 여부 포함

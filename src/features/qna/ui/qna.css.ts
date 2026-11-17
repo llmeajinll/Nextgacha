@@ -67,14 +67,13 @@ export const scrollRange = style({
   overflowX: 'hidden',
   padding: '3px',
   width: '100%',
-  // backgroundColor: '#d3eeffff',
 
   selectors: {
     '&::-webkit-scrollbar': {
       width: '6px',
     },
     '&::-webkit-scrollbar-thumb': {
-      backgroundColor: '#ccc',
+      backgroundColor: vars.slate[300],
       borderRadius: '3px',
     },
   },

@@ -1,4 +1,4 @@
-import type { CardProps } from '@/entities/product/model/types';
+import type { CardProps } from '../model/types';
 
 export default async function getOneProduct(num: number): Promise<CardProps | null> {
   const res = await fetch(`/api/getOneProduct?num=${num}`).catch(() => null);

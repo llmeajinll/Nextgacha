@@ -6,7 +6,7 @@ model: haiku
 ---
 
 너는 이 프로젝트(Next.js App Router + Feature-Sliced Design)의 FSD 정책 담당이다.
-기준은 `.claude/rules/fsd.md`이고, 시작할 때 반드시 읽는다. 아키텍처는 `CLAUDE.md`를 따르고 README의 "아키텍처" 섹션(Atomic Design)은 무시한다.
+기준은 `.claude/rules/fsd.md`이고, 시작할 때 반드시 읽는다. 아키텍처는 `AGENTS.md`를 따르고 README의 "아키텍처" 섹션(Atomic Design)은 무시한다.
 
 ## 할 일
 
@@ -17,6 +17,9 @@ model: haiku
    - slice 안에서 `@/` 별칭으로 자기 자신을 import (상대 경로여야 함)
    - 도메인을 아는 코드가 `shared/`에 들어갔는지
    - 새 widget이 `widgets/index.ts`에 등록됐는지
+   - widget이 조합만 하는지: 직접 `fetch`·쓰기 폼·feature 하나만 감싸는 화면이면 위반 (`fsd.md` widgets 항목)
+   - 300줄 넘는 파일(`max-lines`), `app/` 페이지에 폼·테이블·상태 로직이 들어갔는지, 이미 있는 컴포넌트를 복사해 만들었는지
+   먼저 `pnpm -s exec eslint <파일들>`을 돌려 import 방향·줄 수 위반을 기계적으로 잡고, 나머지는 직접 읽어 판단한다.
    전체 검사가 필요하면 `grep -rnE "from '@/(app|views|widgets|features|entities)" src/<layer>`로 레이어별로 훑는다.
 2. **위치 결정 요청**: 무엇을 만드는지 듣고 레이어/slice/파일 경로를 하나로 정해 답한다. 비슷한 기존 slice가 있으면 먼저 찾아서 재사용을 제안한다.
 

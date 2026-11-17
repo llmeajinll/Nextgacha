@@ -64,7 +64,7 @@ const newBadge = style({
   '@media': { [mobile]: { fontSize: fluid(10) } },
   padding: '2px 6px 3px',
   borderRadius: 15,
-  backgroundColor: '#FFDFAB',
+  backgroundColor: vars.status.new,
   color: 'white',
 });
 export const newDesk = style([newBadge, { '@media': { [mobile]: { display: 'none' } } }]);
