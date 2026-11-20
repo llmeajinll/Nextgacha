@@ -1,4 +1,4 @@
-import { align } from '@/entities/product/lib/align';
+import { align } from './align';
 
 export const getStandardCategory = (userInput) => {
   if (!userInput) return '';

@@ -1,5 +1,5 @@
 // 결제 금액/포인트/보유 한도 정책 (순수 함수, DB 접근 없음)
-// 클라이언트 계산식(CartTemplate, InfoPanel)과 반드시 같게 유지할 것
+// 클라이언트 계산식(widgets CartCheckout, ProductPurchasePanel/InfoPanel)과 반드시 같게 유지할 것
 
 export const MAX_PER_ITEM = 5;
 export const FREE_SHIPPING_MIN = 50000;

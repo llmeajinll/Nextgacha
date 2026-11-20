@@ -74,7 +74,6 @@ export default function ReviewModal() {
             >
               <Range
                 preset='between'
-                //   style={{ border: '1px solid red' }}
               >
                 <div className={titleLabel}>주문 번호</div>
                 <div className={contentLabel}>{productInfo?.orderId}</div>
@@ -82,7 +81,6 @@ export default function ReviewModal() {
 
               <Range
                 preset='between'
-                //   style={{ border: '1px solid red' }}
               >
                 <div className={titleLabel}>주문일</div>
                 <div className={contentLabel}>{productInfo?.created_at}</div>
@@ -90,7 +88,6 @@ export default function ReviewModal() {
 
               <Range
                 preset='between'
-                //   style={{ border: '1px solid red' }}
               >
                 <div className={titleLabel}>주문 상품</div>
                 <Range className={contentLabel} gap='5' preset='column'>

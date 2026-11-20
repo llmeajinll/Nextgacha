@@ -3,12 +3,12 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
-import { ArrowDown, ArrowUp, Plus, Search, Upload } from 'pixelarticons/react';
-import { Pagination, ToggleBtn } from '@/shared/ui';
-import { checkbox } from '@/styles/variants.css';
+import { ArrowDown, ArrowUp, Plus, Search } from 'pixelarticons/react';
+import { Pagination, PageHeader } from '@/shared/ui';
 import { BANNER_STATUS_LABEL, statusOf, todayKst, type Banner, type BannerStatus } from '@/entities/banner/model/types';
-import { isSafeLink, TITLE_MAX } from '../lib/parseBannerForm';
-import { deleteBanner, orderBanners, saveBanner } from '../api/bannerActions';
+import { isSafeLink } from '../lib/parseBannerForm';
+import { orderBanners, saveBanner } from '../api/bannerActions';
+import BannerEditor, { type Draft } from './BannerEditor';
 import * as s from './bannerManager.css';
 
 const PAGE = 6;
@@ -20,8 +20,6 @@ const TABS: { key: Tab; label: string }[] = [
   { key: 'ended', label: '종료' },
   { key: 'all', label: '전체' },
 ];
-
-type Draft = Omit<Banner, 'order'> & { file: File | null };
 
 const dot = (v: string) => v.replace(/-/g, '.');
 const periodOf = (b: Pick<Banner, 'start' | 'end'>) => `${dot(b.start)} ~ ${b.end ? dot(b.end) : '계속'}`;
@@ -115,27 +113,27 @@ export default function BannerManager({ banners }: { banners: Banner[] }) {
 
   return (
     <div className={s.container}>
-      <section className={s.titleSection}>
-        <div className={s.titleText}>
-          <span className={s.eyebrow}>BANNERS</span>
-          <h1 className={s.title}>배너 관리</h1>
-          <p className={s.subText}>쇼핑몰 메인 상단에 돌아가는 배너예요. 목록에서 고른 뒤 오른쪽에서 이미지·링크·게시 기간을 바꿔요.</p>
-        </div>
-        <button
-          type='button'
-          className={s.addBtn}
-          onClick={() => {
-            setDraft(blank(today));
-            setTried(false);
-            setConfirmDelete(false);
-            setError('');
-            setToast('');
-          }}
-        >
-          <Plus aria-hidden />
-          ADD BANNER
-        </button>
-      </section>
+      <PageHeader
+        eyebrow='BANNERS'
+        title='배너 관리'
+        description='쇼핑몰 메인 상단에 돌아가는 배너예요. 목록에서 고른 뒤 오른쪽에서 이미지·링크·게시 기간을 바꿔요.'
+        action={
+          <button
+            type='button'
+            className={s.addBtn}
+            onClick={() => {
+              setDraft(blank(today));
+              setTried(false);
+              setConfirmDelete(false);
+              setError('');
+              setToast('');
+            }}
+          >
+            <Plus aria-hidden />
+            ADD BANNER
+          </button>
+        }
+      />
 
       {toast && (
         <div role='status' className={s.toast}>
@@ -253,175 +251,24 @@ export default function BannerManager({ banners }: { banners: Banner[] }) {
           <Pagination current={cur} total={shown.length} pageSize={PAGE} onChange={setPage} />
         </section>
 
-        <section aria-label='배너 수정' className={s.editor}>
-          {!draft ? (
-            <div className={s.noPick}>왼쪽에서 배너를 고르거나 ADD BANNER로 새로 만들어요.</div>
-          ) : (
-            <>
-              <div className={s.editorHead}>
-                <h2 className={s.editorTitle}>{isNew ? '새 배너 만들기' : '배너 수정'}</h2>
-                <span className={edStatus === 'draft' ? s.draftTag : s.statusTag[edStatus]}>
-                  {edStatus === 'draft' ? '작성 중' : BANNER_STATUS_LABEL[edStatus]}
-                </span>
-              </div>
-              <div className={s.editorBody}>
-                <div className={s.preview}>
-                  {shownImage ? (
-                    // 쇼핑몰 메인과 같은 비율(1312 × 439)
-                    <Image src={shownImage} alt='배너 미리보기' fill sizes='520px' unoptimized={!!draft.file} className={s.previewImg} />
-                  ) : (
-                    <span className={s.previewEmpty}>{draft.title || '배너 미리보기'}</span>
-                  )}
-                  <span className={s.sizeText}>1312 × 439</span>
-                </div>
-
-                <label className={imageBad ? `${s.slot} ${s.slotError}` : s.slot}>
-                  <span className={s.slotKind}>
-                    <Upload aria-hidden />
-                    {draft.file || draft.image ? '이미지 바꾸기' : '이미지 올리기'}
-                  </span>
-                  <span className={s.slotFile}>{draft.file?.name ?? (draft.image ? '지금 이미지 사용 중' : '이미지를 올려 주세요')}</span>
-                  <span className={s.hint}>1312 × 439 권장 · JPG, PNG · 4MB 이하</span>
-                  <input
-                    type='file'
-                    accept='image/*'
-                    aria-label='배너 이미지 선택'
-                    className={s.fileInput}
-                    onChange={(e) => {
-                      const f = e.target.files?.[0] ?? null;
-                      setDraft({ ...draft, file: f });
-                    }}
-                  />
-                </label>
-                {imageBad && (
-                  <span role='status' className={s.errorText}>
-                    배너 이미지를 올려 주세요.
-                  </span>
-                )}
-
-                <label className={s.field}>
-                  <span className={s.label}>
-                    관리용 이름 <span className={s.required}>*</span>
-                  </span>
-                  <input
-                    type='text'
-                    value={draft.title}
-                    maxLength={TITLE_MAX}
-                    onChange={(e) => setDraft({ ...draft, title: e.target.value })}
-                    placeholder='예: 11월 신규 입고'
-                    aria-invalid={titleBad}
-                    className={titleBad ? `${s.input} ${s.inputError}` : s.input}
-                  />
-                  {titleBad && (
-                    <span role='status' className={s.errorText}>
-                      이름을 입력해 주세요.
-                    </span>
-                  )}
-                </label>
-
-                <label className={s.field}>
-                  <span className={s.label}>눌렀을 때 이동할 링크</span>
-                  <input
-                    type='text'
-                    value={draft.link}
-                    onChange={(e) => setDraft({ ...draft, link: e.target.value })}
-                    placeholder='/36/info 또는 /search?type=series'
-                    aria-invalid={linkBad}
-                    className={linkBad ? `${s.input} ${s.inputError}` : s.input}
-                  />
-                  <span className={linkBad ? s.errorText : s.hint}>
-                    {linkBad ? '쇼핑몰 안 주소만 쓸 수 있어요. /로 시작하게 적어 주세요.' : '비워 두면 눌러도 이동하지 않아요.'}
-                  </span>
-                </label>
-
-                <div className={s.field}>
-                  <span className={s.label}>게시 기간</span>
-                  <div className={s.dates}>
-                    <input
-                      type='date'
-                      value={draft.start}
-                      onChange={(e) => setDraft({ ...draft, start: e.target.value || today })}
-                      aria-label='게시 시작일'
-                      className={s.input}
-                    />
-                    <span className={s.muted}>~</span>
-                    <input
-                      type='date'
-                      value={draft.end}
-                      min={draft.start}
-                      disabled={!draft.end}
-                      onChange={(e) => setDraft({ ...draft, end: e.target.value })}
-                      aria-label='게시 종료일'
-                      className={dateBad ? `${s.input} ${s.inputError}` : s.input}
-                    />
-                  </div>
-                  <label className={s.checkLabel}>
-                    <input
-                      type='checkbox'
-                      checked={!draft.end}
-                      onChange={(e) => setDraft({ ...draft, end: e.target.checked ? '' : draft.start })}
-                      className={checkbox}
-                    />
-                    종료일 없이 계속 게시
-                  </label>
-                  {dateBad && (
-                    <span role='status' className={s.errorText}>
-                      종료일이 시작일보다 빨라요.
-                    </span>
-                  )}
-                </div>
-
-                <div className={s.visibleRow}>
-                  <span className={s.visibleText}>
-                    <span className={s.label}>쇼핑몰에 보이기</span>
-                    <span className={s.hint}>끄면 기간 안이어도 숨겨져요.</span>
-                  </span>
-                  <ToggleBtn value={draft.visible} setValue={(v) => setDraft({ ...draft, visible: v })} label='쇼핑몰에 보이기' />
-                </div>
-
-                {error && (
-                  <p role='status' className={s.formError}>
-                    {error}
-                  </p>
-                )}
-
-                {confirmDelete ? (
-                  <div className={s.confirm}>
-                    <span>“{draft.title}” 배너를 지울까요? 되돌릴 수 없어요.</span>
-                    <div className={s.actionsRow}>
-                      <button type='button' className={s.neutralBtn} onClick={() => setConfirmDelete(false)}>
-                        취소
-                      </button>
-                      <button
-                        type='button'
-                        className={s.dangerBtn}
-                        disabled={sending}
-                        onClick={() => run(() => deleteBanner(draft.id), `“${draft.title}” 배너를 지웠어요.`)}
-                      >
-                        지우기
-                      </button>
-                    </div>
-                  </div>
-                ) : (
-                  <div className={s.actions}>
-                    {!isNew && (
-                      <button type='button' className={s.deleteBtn} onClick={() => setConfirmDelete(true)}>
-                        삭제
-                      </button>
-                    )}
-                    <span className={s.spacer} />
-                    <button type='button' className={s.cancelBtn} onClick={() => setDraft(null)}>
-                      CANCEL
-                    </button>
-                    <button type='button' className={s.saveBtn} disabled={sending} onClick={save}>
-                      {sending ? 'SAVING…' : 'SAVE'}
-                    </button>
-                  </div>
-                )}
-              </div>
-            </>
-          )}
-        </section>
+        <BannerEditor
+          draft={draft}
+          setDraft={setDraft}
+          today={today}
+          isNew={isNew}
+          edStatus={edStatus}
+          shownImage={shownImage}
+          imageBad={imageBad}
+          titleBad={titleBad}
+          linkBad={linkBad}
+          dateBad={dateBad}
+          sending={sending}
+          error={error}
+          confirmDelete={confirmDelete}
+          setConfirmDelete={setConfirmDelete}
+          run={run}
+          save={save}
+        />
       </div>
     </div>
   );

@@ -2,14 +2,13 @@
 
 import { useRef, useState, type KeyboardEvent } from 'react';
 import { Trash } from 'pixelarticons/react';
-import { Chip } from '@/shared/ui';
+import { Chip, PageHeader } from '@/shared/ui';
 import type { CategoryMenu } from '@/entities/product/model/types';
 import { RESERVED_GROUP_NAMES } from '@/entities/product/lib/parseCategoryMenu';
 import postCategoryMenu from '../api/postCategoryMenu';
+import GroupPanel from './GroupPanel';
+import { MAX_LEN, type GroupKey } from './categoryKeys';
 import * as s from './categoryManager.css';
-
-// number는 관리자가 추가한 대분류(menu.groups)의 인덱스
-type GroupKey = 'character' | 'ani' | 'series' | number;
 
 // '메인'(전체/인기/신규/예약)은 태그 필터라 편집 대상이 아님
 const FIXED_GROUPS: { key: GroupKey; name: string }[] = [
@@ -18,7 +17,6 @@ const FIXED_GROUPS: { key: GroupKey; name: string }[] = [
   { key: 'series', name: '시리즈' },
 ];
 
-const MAX_LEN = 30;
 const REORDER_SAVE_DELAY = 400;
 
 const move = (items: string[], from: number, to: number) => {
@@ -138,68 +136,38 @@ export default function CategoryManager({ initial }: { initial: CategoryMenu }) 
 
   return (
     <div className={s.container}>
-      <section className={s.titleSection}>
-        <span className={s.eyebrow}>CATEGORIES</span>
-        <h1 className={s.title}>카테고리 관리</h1>
-        <p className={s.subText}>
-          쇼핑몰 헤더의 카테고리 메뉴를 관리해요. 대분류를 고른 뒤 오른쪽에서 항목을 추가하거나 지우세요.
-          <br />
-          <span id='order-hint'>
-            항목을 끌어서 순서를 바꿔요. 키보드는 항목 왼쪽 손잡이에서 ←/→ 키로 옮겨요. 쇼핑몰 헤더에 이 순서대로 보여요.
-          </span>
-        </p>
-      </section>
+      <PageHeader
+        eyebrow='CATEGORIES'
+        title='카테고리 관리'
+        description={
+          <>
+            쇼핑몰 헤더의 카테고리 메뉴를 관리해요. 대분류를 고른 뒤 오른쪽에서 항목을 추가하거나 지우세요.
+            <br />
+            <span id='order-hint'>
+              항목을 끌어서 순서를 바꿔요. 키보드는 항목 왼쪽 손잡이에서 ←/→ 키로 옮겨요. 쇼핑몰 헤더에 이 순서대로 보여요.
+            </span>
+          </>
+        }
+      />
 
       <p aria-live='polite' className={s.srOnly}>
         {announce}
       </p>
 
       <div className={s.columns}>
-        <section aria-label='대분류' className={s.groupPanel}>
-          <div className={s.panelHead}>
-            <h2 className={s.panelTitle}>대분류</h2>
-            <span className={s.pixelCount}>{groups.length}</span>
-          </div>
-          <div className={s.groupList}>
-            {groups.map((g) => (
-              <button
-                key={g.key}
-                type='button'
-                aria-pressed={g.key === cur}
-                className={g.key === cur ? `${s.groupBtn} ${s.groupBtnActive}` : s.groupBtn}
-                onClick={() => {
-                  setSel(g.key);
-                  setDupFor('');
-                }}
-              >
-                <span className={s.groupName}>{g.name}</span>
-                <span className={s.groupCount}>{total(g.key)}</span>
-              </button>
-            ))}
-          </div>
-          <form
-            className={s.groupFoot}
-            onSubmit={(e) => {
-              e.preventDefault();
-              addGroup();
-            }}
-          >
-            <div className={s.addRow}>
-              <input
-                type='text'
-                value={newGroup}
-                maxLength={MAX_LEN}
-                onChange={(e) => setNewGroup(e.target.value)}
-                aria-label='새 대분류 이름'
-                placeholder='새 대분류'
-                className={s.input}
-              />
-              <button type='submit' className={s.addBtnLine} disabled={saving}>
-                ADD
-              </button>
-            </div>
-          </form>
-        </section>
+        <GroupPanel
+          groups={groups}
+          cur={cur}
+          total={total}
+          onPick={(key) => {
+            setSel(key);
+            setDupFor('');
+          }}
+          newGroup={newGroup}
+          setNewGroup={setNewGroup}
+          addGroup={addGroup}
+          saving={saving}
+        />
 
         <section aria-label={`${groupName} 항목`} className={s.itemPanel}>
           <div className={s.panelHead}>

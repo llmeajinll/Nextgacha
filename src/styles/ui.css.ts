@@ -1,14 +1,16 @@
 import { globalStyle, style, styleVariants } from '@vanilla-extract/css';
 import { vars } from './theme.css';
-import { fluid } from './fluid';
+import { fluid, mobile } from './fluid';
 
 // 디자인 캔버스 "버튼 정리 · 탭 정리 · 태그 정리"의 규칙. 각 화면의 *.css.ts에서
 // style([btn, btnSize.s, btnKind.neutral]) 처럼 조합해서 쓴다 (모서리 0, 테두리 1px)
 
 const pixel = 'silkscreen';
 
-// 쇼핑몰 모바일 화면 (태블릿 세로 이하)
-export const mobile = 'screen and (max-width: 1023px)';
+// 쇼핑몰 모바일 화면 (태블릿 세로 이하) — 정의는 fluid.ts
+export { mobile } from './fluid';
+// 태그(tag, tagTone, numTag, optionChip)는 tag.css.ts — 여기서 같이 내보낸다
+export * from './tag.css';
 const { color, slate, tone } = vars;
 
 // 모바일 글자 크기 (디자인 type-mobile.css)
@@ -290,55 +292,6 @@ export const checkbox = style({
     '&[aria-checked="true"]': { borderColor: color.blue1, backgroundColor: color.blue1 },
     '&:focus-visible': { outline: `2px solid ${color.blue2}`, outlineOffset: 2 },
   },
-});
-
-// ── 태그 ──
-// 상태 태그: tone bg 배경 + tone 1 글자, 테두리 없음
-export const tag = style({
-  display: 'inline-flex',
-  alignItems: 'center',
-  fontSize: 12,
-  fontWeight: 600,
-  padding: '4px 8px',
-  whiteSpace: 'nowrap',
-});
-// 상품 상태처럼 목록 행의 큰 태그
-export const tagL = style({ fontSize: 13, padding: '6px 10px', ...m(12) });
-// 상품명 아래 제조사·카테고리·예약 기간
-export const tagS = style({ padding: '4px 6px', fontWeight: 400, lineHeight: 1 });
-export const tagTone = styleVariants({
-  info: { backgroundColor: tone.info.bg, color: tone.info[1] },
-  success: { backgroundColor: tone.success.bg, color: tone.success[1] },
-  warning: { backgroundColor: tone.warning.bg, color: tone.warning[1] },
-  danger: { backgroundColor: tone.danger.bg, color: tone.danger[1] },
-  soldout: { backgroundColor: tone.soldout.bg, color: tone.soldout[1] },
-  // 제조사
-  neutral: { backgroundColor: slate[100], color: slate[700] },
-  // 카테고리
-  muted: { backgroundColor: slate[50], color: slate[600] },
-});
-
-// 상품·옵션 번호
-export const numTag = style({
-  fontFamily: pixel,
-  fontSize: 12,
-  padding: '2px 6px',
-  backgroundColor: color.blueBg,
-  color: color.blue2,
-});
-
-// 옵션 이름 + 수량
-export const optionChip = style({
-  height: 28,
-  boxSizing: 'border-box',
-  display: 'inline-flex',
-  alignItems: 'center',
-  gap: 6,
-  padding: '0 10px',
-  border: `1px solid ${slate[200]}`,
-  backgroundColor: 'white',
-  fontSize: 13,
-  color: slate[700],
 });
 
 // ── textarea 글자 수 (칸 안 오른쪽 아래에 N/MAX) ──

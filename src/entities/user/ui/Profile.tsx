@@ -5,7 +5,7 @@ import Image from 'next/image';
 import { useAtomValue } from 'jotai';
 import { User } from 'pixelarticons/react';
 import { comma } from '@/shared/lib/comma';
-import { userInfoAtom } from '@/entities/user/model/store';
+import { userInfoAtom } from '../model/store';
 import * as s from './profile.css';
 
 export default function Profile() {

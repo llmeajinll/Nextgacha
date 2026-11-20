@@ -1,8 +1,9 @@
 import { redirect } from 'next/navigation';
-import { ErrorTemplate } from '@/widgets';
+import ErrorBoard from '@/features/error-manage/ui/ErrorBoard';
 import { findErrors } from '@/features/error-manage/lib/findErrors';
 import { ERROR_PAGE_SIZE, ERROR_STATUSES, ERROR_TYPES } from '@/features/error-manage/model/types';
 import * as s from './page.css';
+import { PageHeader } from '@/shared/ui';
 
 // 서버 컴포넌트에서 자기 API를 fetch하면 쿠키가 없어 관리자 API가 403 → DB 직접 조회
 export const dynamic = 'force-dynamic';
@@ -23,14 +24,12 @@ export default async function ErrorPage({ searchParams }: { searchParams: Promis
 
   return (
     <div className={s.container}>
-      <section className={s.titleSection}>
-        <span className={s.eyebrow}>ERRORS</span>
-        <h1 className={s.title}>오류 신고 수집</h1>
-        <p className={s.subText}>
-          사용자 제보와 시스템 에러를 확인하고 처리 상태를 바꿔요. 결제 관련 기록은 장애 대응 순서대로 바로 처리해요.
-        </p>
-      </section>
-      <ErrorTemplate
+      <PageHeader
+        eyebrow='ERRORS'
+        title='오류 신고 수집'
+        description='사용자 제보와 시스템 에러를 확인하고 처리 상태를 바꿔요. 결제 관련 기록은 장애 대응 순서대로 바로 처리해요.'
+      />
+      <ErrorBoard
         status={status.status}
         type={type}
         errors={result}

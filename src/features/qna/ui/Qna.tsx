@@ -204,9 +204,6 @@ export default function Qna({
       </Range>
       <Range
         preset='between'
-        // style={{
-        //   marginTop: '10px',
-        // }}
       >
         {isWriter && (
           <Range>

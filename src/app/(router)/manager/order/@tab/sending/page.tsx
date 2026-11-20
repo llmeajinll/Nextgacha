@@ -1,5 +1,5 @@
 import { redirect } from 'next/navigation';
-import OrderTemplate from '@/widgets/OrderTemplate/OrderTemplate';
+import OrderBoard from '@/features/order-manage/ui/OrderBoard';
 import { countOrdersByStatus, findOrdersByStatus } from '@/features/order-manage/lib/findOrdersByStatus';
 import { ORDER_PAGE_SIZE } from '@/features/order-manage/model/status';
 
@@ -16,5 +16,5 @@ export default async function SendingPage({ searchParams }: { searchParams: Prom
   const lastPage = Math.max(Math.ceil(total / ORDER_PAGE_SIZE), 1);
   if (page > lastPage) redirect(`/manager/order/sending?${new URLSearchParams({ page: String(lastPage), ...(q && { q }) })}`);
 
-  return <OrderTemplate status='배송중' orders={result} total={total} page={page} counts={counts} q={q} />;
+  return <OrderBoard status='배송중' orders={result} total={total} page={page} counts={counts} q={q} />;
 }

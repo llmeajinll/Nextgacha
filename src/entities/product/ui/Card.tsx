@@ -7,7 +7,7 @@ import { ImgBtn } from '@/shared/ui';
 import HeartBtn from './HeartBtn';
 import TagContainer from './TagContainer';
 import * as s from './card.css';
-import { CardProps } from '@/entities/product/model/types';
+import { CardProps } from '../model/types';
 import { comma } from '@/shared/lib/comma';
 
 function ShowPrice({ price, isDiscount, discount }: { price: number; isDiscount: boolean; discount: number }) {

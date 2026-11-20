@@ -2,6 +2,8 @@
 
 이 파일은 Claude Code(claude.ai/code)가 이 저장소에서 작업할 때 참고하는 안내서다.
 
+**설명·답변·요약·커밋 메시지는 모두 한국어로 쓴다.** 코드, 식별자, 명령어, 파일 경로는 원문 그대로 둔다.
+
 ## 프로젝트
 
 Next.js 16(App Router) 쇼핑몰 "Next Gacha". 핵심 비즈니스 규칙: 한 사용자는 같은 상품을
@@ -36,7 +38,7 @@ Next.js 16(App Router) 쇼핑몰 "Next Gacha". 핵심 비즈니스 규칙: 한 �
 src/
 ├── app/              # Next.js App Router: 라우트, API 라우트, 루트 layout
 ├── views/            # 페이지 단위 조합 (HomePage, DetailPage, SearchPage, NoticeDetailPage)
-├── widgets/          # 독립적인 큰 UI 영역 (Header, Footer, CartTemplate, OrderTemplate, ManagerMenu, ...)
+├── widgets/          # 독립적인 큰 UI 영역 (Header, CartCheckout, ProductPurchasePanel, OrderHistory, ProductReviews, ...)
 ├── features/         # 사용자 행동: cart, purchase, auth, search, address, qna, review-write, order-manage, product-manage
 ├── entities/         # 도메인 객체: product, order, user, review, qna, notice — 각각 api/model/ui(/lib)
 ├── shared/           # 프레임워크 독립 재사용 코드: api (mongodb client, baseUrl, QueryProviders), lib, hooks, ui, model
@@ -45,7 +47,11 @@ src/
 
 import 방향은 FSD를 따른다: `app → views → widgets → features → entities → shared`. 각 레이어는
 자기 자신이나 아래 레이어만 import한다(커밋 `6e5c8ce`가 이 위반을 고쳤다 — entity가 feature를
-import하는 식의 위쪽 import를 되살리지 말 것).
+import하는 식의 위쪽 import를 되살리지 말 것). import 방향과 파일당 300줄 제한은 `pnpm lint`가 error로 잡는다
+(`eslint.config.mjs`). `app/`의 `page.tsx`는 import 한 줄 + 렌더만 한다: 관리자 화면 본문은
+`features/*-manage/ui/*Board`·`*Manager`·`ProductForm`, 마이페이지·상세 탭은 widget(`OrderHistory`, `LikeList`, `CartCheckout`, `ProductReviews`, `ProductQna`),
+결제 결과는 `features/purchase/ui/PaymentResult`. 두 feature를 같이 쓰는 UI는 widget으로 올린다(`widgets/ProductPurchasePanel`).
+관리자 화면 맨 위 제목 블록은 `shared/ui` `PageHeader`.
 
 entity/feature slice 내부 규칙: `api/`(내부 API 라우트를 호출하는 fetch 함수), `model/`(타입,
 jotai atom/store), `ui/`(컴포넌트 + 옆에 둔 `*.css.ts`), 필요하면 `lib/`(순수 로직).
@@ -104,7 +110,7 @@ jotai atom/store), `ui/`(컴포넌트 + 옆에 둔 `*.css.ts`), 필요하면 `li
   커밋된다). 트랜잭션이 실패하면 라우트가 Toss 결제를 취소하고, 취소마저 실패하면 `errorColl`에
   기록한다. 그래도 놓친 "결제됨 + 주문 없음"은 Toss 웹훅 `/api/webhooks/toss`가 1분 뒤 다시 확인해 취소한다.
   `PAYMENTS_DISABLED=1`이면 `postCheckStock`·`postPaymentsConfirm`이 결제를 막는다. 가격/배송비/포인트/한도
-  규칙은 순수 함수 `orderPolicy.ts`에 있으며(`orderPolicy.test.ts`) `CartTemplate`/`InfoPanel`과 항상 맞춰야 한다.
+  규칙은 순수 함수 `orderPolicy.ts`에 있으며(`orderPolicy.test.ts`) `widgets/CartCheckout`/`widgets/ProductPurchasePanel/InfoPanel`과 항상 맞춰야 한다.
   쇼핑몰 조회 API는 할인 기간을 반영한 `discount`를 내려주므로 클라이언트 계산식은 그대로 둔다.
 - 서버 컴포넌트는 이 앱의 `/api/*` 라우트를 `fetch`하면 **안 된다**: 요청에 세션 쿠키가 없어서
   middleware가 protected/admin 라우트에 401/403을 돌려준다. 조회 로직은 공용 서버 함수

@@ -23,8 +23,8 @@
 ## 중복 제출 방지
 - 상태: 확정
 - 정책: 서버에 쓰기 요청을 보내는 버튼은 요청이 끝날 때까지 disabled로 둔다. 실패하면 다시 누를 수 있게 풀어준다. 서버 쪽 방어(주문 상태 `status` 조건 등, `CLAUDE.md`)와 별개로 화면에서도 막는다.
-- 이유: 지금은 요청 중 비활성화가 `OrderTemplate`과 결제 버튼(유저 정보 로딩 중일 때만) 정도다. 리뷰 등록은 요청 중에도 다시 누를 수 있어서 같은 리뷰가 두 번 올라갈 수 있다.
-- 코드: 잘 된 예 `src/widgets/OrderTemplate/OrderTemplate.tsx:186` / 없음 `src/features/review-write/ui/ReviewModal.tsx:152`, `src/features/qna/ui/Qna.tsx`, `src/features/order-manage/ui/Order.tsx`
+- 이유: 지금은 요청 중 비활성화가 `OrderBoard`와 결제 버튼(유저 정보 로딩 중일 때만) 정도다. 리뷰 등록은 요청 중에도 다시 누를 수 있어서 같은 리뷰가 두 번 올라갈 수 있다.
+- 코드: 잘 된 예 `src/features/order-manage/ui/OrderBoard.tsx:186` / 없음 `src/features/review-write/ui/ReviewModal.tsx:152`, `src/features/qna/ui/Qna.tsx`, `src/features/order-manage/ui/Order.tsx`
 - 변경 이력: 2026-11-09 신설, 2026-11-10 확정
 
 ## 결과 알림 방식
@@ -50,7 +50,8 @@
 - 상태: 확정
 - 정책: 실패해도 손해가 없는 작업(좋아요, 장바구니 수량)은 서버 응답 전에 화면을 먼저 바꾸고, 실패하면 되돌리고 알린다. 돈·재고·주문 상태가 걸린 작업(결제, 환불, 배송 처리)은 반드시 서버 응답을 받은 뒤에 화면을 바꾼다.
 - 이유: 기준이 없으면 결제처럼 실패할 수 있는 작업도 성공한 것처럼 보이게 만들기 쉽다.
-- 변경 이력: 2026-11-09 신설, 2026-11-10 확정
+- 코드: 장바구니 수량·삭제 `src/features/cart/model/useCart.ts`, 상품 상세 담기 `src/features/cart/model/useAddToCart.ts` (캐시 갱신 규칙은 `src/features/cart/lib/cartCache.ts`)
+- 변경 이력: 2026-11-09 신설, 2026-11-10 확정, 2026-11-21 장바구니 수량·상품 상세 담기에 적용
 
 ## 빈 상태
 - 상태: 확정

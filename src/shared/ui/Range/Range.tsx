@@ -1,105 +1,25 @@
 'use client';
 
 import React from 'react';
-import { range, rangeWidth, rangeHeight, rangeGap } from './range.css';
-import {
-  widthVariant,
-  heightVariant,
-  gapVariant,
-  directionVariant,
-  justifyVariant,
-  alignVariant,
-  rangePresetVariant,
-} from '@/styles/variants.css';
+import { range } from './range.css';
+import { widthVariant, heightVariant, gapVariant, rangePresetVariant } from '@/styles/variants.css';
 
+// flex 상자. 폭·높이·간격·정렬은 variants.css.ts의 variant 이름으로만 받는다 (inline style 없음)
 type Props = {
   width?: keyof typeof widthVariant;
   height?: keyof typeof heightVariant;
   gap?: keyof typeof gapVariant;
   preset?: keyof typeof rangePresetVariant;
-  style?: React.CSSProperties;
   children?: React.ReactNode;
   className?: string;
   ref?: React.RefObject<HTMLDivElement | null>;
 };
 
-export default function Range({
-  width,
-  height,
-  // direction = 'row',
-  // justify = 'start',
-  // align = 'stretch',
-  gap,
-  className,
-  preset,
-  ref,
-  style,
-  children,
-}: Props) {
-
-  //   let inlineVars: Record<string, string> = {};
-
-  //   let widthClass = widthVariant.fit;
-  //   if (width === 'fit') widthClass = widthVariant.fit;
-  //   else if (width === 'full') widthClass = widthVariant.full;
-  //   else {
-  //     widthClass = widthVariant.dynamic;
-  //     inlineVars[rangeWidth] = `${width}px`;
-  //   }
-
-  //   let heightClass = heightVariant.fit;
-  //   if (height === 'fit') heightClass = heightVariant.fit;
-  //   else if (height === 'full') heightClass = heightVariant.full;
-  //   else {
-  //     heightClass = heightVariant.dynamic;
-  //     inlineVars[rangeHeight] = `${height}px`;
-  //   }
-
-  //   let gapClass = gapVariant.none;
-  //   if (gap !== undefined) {
-  //     gapClass = gapVariant.dynamic;
-  //     inlineVars[rangeGap] = `${gap}px`;
-  //   }
-
-  //   const inlineStyles: React.CSSProperties = {
-  //     ...(typeof width === 'number' && { [rangeWidth]: `${width}px` }),
-  //     ...(typeof height === 'number' && { [rangeHeight]: `${height}px` }),
-  //     ...(typeof gap === 'number' && { [rangeGap]: `${gap}px` }),
-  //   };
-
-
-  // let inlineStyles = {};
-
-  // return (
-  //   <div
-  //     className={`
-  //       ${range}
-  //       ${widthVariant[width]}
-  //       ${heightVariant[height]}
-  //       ${gapVariant[gap]}
-  //       ${directionVariant[direction]}
-  //       ${justifyVariant[justify]}
-  //       ${alignVariant[align]}
-  //       ${rangePresetVariant[preset ?? 'center']}
-  //       `}
-  //     style={{ ...style, ...inlineStyles }}
-  //   >
-  //     {children}
-  //   </div>
-  // );
-
+export default function Range({ width, height, gap, className, preset, ref, children }: Props) {
   return (
     <div
-      className={`
-        ${range} 
-        ${widthVariant[width ?? 'fit']} 
-        ${heightVariant[height ?? 'fit']} 
-        ${gapVariant[gap ?? 'none']}
-        ${rangePresetVariant[preset ?? 'center']}
-        ${className}
-        `}
+      className={`${range} ${widthVariant[width ?? 'fit']} ${heightVariant[height ?? 'fit']} ${gapVariant[gap ?? 'none']} ${rangePresetVariant[preset ?? 'center']} ${className ?? ''}`}
       ref={ref}
-      style={{ ...style }}
     >
       {children}
     </div>

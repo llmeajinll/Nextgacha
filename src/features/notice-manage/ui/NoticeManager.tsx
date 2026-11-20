@@ -4,7 +4,7 @@ import React, { useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { Bookmark, Plus, Search } from 'pixelarticons/react';
-import { Pagination } from '@/shared/ui';
+import { Pagination, PageHeader } from '@/shared/ui';
 import {
   categoryLabel,
   NOTICE_CATEGORIES,
@@ -55,17 +55,17 @@ export default function NoticeManager({ notices }: { notices: Notice[] }) {
 
   return (
     <div className={s.container}>
-      <section className={s.titleSection}>
-        <div className={s.titleText}>
-          <span className={s.eyebrow}>NOTICES</span>
-          <h1 className={s.title}>공지 관리</h1>
-          <p className={s.subText}>쇼핑몰 공지사항을 쓰고 고쳐요. 중요한 공지는 상단에 고정하고, 미리 써 둔 공지는 예약해서 올릴 수 있어요.</p>
-        </div>
-        <Link href='/manager/notice/add' className={s.addBtn}>
-          <Plus aria-hidden />
-          NEW NOTICE
-        </Link>
-      </section>
+      <PageHeader
+        eyebrow='NOTICES'
+        title='공지 관리'
+        description='쇼핑몰 공지사항을 쓰고 고쳐요. 중요한 공지는 상단에 고정하고, 미리 써 둔 공지는 예약해서 올릴 수 있어요.'
+        action={
+          <Link href='/manager/notice/add' className={s.addBtn}>
+            <Plus aria-hidden />
+            NEW NOTICE
+          </Link>
+        }
+      />
 
       {toast && (
         <div role='status' className={s.toast}>

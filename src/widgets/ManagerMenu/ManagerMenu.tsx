@@ -2,6 +2,7 @@ import Link from 'next/link';
 import { ArrowRight, Box, Bug, Clock, ListBox, Message, Truck } from 'pixelarticons/react';
 import { MANAGER_MENUS as MENUS } from '@/shared/model/managerMenus';
 import * as s from './managerMenu.css';
+import { PageHeader } from '@/shared/ui';
 
 export type ManagerSummary = {
   todayOrders: number;
@@ -26,11 +27,11 @@ export default function ManagerMenu({ summary }: { summary: ManagerSummary | nul
 
   return (
     <div className={s.container}>
-      <section className={s.titleSection}>
-        <span className={s.eyebrow}>DASHBOARD</span>
-        <h1 className={s.title}>관리자 홈</h1>
-        <p className={s.subText}>오늘 처리할 일을 확인하고 각 관리 메뉴로 이동하세요.</p>
-      </section>
+      <PageHeader
+        eyebrow='DASHBOARD'
+        title='관리자 홈'
+        description='오늘 처리할 일을 확인하고 각 관리 메뉴로 이동하세요.'
+      />
 
       <section aria-label='요약' className={s.summaryGrid}>
         {cards.map((c) => (

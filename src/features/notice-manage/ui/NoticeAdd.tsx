@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { ChevronLeft } from 'pixelarticons/react';
 import NoticeEditor from './NoticeEditor';
 import * as s from './noticeAdd.css';
+import { PageHeader } from '@/shared/ui';
 
 // 공지 추가 페이지. 저장하면 결과와 다음 행동(하나 더 쓰기 · 목록으로)을 보여줌
 export default function NoticeAdd({ pinCount }: { pinCount: number }) {
@@ -13,15 +14,17 @@ export default function NoticeAdd({ pinCount }: { pinCount: number }) {
 
   return (
     <div className={s.container}>
-      <section className={s.titleSection}>
-        <Link href='/manager/notice' className={s.back}>
-          <ChevronLeft aria-hidden />
-          공지 관리
-        </Link>
-        <span className={s.eyebrow}>NEW NOTICE</span>
-        <h1 className={s.title}>공지 추가</h1>
-        <p className={s.subText}>쇼핑몰 공지사항을 새로 써요. 글 사이 원하는 자리에 이미지를 넣을 수 있어요.</p>
-      </section>
+      <PageHeader
+        eyebrow='NEW NOTICE'
+        title='공지 추가'
+        description='쇼핑몰 공지사항을 새로 써요. 글 사이 원하는 자리에 이미지를 넣을 수 있어요.'
+        top={
+          <Link href='/manager/notice' className={s.back}>
+            <ChevronLeft aria-hidden />
+            공지 관리
+          </Link>
+        }
+      />
 
       {done ? (
         <div role='status' className={s.done}>

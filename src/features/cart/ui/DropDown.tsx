@@ -3,7 +3,7 @@
 import React, { useState } from 'react';
 import { DropDown as BaseDropDown } from '@/shared/ui';
 import { CardProps } from '@/entities/product/model/types';
-import { useTempCart } from '@/features/cart/model';
+import { useTempCart } from '../model';
 import { dropdown } from './dropdown.css';
 
 type DropDownType = Pick<CardProps, 'list' | 'num'>;

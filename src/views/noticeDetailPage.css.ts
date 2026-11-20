@@ -6,7 +6,7 @@ import { fluid } from '@/styles/fluid';
 const { color, slate, tone } = vars;
 
 export const article = style({
-  maxWidth: 1120, // 공지 목록(NoticeTemplate pageWrap)과 같은 폭
+  maxWidth: 1120, // 공지 목록(NoticeBoard pageWrap)과 같은 폭
   margin: '0 auto',
   boxSizing: 'border-box',
   padding: '40px 24px 80px',

@@ -4,7 +4,7 @@ import { useRouter, useSearchParams, usePathname } from 'next/navigation';
 // import { useRouter } from 'next/router';
 import React, { Suspense, useEffect, useState } from 'react';
 import { CardProps } from '@/entities/product/model/types';
-import { CardTemplate } from '@/widgets';
+import { SearchResults } from '@/widgets';
 import { Title, ScrollToTop } from '@/shared/ui';
 import { getStandardCategory } from '@/entities/product/lib/getStandardCategory';
 import { tagCategory } from '@/entities/product/lib/category';
@@ -40,23 +40,13 @@ export default function SearchPage() {
   const TAG = !tag ? undefined : tagCategory[(tag as TagKey) || '전체'];
 
   const handleSearch = async (page: number) => {
-    const params = new URLSearchParams();
-    if (TAG) params.set('tag', TAG);
-    if (search || detail)
-      params.set('search', detail ? detail : targetCategory);
-    if (filter) params.set('filter', filter === '전체' ? '' : filter);
-    if (page) params.set('page', page.toString());
-    let url = '';
-
-    url = `/api/getProduct?${params.toString()}&count=20`;
-
-    const res = await fetch(url, {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json',
-      },
+    const result = await getProducts({
+      tag: TAG,
+      search: search || detail ? (detail ? detail : targetCategory) : undefined,
+      filter: filter && filter !== '전체' ? filter : undefined,
+      page,
+      count: 20,
     });
-    const result = await res.json();
     setSearchProducts(result.data);
     setTotal(result.total);
   };
@@ -72,7 +62,7 @@ export default function SearchPage() {
       <div>{detail}</div>
       <div>{company}</div> */}
       <Suspense>
-        <CardTemplate />
+        <SearchResults />
 
         {searchProducts.length !== 0 && (
           <Pagination

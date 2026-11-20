@@ -177,7 +177,7 @@ await mongodbSession.withTransaction(async () => {
 src/
 ├── app/        # 라우트, API 라우트(43개), 루트 layout
 ├── views/      # 페이지 단위 조합 (HomePage, DetailPage, SearchPage ...)
-├── widgets/    # 독립적인 큰 UI 영역 (Header, CartTemplate, OrderTemplate ...)
+├── widgets/    # 독립적인 큰 UI 영역 (Header, CartCheckout, OrderBoard ...)
 ├── features/   # 사용자 행동 (cart, purchase, qna, review-write, order-manage ...)
 ├── entities/   # 도메인 객체 (product, order, user, review, qna, notice, banner)
 ├── shared/     # 도메인을 모르는 재사용 코드 (api, lib, hooks, ui)
