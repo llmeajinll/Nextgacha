@@ -1,5 +1,6 @@
 import { getCart } from '../api/getCart';
 import type { CartItem } from './types';
+import { applyCartChange } from '../lib/cartCache';
 import Cookies from 'js-cookie';
 
 import { useRouter } from 'next/navigation';
@@ -42,20 +43,10 @@ export default function useCart() {
     onMutate: async ({ preset, name, num }) => {
       await queryClient.cancelQueries({ queryKey: ['cartData'] });
       const previousData = queryClient.getQueryData<CartItem[]>(['cartData']);
-
-      if (
-        (previousData?.find((i) => i.num === num)?.cart.list.find((v) => v.name === name)?.count ?? 0) > 5
-      ) {
-        return;
-      }
-      // ponytail: 낙관적 업데이트는 없다. 예전 코드는 캐시를 객체로 가정(실제는 배열)해서 항상 아무것도 안 했고,
-      // 응답이 오면 onSettled가 다시 읽는다. 필요하면 previousData에서 해당 줄 count만 바꿔 setQueryData 한다.
+      // 낙관적 업데이트: 서버 응답 전에 수량·삭제를 화면에 먼저 반영한다. 실패하면 onError가 previousData로 되돌리고,
+      // 끝나면 onSettled가 서버 값으로 다시 맞춘다
+      if (previousData) queryClient.setQueryData(['cartData'], applyCartChange(previousData, num, name, preset));
       return { previousData };
-    },
-    // 2. 서버 업데이트 성공 후 실행
-    onSuccess: async () => {
-      // 'cartData' 키를 가진 쿼리를 무효화하여 서버에서 최신 데이터를 다시 읽어옵니다.
-      queryClient.invalidateQueries({ queryKey: ['cartData'] });
     },
     onError: (error, vars, context) => {
       console.error('업데이트 실패:', error);

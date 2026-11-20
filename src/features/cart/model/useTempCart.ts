@@ -4,13 +4,8 @@ import { tempCartAtom } from './store';
 import type { SimpleCart } from './types';
 import { userInfoAtom } from '@/entities/user/model/store';
 import { ProductProps } from '@/entities/product/model/types';
-import useCart from './useCart';
 import { useModal } from '@/shared/hooks';
-import {
-  useMutation,
-  useQuery,
-  useQueryClient,
-} from '@tanstack/react-query';
+import { useQuery } from '@tanstack/react-query';
 
 // const fetcher = (url: string) =>
 //   fetch(url, { credentials: 'include' }).then(async (res) => {
@@ -28,7 +23,6 @@ import {
 const MAX_LIMIT = 5;
 export default function useTempCart(num: number | string) {
   // const
-  const queryClient = useQueryClient();
   const { openModal, closeModal } = useModal();
   const [tempCart, setTempCart] = useAtom(tempCartAtom);
   const [{ data: userData, isPending, error }] = useAtom(userInfoAtom);
@@ -163,44 +157,6 @@ export default function useTempCart(num: number | string) {
       onClickCancel: () => closeModal(),
     });
   };
-
-  const mutation = useMutation({
-    mutationFn: async ({
-      num,
-      name,
-      preset,
-    }: // newData,
-    {
-      num: number;
-      name: string;
-      preset: 'increase' | 'decrease' | 'erase';
-      // newData?: any;
-    }) => {
-      const response = await fetch(`/api/updateCart`, {
-        method: 'POST', // 또는 POST
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ preset, name, num }),
-        // body: JSON.stringify({ num, ...newData }),
-      });
-      return response.json();
-    },
-    onMutate: async ({ preset, name, num }) => {
-      await queryClient.cancelQueries({ queryKey: ['tempCartData'] });
-      const previousData = queryClient.getQueryData<unknown[]>(['tempCartData']);
-      if (previousData && Array.isArray(previousData)) {
-        return { previousData };
-      }
-    },
-    // 2. 서버 업데이트 성공 후 실행
-    onSuccess: async () => {
-      // 'cartData' 키를 가진 쿼리를 무효화하여 서버에서 최신 데이터를 다시 읽어옵니다.
-      queryClient.invalidateQueries({ queryKey: ['tempCartData'] });
-    },
-    onError: (error) => {
-      console.error('업데이트 실패:', error);
-      alert('변경사항을 저장하지 못했습니다.');
-    },
-  });
 
   return {
     tempCart,

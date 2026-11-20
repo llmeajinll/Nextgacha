@@ -1,7 +1,6 @@
 'use client';
 
 import React, { useState, useMemo, useRef, Suspense } from 'react';
-import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 import Cookies from 'js-cookie';
 import dayjs from 'dayjs';
@@ -22,18 +21,17 @@ import {
   FREE_SHIPPING_MIN,
   SHIPPING_FEE,
 } from '@/features/purchase/lib/orderPolicy';
-import { useTempCart } from '@/features/cart/model';
+import { useAddToCart } from '@/features/cart/model';
 import {
   panelTitle,
   copyText,
   panelRoot,
   fullWidth,
 } from './productPurchasePanel.css';
-import { postCart } from '@/features/cart/api/postCart';
 
 export default function InfoPanel({ props }: { props: CardProps }) {
-  const router = useRouter();
   const { openModal } = useModal();
+  const { addToCart } = useAddToCart();
 
   const [tempCart] = useAtom(tempCartAtom);
   const [showText, setShowText] = useState(false);
@@ -56,28 +54,13 @@ export default function InfoPanel({ props }: { props: CardProps }) {
 
   const discountPrice = props.price * (1 - props.discount / 100);
 
-  const onClickCart = async () => {
+  // 낙관적 업데이트: 서버 응답을 기다리지 않고 바로 비우고 안내한다 (useAddToCart)
+  const onClickCart = () => {
     if (tempCart.num === null || tempCart.product.length === 0) {
       openModal('담은 상품이 없습니다.');
       return;
     }
-    await postCart({
-      num: tempCart.num,
-      updatedArray: tempCart.product,
-    }).then(async (res) => {
-      if (res.ok === true) {
-        openModal(
-          '장바구니에 정상적으로 들어갔습니다.\n장바구니로 이동하시겠습니까?',
-          {
-            onClickCheck: () => router.push('/mypage/cart'),
-            onClickCancel: () => window.location.reload(),
-            onClickClose: () => window.location.reload(),
-          },
-        );
-      } else {
-        openModal(res.message ?? '로그인 후 장바구니에 담을 수 있습니다.');
-      }
-    });
+    addToCart({ num: tempCart.num, updatedArray: tempCart.product });
   };
 
   return (
