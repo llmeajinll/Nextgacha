@@ -1,5 +1,6 @@
 'use client';
 
+import { Suspense } from 'react';
 import { usePathname } from 'next/navigation';
 import { FloatingActions, Footer, MobileNav } from '@/widgets';
 import { fluidContainer, fluidMain, layoutContainer, webOnly } from './layout.css';
@@ -13,7 +14,7 @@ export default function SiteFrame({
   children: React.ReactNode;
 }) {
   const pathname = usePathname();
-  if (pathname.startsWith('/manager')) return children;
+  if (pathname.startsWith('/manager')) return <Suspense>{children}</Suspense>;
 
   // 모바일 디자인이 있는 화면만 유연한 폭 (마이페이지는 장바구니만 있음, 좋아요·주문 내역은 아직 고정 폭)
   if (pathname === '/' || pathname === '/notice' || pathname.startsWith('/notice/') || pathname === '/mypage/cart') {
@@ -21,8 +22,11 @@ export default function SiteFrame({
       <div className={fluidContainer}>
         <div className={webOnly}>{header}</div>
         <MobileNav />
-        <main className={fluidMain}>{children}</main>
-        <Footer />
+        {/* 푸터를 본문과 같은 경계에 둔다. 밖에 두면 본문이 스트리밍으로 들어올 때 먼저 그려진 푸터가 밀려 CLS가 생긴다 */}
+        <Suspense>
+          <main className={fluidMain}>{children}</main>
+          <Footer />
+        </Suspense>
         <FloatingActions lift={pathname === '/mypage/cart' ? 'navPay' : 'nav'} />
       </div>
     );
@@ -31,8 +35,10 @@ export default function SiteFrame({
   return (
     <div className={layoutContainer}>
       {header}
-      <main>{children}</main>
-      <Footer />
+      <Suspense>
+        <main>{children}</main>
+        <Footer />
+      </Suspense>
       <FloatingActions />
     </div>
   );

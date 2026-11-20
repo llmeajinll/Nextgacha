@@ -39,7 +39,8 @@ export default function RootLayout({
             <ReactQueryDevtools initialIsOpen={false} />
             <div className={relativeWrap}>
               <AlertModal />
-              {/* useSearchParams를 쓰는 클라이언트 컴포넌트(Header의 검색, 결제/검색 페이지 등)는 Suspense 경계가 필요 */}
+              {/* useSearchParams를 쓰는 클라이언트 컴포넌트(Header의 검색, 결제/검색 페이지 등)는 Suspense 경계가 필요.
+                  본문의 경계는 SiteFrame이 푸터와 함께 감싼다 */}
               <SiteFrame
                 header={
                   <Suspense>
@@ -47,7 +48,7 @@ export default function RootLayout({
                   </Suspense>
                 }
               >
-                <Suspense>{children}</Suspense>
+                {children}
               </SiteFrame>
             </div>
           </SessionProvider>
